@@ -1,11 +1,29 @@
-<div align="center">
+# 🚀 İnteraktif Matematik ve Geometri Öğrenim Merkezi
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Bu proje, 1. sınıftan 12. sınıfa kadar (K-12) tüm matematik ve geometri konularını kapsayan, **Kumon ve Mathnasium gibi geleneksel eğitim devlerine rakip olmayı hedefleyen** yeni nesil bir dijital eğitim platformudur.
 
-  <h1>Built with AI Studio</h2>
+## 🌟 Vizyonumuz
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+Geleneksel eğitim sistemleri (kağıt-kalem, çalışma yaprakları, ezberci formüller) öğrencileri sıkar ve matematikten uzaklaştırır. Bizim vizyonumuz:
+- **Sıkıcı çalışma yaprakları (worksheets) yerine:** Etkileşimli, dokunulabilir ve anında tepki veren simülasyonlar.
+- **Pahalı fiziksel materyaller yerine:** Her an, her yerden ulaşılabilen, sıfır marjinal maliyetli dijital laboratuvarlar.
+- **Ezber yerine:** "Neden?" ve "Nasıl?" sorularına görsel cevaplar veren, keşfederek öğrenme (discovery learning) modeli.
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## 🏗️ Teknik Altyapı (Altın Şablon)
 
-</div>
+100'den fazla modülü spagetti koda dönüşmeden, aynı yüksek kalitede ve hızda üretebilmek için **"Altın Şablon" (Golden Template)** mimarisi kullanıyoruz.
+
+Detaylı teknik dokümantasyon için:
+- [Mimari ve Altın Şablon (ARCHITECTURE.md)](./docs/ARCHITECTURE.md)
+- [Geliştirme Yol Haritası (ROADMAP.md)](./docs/ROADMAP.md)
+
+## 🛠️ Kullanılan Teknolojiler
+- **Frontend:** React 18, Vite, TypeScript
+- **Stil & UI:** Tailwind CSS, Shadcn UI
+- **Oyunlaştırma & State:** Zustand
+- **Matematiksel Dizgi:** KaTeX (`react-katex`)
+- **Fizik & Animasyon:** Matter.js, Framer Motion
+- **Ses Efektleri:** `use-sound`
+
+---
+*Bu proje, eğitimi oyunlaştıran ve matematiği görsel bir şölene dönüştüren bir "Modül Fabrikası"dır.*
