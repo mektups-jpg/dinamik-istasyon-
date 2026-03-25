@@ -1,4 +1,4 @@
-# 🚀 İnteraktif Matematik ve Geometri Öğrenim Merkezi
+# 🚀 Matnastik Laboratuvarı
 
 Bu proje, 1. sınıftan 12. sınıfa kadar (K-12) tüm matematik ve geometri konularını kapsayan, **Kumon ve Mathnasium gibi geleneksel eğitim devlerine rakip olmayı hedefleyen** yeni nesil bir dijital eğitim platformudur.
 

@@ -7,6 +7,7 @@ import {
   ChevronRight, Lock, CheckCircle2
 } from 'lucide-react';
 import { useGameStore } from '../store/useGameStore';
+import { useAtomStore } from '../store/useAtomStore';
 
 export default function Dashboard() {
   const { score } = useGameStore();
@@ -31,8 +32,8 @@ export default function Dashboard() {
             <LayoutGrid className="w-6 h-6 text-[#0B0C10]" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-tight text-white leading-tight">MathVerse</h1>
-            <p className="text-[10px] text-[#00E5FF] font-semibold tracking-wider uppercase">K-12 Akademi</p>
+            <h1 className="text-lg font-bold tracking-tight text-white leading-tight">Matnastik</h1>
+            <p className="text-[10px] text-[#00E5FF] font-semibold tracking-wider uppercase">Laboratuvarı</p>
           </div>
         </div>
 
@@ -123,16 +124,16 @@ export default function Dashboard() {
                   <span className="px-3 py-1 bg-[#00E5FF]/20 text-[#00E5FF] text-xs font-bold rounded-full uppercase tracking-wider">
                     Sıradaki Görev
                   </span>
-                  <span className="text-gray-400 text-sm">Lise • Geometri</span>
+                  <span className="text-gray-400 text-sm">İlkokul 1. Sınıf • Sayılar</span>
                 </div>
                 <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-                  Trigonometrik Birim Çemberi Keşfet
+                  Sayı Doğrusu Zıplaması
                 </h3>
                 <p className="text-gray-400 mb-8 text-lg">
-                  Sinüs ve kosinüsün sadece ezberlenecek formüller değil, dönen bir çemberin gölgeleri olduğunu kendi gözlerinle gör.
+                  Kurbağayı sayı doğrusunda zıplatarak toplama işleminin sırlarını keşfet.
                 </p>
                 <Link 
-                  to="/unit-circle" 
+                  to="/embed/numbers/number-line" 
                   className="inline-flex items-center justify-center gap-2 bg-[#00E5FF] hover:bg-[#66FCF1] text-[#0B0C10] px-8 py-4 rounded-xl font-bold text-lg transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(0,229,255,0.4)]"
                 >
                   <Play className="w-5 h-5 fill-current" />
@@ -214,7 +215,13 @@ function FilterItem({ label, active, onClick, color = "text-gray-400" }: { label
 }
 
 function ModuleCard({ mod }: { mod: any }) {
-  const isCompleted = mod.id === 'unit-circle'; // Örnek: Birim çember tamamlanmış gibi gösterelim
+  const { isMastered } = useAtomStore();
+  
+  // Basit bir kural: Eğer modülün ana atomlarından biri bile tamamlandıysa %100 yapalım (şimdilik)
+  const isCompleted = 
+    mod.id === 'number-line' ? isMastered('G1.NUM.001.1') : 
+    mod.id === 'number-line-sub' ? isMastered('G1.NUM.001.2') : 
+    mod.id === 'unit-circle'; 
   
   return (
     <Link 

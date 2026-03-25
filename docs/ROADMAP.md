@@ -1,46 +1,62 @@
-# 🗺️ Geliştirme Yol Haritası (K-12)
+# 🗺️ Matnastik Laboratuvarı - Evrensel Kök Müfredat (K-12)
 
-Bu doküman, 1. sınıftan 12. sınıfa kadar (K-12) tüm matematik ve geometri konularını kapsayan interaktif modüllerimizin geliştirme planını içerir.
+Bu doküman, Singapur Matematiği (CPA Yaklaşımı), ABD Common Core ve Finlandiya eğitim modelleri sentezlenerek oluşturulmuş **Matnastik Kök Müfredatı**'nı içerir. 
 
-## 🎯 Hedef Kitle ve Yaklaşım
-- **İlkokul (1-4. Sınıf):** Görsel, dokunulabilir, somut kavramlar (Kesirler, Temel Dört İşlem, Şekiller).
-- **Ortaokul (5-8. Sınıf):** Somuttan soyuta geçiş, kuralların görsel ispatları (Pisagor, Olasılık, Doğrusal Denklemler).
-- **Lise (9-12. Sınıf):** İleri düzey soyut kavramların dinamik simülasyonları (Trigonometri, Parabol, Türev, İntegral, 3D Geometri).
+Geleneksel sistemler çocukları hemen "Soyut" (rakamlar ve formüller) aşamasına atarken, biz her konuyu önce "Somut/Görsel" simülasyonlarla başlatıyoruz.
 
----
+## 🟢 FAZ 1: Sayı Hissi ve Somut Temeller (İlkokul 1-4. Sınıf)
+*Amaç: Sayıların ne anlama geldiğini fiziksel/görsel olarak hissettirmek. Ezber yok.*
 
-## 🟢 Tamamlanan Modüller (Altın Şablon Standartlarında)
-- [x] **Trigonometrik Birim Çember (Lise):** Açıların sinüs, kosinüs ve tanjant değerlerinin görselleştirilmesi. (KaTeX, Ses, Puanlama eklendi)
-- [x] **Galton Tahtası (Ortaokul/Lise):** Olasılık ve Binom Dağılımı simülasyonu. (Matter.js, Ses, Puanlama, KaTeX eklendi)
+### 1. Sınıf: Sayıların Doğası
+- [ ] **Sayı Doğrusu Zıplaması:** Toplama ve çıkarmanın ileri/geri gitmek olduğunu gösteren interaktif kurbağa.
+- [ ] **Onluk Bozma Fabrikası:** 10 tane birliğin birleşip 1 onluk bloğa dönüştüğü fiziksel animasyon.
 
----
+### 2. Sınıf: Gruplama ve Temel Geometri
+- [ ] **Dinamik Çarpma Izgarası:** Çarpmanın ardışık toplama ve alan kaplama olduğunu gösteren renkli bloklar.
+- [ ] **Tangram ve Şekil İnşası:** 2D şekilleri birleştirerek yeni şekiller türetme.
 
-## 🟡 Planlanan Modüller (Sıradaki Adımlar)
+### 3. Sınıf: Parça-Bütün İlişkisi (Kesirlere Giriş)
+- [ ] **Kesirler Laboratuvarı (Pizza/Çikolata):** Görsel olarak 1/2'nin 2/4'e eşit olduğunu kanıtlama.
+- [ ] **Zaman ve Çarklar:** Akrep ve yelkovanın dişli oranlarıyla nasıl çalıştığı.
 
-### İlkokul (1-4. Sınıf)
-- [ ] **Kesirler (Fractions) Laboratuvarı:**
-  - *Simülasyon:* Ekranda bir pizza veya çikolata barı.
-  - *Etkileşim:* Öğrenci dilimleri sürükleyip bırakır. Doğru parçayı koyduğunda "Tebrikler" sesi çalar, +10 puan kazanır.
-  - *Matematik:* Sağ tarafta $\frac{1}{2} + \frac{1}{4} = \frac{3}{4}$ işlemi KaTeX ile devasa ve net bir şekilde görünür.
-- [ ] **Çarpım Tablosu Alan Modeli:** Çarpma işleminin sadece ezber değil, bir alan hesabı olduğunu gösteren interaktif ızgara (grid).
+### 4. Sınıf: Gelişmiş Kesirler ve Ondalık Sayılar
+- [ ] **Denk Kesirler Terazisi:** Farklı kesir bloklarını teraziye koyarak dengeyi bulma.
+- [ ] **Ondalık Sayı Büyüteci:** Sayı doğrusunda 1 ile 2 arasına zoom yaparak 1.5, 1.55 gibi sayıları keşfetme.
 
-### Ortaokul (5-8. Sınıf)
-- [ ] **Pisagor Teoremi Su Simülasyonu:**
-  - *Simülasyon:* Dik üçgenin kenarlarındaki karelerin içindeki suların, hipotenüsteki büyük kareye dökülüp tam doldurduğu bir animasyon (Matter.js).
-  - *Etkileşim:* Öğrenci kenar uzunluklarını değiştirir, suyun hacminin hep $a^2 + b^2 = c^2$ kuralına uyduğunu keşfeder.
-- [ ] **Doğrusal Denklemler (Terazi Modeli):** $2x + 3 = 7$ denklemini çözerken terazinin iki kefesinden de ağırlık çıkararak dengeyi koruma oyunu.
+## 🟡 FAZ 2: Cebirsel Düşünme ve Orantı (Ortaokul 5-8. Sınıf)
+*Amaç: Bilinmeyenlerle (x, y) tanışma ve kuralların görsel ispatları.*
 
-### Lise (9-12. Sınıf)
-- [ ] **İkinci Dereceden Denklemler ve Parabol:**
-  - *Simülasyon:* $y = ax^2 + bx + c$ grafiği üzerinde $a, b, c$ katsayılarını kaydırıcılarla (slider) değiştirme.
-  - *Etkileşim:* Kökleri (x eksenini kestiği noktaları) bulduğunda puan kazanma. Tepe noktasının nasıl değiştiğini anlık izleme.
-- [ ] **Türev ve Teğet Doğrusu:**
-  - *Simülasyon:* Eğri üzerinde hareket eden bir nokta ve o noktadaki teğet doğrusu.
-  - *Etkileşim:* Öğrenci noktayı kaydırdıkça teğetin eğiminin (türevin) nasıl değiştiğini anlık görür.
-- [ ] **Eğik Atış (Fizik/Matematik Kesişimi):**
-  - *Simülasyon:* Top mermisi fırlatma ve hedef vurma.
-  - *Etkileşim:* Açı ve ilk hızı ayarlayarak hedefi vurma. Vurunca patlama sesi ve puan.
+### 5. Sınıf: Dönüşümler ve Hacim
+- [ ] **Kesir-Ondalık-Yüzde Makinesi:** Bir değeri değiştirdiğinizde diğer ikisinin anında dönüştüğü çarklı makine.
+- [ ] **3D Prizma Su Doldurma:** Hacmin Taban Alanı × Yükseklik olduğunu gösteren 3D simülasyon.
 
----
+### 6. Sınıf: Oran-Orantı ve Tam Sayılar
+- [ ] **Negatif Sayı Asansörü:** Zemin katın altına inerek negatif sayılarla toplama/çıkarma mantığı.
+- [ ] **Dişli Çarklar (Orantı):** Farklı boyuttaki çarkların dönüş sayıları arasındaki ters/doğru orantı.
 
-*Not: Bu yol haritası canlı bir dokümandır. Yeni fikirler ve önceliklere göre sürekli güncellenecektir.*
+### 7. Sınıf: Cebirsel İfadeler ve Denklemler
+- [ ] **Denklem Terazisi:** 2x + 3 = 7 denklemini çözerken iki kefeden de ağırlık çıkararak x'i yalnız bırakma.
+- [ ] **Açı Lazerleri:** Paralel doğruları kesen bir lazer ışını ile iç-ters, dış-ters açıları bulma.
+
+### 8. Sınıf: İleri Geometri ve Olasılık
+- [ ] **Pisagor Su Simülasyonu:** Dik üçgenin kenarlarındaki suların hipotenüse dolması.
+- [x] **Galton Tahtası:** Topların düşüşüyle olasılık ve çan eğrisi. (Tamamlandı)
+
+## 🔴 FAZ 3: Analitik ve Dinamik Modelleme (Lise 9-12. Sınıf)
+*Amaç: Hareketli grafikleri, fonksiyonları ve uzaysal matematiği simüle etmek.*
+
+### 9. Sınıf: Kümeler ve Mantık
+- [ ] **Dinamik Venn Şemaları:** Kesişim ve birleşimleri boyayarak gösteren interaktif alanlar.
+- [ ] **Mantık Kapıları Devresi:** Ve, Veya, Değil kapılarıyla elektrik devresi kurma.
+
+### 10. Sınıf: Fonksiyonlar ve Polinomlar
+- [ ] **Parabol Bükücü:** y = ax² + bx + c katsayılarını kaydırıcıyla değiştirip tepe noktasını izleme.
+- [ ] **Fonksiyon Makinesi:** İçine sayı atılan ve kurala göre dışarı sayı çıkaran 3D makine.
+
+### 11. Sınıf: Trigonometri ve Uzay Geometri
+- [x] **Trigonometrik Birim Çember:** Dönen çemberin gölgeleriyle sin/cos mantığı. (Tamamlandı)
+- [ ] **Koni Kesitleri:** Bir 3D koniyi farklı açılarla keserek elips, parabol ve hiperbol elde etme.
+
+### 12. Sınıf: Kalkülüs (Türev ve İntegral)
+- [ ] **Teğet Sörfü (Türev):** Eğri üzerinde hareket eden noktanın eğiminin anlık değişimi.
+- [ ] **Riemann Alan Doldurma (İntegral):** Eğri altındaki alanı giderek küçülen dikdörtgenlerle doldurma.

@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 
-export type Category = 'Geometri' | 'Fizik' | 'Olasılık' | 'Cebir';
+export type Category = 'Sayılar' | 'Geometri' | 'Fizik' | 'Olasılık' | 'Cebir';
 export type Difficulty = 'Kolay' | 'Orta' | 'Zor';
 
 export interface ModuleMeta {
@@ -15,6 +15,24 @@ export interface ModuleMeta {
 }
 
 export const modules: ModuleMeta[] = [
+  {
+    id: 'number-line',
+    title: 'Sayı Doğrusu Zıplaması',
+    description: 'Robotu sayı doğrusunda ileri zıplatarak toplama işleminin sırlarını keşfedin.',
+    category: 'Sayılar',
+    difficulty: 'Kolay',
+    path: '/embed/numbers/number-line',
+    component: lazy(() => import('../modules/numbers/number-line/NumberLineApp'))
+  },
+  {
+    id: 'number-line-sub',
+    title: 'Sayı Doğrusunda Çıkarma',
+    description: 'Enerjisi azalan robotu geriye doğru zıplatarak çıkarma işleminin mantığını kavrayın.',
+    category: 'Sayılar',
+    difficulty: 'Kolay',
+    path: '/embed/numbers/number-line-sub',
+    component: lazy(() => import('../modules/numbers/number-line-sub/NumberLineSubApp'))
+  },
   {
     id: 'unit-circle',
     title: 'Trigonometrik Birim Çember',
