@@ -16,9 +16,9 @@ export default function Dashboard() {
   // K-12 Kategorizasyonu (Örnekleme)
   const filteredModules = modules.filter(mod => {
     if (activeTab === 'all') return true;
-    if (activeTab === 'primary' && mod.category.includes('İlkokul')) return true;
-    if (activeTab === 'middle' && mod.category.includes('Ortaokul')) return true;
-    if (activeTab === 'high' && (mod.category.includes('Lise') || mod.category.includes('Geometri') || mod.category.includes('Olasılık'))) return true;
+    if (activeTab === 'primary' && mod.gradeRange === 'İlkokul') return true;
+    if (activeTab === 'middle' && mod.gradeRange === 'Ortaokul') return true;
+    if (activeTab === 'high' && mod.gradeRange === 'Lise') return true;
     return false;
   });
 
@@ -219,8 +219,13 @@ function ModuleCard({ mod }: { mod: any }) {
   
   // Basit bir kural: Eğer modülün ana atomlarından biri bile tamamlandıysa %100 yapalım (şimdilik)
   const isCompleted = 
+    mod.id === 'algebraic-dimensions' ? isMastered('G7.ALG.020.1') :
+    mod.id === 'absolute-value' ? isMastered('G6.NUM.020.1') :
+    mod.id === 'coord-terminal' ? isMastered('G8.GEO.010.1') :
+    mod.id === 'gear-ratio' ? isMastered('G6.ALG.010.1') :
     mod.id === 'number-line' ? isMastered('G1.NUM.001.1') : 
     mod.id === 'number-line-sub' ? isMastered('G1.NUM.001.2') : 
+    mod.id === 'base-10-factory' ? isMastered('G1.NUM.003.1') : 
     mod.id === 'unit-circle'; 
   
   return (

@@ -329,6 +329,10 @@ export default function CylinderSimulation() {
           <span className={`transition-colors duration-300 ${progress < 0.1 ? "text-[#FF6B00]" : ""}`}>Açık (Dikdörtgen)</span>
           <span className={`transition-colors duration-300 ${progress > 0.9 ? "text-[#00E5FF]" : ""}`}>Kapalı (Silindir)</span>
         </div>
+        
+        <div className={`mt-2 text-center text-sm font-medium transition-all duration-500 ${progress < 0.2 ? 'opacity-100 text-[#00E5FF]' : 'opacity-40 text-gray-400'}`}>
+          Silindir açıldığında yan yüzeyi bir <strong>dikdörtgene</strong> dönüşür ve bu dikdörtgenin genişliği silindirin <strong>çevresine (2πr)</strong> eşittir.
+        </div>
       </div>
     </div>
   );

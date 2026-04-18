@@ -39,21 +39,25 @@ Bu dosya, projenin genel vizyonunu, tamamlanan özellikleri ve gelecekteki planl
 - [x] Geriye doğru zıplama ve hedefe koşma (sola doğru) animasyonları eklendi.
 - [x] Yeni kazanım atomları (G1.NUM.001.2 ve G1.NUM.003.1) sisteme entegre edildi.
 
+### 5. Modül 3: Onluk Bozma Fabrikası (Onluk-Birlik Evreni)
+- [x] 'Onluk ve Birlik' kavramlarını öğretmek için laboratuvar arayüzü tasarımı (Neon fabrikasyon stili).
+- [x] Onluklar (büyük mor enerji tüpleri) ve Birlikler (küçük mavi küpler) için görsel simülasyon.
+- [x] Framer Motion kullanılarak akıcı ve animasyonlu "Makineye Enerji Yükleme" parçacıkları.
+
 ---
 
 ## 🚧 Üzerinde Çalışılanlar (In Progress)
-- [ ] *Şu an aktif bir görev yok, yeni talimat bekleniyor.*
+- [x] **Mutlak Değer Lazerleri:** Sıfır noktasına olan uzaklık kavramını simetrik lazer ışınları ile kanıtlayan, aynalı ve temiz bir fizik deneyi oluşturuldu.
+- [x] **Boyutlararası Küp (Cebirsel Boyut Odası):** x, x² ve x³ kavramlarını (Uzunluk, Alan, Hacim) sürgü ile değiştirip objenin nasıl katlanarak büyüdüğünü gösteren 3D/2D/1D CSS simülatörü eklendi.
 
 ---
 
 ## 📅 Planlananlar (To-Do / Backlog)
 
-### Yeni Eğitim Modülleri
-- [ ] **Onluk-Birlik Evreni:** Sayıları onluk ve birlik bloklarına ayırma mini oyunu.
-- [ ] **Ritmik Sayma Meteorları:** Belirli aralıklarla gelen meteorları vurarak ritmik sayma.
+### Ortaokul (5-8. Sınıf) - Teknoloji ve Mühendislik Laboratuvarı
+- [ ] **Dişli Simülatörü İçin Avara Çark (Idle Gear):** Yön değiştiren çark konseptinin eklenmesi.
+- [ ] **Olasılık Şelalesi (Galton Board):** Binlerce partikülün düşerek çan eğrisi oluşturduğu fizik motorlu 2D olasılık deneyi.
 
-### Oyunlaştırma ve Meta-Oyun (Gamification)
-- [ ] **Market (Shop):** Kazanılan Atom'lar ile Astro-Bot'a yeni renkler, şapkalar veya itici (thruster) efektleri satın alma.
-- [ ] **Ses Efektleri (SFX) ve Müzik:** Zıplama sesi, buton tıklama sesi, arka plan uzay ambiyansı.
-- [ ] **Seviye Sistemi (Leveling):** Skor arttıkça oyuncunun seviye atlaması ve yeni unvanlar kazanması (Örn: "Çaylak Astronot", "Galaksi Dehası").
-- [ ] **Kayıt Sistemi:** Oyuncu ilerlemesinin `localStorage` veya bir backend (Firebase vb.) ile kaydedilmesi.
+### Gelecek İçin Fikirler (İlkokul Yedek)
+- [ ] **Ritmik Sayma:** Belirli aralıklarla düşen bloklara lazer atarak ritmik sayma döngüsü oturtma.
+- [ ] **Boyutsal Terazi (<, > ,=):** Nicelik ağırlıklarını eşitleyen dinamik fizik terazisi.
