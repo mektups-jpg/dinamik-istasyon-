@@ -8,11 +8,11 @@ import { CheckCircle2, Star, Sparkles, X } from 'lucide-react';
 import { useAtomStore } from '../../../store/useAtomStore';
 import { useGameStore } from '../../../store/useGameStore';
 
-export default function CylinderApp() {
+export default function PyramidApp() {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [progress, setProgress] = useState(1); // 1 = closed cylinder, 0 = flat plane
-  const [r, setR] = useState(2.0); // Yarıçap
-  const [h, setH] = useState(5.0); // Yükseklik
+  const [progress, setProgress] = useState(1);
+  const [a, setA] = useState(5.0); // Taban Ayrıtı
+  const [h, setH] = useState(4.5); // Piramit Yüksekliği (True Height)
 
   const { unlockAtom } = useAtomStore();
   const { addScore } = useGameStore();
@@ -23,11 +23,11 @@ export default function CylinderApp() {
     if (progress === 0 && !hasWon) {
       setHasWon(true);
       setShowSuccess(true);
-      unlockAtom('G8.GEO.020.4');
+      unlockAtom('G8.GEO.020.3');
       addScore(50);
     }
   }, [progress, hasWon, unlockAtom, addScore]);
-
+  
   const sceneRef = useRef<any>(null);
   const globalsRef = useRef<any>(null);
 
@@ -46,7 +46,7 @@ export default function CylinderApp() {
     scene.fog = new THREE.FogExp2('#0B0C10', 0.02);
 
     const camera = new THREE.PerspectiveCamera(45, w / h_canvas, 0.1, 100);
-    camera.position.set(10, 8, 14);
+    camera.position.set(10, 10, 14);
     camera.setViewOffset(w, h_canvas, 190, 0, w, h_canvas);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
@@ -60,12 +60,12 @@ export default function CylinderApp() {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.target.set(0, 0, -r / 2);
+    controls.target.set(0, 1, 0);
 
     // --- Lighting ---
     scene.add(new THREE.AmbientLight(0xffffff, 0.3));
     
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
     dirLight.position.set(10, 20, 10);
     dirLight.castShadow = true;
     dirLight.shadow.mapSize.width = 2048;
@@ -73,7 +73,7 @@ export default function CylinderApp() {
     scene.add(dirLight);
 
     const pointLight = new THREE.PointLight(0x00E5FF, 3, 20);
-    pointLight.position.set(0, 0, 5);
+    pointLight.position.set(0, 3, 0);
     scene.add(pointLight);
 
     // --- Floor / Grid ---
@@ -81,38 +81,36 @@ export default function CylinderApp() {
     const floorMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9, metalness: 0.1 });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -4;
+    floor.position.y = -2;
     floor.receiveShadow = true;
     scene.add(floor);
 
     const gridHelper = new THREE.GridHelper(40, 40, 0x00E5FF, 0x1a1a1a);
-    gridHelper.position.y = -3.99;
+    gridHelper.position.y = -1.99;
     (gridHelper.material as THREE.Material).transparent = true;
-    (gridHelper.material as THREE.Material).opacity = 0.15;
+    (gridHelper.material as THREE.Material).opacity = 0.2;
     scene.add(gridHelper);
 
     const sceneGroup = new THREE.Group();
+    sceneGroup.position.set(0, -1, 0); // Center standard
     scene.add(sceneGroup);
 
-    // --- Sci-Fi Materials ---
-    const sideMaterial = new THREE.MeshPhysicalMaterial({ 
-      color: 0x00E5FF, metalness: 0.2, roughness: 0.1, transparent: true, opacity: 0.6,
-      side: THREE.DoubleSide, clearcoat: 1.0
-    });
-    const capMaterial = new THREE.MeshPhysicalMaterial({ 
-      color: 0xFF6B00, metalness: 0.2, roughness: 0.1, transparent: true, opacity: 0.8,
-      side: THREE.DoubleSide, clearcoat: 1.0
-    });
-    const edgeMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2, transparent: true, opacity: 0.9 });
+    // --- Materials ---
+    const matBase = new THREE.MeshPhysicalMaterial({ color: 0x00E5FF, transparent: true, opacity: 0.6, roughness: 0.1, metalness: 0.2, side: THREE.DoubleSide });
+    const matSides = new THREE.MeshPhysicalMaterial({ color: 0xB388FF, transparent: true, opacity: 0.7, roughness: 0.1, metalness: 0.3, clearcoat: 1.0, side: THREE.DoubleSide });
+    const edgeMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
 
-    globalsRef.current = { scene, camera, renderer, controls, sceneGroup, materials: { sideMaterial, capMaterial, edgeMaterial } };
+    globalsRef.current = { scene, camera, renderer, controls, sceneGroup, materials: { matBase, matSides, edgeMat } };
 
     // --- Animation Loop ---
     let frameId: number;
     const render = () => {
       frameId = requestAnimationFrame(render);
       controls.update();
-      sceneGroup.position.y = Math.sin(Date.now() * 0.001) * 0.1;
+      
+      const time = Date.now() * 0.001;
+      sceneGroup.position.y = -1 + Math.sin(time * 2) * 0.15; // Floating pyramid
+      
       renderer.render(scene, camera);
     };
     render();
@@ -133,133 +131,101 @@ export default function CylinderApp() {
       cancelAnimationFrame(frameId);
       if (mountRef.current && renderer.domElement.parentNode === mountRef.current) mountRef.current.removeChild(renderer.domElement);
       floorGeo.dispose(); floorMat.dispose();
-      sideMaterial.dispose(); capMaterial.dispose(); edgeMaterial.dispose();
+      matBase.dispose(); matSides.dispose(); edgeMat.dispose();
       renderer.dispose();
     };
   }, []);
 
-  // Helper to calculate bent position
-  const getBentPosition = (origX: number, origY: number, p: number, w: number) => {
-    if (p < 0.0001) return { x: origX, y: origY, z: 0 };
-    const currentAngleTotal = 2 * Math.PI * p;
-    const currentRadius = w / currentAngleTotal;
-    const theta = (origX / w) * currentAngleTotal;
-    return {
-      x: currentRadius * Math.sin(theta),
-      y: origY,
-      z: currentRadius * Math.cos(theta) - currentRadius
-    };
-  };
-
   // 2. Dynamic Geometry Rebuilder
   useEffect(() => {
     if (!globalsRef.current) return;
-    const { sceneGroup, materials, controls } = globalsRef.current;
-    const { sideMaterial, capMaterial, edgeMaterial } = materials;
+    const { sceneGroup, materials } = globalsRef.current;
+    const { matBase, matSides, edgeMat } = materials;
 
     while (sceneGroup.children.length > 0) {
       sceneGroup.remove(sceneGroup.children[0]);
     }
 
-    const width = 2 * Math.PI * r; 
-    controls.target.set(0, 0, -r / 2);
+    const W = a;
+    const H = h;
+    const L = Math.sqrt(H * H + (W / 2) * (W / 2)); 
+    const foldingAngle = -Math.PI + Math.acos((W / 2) / L);
 
-    // 1. Create Side Surface
-    const sideGeometry = new THREE.PlaneGeometry(width, h, 128, 1);
-    const originalVertices = new Float32Array(sideGeometry.attributes.position.array);
-    const sideMesh = new THREE.Mesh(sideGeometry, sideMaterial);
-    sideMesh.castShadow = true; sideMesh.receiveShadow = true;
-    sceneGroup.add(sideMesh);
+    // 1. Base (Square)
+    const baseGeo = new THREE.PlaneGeometry(W, W);
+    baseGeo.rotateX(-Math.PI / 2); // Lay flat on XZ
+    const baseMesh = new THREE.Mesh(baseGeo, matBase);
+    baseMesh.castShadow = true; baseMesh.receiveShadow = true;
+    baseMesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(baseGeo), edgeMat));
+    sceneGroup.add(baseMesh);
 
-    const sideOutlineGeo = new THREE.BufferGeometry();
-    const outlinePositions = new Float32Array((128 * 2) * 3);
-    sideOutlineGeo.setAttribute('position', new THREE.BufferAttribute(outlinePositions, 3));
-    const sideOutline = new THREE.LineLoop(sideOutlineGeo, edgeMaterial);
-    sceneGroup.add(sideOutline);
+    // --- Outward Triangle Geometry ---
+    const triGeo = new THREE.BufferGeometry();
+    const vertices = new Float32Array([
+      -W / 2, 0, 0,  
+       W / 2, 0, 0,  
+       0, 0, L       
+    ]);
+    triGeo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    triGeo.computeVertexNormals(); 
 
-    // 2. Create Top and Bottom Caps
-    const capGeometry = new THREE.CircleGeometry(r, 64);
-    const capEdgesGeo = new THREE.EdgesGeometry(capGeometry);
+    const createTriangle = () => {
+      const mesh = new THREE.Mesh(triGeo, matSides);
+      mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(triGeo), edgeMat));
+      mesh.castShadow = true; mesh.receiveShadow = true;
+      return mesh;
+    };
 
-    const topHinge = new THREE.Group();
-    topHinge.position.set(0, h / 2, 0);
-    const topCap = new THREE.Mesh(capGeometry, capMaterial);
-    topCap.position.set(0, r, 0);
-    topCap.castShadow = true; topCap.receiveShadow = true;
-    topCap.add(new THREE.LineSegments(capEdgesGeo, edgeMaterial));
-    topHinge.add(topCap);
-    sceneGroup.add(topHinge);
+    const createFoldingHinge = (posX: number, posZ: number, rotY: number) => {
+      const edgeAnchor = new THREE.Group();
+      edgeAnchor.position.set(posX, 0, posZ);
+      edgeAnchor.rotation.y = rotY; 
 
-    const bottomHinge = new THREE.Group();
-    bottomHinge.position.set(0, -h / 2, 0);
-    const bottomCap = new THREE.Mesh(capGeometry, capMaterial);
-    bottomCap.position.set(0, -r, 0);
-    bottomCap.castShadow = true; bottomCap.receiveShadow = true;
-    bottomCap.add(new THREE.LineSegments(capEdgesGeo, edgeMaterial));
-    bottomHinge.add(bottomCap);
-    sceneGroup.add(bottomHinge);
+      const hinge = new THREE.Group(); 
+      hinge.add(createTriangle());
+      edgeAnchor.add(hinge);
 
-    sceneRef.current = { sideGeometry, sideOutlineGeo, topHinge, bottomHinge, originalVertices, width, height: h };
+      sceneGroup.add(edgeAnchor);
+      return hinge; 
+    };
+
+    const frontHinge = createFoldingHinge(0, W / 2, 0); 
+    const backHinge = createFoldingHinge(0, -W / 2, Math.PI); 
+    const rightHinge = createFoldingHinge(W / 2, 0, Math.PI / 2); 
+    const leftHinge = createFoldingHinge(-W / 2, 0, -Math.PI / 2); 
+
+    sceneRef.current = { rightHinge, leftHinge, frontHinge, backHinge, foldingAngle };
     
-    updateGeometry(progress);
+    updateHinges(progress);
 
     return () => {
-      sideGeometry.dispose();
-      sideOutlineGeo.dispose();
-      capGeometry.dispose();
-      capEdgesGeo.dispose();
+      baseGeo.dispose();
+      triGeo.dispose();
     };
-  }, [r, h]);
+  }, [a, h]);
 
-  const updateGeometry = (p: number) => {
+  const updateHinges = (p: number) => {
     if (!sceneRef.current) return;
-    const { sideGeometry, sideOutlineGeo, topHinge, bottomHinge, originalVertices, width, height } = sceneRef.current;
+    const { rightHinge, leftHinge, frontHinge, backHinge, foldingAngle } = sceneRef.current;
     
-    // --- Deform Side Surface ---
-    const positions = sideGeometry.attributes.position.array as Float32Array;
-    for (let i = 0; i < positions.length; i += 3) {
-      const origX = originalVertices[i];
-      const origY = originalVertices[i + 1];
-      const { x, y, z } = getBentPosition(origX, origY, p, width);
-      positions[i] = x;
-      positions[i + 1] = y;
-      positions[i + 2] = z;
-    }
-    sideGeometry.attributes.position.needsUpdate = true;
-    sideGeometry.computeVertexNormals();
+    const ease = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    const targetAngle = foldingAngle * ease;
 
-    // --- Deform Side Outline ---
-    const outPos = sideOutlineGeo.attributes.position.array as Float32Array;
-    let idx = 0;
-    const outlinePoints = 128;
-    
-    for (let i = 0; i < outlinePoints; i++) {
-      const t = i / (outlinePoints - 1);
-      const origX = -width / 2 + t * width;
-      const { x, y, z } = getBentPosition(origX, height / 2, p, width);
-      outPos[idx++] = x; outPos[idx++] = y; outPos[idx++] = z;
-    }
-    for (let i = 0; i < outlinePoints; i++) {
-      const t = i / (outlinePoints - 1);
-      const origX = width / 2 - t * width;
-      const { x, y, z } = getBentPosition(origX, -height / 2, p, width);
-      outPos[idx++] = x; outPos[idx++] = y; outPos[idx++] = z;
-    }
-    sideOutlineGeo.attributes.position.needsUpdate = true;
-
-    // --- Animate Hinges ---
-    topHinge.rotation.x = -(Math.PI / 2) * p;
-    bottomHinge.rotation.x = (Math.PI / 2) * p;
+    if (rightHinge) rightHinge.rotation.x = targetAngle;
+    if (leftHinge) leftHinge.rotation.x = targetAngle;
+    if (frontHinge) frontHinge.rotation.x = targetAngle;
+    if (backHinge) backHinge.rotation.x = targetAngle;
   };
 
-  useEffect(() => { updateGeometry(progress); }, [progress, r, h]);
+  useEffect(() => { updateHinges(progress); }, [progress, a, h]);
 
-  const areaValue = (2 * Math.PI * Math.pow(r, 2) + 2 * Math.PI * r * h).toFixed(1);
-  const rectPerimeter = (2 * (2 * Math.PI * r) + 2 * h).toFixed(1);
+  const L = Math.sqrt(Math.pow(h, 2) + Math.pow(a / 2, 2));
+  const areaValue = (Math.pow(a, 2) + 2 * a * L).toFixed(1);
+  const perimeterValue = (8 * a).toFixed(1); // Standard star net
 
   return (
     <div className="w-full h-full flex flex-col relative bg-[#0B0C10] overflow-hidden">
-      <GameHeader title="3D Silindir Açılımı" subtitle="Geometrik Tasarım: Lityum Bataryası" />
+      <GameHeader title="3D Kare Dik Piramit" subtitle="Geometrik Gizemler: Kuantum Çekirdeği" />
       
       <div ref={mountRef} className="absolute inset-0 z-10" style={{ top: '80px' }} />
       
@@ -269,7 +235,7 @@ export default function CylinderApp() {
         {/* Slider Section */}
         <div className="mb-8">
           <label className="text-sm font-bold text-white tracking-widest uppercase flex items-center gap-2 mb-3">
-            <span className="w-3 h-3 rounded-full bg-[#00E5FF] animate-pulse"></span>
+            <span className="w-3 h-3 rounded-full bg-[#B388FF] animate-pulse"></span>
             Simülasyon Barı
           </label>
           
@@ -278,15 +244,15 @@ export default function CylinderApp() {
             min="0" max="1" step="0.01" 
             value={progress} 
             onChange={(e) => setProgress(parseFloat(e.target.value))} 
-            className="w-full accent-[#00E5FF] mb-3 rounded-full cursor-pointer h-2 outline-none appearance-none"
+            className="w-full accent-[#B388FF] mb-3 rounded-full cursor-pointer h-2 outline-none appearance-none"
             style={{
-              background: `linear-gradient(to right, #00E5FF ${progress * 100}%, rgba(255,255,255,0.1) ${progress * 100}%)`
+              background: `linear-gradient(to right, #B388FF ${progress * 100}%, rgba(255,255,255,0.1) ${progress * 100}%)`
             }}
           />
           
           <div className="flex justify-between w-full text-[11px] font-bold text-gray-500 uppercase px-1">
-            <span className={`transition-colors duration-300 ${progress < 0.1 ? "text-[#FF6B00]" : ""}`}>Açık (Ağ)</span>
-            <span className={`transition-colors duration-300 ${progress > 0.9 ? "text-[#00E5FF]" : ""}`}>Kapalı (Silindir)</span>
+            <span className={`transition-colors duration-300 ${progress < 0.1 ? "text-[#00E5FF]" : ""}`}>Açık (Ağ)</span>
+            <span className={`transition-colors duration-300 ${progress > 0.9 ? "text-[#B388FF]" : ""}`}>Kapalı (Zirve)</span>
           </div>
         </div>
 
@@ -295,66 +261,66 @@ export default function CylinderApp() {
         {/* Math Section */}
         <div className="flex-1 flex flex-col gap-6">
           <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-            <h3 className="text-xs font-bold text-[#FF6B00] tracking-wider uppercase mb-3 text-center">Silindiri Tanıyalım</h3>
+            <h3 className="text-xs font-bold text-[#00E5FF] tracking-wider uppercase mb-3 text-center">Piramidi Tanıyalım</h3>
             <p className="text-[12px] font-medium text-gray-300 leading-relaxed mb-4">
-              Silindir açıldığında yan yüzeyi bir <strong className="text-[#00E5FF]">dikdörtgene</strong>, taban ve tavan kısımları ise <strong className="text-[#FF6B00]">2 adet eş daireye</strong> dönüşür.
+              Kare dik piramit, <strong className="text-[#00E5FF]">1 kare taban</strong> ve bu tabanın kenarlarından yükselerek tek bir zirvede birleşen <strong className="text-[#B388FF]">4 eş ikizkenar üçgenden</strong> oluşur.
             </p>
             <div className="bg-black/30 rounded-lg p-3 text-[12px] text-gray-300 font-mono tracking-tight leading-tight flex flex-col gap-3">
                
                <div className="flex justify-between border-b border-white/5 pb-2 items-center">
-                 <span className="text-gray-400">Yarıçap (<InlineMath math="r"/>)</span> 
+                 <span className="text-gray-400">Kare Ayrıtı (<InlineMath math="a"/>)</span> 
                  <div className="flex items-center gap-1">
-                   <button onClick={() => setR(Math.max(1, r - 0.5))} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-md flex items-center justify-center text-white font-bold transition-all">-</button>
-                   <span className="text-[#FF6B00] w-8 text-center text-sm font-bold">{r.toFixed(1)}</span>
-                   <button onClick={() => setR(Math.min(5, r + 0.5))} className="w-5 h-5 bg-[#FF6B00]/20 hover:bg-[#FF6B00]/40 rounded-md flex items-center justify-center text-[#FF6B00] font-bold transition-all">+</button>
+                   <button onClick={() => setA(Math.max(2, a - 1))} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-md flex items-center justify-center text-white font-bold transition-all">-</button>
+                   <span className="text-[#00E5FF] w-8 text-center text-sm font-bold">{a}</span>
+                   <button onClick={() => setA(Math.min(8, a + 1))} className="w-5 h-5 bg-[#00E5FF]/20 hover:bg-[#00E5FF]/40 rounded-md flex items-center justify-center text-[#00E5FF] font-bold transition-all">+</button>
                  </div>
                </div>
                
                <div className="flex justify-between items-center pt-1">
-                 <span className="text-gray-400">Yükseklik (<InlineMath math="h"/>)</span> 
+                 <span className="text-gray-400">Piramit Yüksekliği (<InlineMath math="h"/>)</span> 
                  <div className="flex items-center gap-1">
                    <button onClick={() => setH(Math.max(2, h - 1))} className="w-5 h-5 bg-white/10 hover:bg-white/20 rounded-md flex items-center justify-center text-white font-bold transition-all">-</button>
-                   <span className="text-[#00E5FF] w-8 text-center text-sm font-bold">{h}</span>
-                   <button onClick={() => setH(Math.min(12, h + 1))} className="w-5 h-5 bg-[#00E5FF]/20 hover:bg-[#00E5FF]/40 rounded-md flex items-center justify-center text-[#00E5FF] font-bold transition-all">+</button>
+                   <span className="text-[#B388FF] w-8 text-center text-sm font-bold">{h}</span>
+                   <button onClick={() => setH(Math.min(10, h + 1))} className="w-5 h-5 bg-[#B388FF]/20 hover:bg-[#B388FF]/40 rounded-md flex items-center justify-center text-[#B388FF] font-bold transition-all">+</button>
                  </div>
                </div>
                
                <div className="flex justify-between border-t border-white/5 mt-1 pt-2 items-center">
-                 <span className="text-gray-400">Genişlik (<InlineMath math="2\pi r"/>)</span> 
-                 <span className="text-[#00E5FF] text-xs pr-2">{(2 * Math.PI * r).toFixed(1)} br</span>
+                 <span className="text-gray-400">Üçgen Yüksekliği (<InlineMath math="L"/>)</span> 
+                 <span className="text-gray-400 text-xs pr-2">{L.toFixed(1)} br</span>
                </div>
                
             </div>
           </div>
 
-          <div className="bg-[#00E5FF]/10 border border-[#00E5FF]/20 rounded-xl p-4 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-16 h-16 bg-[#00E5FF]/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-            <h3 className="text-[12px] font-bold text-[#00E5FF] tracking-wider uppercase mb-2">Yüzey Alanı</h3>
+          <div className="bg-[#B388FF]/10 border border-[#B388FF]/20 rounded-xl p-4 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-16 h-16 bg-[#B388FF]/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+            <h3 className="text-[12px] font-bold text-[#B388FF] tracking-wider uppercase mb-2">Yüzey Alanı</h3>
             <p className="text-[11px] text-gray-400 mb-3 leading-relaxed">
-              İki kapak (daireler) ve bir sarıcı etiket (dikdörtgen/yan alan) toplamı!
+              Zemindeki kare evrağını ve yanlarındaki 4 üçgensel yelkeni toplarız!
             </p>
             <div className="text-sm text-white mb-2 overflow-x-auto overflow-y-hidden text-center scale-95 origin-center font-sans">
-              <BlockMath math="\text{Alan} = 2 \cdot A_{\text{daire}} + A_{\text{yan}}" />
-              <BlockMath math={`\\text{Alan} = 2 \\cdot (\\pi \\cdot r^2) + (2\\pi r \\cdot h)`} />
-              <BlockMath math={`= 2 \\cdot (\\pi \\cdot ${r}^2) + (${(2 * Math.PI * r).toFixed(1)} \\cdot ${h})`} />
+              <BlockMath math="\text{Alan} = A_{\text{kare}} + 4 \cdot A_{\text{üçgen}}" />
+              <BlockMath math={`\\text{Alan} = a^2 + 4 \\cdot \\left(\\frac{a \\cdot L}{2}\\right)`} />
+              <BlockMath math={`\\text{Alan} = ${a}^2 + 2 \\cdot (${a} \\cdot ${L.toFixed(1)})`} />
             </div>
             <div className="text-3xl font-bold text-white tracking-widest text-center mt-2 flex items-baseline justify-center gap-1">
               {areaValue} <span className="text-[12px] text-gray-400 font-medium">br²</span>
             </div>
           </div>
 
-          <div className="bg-[#FF6B00]/10 border border-[#FF6B00]/20 rounded-xl p-4 relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-16 h-16 bg-[#FF6B00]/10 rounded-br-full -ml-4 -mt-4 transition-transform group-hover:scale-110"></div>
-            <h3 className="text-[12px] font-bold text-[#FF6B00] tracking-wider uppercase mb-2">Yan Yüzey Çevresi</h3>
+          <div className="bg-[#00E5FF]/10 border border-[#00E5FF]/20 rounded-xl p-4 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-16 h-16 bg-[#00E5FF]/10 rounded-br-full -ml-4 -mt-4 transition-transform group-hover:scale-110"></div>
+            <h3 className="text-[12px] font-bold text-[#00E5FF] tracking-wider uppercase mb-2">Ağ Çevresi (Yıldız Modeli)</h3>
             <p className="text-[11px] text-gray-400 mb-3 leading-relaxed">
-              Silindiri sardığımız etiketi açarsak elde edeceğimiz dikdörtgenin çevresi.
+              4 yapraklı yonca (veya yıldız) gibi açılan piramidin dış hatlarının toplamı.
             </p>
             <div className="text-sm text-white mb-2 overflow-x-auto overflow-y-hidden text-center scale-95 origin-center font-sans">
-              <BlockMath math="\text{Çevre} = 2 \cdot (2\\pi r) + 2 \cdot h" />
-              <BlockMath math={`= 2 \\cdot (${(2 * Math.PI * r).toFixed(1)}) + 2 \\cdot ${h}`} />
+              <BlockMath math="\text{Çevre} = 8 \cdot a" />
+              <BlockMath math={`\\text{Çevre} = 8 \\cdot (${a})`} />
             </div>
             <div className="text-3xl font-bold text-white tracking-widest text-center mt-2 flex items-baseline justify-center gap-1">
-              {rectPerimeter} <span className="text-[12px] text-gray-400 font-medium">br</span>
+              {perimeterValue} <span className="text-[12px] text-gray-400 font-medium">br</span>
             </div>
           </div>
         </div>
@@ -373,7 +339,7 @@ export default function CylinderApp() {
               initial={{ scale: 0.8, opacity: 0, y: 50 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               transition={{ type: "spring", bounce: 0.5 }}
-              className="bg-gradient-to-b from-[#1F2833] to-[#121212] p-10 rounded-[2.5rem] max-w-md w-full border border-gray-700 text-center shadow-[0_0_100px_rgba(255,107,0,0.2)] relative overflow-hidden"
+              className="bg-gradient-to-b from-[#1F2833] to-[#121212] p-10 rounded-[2.5rem] max-w-md w-full border border-gray-700 text-center shadow-[0_0_100px_rgba(179,136,255,0.2)] relative overflow-hidden"
             >
               <button 
                 onClick={() => setShowSuccess(false)}
@@ -394,11 +360,11 @@ export default function CylinderApp() {
               </motion.div>
               
               <h2 className="text-4xl font-bold text-white mb-3 relative z-10">Harika İş!</h2>
-              <p className="text-gray-400 mb-8 text-lg relative z-10">Silindirin ağını (açınımını) başarıyla çözümledin.</p>
+              <p className="text-gray-400 mb-8 text-lg relative z-10">Kare Piramidin ağını (açınımını) başarıyla çözümledin.</p>
               
               <div className="bg-[#0B0C10]/80 rounded-2xl p-6 mb-8 text-left border border-gray-800 relative z-10">
                 <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#FF6B00]" /> Kazanılan Atom
+                  <Sparkles className="w-4 h-4 text-[#B388FF]" /> Kazanılan Atom
                 </h3>
                 <div className="space-y-4">
                   <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 }} className="flex items-center gap-4">
@@ -406,8 +372,8 @@ export default function CylinderApp() {
                       <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-white">G8.GEO.020.4</div>
-                      <div className="text-xs text-gray-400">Silindirin Açınımı ve Yüzey Alanı</div>
+                      <div className="text-sm font-bold text-white">G8.GEO.020.3</div>
+                      <div className="text-xs text-gray-400">Piramit Açınımı ve Temel Elemanları</div>
                     </div>
                   </motion.div>
                 </div>
@@ -417,7 +383,7 @@ export default function CylinderApp() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setShowSuccess(false)}
-                className="w-full py-4 bg-[#FF6B00] hover:bg-[#e66000] text-white font-bold rounded-2xl transition-all shadow-[0_0_20px_rgba(255,107,0,0.4)] relative z-10"
+                className="w-full py-4 bg-[#B388FF] hover:bg-[#9d66ff] text-[#0B0C10] font-bold rounded-2xl transition-all shadow-[0_0_20px_rgba(179,136,255,0.4)] relative z-10"
               >
                 İncelemeye Devam Et
               </motion.button>

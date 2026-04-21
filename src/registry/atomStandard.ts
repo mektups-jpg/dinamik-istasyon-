@@ -1,5 +1,5 @@
 export type GradeLevel = 'G1' | 'G2' | 'G3' | 'G4' | 'G5' | 'G6' | 'G7' | 'G8' | 'G9' | 'G10' | 'G11' | 'G12';
-export type Domain = 'NUM' | 'GEO' | 'ALG' | 'DAT' | 'CAL';
+export type Domain = 'NUM' | 'GEO' | 'ALG' | 'DAT' | 'CAL' | 'TRG';
 
 export interface MicroAtom {
   /** Örn: "G1.NUM.001.1" */
@@ -109,6 +109,16 @@ export const universalAtoms: MacroAtom[] = [
       { id: "G3.NUM.020.1", title: "Bir bütünün yarım ve çeyreklerini modellerle gösterir.", bloomLevel: 2 },
       { id: "G3.NUM.020.2", title: "Pay ve payda kavramlarını açıklar.", bloomLevel: 1 },
       { id: "G3.NUM.020.3", title: "Birim kesirleri (1/3, 1/4) büyüklüklerine göre sıralar.", bloomLevel: 4 }
+    ]
+  },
+  {
+    id: "G11.TRG.010",
+    title: "Birim Çember ve Trigonometrik Fonksiyonlar",
+    domain: "TRG",
+    grade: "G11",
+    microAtoms: [
+      { id: "G11.TRG.010.1", title: "Birim çember üzerinde hareket eden bir noktanın koordinatlarını sinüs ve kosinüs olarak tanımlar.", bloomLevel: 2 },
+      { id: "G11.TRG.010.2", title: "Düzgün dairesel hareketin harmonik sarkaç (sinüs dalgası) ile ilişkisini kavrar.", bloomLevel: 4 }
     ]
   }
   // ... 85 Makro Atom ve 500 Mikro Atom bu standartta JSON olarak tutulur.

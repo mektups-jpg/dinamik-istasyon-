@@ -1,312 +1,311 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { modules } from '../registry/moduleRegistry';
-import { 
-  Play, LayoutGrid, Trophy, Flame, Star, 
-  BookOpen, Compass, BarChart2, Settings, 
-  ChevronRight, Lock, CheckCircle2
-} from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { modules, ModuleMeta } from '../registry/moduleRegistry';
 import { useGameStore } from '../store/useGameStore';
 import { useAtomStore } from '../store/useAtomStore';
+import { Battery, Play, Lock, ChevronLeft, Hexagon, Fingerprint, X } from 'lucide-react';
+import Bot from '../components/characters/Bot';
 
 export default function Dashboard() {
   const { score } = useGameStore();
-  const [activeTab, setActiveTab] = useState('all'); // all, primary, middle, high
+  const { masteredModules } = useAtomStore();
+  const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
 
-  // K-12 Kategorizasyonu (Örnekleme)
-  const filteredModules = modules.filter(mod => {
-    if (activeTab === 'all') return true;
-    if (activeTab === 'primary' && mod.gradeRange === 'İlkokul') return true;
-    if (activeTab === 'middle' && mod.gradeRange === 'Ortaokul') return true;
-    if (activeTab === 'high' && mod.gradeRange === 'Lise') return true;
-    return false;
-  });
+  const getModulesForGrade = (grade: number): ModuleMeta[] => {
+    switch(grade) {
+      case 1: return modules.filter(m => m.id === 'number-line' || m.id === 'number-line-sub');
+      case 2: return modules.filter(m => m.id === 'base-10-factory');
+      case 3: return [];
+      case 4: return [];
+      case 5: return modules.filter(m => m.id === 'magnitude-core' || m.id === 'equation-lab');
+      case 6: return modules.filter(m => m.id === 'absolute-value' || m.id === 'gear-ratio');
+      case 7: return modules.filter(m => m.id === 'identity-blocks' || m.id === 'pythagoras');
+      case 8: return modules.filter(m => m.gradeRange === 'Ortaokul' && !['absolute-value', 'gear-ratio', 'identity-blocks', 'pythagoras'].includes(m.id));
+      case 9: return [];
+      case 10: return [];
+      case 11: return modules.filter(m => m.id === 'trig-pendulum' || m.id === 'unit-circle' || m.id === 'slope-rollercoaster');
+      case 12: return modules.filter(m => m.id === 'galton-board' || m.id === 'laser-defense');
+      default: return [];
+    }
+  };
+
+  const getBotMessage = () => {
+    if (selectedGrade === null) return "Matnastik Laboratuvarı'na Hoş Geldin! Giriş yapmak istediğin laboratuvar kapısını seç.";
+    const count = getModulesForGrade(selectedGrade).length;
+    if (count === 0) return `${selectedGrade}. Sınıf reaktörleri şu an inşa ediliyor komutanım! Lütfen başka bir kapı dene.`;
+    return `${selectedGrade}. Sınıf laboratuvarlarında seni ${count} aktif görev bekliyor. Tıkla ve başlat!`;
+  };
 
   return (
-    <div className="flex h-screen bg-[#0B0C10] text-white font-sans overflow-hidden">
-      
-      {/* SOL SİDEBAR (Navigation) */}
-      <aside className="w-64 bg-[#121212] border-r border-gray-800 flex flex-col hidden md:flex">
-        <div className="p-6 flex items-center gap-3 border-b border-gray-800">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#00E5FF] to-[#B388FF] rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(0,229,255,0.3)]">
-            <LayoutGrid className="w-6 h-6 text-[#0B0C10]" />
+    <div className="min-h-screen w-full bg-[#0B0C10] text-white font-sans overflow-x-hidden relative selection:bg-[#00E5FF] selection:text-[#0B0C10]">
+      {/* Arka Plan Efektleri */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#00E5FF]/5 blur-[150px]"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#B388FF]/5 blur-[150px]"></div>
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]"></div>
+      </div>
+
+      {/* HEADER (Navbar) */}
+      <header className="relative z-20 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto flex-wrap gap-4">
+        <div className="flex items-center gap-4">
+          <div className="relative flex items-center justify-center w-12 h-12">
+            <Hexagon className="w-12 h-12 text-[#00E5FF] absolute animate-[spin_10s_linear_infinite]" strokeWidth={1} />
+            <Fingerprint className="w-6 h-6 text-white relative z-10" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-tight text-white leading-tight">Matnastik</h1>
-            <p className="text-[10px] text-[#00E5FF] font-semibold tracking-wider uppercase">Laboratuvarı</p>
+            <h1 className="text-2xl font-black tracking-tighter text-white">
+              MATNASTİK<span className="text-[#00E5FF]">.</span>
+            </h1>
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] leading-none mt-1">Laboratuvarı</p>
           </div>
         </div>
 
-        <div className="p-4 flex-1 overflow-y-auto space-y-6">
-          {/* Ana Menü */}
-          <div>
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Menü</p>
-            <nav className="space-y-1">
-              <NavItem icon={<Compass />} label="Keşfet" active />
-              <NavItem icon={<BookOpen />} label="Öğrenme Yolu" />
-              <NavItem icon={<Trophy />} label="Liderlik Tablosu" />
-              <NavItem icon={<BarChart2 />} label="İstatistikler" />
-            </nav>
-          </div>
+        <div className="flex gap-4 items-center">
+          {/* TOTAL PROGRESS */}
+          {(() => {
+            const TOTAL_MODULES = 73;
+            // Geliştirme ilerlemesi: Kayıtlı olan modül sayısı
+            const completedCount = modules.length;
+            const progressPercent = Math.min(100, Math.round((completedCount / TOTAL_MODULES) * 100));
 
-          {/* Sınıf Seviyeleri */}
-          <div>
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Seviyeler</p>
-            <nav className="space-y-1">
-              <FilterItem 
-                label="Tüm Modüller" 
-                active={activeTab === 'all'} 
-                onClick={() => setActiveTab('all')} 
-              />
-              <FilterItem 
-                label="İlkokul (1-4)" 
-                active={activeTab === 'primary'} 
-                onClick={() => setActiveTab('primary')} 
-                color="text-green-400"
-              />
-              <FilterItem 
-                label="Ortaokul (5-8)" 
-                active={activeTab === 'middle'} 
-                onClick={() => setActiveTab('middle')} 
-                color="text-yellow-400"
-              />
-              <FilterItem 
-                label="Lise (9-12)" 
-                active={activeTab === 'high'} 
-                onClick={() => setActiveTab('high')} 
-                color="text-purple-400"
-              />
-            </nav>
-          </div>
-        </div>
-
-        <div className="p-4 border-t border-gray-800">
-          <NavItem icon={<Settings />} label="Ayarlar" />
-        </div>
-      </aside>
-
-      {/* ANA İÇERİK ALANI */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
-        
-        {/* Üst Bar (Top Bar) - Oyunlaştırma Metrikleri */}
-        <header className="h-20 border-b border-gray-800 bg-[#0B0C10]/80 backdrop-blur-md flex items-center justify-between px-8 z-10">
-          <h2 className="text-xl font-bold text-white">Hoş Geldin, Öğrenci 👋</h2>
-          
-          <div className="flex items-center gap-6">
-            {/* Streak (Ateş) */}
-            <div className="flex items-center gap-2 bg-[#1F2833] px-4 py-2 rounded-full border border-gray-800">
-              <Flame className="w-5 h-5 text-[#FF6B00]" />
-              <span className="font-bold text-white">3 Gün</span>
-            </div>
-            
-            {/* Global Puan */}
-            <div className="flex items-center gap-2 bg-gradient-to-r from-[#00E5FF]/10 to-[#B388FF]/10 px-4 py-2 rounded-full border border-[#00E5FF]/30 shadow-[0_0_10px_rgba(0,229,255,0.1)]">
-              <Star className="w-5 h-5 text-[#00E5FF] fill-[#00E5FF]" />
-              <span className="font-bold text-[#00E5FF]">{score} XP</span>
-            </div>
-
-            {/* Profil Avatarı */}
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 border-2 border-[#1F2833] cursor-pointer" />
-          </div>
-        </header>
-
-        {/* Scrollable İçerik */}
-        <div className="flex-1 overflow-y-auto p-8 pb-24">
-          
-          {/* Hero Section: Sıradaki Görev */}
-          <section className="mb-12">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#1F2833] to-[#121212] border border-gray-800 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8 group">
-              {/* Arka plan efekti */}
-              <div className="absolute -right-20 -top-20 w-64 h-64 bg-[#00E5FF] opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity duration-500"></div>
-              
-              <div className="relative z-10 max-w-xl">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="px-3 py-1 bg-[#00E5FF]/20 text-[#00E5FF] text-xs font-bold rounded-full uppercase tracking-wider">
-                    Sıradaki Görev
-                  </span>
-                  <span className="text-gray-400 text-sm">İlkokul 1. Sınıf • Sayılar</span>
+            return (
+              <div className="flex flex-col items-end mr-2 md:mr-4">
+                <div className="flex items-end gap-2 mb-1.5">
+                  <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest hidden sm:inline">Geliştirme Süreci</span>
+                  <span className="text-sm font-black text-[#00E5FF] leading-none">%{progressPercent}</span>
                 </div>
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-                  Sayı Doğrusu Zıplaması
-                </h3>
-                <p className="text-gray-400 mb-8 text-lg">
-                  Kurbağayı sayı doğrusunda zıplatarak toplama işleminin sırlarını keşfet.
+                <div className="w-24 sm:w-48 h-1.5 bg-gray-800 rounded-full overflow-hidden mb-1">
+                  <div className="h-full bg-gradient-to-r from-[#00E5FF] to-[#B388FF] rounded-full transition-all duration-1000" style={{ width: `${progressPercent}%` }}></div>
+                </div>
+                <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
+                  {completedCount} / {TOTAL_MODULES} MODÜL ÜRETİLDİ
+                </span>
+              </div>
+            );
+          })()}
+
+          {/* XP BATTERY */}
+          <div className="flex items-center gap-3 bg-[#121212]/80 backdrop-blur-md px-4 sm:px-5 py-2.5 rounded-2xl border border-gray-800 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+            <Battery className="w-6 h-6 text-[#00E5FF] hidden sm:block" />
+            <div className="flex flex-col">
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider leading-none">Enerji</span>
+              <span className="text-lg font-black text-white leading-none mt-1">{score} <span className="text-[#00E5FF] text-sm">XP</span></span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ANA İÇERİK MİMARİSİ */}
+      <main className="relative z-10 max-w-7xl mx-auto px-8 pt-8 pb-32">
+        <AnimatePresence mode="wait">
+          {selectedGrade === null ? (
+            <motion.div 
+              key="doors"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+              transition={{ duration: 0.4 }}
+            >
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Görev <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E5FF] to-[#B388FF]">Sektörünü</span> Seç</h2>
+                <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                  Aşağıdaki cam kapılardan birine tıklayarak MEB standartlarındaki interaktif laboratuvarlara giriş yap.
                 </p>
-                <Link 
-                  to="/embed/numbers/number-line" 
-                  className="inline-flex items-center justify-center gap-2 bg-[#00E5FF] hover:bg-[#66FCF1] text-[#0B0C10] px-8 py-4 rounded-xl font-bold text-lg transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(0,229,255,0.4)]"
-                >
-                  <Play className="w-5 h-5 fill-current" />
-                  Laboratuvara Gir
-                </Link>
               </div>
 
-              {/* Hero Görseli (Placeholder) */}
-              <div className="relative z-10 w-full md:w-auto flex-shrink-0">
-                <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-dashed border-gray-700 flex items-center justify-center relative animate-[spin_60s_linear_infinite]">
-                  <div className="absolute w-full h-[2px] bg-gray-700"></div>
-                  <div className="absolute h-full w-[2px] bg-gray-700"></div>
-                  <div className="w-4 h-4 rounded-full bg-[#00E5FF] absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-[0_0_15px_#00E5FF]"></div>
+              {/* 12 CAM KAPI */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-6">
+                {Array.from({ length: 12 }, (_, i) => i + 1).map(grade => (
+                  <GradeDoor 
+                    key={grade} 
+                    grade={grade} 
+                    moduleCount={getModulesForGrade(grade).length}
+                    onClick={() => setSelectedGrade(grade)} 
+                  />
+                ))}
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="modules"
+              initial={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.4 }}
+            >
+              <button 
+                onClick={() => setSelectedGrade(null)}
+                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-10 group"
+              >
+                <div className="bg-[#121212] p-2 rounded-full border border-gray-800 group-hover:border-gray-500 transition-colors">
+                  <ChevronLeft className="w-5 h-5" />
+                </div>
+                <span className="font-bold tracking-wider uppercase text-sm">Ana Sektöre Dön</span>
+              </button>
+
+              <div className="flex items-end justify-between mb-10 border-b border-gray-800 pb-6">
+                <div>
+                  <h2 className="text-4xl font-black text-white">{selectedGrade}. Sınıf <span className="text-[#00E5FF]">Laboratuvarı</span></h2>
+                  <p className="text-gray-400 mt-2 text-lg">Bu laboratuvarda görevler seni bekliyor.</p>
                 </div>
               </div>
-            </div>
-          </section>
 
-          {/* Modül Grid (Bento Box Layout) */}
-          <section>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold text-white">Eğitim Modülleri</h3>
-              <div className="text-sm text-gray-400">{filteredModules.length} Modül Bulundu</div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredModules.map((mod) => (
-                <ModuleCard key={mod.id} mod={mod} />
-              ))}
-
-              {/* Gelecek Modüller İçin Placeholder (Kilitli) */}
-              {activeTab === 'primary' && (
-                <LockedModuleCard title="Kesirler Laboratuvarı" category="İlkokul" />
+              {getModulesForGrade(selectedGrade).length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 bg-[#121212]/50 rounded-3xl border border-dashed border-gray-800">
+                  <Lock className="w-16 h-16 text-gray-700 mb-6" />
+                  <h3 className="text-2xl font-bold text-gray-500 mb-2">Bu Tesis İnşa Halinde 🚧</h3>
+                  <p className="text-gray-600 max-w-md text-center">Geliştirici ekibimiz kuantum hesaplamalarını yapıyor. Pek yakında burada yepyeni modüller olacak!</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {getModulesForGrade(selectedGrade).map(mod => (
+                    <ModuleCard key={mod.id} mod={mod} />
+                  ))}
+                </div>
               )}
-              {activeTab === 'middle' && (
-                <LockedModuleCard title="Pisagor Su Simülasyonu" category="Ortaokul" />
-              )}
-              {activeTab === 'high' && (
-                <LockedModuleCard title="İkinci Dereceden Denklemler" category="Lise" />
-              )}
-            </div>
-          </section>
-
-        </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
+
+      {/* ASTRO-BOT (Rehber) */}
+      <AstroBot message={getBotMessage()} />
     </div>
   );
 }
 
-// --- YARDIMCI BİLEŞENLER ---
 
-function NavItem({ icon, label, active = false }: { icon: React.ReactNode, label: string, active?: boolean }) {
-  return (
-    <button className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
-      active 
-        ? 'bg-[#1F2833] text-white font-medium' 
-        : 'text-gray-400 hover:bg-[#1F2833]/50 hover:text-gray-200'
-    }`}>
-      {React.cloneElement(icon as React.ReactElement<any>, { className: `w-5 h-5 ${active ? 'text-[#00E5FF]' : ''}` })}
-      <span className="text-sm">{label}</span>
-    </button>
-  );
-}
+// --- ALT BİLEŞENLER ---
 
-function FilterItem({ label, active, onClick, color = "text-gray-400" }: { label: string, active: boolean, onClick: () => void, color?: string }) {
+function GradeDoor({ grade, moduleCount, onClick }: { grade: number, moduleCount: number, onClick: () => void }) {
+  const isLocked = moduleCount === 0;
+
   return (
-    <button 
+    <motion.button 
+      whileHover={{ y: -5, boxShadow: isLocked ? 'none' : '0 10px 30px rgba(0,229,255,0.15)' }}
+      whileTap={{ scale: 0.96 }}
       onClick={onClick}
-      className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${
-        active 
-          ? 'bg-[#1F2833] text-white font-medium' 
-          : 'text-gray-400 hover:bg-[#1F2833]/50 hover:text-gray-200'
+      className={`relative aspect-[3/4] w-full rounded-3xl flex flex-col items-center justify-between p-6 overflow-hidden border transition-colors ${
+        isLocked 
+          ? 'bg-[#121212]/40 border-gray-900/50 grayscale opacity-70 cursor-not-allowed hidden-or-locked' 
+          : 'bg-[#121212]/80 backdrop-blur-xl border-gray-800 hover:border-[#00E5FF]/40 cursor-pointer'
       }`}
     >
-      <span className="text-sm">{label}</span>
-      {active && <ChevronRight className={`w-4 h-4 ${color}`} />}
-    </button>
+      {/* Parlama Efekti */}
+      {!isLocked && (
+        <div className="absolute -inset-2 bg-gradient-to-t from-[#00E5FF]/20 to-transparent opacity-0 hover:opacity-100 blur-xl transition-opacity duration-500"></div>
+      )}
+
+      {/* Sayaç veya Kilit */}
+      <div className="w-full flex justify-end relative z-10">
+        {isLocked ? (
+          <Lock className="w-5 h-5 text-gray-700" />
+        ) : (
+          <div className="bg-[#1F2833] border border-gray-700 text-[#00E5FF] text-[10px] font-bold px-2.5 py-1 rounded-full">
+            {moduleCount} GÖREV
+          </div>
+        )}
+      </div>
+
+      {/* Sınıf Numarası */}
+      <div className={`text-7xl font-black tracking-tighter relative z-10 ${isLocked ? 'text-gray-800' : 'text-white'}`}>
+        {grade}
+      </div>
+
+      {/* Etiket */}
+      <div className="w-full text-center relative z-10">
+        <p className={`text-xs font-bold uppercase tracking-widest ${isLocked ? 'text-gray-700' : 'text-gray-400'}`}>Sınıf</p>
+      </div>
+
+      {/* Alt Vurgu Çizgisi */}
+      {!isLocked && (
+        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00E5FF]/50 to-transparent"></div>
+      )}
+    </motion.button>
   );
 }
 
-function ModuleCard({ mod }: { mod: any }) {
+
+function ModuleCard({ mod }: { mod: ModuleMeta }) {
   const { isMastered } = useAtomStore();
-  
-  // Basit bir kural: Eğer modülün ana atomlarından biri bile tamamlandıysa %100 yapalım (şimdilik)
-  const isCompleted = 
-    mod.id === 'algebraic-dimensions' ? isMastered('G7.ALG.020.1') :
-    mod.id === 'absolute-value' ? isMastered('G6.NUM.020.1') :
-    mod.id === 'coord-terminal' ? isMastered('G8.GEO.010.1') :
-    mod.id === 'gear-ratio' ? isMastered('G6.ALG.010.1') :
-    mod.id === 'number-line' ? isMastered('G1.NUM.001.1') : 
-    mod.id === 'number-line-sub' ? isMastered('G1.NUM.001.2') : 
-    mod.id === 'base-10-factory' ? isMastered('G1.NUM.003.1') : 
-    mod.id === 'unit-circle'; 
+  const completed = isMastered(`fake-id-${mod.id}`); // Geliştirilecek
   
   return (
     <Link 
       to={mod.path} 
-      className="group flex flex-col bg-[#121212] rounded-2xl border border-gray-800 overflow-hidden hover:border-[#00E5FF]/50 transition-all hover:-translate-y-1 hover:shadow-[0_10px_30px_-10px_rgba(0,229,255,0.15)]"
+      className="group relative flex flex-col bg-[#121212]/90 backdrop-blur-md rounded-3xl border border-gray-800 overflow-hidden hover:border-[#00E5FF]/40 transition-all duration-300"
     >
-      {/* Thumbnail Area */}
-      <div className="h-40 relative bg-[#1F2833] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#00E5FF]/10 to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <LayoutGrid className="w-12 h-12 text-gray-700 group-hover:text-[#00E5FF]/50 transition-colors duration-500 group-hover:scale-110" />
-        </div>
-        
-        {/* Status Badge */}
-        <div className="absolute top-4 right-4">
-          {isCompleted ? (
-            <div className="bg-green-500/20 text-green-400 p-1.5 rounded-full backdrop-blur-md border border-green-500/30">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          ) : (
-            <div className="bg-black/40 text-white text-xs font-bold px-3 py-1 rounded-full backdrop-blur-md border border-white/10">
-              Başla
-            </div>
-          )}
-        </div>
-      </div>
+      <div className="absolute top-0 right-0 w-32 h-32 bg-[#00E5FF]/5 blur-3xl group-hover:bg-[#00E5FF]/10 transition-colors"></div>
       
-      {/* Content Area */}
-      <div className="p-6 flex flex-col flex-1">
-        <div className="flex justify-between items-start mb-3">
-          <span className="text-xs font-bold text-[#00E5FF] uppercase tracking-wider">
+      <div className="p-8 pb-6 flex-1 relative z-10">
+        <div className="flex justify-between items-start mb-6">
+          <div className="bg-[#1F2833] border border-gray-700/50 p-3 rounded-2xl">
+            <Play className="w-6 h-6 text-[#00E5FF] group-hover:scale-110 transition-transform" fill="currentColor" />
+          </div>
+          <span className="text-[10px] font-bold tracking-widest uppercase bg-[#00E5FF]/10 text-[#00E5FF] px-3 py-1.5 rounded-full border border-[#00E5FF]/20">
             {mod.category}
           </span>
-          <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${
-            mod.difficulty === 'Kolay' ? 'bg-green-500/10 text-green-400' :
-            mod.difficulty === 'Orta' ? 'bg-yellow-500/10 text-yellow-400' :
-            'bg-red-500/10 text-red-400'
-          }`}>
-            {mod.difficulty}
-          </span>
         </div>
         
-        <h4 className="text-lg font-bold text-white mb-2 group-hover:text-[#00E5FF] transition-colors">{mod.title}</h4>
-        <p className="text-sm text-gray-400 line-clamp-2 mb-6 flex-1">{mod.description}</p>
-        
-        {/* Progress Bar (Örnek) */}
-        <div className="mt-auto">
-          <div className="flex justify-between text-xs text-gray-500 mb-1.5 font-medium">
-            <span>İlerleme</span>
-            <span>{isCompleted ? '100%' : '0%'}</span>
+        <h4 className="text-xl font-bold text-white mb-3 leading-tight">{mod.title}</h4>
+        <p className="text-sm text-gray-400 line-clamp-3">{mod.description}</p>
+      </div>
+      
+      <div className="p-8 pt-0 relative z-10">
+        <div className="flex items-center gap-2">
+          <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+            <div className={`h-full bg-gradient-to-r from-[#00E5FF] to-[#B388FF] rounded-full transition-all duration-1000 ${completed ? 'w-full' : 'w-0 group-hover:w-[15%]'}`} />
           </div>
-          <div className="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
-            <div 
-              className={`h-full rounded-full transition-all duration-1000 ${isCompleted ? 'bg-green-500 w-full' : 'bg-[#00E5FF] w-0 group-hover:w-[10%]'}`}
-            ></div>
-          </div>
+          <span className="text-xs font-bold text-gray-500">{completed ? '100%' : '0%'}</span>
         </div>
       </div>
     </Link>
   );
 }
 
-function LockedModuleCard({ title, category }: { title: string, category: string }) {
+
+function AstroBot({ message }: { message: string }) {
+  const [isVisible, setIsVisible] = useState(true);
+
+  // Mesaj değiştiğinde balonu tekrar göster
+  React.useEffect(() => {
+    setIsVisible(true);
+  }, [message]);
+
   return (
-    <div className="flex flex-col bg-[#121212]/50 rounded-2xl border border-gray-800/50 overflow-hidden opacity-60 grayscale hover:grayscale-0 transition-all">
-      <div className="h-40 relative bg-[#1F2833]/50 flex items-center justify-center">
-        <Lock className="w-10 h-10 text-gray-600" />
+    <motion.div 
+      initial={{ x: 100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.5 }}
+      className="fixed bottom-8 right-8 flex items-end gap-4 z-50 pointer-events-none"
+    >
+      {/* Konuşma Baloncugu */}
+      <AnimatePresence mode="wait">
+        {message && isVisible && (
+          <motion.div 
+            key={message}
+            initial={{ opacity: 0, scale: 0.8, y: 10, transformOrigin: 'bottom right' }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 10 }}
+            className="bg-[#1F2833]/95 backdrop-blur-xl border border-gray-700 text-white p-4 pt-6 rounded-2xl rounded-br-sm shadow-[0_10px_30px_rgba(0,0,0,0.5)] max-w-[280px] mb-8 relative pointer-events-auto"
+          >
+            <button 
+              onClick={() => setIsVisible(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-white transition-colors p-1"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <p className="text-sm font-medium leading-relaxed pr-1">{message}</p>
+            {/* Küçük Ok */}
+            <div className="absolute -bottom-2 right-4 w-4 h-4 bg-[#1F2833] border-b border-r border-gray-700 transform rotate-45"></div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      <div className="relative pb-2">
+        <Bot state="idle" direction={-1} />
       </div>
-      <div className="p-6 flex flex-col flex-1">
-        <span className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
-          {category}
-        </span>
-        <h4 className="text-lg font-bold text-gray-400 mb-2">{title}</h4>
-        <p className="text-sm text-gray-600 mb-6">Bu modül henüz kilitli. Önceki seviyeleri tamamlayarak kilidini açabilirsin.</p>
-        <div className="mt-auto pt-4 border-t border-gray-800/50">
-          <span className="text-xs font-bold text-gray-500 flex items-center gap-2">
-            <Lock className="w-3 h-3" /> Yakında Eklenecek
-          </span>
-        </div>
-      </div>
-    </div>
+    </motion.div>
   );
 }

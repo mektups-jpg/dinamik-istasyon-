@@ -15,6 +15,7 @@ Bu dosya, projenin genel vizyonunu, tamamlanan özellikleri ve gelecekteki planl
 - [x] React Router ile sayfa yönlendirmeleri.
 - [x] Lucide React ikon entegrasyonu.
 - [x] Framer Motion ile animasyon altyapısı.
+- [x] **Müfredat Atomizasyonu:** 1. sınıftan 12. sınıfa kadar tüm MEB matematik müfredatı (555 adet izole, saf ve tekil kazanım atomuna bölünerek) `docs/MEB_ATOMLARI.md` dosyasına veritabanı olarak işlendi. Tıpkı oyun evreninin kodeks'i (SSOT - Single Source of Truth) gibi her modül gücünü buradan alacak.
 
 ### 2. Ana Ekran (Dashboard / Uzay Haritası)
 - [x] Karanlık uzay teması, hareketli yıldız arka planı.
@@ -44,11 +45,21 @@ Bu dosya, projenin genel vizyonunu, tamamlanan özellikleri ve gelecekteki planl
 - [x] Onluklar (büyük mor enerji tüpleri) ve Birlikler (küçük mavi küpler) için görsel simülasyon.
 - [x] Framer Motion kullanılarak akıcı ve animasyonlu "Makineye Enerji Yükleme" parçacıkları.
 
+### 6. Geometri Laboratuvarı (3 Boyutlu Şekiller & Açınımları)
+- [x] **Geometri Odası Tasarımı:** Three.js ve React Three Fiber altyapısı kullanılarak 6 farklı 3 boyutlu şekil için interaktif laboratuvarlar kuruldu.
+- [x] **Şekiller:** Küp, Dikdörtgenler Prizması, Eşkenar Üçgen Prizma, Kare Piramit, Silindir, Koni modülleri kodlandı.
+- [x] **Simülasyon:** Kaydırıcı (slider) ile tam açınım ve kapanım animasyonu.
+- [x] **Matematik ve Canlı Formüller:** Kenar, yükseklik, yarıçap gibi değerler (+ / - butonlarıyla) değiştirilebiliyor. Değişimler KaTeX (`react-katex`) ile profesyonel fontlarla yazılmış alan ve çevre formüllerini eşzamanlı etkiliyor.
+- [x] **İkonografi:** Ana kontrol panelindeki (Dashboard) ızgara ikonları kaldırılarak her modüle özgü Lucide ikonları (`Box`, `Cylinder`, `Tent`, vd.) eklendi. Üzerine gelindiğinde janjanlı büyüme ve dönme efektleri eklendi.
+- [x] **Atom ve Başarı Sistemi:** Katı cisim tam açık (Ağ) hale getirildiğinde, oyunlaştırma kuralına uygun olarak module has "Kazandıran Atom" bilgisi büyük janjanlı bir onay (CheckCircle) pop-up'ıyla sunuluyor (Örn: G8.GEO.020.1 Küpün Açınımı). Ana panoda kazanılan kilitli modüllerin tikleri aktifleşiyor.
+
 ---
 
 ## 🚧 Üzerinde Çalışılanlar (In Progress)
 - [x] **Mutlak Değer Lazerleri:** Sıfır noktasına olan uzaklık kavramını simetrik lazer ışınları ile kanıtlayan, aynalı ve temiz bir fizik deneyi oluşturuldu.
 - [x] **Boyutlararası Küp (Cebirsel Boyut Odası):** x, x² ve x³ kavramlarını (Uzunluk, Alan, Hacim) sürgü ile değiştirip objenin nasıl katlanarak büyüdüğünü gösteren 3D/2D/1D CSS simülatörü eklendi.
+- [x] **Trigonometrik Sarkaç:** Lise müfredatı için, Birim Çember üzerinde dönen bir açının nasıl mükemmel bir Sinüs ve Kosinüs dalgası (harmonik hareket) çizdiğini görselleştiren Canvas tabanlı osiloskop/sarkaç deneyi.
+- [x] **Pisagor Su İspatı (Revizyon):** Matter.js kaynaklı hizalama sorunları giderildi. Modül tamamen vektörel (SVG) ve pürüzsüz animasyonlu bir "Sıvı Aktarımı" deneyine dönüştürüldü. Karelerin oranları (3-4-5) geometrik olarak kusursuzlaştırıldı.
 
 ---
 

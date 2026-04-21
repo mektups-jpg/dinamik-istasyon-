@@ -1,324 +1,291 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Matter from 'matter-js';
+import React, { useState, useEffect } from 'react';
+import { Droplet, RefreshCcw } from 'lucide-react';
+import { motion, useMotionValue, animate } from 'framer-motion';
+import { useAtomStore } from '../../../store/useAtomStore';
+import { useGameStore } from '../../../store/useGameStore';
+import { GameHeader } from '../../../components/ui/GameHeader';
+import { SciFiButton } from '../../../components/ui/SciFiButton';
 
-export default function PythagorasSimulation() {
-  const mountRef = useRef<HTMLDivElement>(null);
-  const engineRef = useRef<Matter.Engine | null>(null);
-  const renderRef = useRef<Matter.Render | null>(null);
-  const [isReleased, setIsReleased] = useState(false);
-  const gatesRef = useRef<Matter.Body[]>([]);
+// Yüksek yoğunluklu sıvı damlacıkları (Su akışını / Şelale etkisini simüle etmek için)
+const DROPLETS = Array.from({ length: 120 }).map((_, i) => {
+   // Damlacıkları P1(-150, 0) ile P2(150, 0) arasındaki tüm hipotenüs yüzeyine dağıtıyoruz
+   const x = (Math.random() * 300) - 150;
+   
+   // Matematiksel olarak damlanın düşmeye başlayacağı Y ekseni (P1-P3 ve P3-P2 doğruları)
+   // İkizkenar dik üçgen olduğu için doğru denklemi mutlak değerle çok basit: y = |x| - 150
+   const mathY = Math.abs(x) - 150; 
+   
+   return {
+       id: i,
+       x: x + (Math.random() * 8 - 4), // Çizgisel doğallık için hafif sapmalar
+       startY: mathY + (Math.random() * 10 - 5),
+       delay: Math.random() * 1.5,
+       duration: 0.4 + Math.random() * 0.4,
+       size: 3 + Math.random() * 6
+   };
+});
+
+// C Karesine dolarken yukarı doğru çıkacak hava baloncukları
+const BUBBLES = Array.from({ length: 25 }).map((_, i) => ({
+    id: i,
+    x: (Math.random() * 260) - 130, 
+    delay: Math.random() * 3,
+    duration: 1 + Math.random() * 2,
+    size: 2 + Math.random() * 4
+}));
+
+export default function PythagorasApp() {
+  const { unlockAtom } = useAtomStore();
+  const { addScore } = useGameStore();
+
+  const [isDraining, setIsDraining] = useState(false);
+  const [progress, setProgress] = useState(0); 
+
+  // Animasyonun kalbini oluşturan Framer Motion Değeri (0: A ve B tam dolu, 1: C tam dolu)
+  const p = useMotionValue(0);
+
+  // Vektörel çokgen koordinatları
+  const [polyA, setPolyA] = useState("");
+  const [polyB, setPolyB] = useState("");
+  const [polyC, setPolyC] = useState("");
+
+  // KUSURSUZ MERKEZLENMİŞ GEOMETRİ (İkizkenar Dik Üçgen a=b)
+  // c=300 birim. Zemin yatayda mükemmel ortalanmıştır.
+  const P1 = {x: -150, y: 0};
+  const P2 = {x: 150, y: 0};
+  const P3 = {x: 0, y: -150};
+  
+  const OB1 = {x: -300, y: -150};
+  const OB3 = {x: -150, y: -300};
+  
+  const OA3 = {x: 150, y: -300};
+  const OA2 = {x: 300, y: -150};
+  
+  const OC1 = {x: -150, y: 300};
+  const OC2 = {x: 150, y: 300};
+
+  // SVG Çerçeveleri (Boş Cam Görünümü)
+  const outlineB = `${P1.x},${P1.y} ${P3.x},${P3.y} ${OB3.x},${OB3.y} ${OB1.x},${OB1.y}`;
+  const outlineA = `${P3.x},${P3.y} ${OA3.x},${OA3.y} ${OA2.x},${OA2.y} ${P2.x},${P2.y}`;
+  const outlineC = `${P1.x},${P1.y} ${P2.x},${P2.y} ${OC2.x},${OC2.y} ${OC1.x},${OC1.y}`;
+  const outlineTri = `${P1.x},${P1.y} ${P3.x},${P3.y} ${P2.x},${P2.y}`;
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    // Karelerin doluluk oranını (hacmini) hesaplayan vektörel motor
+    const unsubscribe = p.on("change", (v) => {
+      // B Karesi sıvı hacmi
+      const hb = 150 * (1 - v); 
+      const ltB_x = P1.x - hb;
+      const ltB_y = P1.y - hb;
+      const rtB_x = P3.x - hb;
+      const rtB_y = P3.y - hb;
+      setPolyB(`${P1.x},${P1.y} ${P3.x},${P3.y} ${rtB_x},${rtB_y} ${ltB_x},${ltB_y}`);
 
-    // Wait a brief moment for container to have dimensions
-    const initTimer = setTimeout(() => {
-      if (!mountRef.current) return;
-      
-      const width = mountRef.current.clientWidth;
-      const height = mountRef.current.clientHeight;
+      // A Karesi sıvı hacmi
+      const ha = 150 * (1 - v);
+      const ltA_x = P3.x + ha;
+      const ltA_y = P3.y - ha;
+      const rtA_x = P2.x + ha;
+      const rtA_y = P2.y - ha;
+      setPolyA(`${P3.x},${P3.y} ${P2.x},${P2.y} ${rtA_x},${rtA_y} ${ltA_x},${ltA_y}`);
 
-      // module aliases
-      const Engine = Matter.Engine,
-            Render = Matter.Render,
-            Runner = Matter.Runner,
-            Bodies = Matter.Bodies,
-            Composite = Matter.Composite;
+      // C Karesi sıvı hacmi (Aşağıdan yukarıya dolum)
+      const hc = 300 * v; 
+      const ltC_y = OC1.y - hc; // Sol üst su yüzeyi
+      const rtC_y = OC2.y - hc; // Sağ üst su yüzeyi
+      setPolyC(`${OC1.x},${OC1.y} ${OC2.x},${OC2.y} ${P2.x},${rtC_y} ${P1.x},${ltC_y}`);
+    });
+    return () => unsubscribe();
+  }, [p]);
 
-      // create an engine
-      const engine = Engine.create();
-      engineRef.current = engine;
+  useEffect(() => {
+    p.set(0); 
+  }, [p]);
 
-      // create a renderer
-      const render = Render.create({
-        element: mountRef.current,
-        engine: engine,
-        options: {
-          width,
-          height,
-          wireframes: false,
-          background: '#1E1E1E',
-          pixelRatio: window.devicePixelRatio
-        }
-      });
-      renderRef.current = render;
+  useEffect(() => {
+    if (progress >= 100) {
+      unlockAtom("G8.GEO.020.1"); 
+      addScore(50);
+    }
+  }, [progress, unlockAtom, addScore]);
 
-      // --- SCENE SETUP ---
-      const cx = width / 2;
-      const cy = height / 2 + 50; // Shift down slightly
-      const scale = Math.min(width, height) / 600; // Responsive scaling
-
-      // Triangle dimensions (a=3, b=4, c=5 ratio)
-      const a = 120 * scale; // vertical
-      const b = 160 * scale; // horizontal
-      const c = 200 * scale; // hypotenuse
-      const wallThickness = 10;
-
-      const wallOptions = { 
-        isStatic: true, 
-        render: { fillStyle: '#333', strokeStyle: '#555', lineWidth: 1 },
-        friction: 0.0,
-        restitution: 0.2
-      };
-      
-      const gateOptions = { 
-        isStatic: true, 
-        render: { fillStyle: '#FF6B00' } 
-      };
-
-      // Right angle vertex is at (cx - b/2, cy - a/2)
-      // Top vertex is at (cx - b/2, cy + a/2) -> wait, let's make right angle bottom-left
-      const pRightAngle = { x: cx - b/2, y: cy };
-      const pTop = { x: cx - b/2, y: cy - a };
-      const pRight = { x: cx + b/2, y: cy };
-
-      // 1. Central Triangle (Just walls)
-      const tLeft = Bodies.rectangle(pRightAngle.x, cy - a/2, wallThickness, a, wallOptions);
-      const tBottom = Bodies.rectangle(cx, pRightAngle.y, b, wallThickness, wallOptions);
-      
-      // Hypotenuse
-      const angle = Math.atan2(a, b); // Angle of hypotenuse
-      const tHypot = Bodies.rectangle(cx, cy - a/2, c, wallThickness, {
-        isStatic: true,
-        angle: -angle,
-        render: { fillStyle: '#333' }
-      });
-
-      // 2. Square A (Left of vertical leg)
-      // Side length = a
-      const sqA_left = Bodies.rectangle(pRightAngle.x - a, cy - a/2, wallThickness, a, wallOptions);
-      const sqA_top = Bodies.rectangle(pRightAngle.x - a/2, pTop.y, a, wallThickness, wallOptions);
-      const sqA_bottom = Bodies.rectangle(pRightAngle.x - a/2, pRightAngle.y, a, wallThickness, wallOptions);
-      // The gate is the right wall of Square A (which is also the left wall of the triangle)
-      const gateA = Bodies.rectangle(pRightAngle.x, cy - a/2, wallThickness, a - 20, gateOptions);
-
-      // 3. Square B (Top of horizontal leg)
-      // Side length = b
-      const sqB_left = Bodies.rectangle(pTop.x, pTop.y - b/2, wallThickness, b, wallOptions);
-      const sqB_right = Bodies.rectangle(pRight.x, pTop.y - b/2, wallThickness, b, wallOptions);
-      const sqB_top = Bodies.rectangle(cx, pTop.y - b, b, wallThickness, wallOptions);
-      // The gate is the bottom wall of Square B (which is also the top of the triangle... wait, no)
-      // Let's attach Square B to the horizontal leg (bottom of triangle)
-      // Actually, standard visual is: A on vertical, B on horizontal, C on hypotenuse.
-      // Let's move Square B to the bottom of the horizontal leg.
-      const sqB_bottom_y = pRightAngle.y + b;
-      const sqB_left2 = Bodies.rectangle(pRightAngle.x, pRightAngle.y + b/2, wallThickness, b, wallOptions);
-      const sqB_right2 = Bodies.rectangle(pRight.x, pRightAngle.y + b/2, wallThickness, b, wallOptions);
-      const sqB_bottom2 = Bodies.rectangle(cx, sqB_bottom_y, b, wallThickness, wallOptions);
-      const gateB = Bodies.rectangle(cx, pRightAngle.y, b - 20, wallThickness, gateOptions);
-
-      // 4. Square C (On hypotenuse)
-      // Side length = c
-      const hx = Math.sin(angle);
-      const hy = Math.cos(angle);
-      
-      // Calculate normal vector to hypotenuse
-      const nx = Math.sin(angle);
-      const ny = Math.cos(angle);
-
-      // Center of hypotenuse is (cx, cy - a/2)
-      // Center of Square C is offset by c/2 along the normal
-      const sqC_cx = cx + (c/2) * nx;
-      const sqC_cy = (cy - a/2) - (c/2) * ny;
-
-      // Create Square C using a single hollow body or 3 walls
-      const sqC_top = Bodies.rectangle(sqC_cx + (c/2)*nx, sqC_cy - (c/2)*ny, c, wallThickness, { isStatic: true, angle: -angle, render: { fillStyle: '#333' } });
-      const sqC_left3 = Bodies.rectangle(sqC_cx - (c/2)*Math.cos(angle), sqC_cy - (c/2)*Math.sin(angle), wallThickness, c, { isStatic: true, angle: -angle, render: { fillStyle: '#333' } });
-      const sqC_right3 = Bodies.rectangle(sqC_cx + (c/2)*Math.cos(angle), sqC_cy + (c/2)*Math.sin(angle), wallThickness, c, { isStatic: true, angle: -angle, render: { fillStyle: '#333' } });
-      
-      // Actually, building a perfect angled box is tricky with raw coordinates.
-      // Let's use a simpler approach: build it flat, then rotate and translate it.
-      const boxC_bottom = Bodies.rectangle(0, c/2, c, wallThickness, wallOptions);
-      const boxC_left = Bodies.rectangle(-c/2, 0, wallThickness, c, wallOptions);
-      const boxC_right = Bodies.rectangle(c/2, 0, wallThickness, c, wallOptions);
-      const boxC_top = Bodies.rectangle(0, -c/2, c, wallThickness, wallOptions); // The gate
-      
-      const squareC = Matter.Body.create({
-        parts: [boxC_bottom, boxC_left, boxC_right],
-        isStatic: true
-      });
-      
-      // Position and rotate Square C to align with hypotenuse
-      Matter.Body.setPosition(squareC, { x: sqC_cx, y: sqC_cy });
-      Matter.Body.setAngle(squareC, -angle);
-
-      // We need a gate for C too, or just let it fall in.
-      // Actually, water falls FROM A and B, INTO C.
-      // So C should be BELOW the triangle.
-      // Let's flip the triangle so hypotenuse is at the bottom.
-      
-      // --- REVISED SIMPLER SCENE ---
-      // To make gravity work naturally without complex funnels:
-      // Triangle points DOWN. Hypotenuse is horizontal at the bottom.
-      // Square A and B are on top.
-      
-      Engine.clear(engine);
-      
-      // Hypotenuse horizontal at bottom
-      const triY = cy + 50;
-      const tAngle = Math.asin(a/c); // Angle of triangle
-      
-      // Base (Hypotenuse)
-      const base = Bodies.rectangle(cx, triY, c, wallThickness, wallOptions);
-      
-      // Left leg (b)
-      const legLeftX = cx - c/2 + (b/2) * Math.cos(tAngle);
-      const legLeftY = triY - (b/2) * Math.sin(tAngle);
-      const legLeft = Bodies.rectangle(legLeftX, legLeftY, b, wallThickness, {
-        isStatic: true, angle: tAngle, render: { fillStyle: '#555' }
-      });
-      
-      // Right leg (a)
-      const legRightX = cx + c/2 - (a/2) * Math.sin(tAngle);
-      const legRightY = triY - (a/2) * Math.cos(tAngle);
-      const legRight = Bodies.rectangle(legRightX, legRightY, a, wallThickness, {
-        isStatic: true, angle: -(Math.PI/2 - tAngle), render: { fillStyle: '#555' }
-      });
-
-      // Square C (Below base)
-      const sqC_l = Bodies.rectangle(cx - c/2, triY + c/2, wallThickness, c, wallOptions);
-      const sqC_r = Bodies.rectangle(cx + c/2, triY + c/2, wallThickness, c, wallOptions);
-      const sqC_b = Bodies.rectangle(cx, triY + c, c, wallThickness, wallOptions);
-
-      // Square B (Above left leg)
-      const sqB_cx = legLeftX - (b/2) * Math.sin(tAngle);
-      const sqB_cy = legLeftY - (b/2) * Math.cos(tAngle);
-      const sqB_box = Matter.Body.create({
-        parts: [
-          Bodies.rectangle(0, -b/2, b, wallThickness, wallOptions), // top
-          Bodies.rectangle(-b/2, 0, wallThickness, b, wallOptions), // left
-          Bodies.rectangle(b/2, 0, wallThickness, b, wallOptions),  // right
-        ],
-        isStatic: true
-      });
-      Matter.Body.setPosition(sqB_box, { x: sqB_cx, y: sqB_cy });
-      Matter.Body.setAngle(sqB_box, tAngle);
-      const gateB_new = Bodies.rectangle(legLeftX, legLeftY, b, wallThickness, gateOptions);
-      Matter.Body.setAngle(gateB_new, tAngle);
-
-      // Square A (Above right leg)
-      const sqA_cx = legRightX + (a/2) * Math.cos(tAngle);
-      const sqA_cy = legRightY - (a/2) * Math.sin(tAngle);
-      const sqA_box = Matter.Body.create({
-        parts: [
-          Bodies.rectangle(0, -a/2, a, wallThickness, wallOptions), // top
-          Bodies.rectangle(-a/2, 0, wallThickness, a, wallOptions), // left
-          Bodies.rectangle(a/2, 0, wallThickness, a, wallOptions),  // right
-        ],
-        isStatic: true
-      });
-      Matter.Body.setPosition(sqA_box, { x: sqA_cx, y: sqA_cy });
-      Matter.Body.setAngle(sqA_box, -(Math.PI/2 - tAngle));
-      const gateA_new = Bodies.rectangle(legRightX, legRightY, a, wallThickness, gateOptions);
-      Matter.Body.setAngle(gateA_new, -(Math.PI/2 - tAngle));
-
-      gatesRef.current = [gateA_new, gateB_new];
-
-      Composite.add(engine.world, [
-        base, legLeft, legRight,
-        sqC_l, sqC_r, sqC_b,
-        sqB_box, gateB_new,
-        sqA_box, gateA_new
-      ]);
-
-      // Fill Square A and B with "water" (small circles)
-      const particleRadius = 4 * scale;
-      const waterOptions = {
-        restitution: 0.1,
-        friction: 0.001,
-        frictionAir: 0.01,
-        density: 0.001,
-        render: { fillStyle: '#00E5FF', strokeStyle: '#00B3CC', lineWidth: 1 }
-      };
-
-      const waterParticles: Matter.Body[] = [];
-      
-      // Calculate area to determine number of particles
-      // A^2 + B^2 = C^2. 
-      // Area A = a*a, Area B = b*b.
-      // Particle area = PI * r^2
-      // Packing fraction ~ 0.65 for circles
-      const areaA = a * a;
-      const numParticlesA = Math.floor((areaA * 0.5) / (Math.PI * particleRadius * particleRadius));
-      
-      const areaB = b * b;
-      const numParticlesB = Math.floor((areaB * 0.5) / (Math.PI * particleRadius * particleRadius));
-
-      // Spawn particles inside Square A
-      for (let i = 0; i < numParticlesA; i++) {
-        const px = sqA_cx + (Math.random() - 0.5) * (a - 20);
-        const py = sqA_cy + (Math.random() - 0.5) * (a - 20);
-        waterParticles.push(Bodies.circle(px, py, particleRadius, waterOptions));
-      }
-
-      // Spawn particles inside Square B
-      for (let i = 0; i < numParticlesB; i++) {
-        const px = sqB_cx + (Math.random() - 0.5) * (b - 20);
-        const py = sqB_cy + (Math.random() - 0.5) * (b - 20);
-        waterParticles.push(Bodies.circle(px, py, particleRadius, waterOptions));
-      }
-
-      Composite.add(engine.world, waterParticles);
-
-      // run the renderer
-      Render.run(render);
-
-      // create runner
-      const runner = Runner.create();
-      Runner.run(runner, engine);
-
-    }, 100); // 100ms delay to ensure container is sized
-
-    return () => {
-      clearTimeout(initTimer);
-      if (renderRef.current) {
-        Matter.Render.stop(renderRef.current);
-        if (renderRef.current.canvas) {
-          renderRef.current.canvas.remove();
-        }
-      }
-      if (engineRef.current) {
-        Matter.Engine.clear(engineRef.current);
-      }
-    };
-  }, []);
-
-  const releaseWater = () => {
-    if (!engineRef.current || isReleased) return;
-    setIsReleased(true);
+  const handleDrain = () => {
+    if (isDraining) return;
+    setIsDraining(true);
     
-    // Remove the gates to let water fall
-    Matter.Composite.remove(engineRef.current.world, gatesRef.current);
+    // Mükemmel pürüzsüzlükte sıvı akış animasyonu
+    animate(p, 1, {
+      duration: 7, 
+      ease: [0.42, 0, 0.58, 1], // Gerçekçi süzülme fiziği için özel ease-in-out eğrisi
+      onUpdate: (latest) => {
+        setProgress(Math.floor(latest * 100));
+      }
+    });
   };
 
-  const resetSimulation = () => {
-    window.location.reload();
+  const handleReset = () => {
+    setIsDraining(false);
+    setProgress(0);
+    p.set(0);
   };
 
   return (
-    <div className="w-full h-full flex flex-col relative">
-      <div ref={mountRef} className="flex-1 w-full h-full bg-[#1E1E1E] rounded-lg overflow-hidden" />
+    <div className="min-h-screen bg-[#020208] text-white font-sans flex flex-col w-full h-full relative overflow-hidden">
       
-      {/* Controls Overlay */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4 bg-black/50 p-3 rounded-full backdrop-blur-sm border border-white/10">
-        <button 
-          onClick={releaseWater}
-          disabled={isReleased}
-          className={`px-8 py-3 rounded-full font-bold text-white shadow-lg transition-all ${
-            isReleased ? 'bg-gray-600 cursor-not-allowed opacity-50' : 'bg-[#00E5FF] hover:bg-[#00B3CC] hover:scale-105 shadow-[#00E5FF]/20'
-          }`}
-        >
-          {isReleased ? 'Su Boşaltıldı' : 'Suyu Boşalt'}
-        </button>
-        {isReleased && (
-          <button 
-            onClick={resetSimulation}
-            className="px-8 py-3 rounded-full font-bold text-white bg-gray-700 hover:bg-gray-600 shadow-lg transition-all hover:scale-105"
-          >
-            Tekrarla
-          </button>
-        )}
-      </div>
+      {/* Estetik Işıklandırma Arka Planı */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-[#020208] to-[#020208]" />
+      
+      <GameHeader 
+        title="Pisagor Su İspatı" 
+        subtitle="Simetrik Hacim Modülü V2"
+        rightContent={
+          <>
+            <div className="flex items-center gap-2 bg-blue-950/40 px-4 py-2 rounded-xl border border-blue-900/40 shadow-inner">
+               <span className="text-sm text-gray-400">Aktarım:</span>
+               <span className="text-[#00E5FF] font-mono font-bold tracking-wider">{progress}%</span>
+            </div>
+            
+            <SciFiButton variant="secondary" icon={<RefreshCcw className="w-4 h-4" />} onClick={handleReset}>
+              Sıfırla
+            </SciFiButton>
+            
+            <SciFiButton 
+              variant="primary" 
+              icon={<Droplet className="w-4 h-4" fill={isDraining ? "transparent" : "currentColor"} />} 
+              onClick={handleDrain} 
+              disabled={isDraining}
+            >
+               {isDraining ? "Kapasite Doluyor..." : "Sıvı Aktarımını Başlat"}
+            </SciFiButton>
+          </>
+        }
+      />
+
+      <main className="flex-1 flex items-center justify-center relative z-20">
+        <div className="relative w-full max-w-[800px] aspect-square flex items-center justify-center scale-75 md:scale-100">
+            
+            <svg viewBox="-400 -400 800 800" className="absolute inset-0 z-20 drop-shadow-[0_20px_50px_rgba(0,100,255,0.15)]">
+                <defs>
+                    {/* Estetik Sıvı Gradyanı: Üstü daha açık ve parlayan su, altı derin deniz */}
+                    <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.95" />
+                        <stop offset="100%" stopColor="#0055AA" stopOpacity="0.85" />
+                    </linearGradient>
+
+                    <linearGradient id="waterGradDark" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#00AACC" stopOpacity="0.95" />
+                        <stop offset="100%" stopColor="#003388" stopOpacity="0.85" />
+                    </linearGradient>
+
+                    {/* Gooey Efekti: Suyun damlalarla mükemmel kavuşmasını sağlar */}
+                    <filter id="gooey">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 30 -12" result="goo" />
+                        <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+                    </filter>
+                </defs>
+                
+                {/* 1) ARKAPLAN CAM/KUTU GÖRÜNÜMÜ */}
+                <g fill="rgba(0, 229, 255, 0.02)" stroke="#222" strokeWidth="12" strokeLinejoin="round">
+                    <polygon points={outlineB} />
+                    <polygon points={outlineA} />
+                    <polygon points={outlineC} />
+                    {/* Merkezdeki üçgenin içi biraz daha koyu */}
+                    <polygon points={outlineTri} fill="rgba(0, 0, 0, 0.5)" />
+                </g>
+
+                {/* 2) SIVI VE AKIŞ (Gooey Grubunun İçinde) */}
+                <g filter="url(#gooey)">
+                    
+                    {/* İçeride Kalan Sular */}
+                    {polyB && <polygon points={polyB} fill="url(#waterGrad)" />}
+                    {polyA && <polygon points={polyA} fill="url(#waterGrad)" />}
+                    {polyC && <polygon points={polyC} fill="url(#waterGradDark)" />}
+
+                    {/* Dökülen Su Damlacıkları / Şelale Efekti */}
+                    {isDraining && progress < 100 && DROPLETS.map(d => (
+                        <motion.ellipse
+                            key={d.id}
+                            cx={d.x}
+                            rx={d.size}
+                            ry={d.size * 3} // Hız hissi vermek için dikey esnetilmiş
+                            fill="#00E5FF"
+                            initial={{ cy: d.startY, opacity: 0, scale: 0 }}
+                            animate={{
+                                cy: [d.startY, 200], // Sular 200'e (havuzun içine) iner
+                                opacity: [0, 1, 1, 0],
+                                scale: [0, 1, 0.8, 0.2]
+                            }}
+                            transition={{
+                                duration: d.duration,
+                                delay: d.delay,
+                                repeat: Infinity,
+                                ease: "easeIn"
+                            }}
+                        />
+                    ))}
+                    
+                    {/* Suyun içinden yukarı çıkan oksijen/hava baloncukları */}
+                    {isDraining && BUBBLES.map(b => (
+                        <motion.circle
+                            key={`b-${b.id}`}
+                            cx={b.x}
+                            r={b.size}
+                            fill="#00E5FF"
+                            initial={{ cy: 300, opacity: 0, scale: 0 }}
+                            animate={{ cy: 0, opacity: [0, 0.5, 0], scale: [0, 1, 0.5] }}
+                            transition={{ duration: b.duration, delay: b.delay, repeat: Infinity, ease: "easeOut" }}
+                        />
+                    ))}
+                </g>
+
+                {/* 3) CAM PANELLERİN DIŞ ÇERÇEVE PARLAMALARI VE İNCE HATLARI (Üst Katman) */}
+                <g fill="none" stroke="currentColor" className="text-[#00E5FF]" strokeWidth="3" strokeLinejoin="round" opacity="0.8">
+                    <polygon points={outlineB} />
+                    <polygon points={outlineA} />
+                    <polygon points={outlineC} />
+                    <polygon points={outlineTri} stroke="transparent" />
+                </g>
+                <g fill="none" stroke="white" strokeWidth="1" strokeLinejoin="round" opacity="0.2">
+                    <polygon points={outlineB} />
+                    <polygon points={outlineA} />
+                    <polygon points={outlineC} />
+                </g>
+
+                {/* 4) MATEMATİKSEL ETİKETLER (Kalıcı ve Orantılı) */}
+                {/* 
+                   İkizkenar dik üçgen olduğu için alanları eşit ve tutarlıdır: 
+                   a = 150*sqrt(2), a^2 = 45000 -> Etiket (50)
+                   c = 300, c^2 = 90000 -> Etiket (100)
+                */}
+                <g className="font-sans font-bold pointer-events-none" textAnchor="middle" dominantBaseline="middle">
+                    <text x="-150" y="-150" fill="white" fontSize="24" transform="rotate(-45, -150, -150)">
+                        b² (50)
+                    </text>
+                    <text x="150" y="-150" fill="white" fontSize="24" transform="rotate(45, 150, -150)">
+                        a² (50)
+                    </text>
+                    
+                    {/* C karesindeki metne biraz sualtı havası verdik ve daha modern tuttuk */}
+                    <text x="0" y="150" fill="white" fontSize="42" className="drop-shadow-lg">
+                        c² (100)
+                    </text>
+                    
+                    {progress === 100 && (
+                        <motion.g initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                            <text x="0" y="200" fill="#00E5FF" fontSize="20" className="font-mono tracking-widest uppercase" style={{ filter: 'drop-shadow(0px 0px 5px rgba(0,229,255,0.5))' }}>
+                                a² + b² = c²
+                            </text>
+                            <text x="0" y="230" fill="white" opacity="0.6" fontSize="14" className="font-mono">
+                                50 + 50 = 100
+                            </text>
+                        </motion.g>
+                    )}
+                </g>
+
+            </svg>
+        </div>
+      </main>
     </div>
   );
 }

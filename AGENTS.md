@@ -21,6 +21,8 @@ Bu dosya, projeyi geliştiren Yapay Zeka (AI) asistanının uyması gereken teme
 2. **Responsive:** Mobil, tablet ve masaüstü ekranlarda kusursuz çalışmalı.
 3. **Temiz Kod:** Kodlar modüler olmalı. Uzun dosyalar yerine küçük, yeniden kullanılabilir bileşenler (components) oluşturulmalı.
 4. **Dokümantasyon:** Yapılan her büyük değişiklik `PROGRESS.md` dosyasına işlenmeli.
+5. **Temel Veritabanı (SSOT):** Tüm MEB müfredat kazanım atomları (toplam 555 adet) `docs/MEB_ATOMLARI.md` dosyasında tutulmaktadır. Sistemdeki herhangi bir yeni modül, oyun veya egzersiz kurgulanırken mutlaka bu dosyadaki saf atom sınırlarına (tek girdi-tek çıktı) sadık kalınacaktır. Başka bir atom listesi kullanılmayacaktır.
+6. **Modül Mimarisi:** Mikro atomların hangi "Makro Oyun Modüllerine" dönüştürüldüğünün haritası sınıf sınıf `MODULES.md` dosyasında tutulur.
 
 ## 🔄 Çalışma Akışı (Workflow)
 1. Kullanıcıdan gelen talebi anla.

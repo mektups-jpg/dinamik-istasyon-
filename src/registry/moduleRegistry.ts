@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 
-export type Category = 'Sayılar' | 'Geometri' | 'Fizik' | 'Olasılık' | 'Cebir';
+export type Category = 'Sayılar' | 'Geometri' | 'Fizik' | 'Olasılık' | 'Cebir' | 'Trigonometri' | 'Geometrik Şekiller';
 export type Difficulty = 'Kolay' | 'Orta' | 'Zor';
 export type GradeRange = 'İlkokul' | 'Ortaokul' | 'Lise';
 
@@ -17,6 +17,36 @@ export interface ModuleMeta {
 }
 
 export const modules: ModuleMeta[] = [
+  {
+    id: 'magnitude-core',
+    title: 'Devasa Nicelik Çekirdeği',
+    description: '9 haneli dev sayılar ve sadece 0-1 arasında var olabilen olasılık evreni vizyon simülatörü.',
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    gradeRange: 'Ortaokul',
+    path: '/embed/numbers/magnitude-core',
+    component: lazy(() => import('../modules/numbers/magnitude-core/MagnitudeCoreApp'))
+  },
+  {
+    id: 'equation-lab',
+    title: 'Algoritmik Denklem Laboratuvarı',
+    description: 'Terazide eşitliği sağla ve işlem önceliği (parantez, çarpma, bölme) kalkanlarını kırarak hedefe ulaş.',
+    category: 'Cebir',
+    difficulty: 'Orta',
+    gradeRange: 'Ortaokul',
+    path: '/embed/algebra/equation-lab',
+    component: lazy(() => import('../modules/algebra/equation-lab/EquationLabApp'))
+  },
+  {
+    id: 'trig-pendulum',
+    title: 'Trigonometrik Sarkaç',
+    description: 'Birim çember üzerindeki hareketin nasıl sinüs ve kosinüs dalgalarına dönüştüğünü keşfet.',
+    category: 'Trigonometri',
+    difficulty: 'Zor',
+    gradeRange: 'Lise',
+    path: '/embed/trig/pendulum',
+    component: lazy(() => import('../modules/trig/pendulum/TrigPendulumApp'))
+  },
   {
     id: 'algebraic-dimensions',
     title: 'Cebirsel Boyut Odası',
@@ -101,11 +131,61 @@ export const modules: ModuleMeta[] = [
     id: 'cylinder-3d',
     title: '3D Silindir Açılımı',
     description: 'Dikdörtgenin kıvrılarak silindire dönüşümünü 3D olarak inceleyin.',
-    category: 'Geometri',
+    category: 'Geometrik Şekiller',
     difficulty: 'Orta',
     gradeRange: 'Ortaokul',
     path: '/embed/geometry/cylinder-3d',
     component: lazy(() => import('../modules/geometry/cylinder-3d/CylinderApp'))
+  },
+  {
+    id: 'prism-3d',
+    title: '3D Prizma Açılımı',
+    description: 'Bir dikdörtgenler prizmasının (kutunun) 6 yüzeyinin nasıl katlanıp açıldığını 3D olarak inceleyin.',
+    category: 'Geometrik Şekiller',
+    difficulty: 'Kolay',
+    gradeRange: 'Ortaokul',
+    path: '/embed/geometry/prism-3d',
+    component: lazy(() => import('../modules/geometry/prism-3d/PrismApp'))
+  },
+  {
+    id: 'cube-3d',
+    title: '3D Küp Açılımı',
+    description: 'Küpün 6 eş kareden oluşan açılımını (Kuantum Zarı) inceleyin.',
+    category: 'Geometrik Şekiller',
+    difficulty: 'Kolay',
+    gradeRange: 'Ortaokul',
+    path: '/embed/geometry/cube-3d',
+    component: lazy(() => import('../modules/geometry/cube-3d/CubeApp'))
+  },
+  {
+    id: 'pyramid-3d',
+    title: 'Kare Dik Piramit',
+    description: 'Kare taban ve 4 üçgenden oluşan piramidi 3D katlayın.',
+    category: 'Geometrik Şekiller',
+    difficulty: 'Orta',
+    gradeRange: 'Ortaokul',
+    path: '/embed/geometry/pyramid-3d',
+    component: lazy(() => import('../modules/geometry/pyramid-3d/PyramidApp'))
+  },
+  {
+    id: 'cone-3d',
+    title: '3D Koni Açılımı',
+    description: 'Daire taban ve sektörel yan yüzeyden oluşan koniyi uzayda canlandırın.',
+    category: 'Geometrik Şekiller',
+    difficulty: 'Zor',
+    gradeRange: 'Ortaokul',
+    path: '/embed/geometry/cone-3d',
+    component: lazy(() => import('../modules/geometry/cone-3d/ConeApp'))
+  },
+  {
+    id: 'triangular-prism-3d',
+    title: 'Üçgen Prizma Açılımı',
+    description: 'Kamp çadırı formundaki üçgen prizmasını 3D parçalara ayırarak incele.',
+    category: 'Geometrik Şekiller',
+    difficulty: 'Orta',
+    gradeRange: 'Ortaokul',
+    path: '/embed/geometry/triangular-prism-3d',
+    component: lazy(() => import('../modules/geometry/triangular-prism-3d/TriangularPrismApp'))
   },
   {
     id: 'galton-board',
