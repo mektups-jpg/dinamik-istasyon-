@@ -4,15 +4,10 @@ import { useAtomStore } from '../../../store/useAtomStore';
 import { ArrowLeftRight, Scale, Shield, ChevronLeft, Hexagon, Fingerprint, X, Info, CheckCircle, AlertTriangle, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Bot from '../../../components/characters/Bot';
+import { AstroBot, BotMessage, BotMessageType } from '../../../components/ui/AstroBot';
+import { ModuleCompletedScreen } from '../../../components/ui/ModuleCompletedScreen';
 
 type Mode = 'select' | 'priority' | 'balance';
-
-export type BotMessageType = 'info' | 'success' | 'error';
-export interface BotMessage {
-  text: string;
-  type: BotMessageType;
-  id: number;
-}
 
 export default function EquationLabApp() {
   const [mode, setMode] = useState<Mode>('select');
@@ -287,30 +282,18 @@ function PrioritySimulator({ onWin, showBotMessage }: { onWin: () => void, showB
 
   if (successCount >= levels.length) {
     return (
-      <div className="text-center p-12 bg-[#12121A] border border-[#00FF88] rounded-3xl text-white shadow-[0_0_50px_rgba(0,255,136,0.1)]">
-        <h2 className="text-4xl font-black mb-4">SİSTEM ÇÖZÜLDÜ</h2>
-        <p className="text-xl text-gray-400 mb-6">İşlem önceliği kalkanlarını kusursuz bir şekilde aştın.</p>
-        
-        <div className="inline-block bg-[#1F2833] border border-[#00FF88]/30 rounded-xl p-4 mb-8 text-left">
-          <div className="text-xs text-[#00FF88] font-bold mb-1 uppercase tracking-widest">Kazanım Mührü Edinildi</div>
-          <div className="flex items-center gap-3">
-            <Shield className="w-8 h-8 text-[#00FF88]" />
-            <div>
-              <div className="font-mono font-bold text-white">MAT.5.2.2.x</div>
-              <div className="text-sm text-gray-400">İşlem önceliği kalkan protokelleri (Parantez/Çarpma/Bölme)</div>
-            </div>
-          </div>
-        </div>
-
-        <br/>
-        <button onClick={() => {
+      <ModuleCompletedScreen
+        title="KALKANLAR İNDİRİLDİ"
+        message="İşlem önceliği kalkanlarını kusursuz bir şekilde aştın. Kazanım mührü senin!"
+        scoreEarned={50}
+        onRestart={() => {
           const newLevels = generatePriorityLevels();
           setLevels(newLevels);
           setSuccessCount(0); 
           setStage('breaking_shield'); 
           setActiveLevel(newLevels[0]);
-        }} className="px-8 py-4 bg-[#00FF88] text-black font-black rounded-xl hover:scale-105 transition-transform shadow-[0_0_20px_#00FF88]">Tekrar Oyna</button>
-      </div>
+        }}
+      />
     );
   }
 
@@ -459,28 +442,15 @@ function BalanceSimulator({ onWin, showBotMessage }: { onWin: () => void, showBo
 
   if (successCount >= levels.length) {
     return (
-      <div className="text-center p-12 bg-[#12121A] border border-[#FFD700] rounded-3xl text-white shadow-[0_0_50px_rgba(255,215,0,0.1)]">
-        <h2 className="text-4xl font-black mb-4">SİSTEM ÇÖZÜLDÜ</h2>
-        <p className="text-xl text-gray-400 mb-6">Eşitlik kurallarını kusursuz uygulayarak teraziyi dengeledin.</p>
-        
-        <div className="inline-block bg-[#1F2833] border border-[#FFD700]/30 rounded-xl p-4 mb-8 text-left">
-          <div className="text-xs text-[#FFD700] font-bold mb-1 uppercase tracking-widest">Kazanım Mührü Edinildi</div>
-          <div className="flex items-center gap-3">
-            <Fingerprint className="w-8 h-8 text-[#FFD700]" />
-            <div>
-              <div className="font-mono font-bold text-white">MAT.5.2.1.x</div>
-              <div className="text-sm text-gray-400">Terazi tabanlı işlem korunumu algoritmaları</div>
-            </div>
-          </div>
-        </div>
-        
-        <br/>
-        <button onClick={() => {
+      <ModuleCompletedScreen
+        title="MÜKEMMEL DENGE"
+        message="Eşitlik kurallarını kusursuz uygulayarak teraziyi dengeledin. Sistem çözüldü."
+        scoreEarned={50}
+        onRestart={() => {
           setLevels(generateBalanceLevels());
           setSuccessCount(0); 
-          // startLevel handled via effect
-        }} className="px-8 py-4 bg-[#FFD700] text-black font-black rounded-xl hover:scale-105 transition-transform shadow-[0_0_20px_#FFD700]">Tekrar Oyna</button>
-      </div>
+        }}
+      />
     );
   }
 
@@ -571,58 +541,5 @@ function BalanceSimulator({ onWin, showBotMessage }: { onWin: () => void, showBo
         </div>
       </div>
     </div>
-  );
-}
-
-function AstroBot({ message }: { message: BotMessage }) {
-  const [isVisible, setIsVisible] = useState(true);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, [message.id]);
-
-  const colors = {
-    info: 'border-gray-700 shadow-[0_10px_30px_rgba(0,0,0,0.5)]',
-    success: 'border-[#00FF88]/50 shadow-[0_10px_30px_rgba(0,255,136,0.15)]',
-    error: 'border-[#FF0055]/50 shadow-[0_10px_30px_rgba(255,0,85,0.15)]'
-  };
-
-  return (
-    <motion.div 
-      initial={{ x: 100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.5 }}
-      className="fixed bottom-8 right-8 flex items-end gap-4 z-50 pointer-events-none"
-    >
-      <AnimatePresence mode="wait">
-        {message && isVisible && (
-          <motion.div 
-            key={message.id}
-            initial={{ opacity: 0, scale: 0.8, y: 10, transformOrigin: 'bottom right' }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 10 }}
-            className={`bg-[#1F2833]/95 backdrop-blur-xl border text-white p-4 pt-6 rounded-2xl rounded-br-sm max-w-[340px] mb-8 relative pointer-events-auto flex items-start gap-3 ${colors[message.type]}`}
-          >
-            <button 
-              onClick={() => setIsVisible(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-white transition-colors p-1"
-            >
-              <X className="w-4 h-4" />
-            </button>
-            <div className="mt-0.5 min-w-[20px]">
-              {message.type === 'info' && <Info className="w-5 h-5 text-[#00E5FF]" />}
-              {message.type === 'success' && <CheckCircle className="w-5 h-5 text-[#00FF88]" />}
-              {message.type === 'error' && <AlertTriangle className="w-5 h-5 text-[#FF0055]" />}
-            </div>
-            <p className="text-sm font-medium leading-relaxed pr-1">{message.text}</p>
-            <div className={`absolute -bottom-2 right-4 w-4 h-4 bg-[#1F2833] border-b border-r transform rotate-45 ${message.type === 'info' ? 'border-gray-700' : message.type === 'success' ? 'border-[#00FF88]/50' : 'border-[#FF0055]/50'}`}></div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      <div className="relative pb-2">
-        <Bot state="idle" direction={-1} />
-      </div>
-    </motion.div>
   );
 }

@@ -4,37 +4,46 @@ import { motion, AnimatePresence } from 'motion/react';
 import { modules, ModuleMeta } from '../registry/moduleRegistry';
 import { useGameStore } from '../store/useGameStore';
 import { useAtomStore } from '../store/useAtomStore';
-import { Battery, Play, Lock, ChevronLeft, Hexagon, Fingerprint, X } from 'lucide-react';
+import { Battery, Play, Lock, ChevronLeft, Hexagon, Fingerprint, X, User as UserIcon, LogOut } from 'lucide-react';
 import Bot from '../components/characters/Bot';
+import { auth } from '../services/firebase';
+import { AstroBot, BotMessage } from '../components/ui/AstroBot';
+import { ProfilePanel } from '../components/ui/ProfilePanel';
 
 export default function Dashboard() {
   const { score } = useGameStore();
-  const { masteredModules } = useAtomStore();
+  const { masteredModules, masteredAtoms, displayName, role } = useAtomStore();
   const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  const getModulesForGrade = (grade: number): ModuleMeta[] => {
-    switch(grade) {
-      case 1: return modules.filter(m => m.id === 'number-line' || m.id === 'number-line-sub');
-      case 2: return modules.filter(m => m.id === 'base-10-factory');
-      case 3: return [];
-      case 4: return [];
-      case 5: return modules.filter(m => m.id === 'magnitude-core' || m.id === 'equation-lab');
-      case 6: return modules.filter(m => m.id === 'absolute-value' || m.id === 'gear-ratio');
-      case 7: return modules.filter(m => m.id === 'identity-blocks' || m.id === 'pythagoras');
-      case 8: return modules.filter(m => m.gradeRange === 'Ortaokul' && !['absolute-value', 'gear-ratio', 'identity-blocks', 'pythagoras'].includes(m.id));
-      case 9: return [];
-      case 10: return [];
-      case 11: return modules.filter(m => m.id === 'trig-pendulum' || m.id === 'unit-circle' || m.id === 'slope-rollercoaster');
-      case 12: return modules.filter(m => m.id === 'galton-board' || m.id === 'laser-defense');
-      default: return [];
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+    } catch (err) {
+      console.error('Logout error:', err);
     }
   };
 
-  const getBotMessage = () => {
-    if (selectedGrade === null) return "Matnastik Laboratuvarı'na Hoş Geldin! Giriş yapmak istediğin laboratuvar kapısını seç.";
-    const count = getModulesForGrade(selectedGrade).length;
-    if (count === 0) return `${selectedGrade}. Sınıf reaktörleri şu an inşa ediliyor komutanım! Lütfen başka bir kapı dene.`;
-    return `${selectedGrade}. Sınıf laboratuvarlarında seni ${count} aktif görev bekliyor. Tıkla ve başlat!`;
+  const getModulesForGrade = (grade: number): ModuleMeta[] => {
+    return modules.filter(m => m.grade === grade);
+  };
+
+  const getBotMessage = (): BotMessage => {
+    let text = `Hoş geldin ${displayName}! Giriş yapmak istediğin laboratuvar kapısını seç.`;
+    let type: 'info' | 'success' | 'error' = 'info';
+
+    if (selectedGrade !== null) {
+      const count = getModulesForGrade(selectedGrade).length;
+      if (count === 0) {
+        text = `${selectedGrade}. Sınıf reaktörleri şu an inşa ediliyor komutanım! Lütfen başka bir kapı dene.`;
+        type = 'error';
+      } else {
+        text = `${selectedGrade}. Sınıf laboratuvarlarında seni ${count} aktif görev bekliyor. Tıkla ve başlat!`;
+        type = 'success';
+      }
+    }
+    
+    return { id: selectedGrade || 0, text, type };
   };
 
   return (
@@ -62,6 +71,23 @@ export default function Dashboard() {
         </div>
 
         <div className="flex gap-4 items-center">
+          {/* PROFILE BOARD */}
+          <div className="hidden lg:flex items-center gap-4 border-r border-gray-800 pr-6 mr-2">
+            <div className="flex flex-col items-end">
+               <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{role === 'guest' ? 'Misafir Modu' : 'Astronot Kimliği'}</span>
+               <span className="text-sm font-black text-white">{displayName}</span>
+               <span className="text-[10px] text-[#00E5FF] font-bold mt-0.5">{masteredAtoms.length} Mühür | {masteredModules.length} Laboratuvar</span>
+            </div>
+            
+            <button 
+              onClick={() => setIsProfileOpen(true)}
+              className="w-10 h-10 rounded-full bg-gray-900 border border-gray-700 flex items-center justify-center hover:border-[#00E5FF] hover:text-[#00E5FF] transition-colors"
+              title="Profil ve Kazanımlar"
+            >
+              <UserIcon className="w-5 h-5" />
+            </button>
+          </div>
+
           {/* TOTAL PROGRESS */}
           {(() => {
             const TOTAL_MODULES = 73;
@@ -169,6 +195,9 @@ export default function Dashboard() {
         </AnimatePresence>
       </main>
 
+      {/* PROFILE PANEL */}
+      <ProfilePanel isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+
       {/* ASTRO-BOT (Rehber) */}
       <AstroBot message={getBotMessage()} />
     </div>
@@ -228,8 +257,8 @@ function GradeDoor({ grade, moduleCount, onClick }: { grade: number, moduleCount
 
 
 function ModuleCard({ mod }: { mod: ModuleMeta }) {
-  const { isMastered } = useAtomStore();
-  const completed = isMastered(`fake-id-${mod.id}`); // Geliştirilecek
+  const { masteredModules } = useAtomStore();
+  const completed = masteredModules.includes(mod.id);
   
   return (
     <Link 
@@ -261,51 +290,5 @@ function ModuleCard({ mod }: { mod: ModuleMeta }) {
         </div>
       </div>
     </Link>
-  );
-}
-
-
-function AstroBot({ message }: { message: string }) {
-  const [isVisible, setIsVisible] = useState(true);
-
-  // Mesaj değiştiğinde balonu tekrar göster
-  React.useEffect(() => {
-    setIsVisible(true);
-  }, [message]);
-
-  return (
-    <motion.div 
-      initial={{ x: 100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.5 }}
-      className="fixed bottom-8 right-8 flex items-end gap-4 z-50 pointer-events-none"
-    >
-      {/* Konuşma Baloncugu */}
-      <AnimatePresence mode="wait">
-        {message && isVisible && (
-          <motion.div 
-            key={message}
-            initial={{ opacity: 0, scale: 0.8, y: 10, transformOrigin: 'bottom right' }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 10 }}
-            className="bg-[#1F2833]/95 backdrop-blur-xl border border-gray-700 text-white p-4 pt-6 rounded-2xl rounded-br-sm shadow-[0_10px_30px_rgba(0,0,0,0.5)] max-w-[280px] mb-8 relative pointer-events-auto"
-          >
-            <button 
-              onClick={() => setIsVisible(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-white transition-colors p-1"
-            >
-              <X className="w-4 h-4" />
-            </button>
-            <p className="text-sm font-medium leading-relaxed pr-1">{message}</p>
-            {/* Küçük Ok */}
-            <div className="absolute -bottom-2 right-4 w-4 h-4 bg-[#1F2833] border-b border-r border-gray-700 transform rotate-45"></div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      <div className="relative pb-2">
-        <Bot state="idle" direction={-1} />
-      </div>
-    </motion.div>
   );
 }

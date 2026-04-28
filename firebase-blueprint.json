@@ -1,0 +1,24 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Student or Guest user profile",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string", "description": "Name of the student" },
+        "role": { "type": "string", "enum": ["student", "guest"] },
+        "masteredAtoms": { "type": "array", "items": { "type": "string" } },
+        "masteredModules": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["displayName", "role", "masteredAtoms", "masteredModules", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profile and progress data"
+    }
+  }
+}

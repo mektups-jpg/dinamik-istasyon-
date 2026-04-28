@@ -289,8 +289,8 @@ Tüm modüller aşağıdaki görsel ve mekanik felsefeye göre kodlanacaktır (S
   * `MAT.6.3.1.x` / `MAT.6.3.2.x` (İç/Dış ters açılar, yöndeş açı ile Z/U/M labirent kuralı)
   * `MAT.6.3.3.x` / `MAT.6.3.4.x` (Köşegenden şekil -Kare/Yamuk- teşhisi, iç açılar toplamından eksik X açısını bulma)
 
-### 5. Alan Katlayıcı ve Pi (π) Simülatörü 
-* **Konsept:** Fizikçi animasyon masası. Dikdörtgen bir blok, köşegen sürgüsüyle "kat" diye ikiye ayrılır ve Üçgen'in yarım alan $(a*h)/2$ formüllediği ispatlanır. Veya üstten yana itilir ve Paralelkenar olur. Sonra masada fırlatılan bir tekerlek tam 1 tur döner. Tekerleğin bıraktığı mürekkep izi çapın etrafına sarılır ve daima "3,14"te kaldığı izlenip Pi(π) sabiti ateşlenir.
+### 5. Geometrik Alan ve Pi (π) Laboratuvarı
+* **Konsept:** Fizikçi animasyon masası. Dikdörtgen bir blok, köşegen sürgüsüyle "kat" diye ikiye ayrılır ve Üçgen'in yarım alan $(a*h)/2$ formüllediği ispatlanır. Veya üstten yana itilir ve Paralelkenar olur. Sonra masada fırlatılan bir tekerlek tam 1 tur döner. Tekerleğin bıraktığı mürekkep izi çapın etrafına sarılır ve daima "3,14"te kaldığı izlenip Pi(π) sabiti ateşlenir. Devamında çemberin çevresi hesaplanır.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.6.4.1.x` (Uzunlukların 10'ar (1D), Alanların 100'er (2D) büyüme/küçülme simülasyonu)
   * `MAT.6.4.2.x` / `MAT.6.4.3.x` (Dikdörtgenden bükülerek Üçgen/Paralelkenar alan buluşu ve gerçek hayat problem entegrasyonu)

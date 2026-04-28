@@ -3,10 +3,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { modules } from '../registry/moduleRegistry';
 import Dashboard from './Dashboard';
 import EmbedLayout from './EmbedLayout';
+import { GlobalAstroBot } from '../components/ui/GlobalAstroBot';
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
+      <GlobalAstroBot />
       <Routes>
         <Route path="/" element={<Dashboard />} />
         
