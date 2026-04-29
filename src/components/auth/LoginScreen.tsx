@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Fingerprint, User, Rocket } from 'lucide-react';
+import { FirebaseError } from 'firebase/app';
 import { signInAnonymously } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../../services/firebase';
@@ -46,14 +47,15 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       }
 
       onLogin();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      if (err.code === 'auth/operation-not-allowed') {
+      if (err instanceof FirebaseError && err.code === 'auth/operation-not-allowed') {
         setError("Firebase Konsolundan 'Anonymous' (Misafir) giriş yöntemi henüz aktifleştirilmemiş!");
-      } else if (err.code === 'auth/admin-restricted-operation') {
+      } else if (err instanceof FirebaseError && err.code === 'auth/admin-restricted-operation') {
          setError("Sisteme bağlanırken bir hata oluştu: Firebase: Error (auth/admin-restricted-operation). Lütfen Google Cloud Console üzerinden kimlik doğrulama ayarlarında 'Enable create (sign-up)' seçeneğini aktifleştirin.");
       } else {
-        setError('Sisteme bağlanırken bir hata oluştu: ' + (err.message || 'Bilinmeyen hata.'));
+        const message = err instanceof Error ? err.message : 'Bilinmeyen hata.';
+        setError('Sisteme bağlanırken bir hata oluştu: ' + message);
       }
     } finally {
       setLoading(false);
@@ -62,7 +64,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
 
   return (
     <div className="min-h-screen bg-[#050510] flex items-center justify-center p-4 font-mono relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none" />
+      <div className="absolute inset-0 noise-overlay opacity-[0.03] pointer-events-none" />
       <div className="absolute w-[100vw] h-[100vw] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-10 bg-[radial-gradient(circle,#00E5FF_0%,transparent_70%)] pointer-events-none" />
       
       <motion.div 

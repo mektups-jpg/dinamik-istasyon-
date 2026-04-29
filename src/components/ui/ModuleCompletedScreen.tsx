@@ -92,7 +92,7 @@ export function ModuleCompletedScreen({
             </SciFiButton>
           </Link>
         ) : (
-          <Link to="/dashboard">
+          <Link to="/">
             <SciFiButton variant="primary" className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-orange-500 border-yellow-400/50 shadow-[0_0_20px_rgba(234,179,8,0.4)] text-black" icon={<Home className="w-4 h-4" />}>
               ANA MERKEZE DÖN
             </SciFiButton>

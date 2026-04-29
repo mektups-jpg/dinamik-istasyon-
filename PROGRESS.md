@@ -47,6 +47,7 @@ Bu dosya, projenin genel vizyonunu, tamamlanan özellikleri ve gelecekteki planl
 - [x] **Vektörel Tasarım Paneli (Işın, Doğru, Açı Fiziği):** Lazer tabanlı doğru çizim, ters açı tespiti ve sanal iletki kullanımı. (MAT.5.3.x grubunu kapsar).
 - [x] **Poligon Çatışma Testi (Üçgen Eşitsizliği):** Üçgenin kenar uzunluklarını slider ile ayarlayarak oluşup oluşamama durumunu (Üçgen Eşitsizliği - MAT.5.3.7.1) fiziksel olarak simüle eden laboratuvar. *Vibe Coder incelemesiyle `GameHeader` entegre edildi, AstroBot ipucu akışı (timeout debounce) mükemmelleştirildi. `Math.atan2` tabanlı kolların hatalı açı problemleri onarılarak mühendislik stili dashed-line eklentileri (U AÇIKLIK) yapıldı. Orantısız kenarlarda yaşanan SVG viewport clipping/taşıma sorunları (scale küçültmesiyle) engellendi. CSS transform-origin bazlı çubuk kopma (rotation) sorunları giderilerek direkt koordinat hesaplamalı (`x1, y1`) yaylı (`spring`) sisteme geçildi.*
 - [x] **Kod Refactoring (Kısmi):** Ortak UI bileşenleri (`AstroBot`, `GlobalAstroBot`, `Protractor`, `MeasurementPanel`) bağımsızlaştırılarak merkezileştirildi.
+- [x] **Codex Devralma ve Roadmap Senkronizasyonu:** Tüm proje dokümanları incelendi, `docs/ROADMAP.md` teknik omurga + publish hattı + müfredat sprintleri olarak yeniden düzenlendi. Sıradaki önerilen modül 6. sınıf **Kuantum Filtre İstasyonu** olarak belirlendi.
 
 ---
 
@@ -54,4 +55,3 @@ Bu dosya, projenin genel vizyonunu, tamamlanan özellikleri ve gelecekteki planl
 *Verim İzleme Metrikleri:*
 - **Derleme (Build):** Herhangi bir TypeScript veya çökme hatası YOK. Tam performans.
 - **Mimari:** "AstroBot" ve bazı HUD modülleri yavaş yavaş izole edildi. Gelecekte diğer modüller de bu merkezi kütüphaneye geçirilebilir. Modül sayısı arttıkça performansta sorun yaşanmıyor.
-

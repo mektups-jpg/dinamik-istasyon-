@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import AppRouter from './routes/AppRouter';
 import LoginScreen from './components/auth/LoginScreen';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, type User } from 'firebase/auth';
 import { doc, onSnapshot, getDoc } from 'firebase/firestore';
+import type { DocumentData, Unsubscribe } from 'firebase/firestore';
 import { auth, db } from './services/firebase';
-import { useAtomStore } from './store/useAtomStore';
+import { useAtomStore, type UserRole } from './store/useAtomStore';
 import { Loader2 } from 'lucide-react';
+
+const normalizeRole = (role: unknown): UserRole => role === 'student' ? 'student' : 'guest';
+
+const normalizeStringArray = (value: unknown): string[] => {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is string => typeof item === 'string');
+};
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -13,7 +21,22 @@ export default function App() {
   const { setFirestoreSync } = useAtomStore();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user: any) => {
+    let unsubscribeUserDoc: Unsubscribe | undefined;
+
+    const syncUserData = (uid: string, data: DocumentData) => {
+      setFirestoreSync(
+        normalizeStringArray(data.masteredAtoms),
+        normalizeStringArray(data.masteredModules),
+        uid,
+        typeof data.displayName === 'string' ? data.displayName : 'Astronot',
+        normalizeRole(data.role)
+      );
+    };
+
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user: User | null) => {
+      unsubscribeUserDoc?.();
+      unsubscribeUserDoc = undefined;
+
       if (user) {
         // Authenticated
         // Initial setup for the store from Firestore
@@ -21,27 +44,13 @@ export default function App() {
         const userDoc = await getDoc(userDocRef);
         
         if (userDoc.exists()) {
-           const data = userDoc.data();
-           setFirestoreSync(
-             data.masteredAtoms || [], 
-             data.masteredModules || [],
-             user.uid,
-             data.displayName || 'Astronot',
-             data.role || 'student'
-           );
+          syncUserData(user.uid, userDoc.data());
         }
 
         // Keep listening for external changes (optional for real-time across tabs)
-        onSnapshot(userDocRef, (docSnap: any) => {
-          if(docSnap.exists()){
-            const data = docSnap.data();
-            setFirestoreSync(
-              data.masteredAtoms || [], 
-              data.masteredModules || [],
-              user.uid,
-              data.displayName || 'Astronot',
-              data.role || 'student'
-            );
+        unsubscribeUserDoc = onSnapshot(userDocRef, (docSnap) => {
+          if (docSnap.exists()) {
+            syncUserData(user.uid, docSnap.data());
           }
         });
 
@@ -54,7 +63,10 @@ export default function App() {
       setIsLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeUserDoc?.();
+      unsubscribeAuth();
+    };
   }, [setFirestoreSync]);
 
   if (isLoading) {

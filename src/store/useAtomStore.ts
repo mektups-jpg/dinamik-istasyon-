@@ -2,18 +2,20 @@ import { create } from 'zustand';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../services/firebase';
 
+export type UserRole = 'student' | 'guest';
+
 interface AtomState {
   masteredAtoms: string[];
   masteredModules: string[];
   uid: string | null;
   displayName: string;
-  role: 'student' | 'guest';
+  role: UserRole;
   
   unlockAtom: (atomId: string) => void;
   unlockModule: (moduleId: string) => void;
   isMastered: (atomId: string) => boolean;
   
-  setFirestoreSync: (atoms: string[], modules: string[], uid: string | null, name: string, role: string) => void;
+  setFirestoreSync: (atoms: string[], modules: string[], uid: string | null, name: string, role: UserRole) => void;
 }
 
 export const useAtomStore = create<AtomState>((set, get) => ({
@@ -64,5 +66,5 @@ export const useAtomStore = create<AtomState>((set, get) => ({
   isMastered: (atomId) => get().masteredAtoms.includes(atomId),
   
   setFirestoreSync: (atoms, modules, uid, name, role) => 
-    set({ masteredAtoms: atoms, masteredModules: modules, uid, displayName: name, role: role as any })
+    set({ masteredAtoms: atoms, masteredModules: modules, uid, displayName: name, role })
 }));

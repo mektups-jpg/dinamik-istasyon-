@@ -1,62 +1,153 @@
-# 🗺️ Matnastik Laboratuvarı - Evrensel Kök Müfredat (K-12)
+# Matnastik Laboratuvarı - Uygulama Yol Haritası
 
-Bu doküman, Singapur Matematiği (CPA Yaklaşımı), ABD Common Core ve Finlandiya eğitim modelleri sentezlenerek oluşturulmuş **Matnastik Kök Müfredatı**'nı içerir. 
+Bu doküman, mevcut kod tabanı ve proje belgeleri incelendikten sonra uygulanacak çalışma sırasını tanımlar. Müfredat ve atom doğruluğu için kaynak belgeler:
 
-Geleneksel sistemler çocukları hemen "Soyut" (rakamlar ve formüller) aşamasına atarken, biz her konuyu önce "Somut/Görsel" simülasyonlarla başlatıyoruz.
+- `docs/MEB_ATOMLARI.md`: Mikro kazanım atomları için SSOT.
+- `docs/MODULES.md`: 73 makro oyun/laboratuvar modülünün ana haritası.
+- `docs/ARCHITECTURE.md`: Golden Template mimarisi.
+- `.agent/knowledge/`: Bilinen UI gotcha ve teknik kararlar.
 
-## 🟢 FAZ 1: Sayı Hissi ve Somut Temeller (İlkokul 1-4. Sınıf)
-*Amaç: Sayıların ne anlama geldiğini fiziksel/görsel olarak hissettirmek. Ezber yok.*
+## Güncel Durum
 
-### 1. Sınıf: Sayıların Doğası
-- [ ] **Sayı Doğrusu Zıplaması:** Toplama ve çıkarmanın ileri/geri gitmek olduğunu gösteren interaktif kurbağa.
-- [ ] **Onluk Bozma Fabrikası:** 10 tane birliğin birleşip 1 onluk bloğa dönüştüğü fiziksel animasyon.
+| Alan | Durum |
+| --- | --- |
+| Hedef makro modül | 73 |
+| Registry'de aktif modül | 32 |
+| Yaklaşık üretim oranı | %44 |
+| En dolu sınıf | 5. sınıf tamamlandı, 8. sınıf 3D/geometri ağırlıklı |
+| En boş sınıf | 10. sınıf henüz modülsüz |
+| Ana teknik risk | Modüller arası template tutarsızlığı, iframe root layout sorunları, kalan `any` tipleri, büyük ana bundle |
 
-### 2. Sınıf: Gruplama ve Temel Geometri
-- [ ] **Dinamik Çarpma Izgarası:** Çarpmanın ardışık toplama ve alan kaplama olduğunu gösteren renkli bloklar.
-- [ ] **Tangram ve Şekil İnşası:** 2D şekilleri birleştirerek yeni şekiller türetme.
+## Çalışma İlkeleri
 
-### 3. Sınıf: Parça-Bütün İlişkisi (Kesirlere Giriş)
-- [ ] **Kesirler Laboratuvarı (Pizza/Çikolata):** Görsel olarak 1/2'nin 2/4'e eşit olduğunu kanıtlama.
-- [ ] **Zaman ve Çarklar:** Akrep ve yelkovanın dişli oranlarıyla nasıl çalıştığı.
+1. Her yeni modül önce `docs/MEB_ATOMLARI.md` atomlarıyla eşleşir; uydurma kazanım kullanılmaz.
+2. Her modül `src/registry/moduleRegistry.ts` üzerinden dashboard ve embed route'a bağlanır.
+3. Embed root layout kuralı: `h-full w-full overflow-y-auto overflow-x-hidden`; root seviyesinde `min-h-screen` kullanılmaz.
+4. Dekoratif absolute overlay'ler `pointer-events-none` alır.
+5. Modül tamamlandı sayılması için build geçmeli, tarayıcı console temiz olmalı, temel desktop/mobile görsel kontrol yapılmalı.
 
-### 4. Sınıf: Gelişmiş Kesirler ve Ondalık Sayılar
-- [ ] **Denk Kesirler Terazisi:** Farklı kesir bloklarını teraziye koyarak dengeyi bulma.
-- [ ] **Ondalık Sayı Büyüteci:** Sayı doğrusunda 1 ile 2 arasına zoom yaparak 1.5, 1.55 gibi sayıları keşfetme.
+## Faz 0 - Devralma ve Stabilizasyon
 
-## 🟡 FAZ 2: Cebirsel Düşünme ve Orantı (Ortaokul 5-8. Sınıf)
-*Amaç: Bilinmeyenlerle (x, y) tanışma ve kuralların görsel ispatları.*
+Amaç: Google AI Studio prototip hissinden çıkıp sürdürülebilir repo düzenine geçmek.
 
-### 5. Sınıf: Dönüşümler ve Hacim
-- [ ] **Kesir-Ondalık-Yüzde Makinesi:** Bir değeri değiştirdiğinizde diğer ikisinin anında dönüştüğü çarklı makine.
-- [ ] **3D Prizma Su Doldurma:** Hacmin Taban Alanı × Yükseklik olduğunu gösteren 3D simülasyon.
+- [x] Depoyu yerelde çalışır hale getir.
+- [x] `package-lock.json` ve bağımlılık güvenlik uyarılarını düzelt.
+- [x] `node_modules/` ve `dist/` için `.gitignore` ekle.
+- [x] `PROGRESS.md` / `progress.md` case-collision sorununu temizle.
+- [x] Kırık dış `noise.svg` asset bağımlılığını yerel CSS ile değiştir.
+- [x] Poligon Çatışma Testi SVG runtime hatalarını düzelt.
+- [ ] Kalan `any` kullanımlarını temizle.
+- [ ] Büyük bundle uyarısı için manual chunk stratejisi ekle.
+- [ ] Iframe root layout audit'i yap ve eski modülleri normalize et.
 
-### 6. Sınıf: Oran-Orantı ve Tam Sayılar
-- [ ] **Negatif Sayı Asansörü:** Zemin katın altına inerek negatif sayılarla toplama/çıkarma mantığı.
-- [ ] **Dişli Çarklar (Orantı):** Farklı boyuttaki çarkların dönüş sayıları arasındaki ters/doğru orantı.
+## Faz 1 - Publish ve Operasyon Hattı
 
-### 7. Sınıf: Cebirsel İfadeler ve Denklemler
-- [ ] **Denklem Terazisi:** 2x + 3 = 7 denklemini çözerken iki kefeden de ağırlık çıkararak x'i yalnız bırakma.
-- [ ] **Açı Lazerleri:** Paralel doğruları kesen bir lazer ışını ile iç-ters, dış-ters açıları bulma.
+Amaç: AI Studio'daki `Publish` rahatlığını GitHub tabanlı tekrarlanabilir deploy'a taşımak.
 
-### 8. Sınıf: İleri Geometri ve Olasılık
-- [ ] **Pisagor Su Simülasyonu:** Dik üçgenin kenarlarındaki suların hipotenüse dolması.
-- [x] **Galton Tahtası:** Topların düşüşüyle olasılık ve çan eğrisi. (Tamamlandı)
+- [ ] Firebase Hosting projesini mevcut Firebase projesiyle eşleştir.
+- [ ] `firebase.json` ve deploy hedeflerini ekle.
+- [ ] GitHub Actions ile `main` push sonrası otomatik build + deploy kur.
+- [ ] Preview channel akışı ekle: PR veya manuel branch için geçici URL.
+- [ ] Ortam ayrımı yap: local, preview, production.
+- [ ] Deploy sonrası smoke test listesi oluştur: dashboard, login, 1 embed modül, 1 3D modül.
 
-## 🔴 FAZ 3: Analitik ve Dinamik Modelleme (Lise 9-12. Sınıf)
-*Amaç: Hareketli grafikleri, fonksiyonları ve uzaysal matematiği simüle etmek.*
+Not: Bu proje şu an Vite SPA olduğu için ilk tercih Firebase Hosting. Server-side ihtiyaç doğarsa Cloud Run veya Firebase App Hosting ayrıca değerlendirilir.
 
-### 9. Sınıf: Kümeler ve Mantık
-- [ ] **Dinamik Venn Şemaları:** Kesişim ve birleşimleri boyayarak gösteren interaktif alanlar.
-- [ ] **Mantık Kapıları Devresi:** Ve, Veya, Değil kapılarıyla elektrik devresi kurma.
+## Faz 2 - Golden Template Standardizasyonu
 
-### 10. Sınıf: Fonksiyonlar ve Polinomlar
-- [ ] **Parabol Bükücü:** y = ax² + bx + c katsayılarını kaydırıcıyla değiştirip tepe noktasını izleme.
-- [ ] **Fonksiyon Makinesi:** İçine sayı atılan ve kurala göre dışarı sayı çıkaran 3D makine.
+Amaç: 73 modül büyürken her modülün farklı iskelete savrulmasını engellemek.
 
-### 11. Sınıf: Trigonometri ve Uzay Geometri
-- [x] **Trigonometrik Birim Çember:** Dönen çemberin gölgeleriyle sin/cos mantığı. (Tamamlandı)
-- [ ] **Koni Kesitleri:** Bir 3D koniyi farklı açılarla keserek elips, parabol ve hiperbol elde etme.
+- [ ] Ortak `ModuleShell` bileşeni çıkar: header, bot alanı, kontrol paneli, simülasyon alanı.
+- [ ] `ModuleMeta` tipini sertleştir: `component` için `any` kaldır, `atomIds` dizisi ekle.
+- [ ] Tamamlama ekranı ve atom unlock akışını tek bileşende standartlaştır.
+- [ ] Ortak test/smoke checklist ekle.
+- [ ] 3D modüllerde ortak Three.js lifecycle helper'ı oluştur.
+- [ ] Eski modülleri template'e kademeli taşı.
 
-### 12. Sınıf: Kalkülüs (Türev ve İntegral)
-- [ ] **Teğet Sörfü (Türev):** Eğri üzerinde hareket eden noktanın eğiminin anlık değişimi.
-- [ ] **Riemann Alan Doldurma (İntegral):** Eğri altındaki alanı giderek küçülen dikdörtgenlerle doldurma.
+## Faz 3 - Müfredat Üretim Sırası
+
+Öncelik stratejisi: Önce 5-8 ortaokul omurgası tamamlanır, sonra ilkokul temel fazı doldurulur, lise modülleri daha sonra genişletilir. Sebep: mevcut kod tabanı en güçlü ortaokul/geometri simülasyonlarında; momentum buradan devam etmeli.
+
+### Sprint 3.1 - 6. Sınıfı Tamamlama
+
+5. sınıf tamamlandığı için doğal devam noktası 6. sınıf.
+
+- [ ] Kuantum Filtre İstasyonu: çarpanlar, katlar, bölünebilme, asal sayılar, EBOB/EKOK.
+- [ ] Format Dönüştürücü Çekirdek: kesir, ondalık, yüzde dönüşümü.
+- [ ] Cebirsel Reaktör: değişken, denklem dengesi, benzer terimler.
+- [ ] Büyük Veri Hızlandırıcısı: ortalama, açıklık, deneysel olasılık, yanıltıcı grafik.
+- [ ] Mevcut Optik Lazer ve Area/Pi modüllerini template + iframe kurallarına göre yeniden denetle.
+
+İlk önerilen modül: **Kuantum Filtre İstasyonu**. Hem 6. sınıfın ilk büyük ekseni hem de çok sayıda atomu tek modülde kapatıyor.
+
+### Sprint 3.2 - İlkokul Temel Fazı
+
+Amaç: küçük yaş kullanıcıları için ürünün giriş deneyimini güçlendirmek.
+
+- [ ] 1. sınıf: Lazer Denge Reaktörü.
+- [ ] 1. sınıf: Otonom Rota Bağlantısı.
+- [ ] 1. sınıf: Optik Kalite Kontrol Bandı.
+- [ ] 1. sınıf: Akıllı Lojistik Terminali.
+- [ ] 1. sınıf: Veri Akış Ekranı.
+- [ ] 2. sınıf: Lazer Kesim Odası.
+- [ ] 2. sınıf: Kargo Gruplama Bandı.
+- [ ] 2. sınıf: Kuantum Denge Terazisi.
+- [ ] 3. sınıf: İşlem Laboratuvarı ve Dinamik Birim Dönüştürücü.
+- [ ] 4. sınıf: Dinamik Kesir Terazisi ve Rotasyonlu Açı İletkisi.
+
+### Sprint 3.3 - 7 ve 8. Sınıf Tamamlama
+
+- [ ] 7. sınıf: Kuantum Kesir/Ondalık Senkronizatörü.
+- [ ] 7. sınıf: Akış Diyagramı ve Terim Reaktörü.
+- [ ] 7. sınıf: Optik Mimari Masası.
+- [ ] 7. sınıf: Hacim Dolum Tesisleri & Daire Alan Kurgusu.
+- [ ] 7. sınıf: Geometrik Asistan Robot & Spekülasyon Dedektifi.
+- [ ] 8. sınıf: Radikal Üs ve Kök Jeneratörü.
+- [ ] 8. sınıf: Kinematik Transformasyon Matrisi.
+- [ ] 8. sınıf: Spekülasyon Klasörü.
+- [ ] 8. sınıf 3D Holografik Ambalaj Tesisi alt modüllerini tek pedagogik akışta birleştir.
+
+### Sprint 3.4 - Lise Omurgası
+
+- [ ] 9. sınıf: Kök ve Üs Reaktörü.
+- [ ] 9. sınıf: Fonksiyonel Hologram Odası.
+- [ ] 9. sınıf: Akıllı Mantık Devreleri.
+- [ ] 10. sınıf: Şifreli Kuantum Kasası.
+- [ ] 10. sınıf: Parabolik Eğri Simülatörü.
+- [ ] 10. sınıf: Lazer Teodoliti.
+- [ ] 11. sınıf: Logaritmik Büyüme Reaktörü.
+- [ ] 12. sınıf: Limit Sensörü ve Türev Eğim Sürücüsü.
+
+## Modül Definition of Done
+
+Bir modül ancak şu maddeler tamamlanınca bitmiş sayılır:
+
+- [ ] `docs/MEB_ATOMLARI.md` içinden kapsadığı atomlar belirlenmiş.
+- [ ] Modül `src/modules/<domain>/<module>/` altında tek sorumluluklu kurulmuş.
+- [ ] `src/registry/moduleRegistry.ts` içine doğru `grade`, `category`, `difficulty`, `path`, `atomIds` ile eklenmiş.
+- [ ] Root layout iframe uyumlu.
+- [ ] `any` yok; event ve state tipleri açık.
+- [ ] Decorative overlay'ler click/drag engellemiyor.
+- [ ] Completion state `useAtomStore` üzerinden çalışıyor.
+- [ ] `npm run build` geçiyor.
+- [ ] Tarayıcı console error vermiyor.
+- [ ] Desktop ve mobil viewport smoke test tamam.
+- [ ] `PROGRESS.md` ve gerekirse `docs/BRAINSTORM.md` güncellenmiş.
+
+## Yakın Dönem Checkpoint'leri
+
+### Checkpoint A
+
+Teknik omurga kapanmış olmalı: deploy pipeline, type cleanup, bundle chunking, layout audit.
+
+### Checkpoint B
+
+6. sınıf ana modülleri tamamlanmış olmalı. Dashboard'da 6. sınıf artık eksik görünmemeli.
+
+### Checkpoint C
+
+İlkokul 1-4 için en az her sınıfta 3 güçlü modül bulunmalı. Ürün küçük yaş kullanıcısına da gerçek değer sunmalı.
+
+### Checkpoint D
+
+8. sınıf ve lise 9-10 için fonksiyon/analitik modüller açılmalı. Bu noktadan sonra platform demo değil, gerçek K-12 omurga olur.

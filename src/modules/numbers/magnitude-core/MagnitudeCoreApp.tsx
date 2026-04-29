@@ -58,7 +58,7 @@ export default function MagnitudeCoreApp() {
       {/* Background FX */}
       <div className="absolute inset-0 pointer-events-none">
         <div className={`absolute w-[100vw] h-[100vw] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-10 transition-colors duration-1000 ${mode === 'macro' ? 'bg-[radial-gradient(circle,#00E5FF_0%,transparent_70%)]' : 'bg-[radial-gradient(circle,#B388FF_0%,transparent_70%)]'}`} />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
+        <div className="absolute inset-0 noise-overlay opacity-[0.03]" />
       </div>
 
       {/* Top Header */}

@@ -14,6 +14,14 @@ body {
   color: white;
 }
 
+.noise-overlay {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.18) 0 0.7px, transparent 0.8px),
+    radial-gradient(circle, rgba(0, 229, 255, 0.12) 0 0.6px, transparent 0.7px);
+  background-position: 0 0, 11px 13px;
+  background-size: 23px 23px, 29px 29px;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: #1E1E1E; }

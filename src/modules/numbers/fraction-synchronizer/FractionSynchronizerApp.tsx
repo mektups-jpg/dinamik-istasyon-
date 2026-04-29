@@ -128,7 +128,7 @@ export default function FractionSynchronizerApp({ onBack }: { onBack?: () => voi
       <div className="absolute inset-0 pointer-events-none">
          <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-[#00E5FF]/5 to-transparent transition-opacity" style={{ opacity: step === 'victory' ? 0.3 : 1 }}></div>
          <div className="absolute bottom-0 right-0 w-full h-[500px] bg-gradient-to-t from-[#B388FF]/5 to-transparent transition-opacity" style={{ opacity: step === 'victory' ? 0.3 : 1 }}></div>
-         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04]"></div>
+         <div className="absolute inset-0 noise-overlay opacity-[0.04]"></div>
          <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)', backgroundSize: '50px 50px' }}></div>
       </div>
 

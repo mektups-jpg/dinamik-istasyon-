@@ -24,7 +24,7 @@ export default function PolygonCollisionApp() {
   const [a, setA] = useState(3);
   const [b, setB] = useState(4);
   const [c, setC] = useState(8);
-  
+
   const [phase, setPhase] = useState(0);
   const [showVictory, setShowVictory] = useState(false);
   const [typesFound, setTypesFound] = useState({ EQUILATERAL: false, ISOSCELES: false, SCALENE: false });
@@ -61,7 +61,7 @@ export default function PolygonCollisionApp() {
               if (!typesFound.EQUILATERAL) missing.push("Eşkenar");
               if (!typesFound.ISOSCELES) missing.push("İkizkenar");
               if (!typesFound.SCALENE) missing.push("Çeşitkenar");
-              
+
               const foundCount = 3 - missing.length;
               if (foundCount === 2) {
                   showMessage(`Mükemmel gidiyorsun! Son bir tane kaldı: Kilit açmak için bir ${missing[0]} Üçgen oluştur!`, "info");
@@ -100,31 +100,31 @@ export default function PolygonCollisionApp() {
   if (isValid) {
     const cosB = (b * b + c * c - a * a) / (2 * b * c);
     const radB = Math.acos(cosB);
-    angleB = -radB * (180 / Math.PI); 
+    angleB = -radB * (180 / Math.PI);
 
     const tipX = bScaled * Math.cos(radB);
-    const tipY = -bScaled * Math.sin(radB); 
+    const tipY = -bScaled * Math.sin(radB);
 
     const radA = Math.atan2(tipY, tipX - cScaled);
-    angleA = radA * (180 / Math.PI); 
+    angleA = radA * (180 / Math.PI);
   } else {
     // Drop them to the floor visually
     if (a + b <= c) {
-      angleB = 0; 
+      angleB = 0;
       angleA = 180;
     } else if (b + c <= a) {
-      angleB = 180; 
+      angleB = 180;
       angleA = 180;
     } else if (a + c <= b) {
-      angleB = 0; 
-      angleA = 0; 
+      angleB = 0;
+      angleA = 0;
     }
   }
 
   // Calculate triangle vertices for polygon fill if valid
   const p1 = { x: -cScaled/2, y: 0 };
   const p2 = { x: cScaled/2, y: 0 };
-  
+
   // Calculate tips using exact angles
   const bTipX = p1.x + bScaled * Math.cos(angleB * Math.PI / 180);
   const bTipY = p1.y + bScaled * Math.sin(angleB * Math.PI / 180);
@@ -142,9 +142,9 @@ export default function PolygonCollisionApp() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#05050A] via-transparent to-[#05050A]"></div>
       </div>
 
-      <GameHeader 
-        title="POLİGON ÇATIŞMA TESTİ" 
-        subtitle="ÜÇGEN EŞİTSİZLİĞİ" 
+      <GameHeader
+        title="POLİGON ÇATIŞMA TESTİ"
+        subtitle="ÜÇGEN EŞİTSİZLİĞİ"
         rightContent={
           isValid && (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-xs px-4 py-2 font-mono tracking-widest text-[#00FF88] bg-[#00FF88]/10 rounded-lg border border-[#00FF88]/30 shadow-[0_0_15px_rgba(0,255,136,0.2)]">
@@ -156,14 +156,14 @@ export default function PolygonCollisionApp() {
 
       <main className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 flex-1 flex flex-col pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 flex-1 min-h-0">
-          
+
           {/* Sol Panel: Kontrol Paneli */}
           <div className="lg:col-span-1 flex flex-col gap-3 overflow-y-auto CustomScrollbar pr-2">
-            
+
             {/* Uzunluk Kontrolleri (Kompakt) */}
             <div className="bg-[#12121A]/80 backdrop-blur-xl border border-gray-800 p-4 rounded-3xl shadow-2xl relative overflow-hidden flex-shrink-0 flex flex-col gap-4">
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/5 to-transparent"></div>
-                
+
                 {/* A */}
                 <div className="relative z-10">
                     <div className="flex justify-between items-center mb-1">
@@ -235,8 +235,8 @@ export default function PolygonCollisionApp() {
           <div className="lg:col-span-3 bg-[#0A0A0F]/90 backdrop-blur border border-gray-800 rounded-3xl relative overflow-hidden flex items-center justify-center shadow-[inset_0_0_100px_rgba(0,0,0,0.8)] min-h-[500px]">
              <AnimatePresence>
                {!isValid && (
-                   <motion.div 
-                     initial={{ opacity: 0, y: -20, scale: 0.9 }} 
+                   <motion.div
+                     initial={{ opacity: 0, y: -20, scale: 0.9 }}
                      animate={{ opacity: 1, y: 0, scale: 1 }}
                      exit={{ opacity: 0, y: -20, scale: 0.9 }}
                      className="absolute top-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none"
@@ -248,40 +248,36 @@ export default function PolygonCollisionApp() {
                    </motion.div>
                )}
              </AnimatePresence>
-             
+
              <svg width="100%" height="100%" viewBox="-400 -300 800 600" className="overflow-visible absolute inset-0">
                 {/* Dağılan Yaylar (Radii Arcs) */}
-                <motion.circle 
-                    cx={p1.x} cy={p1.y} 
-                    r={bScaled} 
-                    fill="none" 
-                    stroke="#33CCFF" 
-                    strokeWidth="1.5" 
-                    strokeDasharray="6,8" 
+                <circle
+                    cx={p1.x} cy={p1.y}
+                    r={bScaled}
+                    fill="none"
+                    stroke="#33CCFF"
+                    strokeWidth="1.5"
+                    strokeDasharray="6,8"
                     className="opacity-20"
-                    animate={{ r: bScaled, cx: p1.x }}
-                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
                 />
-                <motion.circle 
-                    cx={p2.x} cy={p2.y} 
-                    r={aScaled} 
-                    fill="none" 
-                    stroke="#FF3366" 
-                    strokeWidth="1.5" 
-                    strokeDasharray="6,8" 
+                <circle
+                    cx={p2.x} cy={p2.y}
+                    r={aScaled}
+                    fill="none"
+                    stroke="#FF3366"
+                    strokeWidth="1.5"
+                    strokeDasharray="6,8"
                     className="opacity-20"
-                    animate={{ r: aScaled, cx: p2.x }}
-                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
                 />
 
                 {/* Geometri İç Dolgu (Sadece üçgen oluştuğunda) */}
                 <AnimatePresence>
                     {isValid && p3 && (
-                        <motion.path 
+                        <motion.path
                             initial={{ opacity: 0 }}
-                            animate={{ 
+                            animate={{
                                 opacity: 0.15,
-                                d: `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} Z` 
+                                d: `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} L ${p3.x} ${p3.y} Z`
                             }}
                             exit={{ opacity: 0 }}
                             fill="#00E5FF"
@@ -291,92 +287,74 @@ export default function PolygonCollisionApp() {
                 </AnimatePresence>
 
                 {/* Baz Çizgisi (Yeşil C) */}
-                <motion.line
+                <line
                     x1={p1.x} y1={p1.y}
                     x2={p2.x} y2={p2.y}
                     stroke="#00FF88" strokeWidth="8" strokeLinecap="round"
                     className="drop-shadow-[0_0_10px_rgba(0,255,136,0.8)]"
-                    animate={{ x1: p1.x, x2: p2.x, y1: p1.y, y2: p2.y }}
-                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
                 />
-                
+
                 {/* Sol Pivot */}
-                <motion.circle cx={p1.x} cy={p1.y} r="6" fill="#12121A" stroke="#00FF88" strokeWidth="3" className="z-10 relative" animate={{ cx: p1.x, cy: p1.y }} transition={{ type: "spring", stiffness: 100, damping: 20 }} />
+                <circle cx={p1.x} cy={p1.y} r="6" fill="#12121A" stroke="#00FF88" strokeWidth="3" className="z-10 relative" />
                 {/* Sağ Pivot */}
-                <motion.circle cx={p2.x} cy={p2.y} r="6" fill="#12121A" stroke="#00FF88" strokeWidth="3" className="z-10 relative" animate={{ cx: p2.x, cy: p2.y }} transition={{ type: "spring", stiffness: 100, damping: 20 }}/>
+                <circle cx={p2.x} cy={p2.y} r="6" fill="#12121A" stroke="#00FF88" strokeWidth="3" className="z-10 relative" />
 
                 {/* Mavi (B) Çizgisi - Sol uca bağlı */}
-                <motion.line 
-                    x1={p1.x} y1={p1.y} x2={bTipX} y2={bTipY} 
-                    stroke="#33CCFF" strokeWidth="8" strokeLinecap="round" 
+                <line
+                    x1={p1.x} y1={p1.y} x2={bTipX} y2={bTipY}
+                    stroke="#33CCFF" strokeWidth="8" strokeLinecap="round"
                     className="drop-shadow-[0_0_10px_rgba(51,204,255,0.8)]"
-                    animate={{ x1: p1.x, y1: p1.y, x2: bTipX, y2: bTipY }}
-                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
                 />
-                <motion.circle 
-                    cx={bTipX} cy={bTipY} r="6" fill="#12121A" stroke="#33CCFF" strokeWidth="3" 
+                <circle
+                    cx={bTipX} cy={bTipY} r="6" fill="#12121A" stroke="#33CCFF" strokeWidth="3"
                     className="z-10 relative"
-                    animate={{ cx: bTipX, cy: bTipY }}
-                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
                 />
 
                 {/* Kırmızı (A) Çizgisi - Sağ uca bağlı */}
-                <motion.line 
-                    x1={p2.x} y1={p2.y} x2={aTipX} y2={aTipY} 
-                    stroke="#FF3366" strokeWidth="8" strokeLinecap="round" 
+                <line
+                    x1={p2.x} y1={p2.y} x2={aTipX} y2={aTipY}
+                    stroke="#FF3366" strokeWidth="8" strokeLinecap="round"
                     className="drop-shadow-[0_0_10px_rgba(255,51,102,0.8)]"
-                    animate={{ x1: p2.x, y1: p2.y, x2: aTipX, y2: aTipY }}
-                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
                 />
-                <motion.circle 
-                    cx={aTipX} cy={aTipY} r="6" fill="#12121A" stroke="#FF3366" strokeWidth="3" 
+                <circle
+                    cx={aTipX} cy={aTipY} r="6" fill="#12121A" stroke="#FF3366" strokeWidth="3"
                     className="z-10 relative"
-                    animate={{ cx: aTipX, cy: aTipY }}
-                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
                 />
 
                 {/* Çatışma Yoksa Açıklık Mesafesini Göster (Kırmızı Kesik Çizgi) */}
                 <AnimatePresence>
                     {!isValid && (
-                        <motion.g 
-                            initial={{ opacity: 0 }} 
-                            animate={{ opacity: 1 }} 
+                        <motion.g
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ delay: 0.3 }}
                         >
                             {/* Mühendislik tarzı ölçüm çizgileri */}
-                            <motion.line 
-                                x1={bTipX} y1={bTipY + 40} 
+                            <line
+                                x1={bTipX} y1={bTipY + 40}
                                 x2={aTipX} y2={aTipY + 40}
                                 stroke="#FF3366" strokeWidth="2" strokeDasharray="6,6"
-                                animate={{ x1: bTipX, y1: bTipY + 40, x2: aTipX, y2: aTipY + 40 }}
-                                transition={{ type: "spring", stiffness: 100, damping: 20 }}
                             />
-                            <motion.line 
-                                x1={bTipX} y1={bTipY} x2={bTipX} y2={bTipY + 40} 
+                            <line
+                                x1={bTipX} y1={bTipY} x2={bTipX} y2={bTipY + 40}
                                 stroke="#FF3366" strokeWidth="1" strokeDasharray="2,4" opacity="0.6"
-                                animate={{ x1: bTipX, y1: bTipY, x2: bTipX, y2: bTipY + 40 }}
-                                transition={{ type: "spring", stiffness: 100, damping: 20 }}
                             />
-                            <motion.line 
-                                x1={aTipX} y1={aTipY} x2={aTipX} y2={aTipY + 40} 
+                            <line
+                                x1={aTipX} y1={aTipY} x2={aTipX} y2={aTipY + 40}
                                 stroke="#FF3366" strokeWidth="1" strokeDasharray="2,4" opacity="0.6"
-                                animate={{ x1: aTipX, y1: aTipY, x2: aTipX, y2: aTipY + 40 }}
-                                transition={{ type: "spring", stiffness: 100, damping: 20 }}
                             />
-                            
+
                             {/* Mesafeyi Metin Olarak Ekle */}
-                            <motion.text 
-                                x={(bTipX + aTipX) / 2} 
+                            <text
+                                x={(bTipX + aTipX) / 2}
                                 y={(bTipY + aTipY) / 2 + 60}
-                                fill="#FF3366" 
-                                textAnchor="middle" 
+                                fill="#FF3366"
+                                textAnchor="middle"
                                 className="font-mono text-sm tracking-widest fill-[#FF3366] drop-shadow-[0_0_10px_rgba(255,51,102,0.8)]"
-                                animate={{ x: (bTipX + aTipX) / 2, y: (bTipY + aTipY) / 2 + 60 }}
-                                transition={{ type: "spring", stiffness: 100, damping: 20 }}
                             >
                                 {(Math.hypot(bTipX - aTipX, bTipY - aTipY) / scale).toFixed(1)} U AÇIKLIK
-                            </motion.text>
+                            </text>
                         </motion.g>
                     )}
                 </AnimatePresence>
@@ -416,4 +394,3 @@ export default function PolygonCollisionApp() {
     </div>
   );
 }
-

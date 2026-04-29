@@ -67,7 +67,7 @@ export default function EquationLabApp() {
     <div className="min-h-screen bg-[#050510] text-white font-mono flex flex-col w-full h-full relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
         <div className={`absolute w-[100vw] h-[100vw] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-10 transition-colors duration-1000 ${getBgClass()}`} />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
+        <div className="absolute inset-0 noise-overlay opacity-[0.03]" />
       </div>
 
       <header className="px-8 py-6 flex items-center justify-between z-10 relative border-b border-gray-800/50 bg-[#050510]/80 backdrop-blur-md">
