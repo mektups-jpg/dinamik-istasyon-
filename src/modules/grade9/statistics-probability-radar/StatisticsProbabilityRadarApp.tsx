@@ -242,18 +242,25 @@ function RadarVisual({ groupChoice, boxChoice, trials, successes }: RadarVisualP
   const values = groups[groupChoice];
   const observed = trials === 0 ? 0 : successes / trials;
   const box = { min: 42, q1: 55, median: 70, q3: 82, max: 96 };
-  const scale = (value: number) => 60 + value * 3.1;
+  const boxScale = (value: number) => 250 + ((value - box.min) / (box.max - box.min)) * 170;
+  const boxLabels: Record<BoxChoice, string> = {
+    min: 'Minimum',
+    q1: 'Q1',
+    median: 'Medyan',
+    q3: 'Q3',
+  };
   const arcRadius = 72;
   const arcStart = -Math.PI / 2;
   const arcEnd = arcStart + observed * Math.PI * 2;
-  const arcStartX = 470 + Math.cos(arcStart) * arcRadius;
-  const arcStartY = 218 + Math.sin(arcStart) * arcRadius;
-  const arcEndX = 470 + Math.cos(arcEnd) * arcRadius;
-  const arcEndY = 218 + Math.sin(arcEnd) * arcRadius;
+  const arcStartX = 510 + Math.cos(arcStart) * arcRadius;
+  const arcStartY = 160 + Math.sin(arcStart) * arcRadius;
+  const arcEndX = 510 + Math.cos(arcEnd) * arcRadius;
+  const arcEndY = 160 + Math.sin(arcEnd) * arcRadius;
   const largeArcFlag = observed > 0.5 ? 1 : 0;
   const probabilityArc = `M${arcStartX} ${arcStartY} A${arcRadius} ${arcRadius} 0 ${largeArcFlag} 1 ${arcEndX} ${arcEndY}`;
   const selectedBoxValue = box[boxChoice];
   const projectedSuccesses = Math.round(observed * 1000);
+  const boxY = 205;
 
   return (
     <div className="relative min-h-[430px] overflow-hidden rounded-2xl border border-[#00E5FF]/20 bg-black/45 p-4">
@@ -291,15 +298,27 @@ function RadarVisual({ groupChoice, boxChoice, trials, successes }: RadarVisualP
         })}
         <text x="185" y="176" textAnchor="middle" fill="#fff" fontWeight="900">Sınıf {groupChoice}</text>
 
-        <line x1={scale(box.min)} y1="300" x2={scale(box.max)} y2="300" stroke="rgba(255,255,255,0.45)" strokeWidth="4" />
-        <rect x={scale(box.q1)} y="260" width={scale(box.q3) - scale(box.q1)} height="80" rx="10" fill="rgba(0,229,255,0.12)" stroke="#00E5FF" strokeWidth="3" />
-        <line x1={scale(box.median)} y1="252" x2={scale(box.median)} y2="348" stroke={boxChoice === 'median' ? '#00FF88' : '#fff'} strokeWidth="6" />
-        <circle cx={scale(box.min)} cy="300" r="7" fill="#FF6B9A" />
-        <circle cx={scale(box.max)} cy="300" r="7" fill="#FF6B9A" />
+        <rect x="232" y="86" width="210" height="178" rx="22" fill="rgba(0,229,255,0.055)" stroke="rgba(0,229,255,0.22)" strokeWidth="2" />
+        <text x="337" y="116" textAnchor="middle" fill="#00E5FF" fontSize="13" fontWeight="900">KUTU-BIYIK OKUYUCU</text>
+        <text x="337" y="138" textAnchor="middle" fill="rgba(255,255,255,0.58)" fontSize="11" fontWeight="900">verinin orta %50 bölgesi</text>
+        <line x1={boxScale(box.min)} y1={boxY} x2={boxScale(box.max)} y2={boxY} stroke="rgba(255,255,255,0.52)" strokeWidth="4" strokeLinecap="round" />
+        <line x1={boxScale(box.min)} y1={boxY - 22} x2={boxScale(box.min)} y2={boxY + 22} stroke="#FF6B9A" strokeWidth="4" strokeLinecap="round" />
+        <line x1={boxScale(box.max)} y1={boxY - 22} x2={boxScale(box.max)} y2={boxY + 22} stroke="#FF6B9A" strokeWidth="4" strokeLinecap="round" />
+        <rect x={boxScale(box.q1)} y={boxY - 24} width={boxScale(box.q3) - boxScale(box.q1)} height="48" rx="12" fill="rgba(0,229,255,0.13)" stroke="#00E5FF" strokeWidth="3" />
+        <line x1={boxScale(box.median)} y1={boxY - 32} x2={boxScale(box.median)} y2={boxY + 32} stroke={boxChoice === 'median' ? '#00FF88' : '#fff'} strokeWidth="6" strokeLinecap="round" />
+        {[
+          { key: 'min', label: 'Min', value: box.min },
+          { key: 'q1', label: 'Q1', value: box.q1 },
+          { key: 'median', label: 'Medyan', value: box.median },
+          { key: 'q3', label: 'Q3', value: box.q3 },
+          { key: 'max', label: 'Max', value: box.max },
+        ].map((item) => (
+          <text key={item.key} x={boxScale(item.value)} y={boxY + 52} textAnchor="middle" fill="rgba(255,255,255,0.62)" fontSize="10" fontWeight="900">{item.label}</text>
+        ))}
         <motion.g animate={{ opacity: [0.58, 1, 0.58] }} transition={{ duration: 1.2, repeat: Infinity }}>
-          <line x1={scale(selectedBoxValue)} y1="238" x2={scale(selectedBoxValue)} y2="356" stroke="#FBBF24" strokeWidth="3" strokeDasharray="6 7" />
-          <circle cx={scale(selectedBoxValue)} cy="238" r="9" fill="#FBBF24" filter="url(#stats-glow)" />
-          <text x={scale(selectedBoxValue)} y="224" textAnchor="middle" fill="#FBBF24" fontSize="12" fontWeight="900">{boxChoice.toUpperCase()}</text>
+          <line x1={boxScale(selectedBoxValue)} y1={boxY - 52} x2={boxScale(selectedBoxValue)} y2={boxY + 42} stroke="#FBBF24" strokeWidth="3" strokeDasharray="6 7" />
+          <circle cx={boxScale(selectedBoxValue)} cy={boxY - 52} r="9" fill="#FBBF24" filter="url(#stats-glow)" />
+          <text x={boxScale(selectedBoxValue)} y={boxY - 66} textAnchor="middle" fill="#FBBF24" fontSize="12" fontWeight="900">{boxLabels[boxChoice]}</text>
         </motion.g>
 
         {observed > 0 ? (
@@ -312,13 +331,13 @@ function RadarVisual({ groupChoice, boxChoice, trials, successes }: RadarVisualP
             filter="url(#stats-glow)"
           />
         ) : null}
-        <circle cx="470" cy="218" r="54" fill="rgba(0,255,136,0.08)" stroke="rgba(0,255,136,0.28)" strokeWidth="2" />
-        <text x="470" y="212" textAnchor="middle" fill="#00FF88" fontSize="26" fontWeight="900">{observed.toFixed(2)}</text>
-        <text x="470" y="236" textAnchor="middle" fill="rgba(255,255,255,0.58)" fontSize="12" fontWeight="900">P(başarı)</text>
-        <rect x="405" y="306" width="130" height="18" rx="9" fill="rgba(255,255,255,0.08)" />
+        <circle cx="510" cy="160" r="54" fill="rgba(0,255,136,0.08)" stroke="rgba(0,255,136,0.28)" strokeWidth="2" />
+        <text x="510" y="154" textAnchor="middle" fill="#00FF88" fontSize="26" fontWeight="900">{observed.toFixed(2)}</text>
+        <text x="510" y="178" textAnchor="middle" fill="rgba(255,255,255,0.58)" fontSize="12" fontWeight="900">P(başarı)</text>
+        <rect x="445" y="262" width="130" height="18" rx="9" fill="rgba(255,255,255,0.08)" />
         <motion.rect
-          x="405"
-          y="306"
+          x="445"
+          y="262"
           width={Math.max(4, observed * 130)}
           height="18"
           rx="9"
@@ -326,7 +345,7 @@ function RadarVisual({ groupChoice, boxChoice, trials, successes }: RadarVisualP
           animate={{ opacity: [0.65, 1, 0.65] }}
           transition={{ duration: 1.3, repeat: Infinity }}
         />
-        <text x="470" y="347" textAnchor="middle" fill="rgba(255,255,255,0.66)" fontSize="12" fontWeight="900">1000 atış projeksiyonu: {projectedSuccesses}</text>
+        <text x="510" y="303" textAnchor="middle" fill="rgba(255,255,255,0.66)" fontSize="12" fontWeight="900">1000 atış projeksiyonu: {projectedSuccesses}</text>
       </svg>
 
       <div className="relative grid gap-3 md:grid-cols-3">
