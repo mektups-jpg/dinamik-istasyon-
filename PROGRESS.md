@@ -55,6 +55,7 @@ Bu dosya, projenin genel vizyonunu, tamamlanan özellikleri ve gelecekteki planl
 - [x] **Kod Refactoring (Kısmi):** Ortak UI bileşenleri (`AstroBot`, `GlobalAstroBot`, `Protractor`, `MeasurementPanel`) bağımsızlaştırılarak merkezileştirildi.
 - [x] **Codex Devralma ve Roadmap Senkronizasyonu:** Tüm proje dokümanları incelendi, `docs/ROADMAP.md` teknik omurga + publish hattı + müfredat sprintleri olarak yeniden düzenlendi. Sıradaki önerilen modül 6. sınıf **Kuantum Filtre İstasyonu** olarak belirlendi.
 - [x] **9. Sınıf Lab Paketi v1:** Ortak `Grade9LabShell` altyapısı kuruldu; 6 yeni 9. sınıf modülü registry ve dashboard'a bağlandı. Browser Use ile `?qa=1` güvenli test oturumunda 6/6 yeni modülün tüm görev zincirleri uçtan uca tamamlandı. AstroBot'un kontrol butonlarını tıklanamaz hale getirme riski, Kök/Üs test id çakışması, Üçgen açı slider test/UX eksiği ve veri radarı 0 deney yayı düzeltildi. Son görsel denetimde orta genişlikte yatay sahne sıkışması giderildi, görev zinciri kompakt yatay akışa alındı ve Fonksiyon stepper hızlı tıklama state hatası fonksiyonel update ile onarıldı.
+- [x] **9. Sınıf Lab Paketi v2 Görsel Ayrıştırma:** `Grade9LabShell` ortak görev paneli dayatmasından arındırıldı; sadece GameHeader, tamamlanma ve görev state iskeletini taşıyor. Modüllere Hologram/Reaktör/Devre/Gerilim/Adli Analiz/Radar brifingleri, ayrı arka plan kimlikleri ve tema bazlı kontrol varyantları eklendi. Browser Use ile 6/6 modül tekrar tamamlandı.
 
 ---
 

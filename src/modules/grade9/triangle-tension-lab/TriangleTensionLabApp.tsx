@@ -127,24 +127,27 @@ export default function TriangleTensionLabApp() {
       activeIndex={progress.activeIndex}
       completed={progress.completed}
       onRestart={restart}
+      frameClassName="bg-[#04110f] [background-image:radial-gradient(circle_at_17%_18%,rgba(45,212,191,0.16),transparent_26%),radial-gradient(circle_at_82%_16%,rgba(251,191,36,0.12),transparent_24%),linear-gradient(180deg,#04110f_0%,#061916_54%,#030806_100%)]"
       badges={[
         { label: 'A Açısı', value: `${angleA}°`, tone: 'amber' },
         { label: 'Seçili Kenar', value: sideChoice, tone: 'cyan' },
       ]}
     >
+      <div className="space-y-4">
+        <TensionBrief activeMission={progress.activeMission} activeIndex={progress.activeIndex} total={MISSIONS.length} angleA={angleA} sideChoice={sideChoice} />
       <div className="grid gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="min-w-0 rounded-2xl border border-white/10 bg-[#07101e]/80 p-4">
+        <div className="min-w-0 rounded-[30px] border border-teal-200/15 bg-teal-950/20 p-4 shadow-[inset_0_0_35px_rgba(45,212,191,0.05)]">
           <div className="mb-4 flex flex-wrap gap-2">
-            <MetricPill label="AB" value={String(triangle.ab)} tone="purple" />
-            <MetricPill label="AC" value={String(triangle.ac)} tone="green" />
-            <MetricPill label="BC" value={String(triangle.bc)} tone="cyan" />
-            <MetricPill label="Oran" value="6/3 = 2" tone="amber" />
+            <MetricPill variant="tension" label="AB" value={String(triangle.ab)} tone="purple" />
+            <MetricPill variant="tension" label="AC" value={String(triangle.ac)} tone="green" />
+            <MetricPill variant="tension" label="BC" value={String(triangle.bc)} tone="cyan" />
+            <MetricPill variant="tension" label="Oran" value="6/3 = 2" tone="amber" />
           </div>
           <TriangleVisual angleA={angleA} sideChoice={sideChoice} triangle={triangle} />
         </div>
 
         <div className="min-w-0 space-y-4">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-4">
+          <div className="rounded-[30px] border border-teal-200/15 bg-teal-200/[0.045] p-4">
             <h4 className="mb-3 flex items-center gap-2 text-sm font-black uppercase tracking-wider text-white">
               <MoveHorizontal className="h-4 w-4 text-[#00E5FF]" /> Açı Gerilim Sürgüsü
             </h4>
@@ -180,7 +183,7 @@ export default function TriangleTensionLabApp() {
 
           <div className="grid grid-cols-3 gap-3">
             {(['AB', 'AC', 'BC'] as SideChoice[]).map((side) => (
-              <ChoiceButton testId={`triangle-side-${side.toLowerCase()}`} key={side} selected={sideChoice === side} label={side} detail="Karşı/en uzun kenar" onClick={() => setSideChoice(side)} tone="cyan" />
+              <ChoiceButton variant="tension" testId={`triangle-side-${side.toLowerCase()}`} key={side} selected={sideChoice === side} label={side} detail="Karşı/en uzun kenar" onClick={() => setSideChoice(side)} tone="cyan" />
             ))}
           </div>
 
@@ -196,7 +199,30 @@ export default function TriangleTensionLabApp() {
           </div>
         </div>
       </div>
+      </div>
     </Grade9LabShell>
+  );
+}
+
+function TensionBrief({ activeMission, activeIndex, total, angleA, sideChoice }: { activeMission: MissionStep; activeIndex: number; total: number; angleA: number; sideChoice: SideChoice }) {
+  return (
+    <section className="relative overflow-hidden rounded-[30px] border border-teal-200/20 bg-teal-200/[0.045] p-5 shadow-[0_0_42px_rgba(45,212,191,0.10)]">
+      <div className="pointer-events-none absolute right-6 top-5 h-24 w-32 border-b border-l border-teal-200/20" />
+      <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="max-w-3xl">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-teal-100/65">gerilim testi {activeIndex + 1}/{total}</p>
+          <h2 className="mt-2 text-3xl font-black text-white">{activeMission.title}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-teal-50/70">{activeMission.prompt}</p>
+        </div>
+        <div className="w-full min-w-0 rounded-3xl border border-teal-200/15 bg-black/30 p-3 lg:w-[250px] lg:shrink-0">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-teal-100/55">ip gerilimi</p>
+          <div className="mt-2 flex items-end justify-between gap-3">
+            <span className="text-3xl font-black text-teal-100">A {angleA}°</span>
+            <span className="rounded-full border border-teal-200/25 px-3 py-1 font-mono text-xs font-black text-teal-100">{sideChoice}</span>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -276,16 +302,16 @@ function AnswerPanel({ answers, setAnswer }: AnswerPanelProps) {
       </h4>
       <div className="grid grid-cols-2 gap-3">
         {['55', '65', '75', '115'].map((value) => (
-          <ChoiceButton testId={`triangle-angle-answer-${value}`} key={value} selected={answers.missingAngle === value} label={`${value}°`} detail="Eksik açı" onClick={() => setAnswer('missingAngle', value)} tone="amber" />
+          <ChoiceButton variant="tension" testId={`triangle-angle-answer-${value}`} key={value} selected={answers.missingAngle === value} label={`${value}°`} detail="Eksik açı" onClick={() => setAnswer('missingAngle', value)} tone="amber" />
         ))}
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <ChoiceButton testId="triangle-similarity-aaa" selected={answers.similarity === 'AAA'} label="AAA" detail="Açı-Açı-Açı" onClick={() => setAnswer('similarity', 'AAA')} tone="green" />
-        <ChoiceButton testId="triangle-similarity-ssa" selected={answers.similarity === 'SSA'} label="SSA" detail="Belirsiz durum" onClick={() => setAnswer('similarity', 'SSA')} tone="pink" />
-        <ChoiceButton testId="triangle-ratio-2" selected={answers.ratio === '2'} label="2" detail="6/3 = 8/4 = 10/5" onClick={() => setAnswer('ratio', '2')} tone="cyan" />
-        <ChoiceButton testId="triangle-ratio-3" selected={answers.ratio === '3'} label="3" detail="Fazla büyütme" onClick={() => setAnswer('ratio', '3')} tone="pink" />
-        <ChoiceButton testId="triangle-theorem-euclid" selected={answers.theorem === 'Euclid'} label="Öklid" detail="h²=p·k" onClick={() => setAnswer('theorem', 'Euclid')} tone="purple" />
-        <ChoiceButton testId="triangle-theorem-tales" selected={answers.theorem === 'Tales'} label="Tales" detail="Paralel oran" onClick={() => setAnswer('theorem', 'Tales')} tone="amber" />
+        <ChoiceButton variant="tension" testId="triangle-similarity-aaa" selected={answers.similarity === 'AAA'} label="AAA" detail="Açı-Açı-Açı" onClick={() => setAnswer('similarity', 'AAA')} tone="green" />
+        <ChoiceButton variant="tension" testId="triangle-similarity-ssa" selected={answers.similarity === 'SSA'} label="SSA" detail="Belirsiz durum" onClick={() => setAnswer('similarity', 'SSA')} tone="pink" />
+        <ChoiceButton variant="tension" testId="triangle-ratio-2" selected={answers.ratio === '2'} label="2" detail="6/3 = 8/4 = 10/5" onClick={() => setAnswer('ratio', '2')} tone="cyan" />
+        <ChoiceButton variant="tension" testId="triangle-ratio-3" selected={answers.ratio === '3'} label="3" detail="Fazla büyütme" onClick={() => setAnswer('ratio', '3')} tone="pink" />
+        <ChoiceButton variant="tension" testId="triangle-theorem-euclid" selected={answers.theorem === 'Euclid'} label="Öklid" detail="h²=p·k" onClick={() => setAnswer('theorem', 'Euclid')} tone="purple" />
+        <ChoiceButton variant="tension" testId="triangle-theorem-tales" selected={answers.theorem === 'Tales'} label="Tales" detail="Paralel oran" onClick={() => setAnswer('theorem', 'Tales')} tone="amber" />
       </div>
     </div>
   );

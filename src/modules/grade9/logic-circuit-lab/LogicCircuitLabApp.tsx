@@ -121,30 +121,34 @@ export default function LogicCircuitLabApp() {
       activeIndex={progress.activeIndex}
       completed={progress.completed}
       onRestart={restart}
+      frameClassName="bg-[#03080f] [background-image:radial-gradient(circle_at_16%_18%,rgba(56,189,248,0.16),transparent_27%),radial-gradient(circle_at_82%_16%,rgba(59,130,246,0.12),transparent_24%),linear-gradient(180deg,#03080f_0%,#06111c_56%,#03060b_100%)]"
       badges={[
         { label: 'A/B', value: `${Number(inputA)}-${Number(inputB)}`, tone: 'cyan' },
         { label: 'Çıkış', value: output ? '1' : '0', tone: output ? 'green' : 'pink' },
       ]}
     >
+      <div className="space-y-4">
+        <CircuitBrief activeMission={progress.activeMission} activeIndex={progress.activeIndex} total={MISSIONS.length} output={output} flowCount={flowOrder.length} />
       <div className="grid gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_350px]">
-        <div className="min-w-0 rounded-2xl border border-white/10 bg-[#07101e]/80 p-4">
+        <div className="min-w-0 rounded-lg border border-dashed border-sky-300/20 bg-sky-950/20 p-4 shadow-[inset_0_0_35px_rgba(56,189,248,0.05)]">
           <div className="mb-4 flex flex-wrap gap-2">
-            <MetricPill label="Kapı" value={gate.toUpperCase()} tone="purple" />
-            <MetricPill label="A" value={inputA ? '1' : '0'} tone={inputA ? 'green' : 'pink'} />
-            <MetricPill label="B" value={inputB ? '1' : '0'} tone={inputB ? 'green' : 'pink'} />
-            <MetricPill label="Niceleyici" value={quantifier === 'forall' ? 'HER' : 'BAZI'} tone="amber" />
+            <MetricPill variant="circuit" label="Kapı" value={gate.toUpperCase()} tone="purple" />
+            <MetricPill variant="circuit" label="A" value={inputA ? '1' : '0'} tone={inputA ? 'green' : 'pink'} />
+            <MetricPill variant="circuit" label="B" value={inputB ? '1' : '0'} tone={inputB ? 'green' : 'pink'} />
+            <MetricPill variant="circuit" label="Niceleyici" value={quantifier === 'forall' ? 'HER' : 'BAZI'} tone="amber" />
           </div>
           <CircuitVisual inputA={inputA} inputB={inputB} gate={gate} output={output} quantifier={quantifier} flowOrder={flowOrder} />
         </div>
 
         <div className="min-w-0 space-y-4">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-4">
+          <div className="rounded-lg border border-dashed border-sky-300/20 bg-sky-300/[0.045] p-4">
             <h4 className="mb-3 flex items-center gap-2 text-sm font-black uppercase tracking-wider text-white">
               <Workflow className="h-4 w-4 text-[#00E5FF]" /> Akış Sırası
             </h4>
             <div className="grid gap-2">
               {FLOW_STEPS.map((step) => (
                 <ChoiceButton
+                  variant="circuit"
                   key={step}
                   testId={`logic-flow-${step.toLowerCase().replaceAll(' ', '-')}`}
                   selected={flowOrder.includes(step)}
@@ -165,6 +169,7 @@ export default function LogicCircuitLabApp() {
           <div className="grid grid-cols-2 gap-3">
             {(['and', 'or', 'implies', 'xor'] as Gate[]).map((item) => (
               <ChoiceButton
+                variant="circuit"
                 key={item}
                 testId={`logic-gate-${item}`}
                 selected={gate === item}
@@ -177,8 +182,8 @@ export default function LogicCircuitLabApp() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <ChoiceButton testId="logic-quantifier-forall" selected={quantifier === 'forall'} label="∀ Her" detail="Tüm elemanlar doğru" onClick={() => setQuantifier('forall')} tone="green" />
-            <ChoiceButton testId="logic-quantifier-exists" selected={quantifier === 'exists'} label="∃ Bazı" detail="En az bir eleman doğru" onClick={() => setQuantifier('exists')} tone="cyan" />
+            <ChoiceButton variant="circuit" testId="logic-quantifier-forall" selected={quantifier === 'forall'} label="∀ Her" detail="Tüm elemanlar doğru" onClick={() => setQuantifier('forall')} tone="green" />
+            <ChoiceButton variant="circuit" testId="logic-quantifier-exists" selected={quantifier === 'exists'} label="∃ Bazı" detail="En az bir eleman doğru" onClick={() => setQuantifier('exists')} tone="cyan" />
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row xl:flex-col">
@@ -191,7 +196,30 @@ export default function LogicCircuitLabApp() {
           </div>
         </div>
       </div>
+      </div>
     </Grade9LabShell>
+  );
+}
+
+function CircuitBrief({ activeMission, activeIndex, total, output, flowCount }: { activeMission: MissionStep; activeIndex: number; total: number; output: boolean; flowCount: number }) {
+  return (
+    <section className="relative overflow-hidden rounded-xl border border-sky-300/20 bg-sky-300/[0.045] p-5 shadow-[0_0_42px_rgba(56,189,248,0.10)]">
+      <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:linear-gradient(90deg,rgba(56,189,248,0.18)_1px,transparent_1px),linear-gradient(rgba(56,189,248,0.12)_1px,transparent_1px)] [background-size:44px_44px]" />
+      <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="max-w-3xl">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-sky-200/65">devre görevi {activeIndex + 1}/{total}</p>
+          <h2 className="mt-2 text-3xl font-black text-white">{activeMission.title}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-sky-50/70">{activeMission.prompt}</p>
+        </div>
+        <div className="flex w-full min-w-0 items-center justify-between rounded-lg border border-dashed border-sky-300/25 bg-black/35 p-3 lg:w-[250px] lg:shrink-0">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-sky-200/55">akış</p>
+            <p className="text-2xl font-black text-sky-100">{flowCount}/4</p>
+          </div>
+          <div className={`h-14 w-14 rounded-lg border ${output ? 'border-emerald-300/60 bg-emerald-300/15 shadow-[0_0_22px_rgba(0,255,136,0.2)]' : 'border-pink-300/50 bg-pink-300/10 shadow-[0_0_22px_rgba(255,0,85,0.16)]'}`} />
+        </div>
+      </div>
+    </section>
   );
 }
 

@@ -79,17 +79,20 @@ export default function TransformationForensicsApp() {
       activeIndex={progress.activeIndex}
       completed={progress.completed}
       onRestart={restart}
+      frameClassName="bg-[#080713] [background-image:radial-gradient(circle_at_16%_18%,rgba(167,139,250,0.18),transparent_27%),radial-gradient(circle_at_82%_16%,rgba(0,229,255,0.10),transparent_24%),linear-gradient(180deg,#080713_0%,#100d1c_56%,#05050b_100%)]"
       badges={[
         { label: 'Merkez', value: centerLabel(center), tone: 'cyan' },
         { label: 'Açı', value: `${angle}°`, tone: 'amber' },
       ]}
     >
+      <div className="space-y-4">
+        <ForensicBrief activeMission={progress.activeMission} activeIndex={progress.activeIndex} total={MISSIONS.length} center={center} angle={angle} axis={axis} />
       <div className="grid gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_350px]">
-        <div className="min-w-0 rounded-2xl border border-white/10 bg-[#07101e]/80 p-4">
+        <div className="min-w-0 rounded-md border border-violet-200/15 bg-violet-950/20 p-4 shadow-[inset_0_0_35px_rgba(167,139,250,0.05)]">
           <div className="mb-4 flex flex-wrap gap-2">
-            <MetricPill label="Merkez Adayı" value={centerLabel(center)} tone="cyan" />
-            <MetricPill label="Döndürme" value={`${angle}°`} tone="purple" />
-            <MetricPill label="Ayna" value={axisLabel(axis)} tone="green" />
+            <MetricPill variant="forensic" label="Merkez Adayı" value={centerLabel(center)} tone="cyan" />
+            <MetricPill variant="forensic" label="Döndürme" value={`${angle}°`} tone="purple" />
+            <MetricPill variant="forensic" label="Ayna" value={axisLabel(axis)} tone="green" />
           </div>
           <ForensicsGrid center={center} angle={angle} axis={axis} />
         </div>
@@ -97,23 +100,23 @@ export default function TransformationForensicsApp() {
         <div className="min-w-0 space-y-4">
           <PanelTitle icon={<LocateFixed className="h-4 w-4" />} title="Merkez Takibi" />
           <div className="grid gap-3">
-            <ChoiceButton testId="transform-center-origin" selected={center === 'origin'} label="Orijin (0,0)" detail="Eş uzaklık merkezi" onClick={() => setCenter('origin')} tone="cyan" />
-            <ChoiceButton testId="transform-center-point-a" selected={center === 'point-a'} label="A noktası" detail="Şeklin köşesi" onClick={() => setCenter('point-a')} tone="pink" />
-            <ChoiceButton testId="transform-center-point-b" selected={center === 'point-b'} label="B noktası" detail="İz köşesi" onClick={() => setCenter('point-b')} tone="pink" />
+            <ChoiceButton variant="forensic" testId="transform-center-origin" selected={center === 'origin'} label="Orijin (0,0)" detail="Eş uzaklık merkezi" onClick={() => setCenter('origin')} tone="cyan" />
+            <ChoiceButton variant="forensic" testId="transform-center-point-a" selected={center === 'point-a'} label="A noktası" detail="Şeklin köşesi" onClick={() => setCenter('point-a')} tone="pink" />
+            <ChoiceButton variant="forensic" testId="transform-center-point-b" selected={center === 'point-b'} label="B noktası" detail="İz köşesi" onClick={() => setCenter('point-b')} tone="pink" />
           </div>
 
           <PanelTitle icon={<RotateCcw className="h-4 w-4" />} title="Açı İmzası" />
           <div className="grid grid-cols-3 gap-3">
             {(['90', '180', '270'] as AngleChoice[]).map((value) => (
-              <ChoiceButton testId={`transform-angle-${value}`} key={value} selected={angle === value} label={`${value}°`} onClick={() => setAngle(value)} tone="amber" />
+              <ChoiceButton variant="forensic" testId={`transform-angle-${value}`} key={value} selected={angle === value} label={`${value}°`} onClick={() => setAngle(value)} tone="amber" />
             ))}
           </div>
 
           <PanelTitle icon={<FlipHorizontal2 className="h-4 w-4" />} title="Ayna Ekseni" />
           <div className="grid gap-3">
-            <ChoiceButton testId="transform-axis-x" selected={axis === 'x-axis'} label="X ekseni" detail="Y koordinatı işaret değiştirir" onClick={() => setAxis('x-axis')} tone="purple" />
-            <ChoiceButton testId="transform-axis-y" selected={axis === 'y-axis'} label="Y ekseni" detail="X koordinatı işaret değiştirir" onClick={() => setAxis('y-axis')} tone="green" />
-            <ChoiceButton testId="transform-axis-y-equals-x" selected={axis === 'y-equals-x'} label="y=x" detail="Koordinatlar yer değiştirir" onClick={() => setAxis('y-equals-x')} tone="cyan" />
+            <ChoiceButton variant="forensic" testId="transform-axis-x" selected={axis === 'x-axis'} label="X ekseni" detail="Y koordinatı işaret değiştirir" onClick={() => setAxis('x-axis')} tone="purple" />
+            <ChoiceButton variant="forensic" testId="transform-axis-y" selected={axis === 'y-axis'} label="Y ekseni" detail="X koordinatı işaret değiştirir" onClick={() => setAxis('y-axis')} tone="green" />
+            <ChoiceButton variant="forensic" testId="transform-axis-y-equals-x" selected={axis === 'y-equals-x'} label="y=x" detail="Koordinatlar yer değiştirir" onClick={() => setAxis('y-equals-x')} tone="cyan" />
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row xl:flex-col">
@@ -126,7 +129,28 @@ export default function TransformationForensicsApp() {
           </div>
         </div>
       </div>
+      </div>
     </Grade9LabShell>
+  );
+}
+
+function ForensicBrief({ activeMission, activeIndex, total, center, angle, axis }: { activeMission: MissionStep; activeIndex: number; total: number; center: CenterChoice; angle: AngleChoice; axis: AxisChoice }) {
+  return (
+    <section className="relative overflow-hidden rounded-md border border-violet-200/20 bg-violet-200/[0.045] p-5 shadow-[0_0_42px_rgba(167,139,250,0.10)]">
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-44 bg-[repeating-linear-gradient(135deg,rgba(167,139,250,0.12)_0_1px,transparent_1px_12px)]" />
+      <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="max-w-3xl">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-violet-100/65">adli iz dosyası {activeIndex + 1}/{total}</p>
+          <h2 className="mt-2 text-3xl font-black text-white">{activeMission.title}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-violet-50/70">{activeMission.prompt}</p>
+        </div>
+        <div className="grid w-full min-w-0 grid-cols-3 gap-2 rounded-md border border-violet-200/15 bg-black/35 p-3 font-mono text-xs font-black text-violet-50/80 lg:w-[280px] lg:shrink-0">
+          <span>{centerLabel(center)}</span>
+          <span>{angle}°</span>
+          <span>{axisLabel(axis)}</span>
+        </div>
+      </div>
+    </section>
   );
 }
 

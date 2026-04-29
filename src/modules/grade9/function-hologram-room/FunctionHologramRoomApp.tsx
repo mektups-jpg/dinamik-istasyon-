@@ -136,13 +136,16 @@ export default function FunctionHologramRoomApp() {
       activeIndex={progress.activeIndex}
       completed={progress.completed}
       onRestart={restart}
+      frameClassName="bg-[#030711] [background-image:radial-gradient(circle_at_18%_20%,rgba(0,229,255,0.22),transparent_28%),radial-gradient(circle_at_78%_18%,rgba(255,0,85,0.14),transparent_25%),linear-gradient(180deg,#030711_0%,#071426_58%,#040712_100%)]"
       badges={[
         { label: 'Model', value: mode === 'absolute' ? '|f(x)|' : mode === 'inequality' ? 'Alan' : 'f(x)', tone: 'purple' },
         { label: 'Denklem', value: `a=${a} r=${r} k=${k}`, tone: 'cyan' },
       ]}
     >
+      <div className="space-y-4">
+        <HologramBrief activeMission={progress.activeMission} activeIndex={progress.activeIndex} total={MISSIONS.length} mode={mode} />
       <div className="grid gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_310px] xl:grid-cols-[minmax(0,1fr)_330px]">
-        <div className="min-w-0 rounded-2xl border border-white/10 bg-[#07101e]/80 p-4">
+        <div className="min-w-0 rounded-[28px] border border-cyan-300/15 bg-cyan-950/20 p-4 shadow-[inset_0_0_35px_rgba(0,229,255,0.05)]">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <MetricPill label="a eğim" value={String(a)} tone="cyan" />
             <MetricPill label="r yatay" value={String(r)} tone="purple" />
@@ -203,7 +206,7 @@ export default function FunctionHologramRoomApp() {
             <ChoiceButton testId="function-mode-inequality" selected={mode === 'inequality'} label="Eşitsizlik Alanı" detail="Çözüm bölgesini boyar" onClick={() => setMode('inequality')} tone="amber" />
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-4">
+          <div className="rounded-[28px] border border-cyan-300/15 bg-cyan-300/[0.045] p-4">
             <h4 className="mb-3 flex items-center gap-2 text-sm font-black uppercase tracking-wider text-white">
               <Gauge className="h-4 w-4 text-[#00E5FF]" /> Dönüşüm Konsolu
             </h4>
@@ -227,7 +230,30 @@ export default function FunctionHologramRoomApp() {
           </div>
         </div>
       </div>
+      </div>
     </Grade9LabShell>
+  );
+}
+
+function HologramBrief({ activeMission, activeIndex, total, mode }: { activeMission: MissionStep; activeIndex: number; total: number; mode: GraphMode }) {
+  return (
+    <section className="relative overflow-hidden rounded-[28px] border border-cyan-300/20 bg-cyan-300/[0.055] p-5 shadow-[0_0_45px_rgba(0,229,255,0.10)]">
+      <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(0,229,255,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.12)_1px,transparent_1px)] [background-size:28px_28px]" />
+      <div className="relative flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="max-w-3xl">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.35em] text-cyan-200/70">Hologram direktifi {activeIndex + 1}/{total}</p>
+          <h2 className="mt-2 text-3xl font-black text-white">{activeMission.title}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-cyan-50/70">{activeMission.prompt}</p>
+        </div>
+        <div className="flex w-full min-w-0 items-center gap-3 rounded-2xl border border-cyan-300/20 bg-black/30 p-3 lg:w-[260px] lg:shrink-0">
+          <div className="h-14 w-14 rounded-full border border-cyan-300/40 bg-cyan-300/10 shadow-[0_0_22px_rgba(0,229,255,0.22)]" />
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-cyan-200/55">ışık modu</p>
+            <p className="text-lg font-black leading-tight text-cyan-100">{mode === 'absolute' ? 'ayna kırılması' : mode === 'inequality' ? 'alan taraması' : 'doğrusal lazer'}</p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 

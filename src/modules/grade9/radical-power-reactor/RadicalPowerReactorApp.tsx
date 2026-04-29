@@ -149,17 +149,20 @@ export default function RadicalPowerReactorApp() {
       activeIndex={progress.activeIndex}
       completed={progress.completed}
       onRestart={restart}
+      frameClassName="bg-[#080b05] [background-image:radial-gradient(circle_at_20%_18%,rgba(0,255,136,0.18),transparent_28%),radial-gradient(circle_at_78%_16%,rgba(251,191,36,0.14),transparent_25%),linear-gradient(180deg,#080b05_0%,#08150e_52%,#050806_100%)]"
       badges={[
         { label: 'İstasyon', value: String(progress.activeIndex + 1), tone: 'amber' },
         { label: 'Seçim', value: choices[activeKey] || 'bekliyor', tone: 'cyan' },
       ]}
     >
+      <div className="space-y-4">
+        <ReactorBrief activeMission={progress.activeMission} activeIndex={progress.activeIndex} total={MISSIONS.length} activeKey={activeKey} />
       <div className="grid gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="min-w-0 rounded-2xl border border-white/10 bg-[#07101e]/80 p-4">
+        <div className="min-w-0 rounded-[2rem_0.8rem_2rem_0.8rem] border border-emerald-300/15 bg-emerald-950/20 p-4 shadow-[inset_0_0_35px_rgba(0,255,136,0.05)]">
           <div className="mb-4 flex flex-wrap gap-2">
-            <MetricPill label="Üs Motoru" value={choices.power || '2^3 * 2^2'} tone="cyan" />
-            <MetricPill label="Kök Motoru" value={choices.radical || '√72'} tone="green" />
-            <MetricPill label="Aralık" value={choices.interval || '[-2,4] ∩ (1,7]'} tone="purple" />
+            <MetricPill variant="reactor" label="Üs Motoru" value={choices.power || '2^3 * 2^2'} tone="cyan" />
+            <MetricPill variant="reactor" label="Kök Motoru" value={choices.radical || '√72'} tone="green" />
+            <MetricPill variant="reactor" label="Aralık" value={choices.interval || '[-2,4] ∩ (1,7]'} tone="purple" />
           </div>
 
           <ReactorVisual activeKey={activeKey} choices={choices} />
@@ -170,6 +173,7 @@ export default function RadicalPowerReactorApp() {
           <div className="grid gap-3">
             {OPTIONS[activeKey].map((option, index) => (
               <ChoiceButton
+                variant="reactor"
                 key={option.id}
                 testId={`radical-${activeKey}-${index}-${option.id.replace(/[^a-z0-9-]/gi, '-')}`}
                 selected={choices[activeKey] === option.id}
@@ -191,7 +195,28 @@ export default function RadicalPowerReactorApp() {
           </div>
         </div>
       </div>
+      </div>
     </Grade9LabShell>
+  );
+}
+
+function ReactorBrief({ activeMission, activeIndex, total, activeKey }: { activeMission: MissionStep; activeIndex: number; total: number; activeKey: keyof ChoiceState }) {
+  return (
+    <section className="relative overflow-hidden rounded-[32px_12px_32px_12px] border border-emerald-300/20 bg-emerald-300/[0.055] p-5 shadow-[0_0_45px_rgba(0,255,136,0.10)]">
+      <div className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full border border-emerald-300/20 bg-emerald-300/10 shadow-[0_0_55px_rgba(0,255,136,0.16)]" />
+      <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="max-w-3xl">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-emerald-200/65">reaktör istasyonu {activeIndex + 1}/{total}</p>
+          <h2 className="mt-2 text-3xl font-black text-white">{activeMission.title}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-emerald-50/70">{activeMission.prompt}</p>
+        </div>
+        <div className="grid w-full min-w-0 grid-cols-3 gap-2 rounded-[24px_10px_24px_10px] border border-emerald-300/15 bg-black/30 p-3 lg:w-[260px] lg:shrink-0">
+          {(['power', 'radical', 'interval'] as Array<keyof ChoiceState>).map((key) => (
+            <div key={key} className={`h-14 rounded-xl border ${activeKey === key ? 'border-emerald-300/55 bg-emerald-300/15' : 'border-white/10 bg-white/5'}`} />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 

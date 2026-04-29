@@ -131,18 +131,21 @@ export default function StatisticsProbabilityRadarApp() {
       activeIndex={progress.activeIndex}
       completed={progress.completed}
       onRestart={restart}
+      frameClassName="bg-[#061006] [background-image:radial-gradient(circle_at_18%_18%,rgba(190,242,100,0.16),transparent_27%),radial-gradient(circle_at_80%_16%,rgba(0,229,255,0.10),transparent_24%),linear-gradient(180deg,#061006_0%,#07150d_55%,#030803_100%)]"
       badges={[
         { label: 'Deney', value: `${trials} atış`, tone: 'cyan' },
         { label: 'Oran', value: observedProbability.toFixed(2), tone: 'green' },
       ]}
     >
+      <div className="space-y-4">
+        <RadarBrief activeMission={progress.activeMission} activeIndex={progress.activeIndex} total={MISSIONS.length} trials={trials} observedProbability={observedProbability} />
       <div className="grid gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="min-w-0 rounded-2xl border border-white/10 bg-[#07101e]/80 p-4">
+        <div className="min-w-0 rounded-[34px] border border-lime-200/15 bg-lime-950/20 p-4 shadow-[inset_0_0_35px_rgba(190,242,100,0.05)]">
           <div className="mb-4 flex flex-wrap gap-2">
-            <MetricPill label="Sınıf A σ" value={deviations.A.toFixed(1)} tone="pink" />
-            <MetricPill label="Sınıf B σ" value={deviations.B.toFixed(1)} tone="green" />
-            <MetricPill label="Sınıf C σ" value={deviations.C.toFixed(1)} tone="purple" />
-            <MetricPill label="Başarı" value={`${successes}/${trials || 0}`} tone="amber" />
+            <MetricPill variant="radar" label="Sınıf A σ" value={deviations.A.toFixed(1)} tone="pink" />
+            <MetricPill variant="radar" label="Sınıf B σ" value={deviations.B.toFixed(1)} tone="green" />
+            <MetricPill variant="radar" label="Sınıf C σ" value={deviations.C.toFixed(1)} tone="purple" />
+            <MetricPill variant="radar" label="Başarı" value={`${successes}/${trials || 0}`} tone="amber" />
           </div>
           <RadarVisual groupChoice={groupChoice} boxChoice={boxChoice} trials={trials} successes={successes} />
         </div>
@@ -151,16 +154,16 @@ export default function StatisticsProbabilityRadarApp() {
           <PanelTitle icon={<Gauge className="h-4 w-4" />} title="İstikrarlı Grup" />
           <div className="grid grid-cols-3 gap-3">
             {(['A', 'B', 'C'] as GroupChoice[]).map((group) => (
-              <ChoiceButton testId={`stats-group-${group.toLowerCase()}`} key={group} selected={groupChoice === group} label={`Sınıf ${group}`} detail={`σ=${deviations[group].toFixed(1)}`} onClick={() => setGroupChoice(group)} tone={group === 'B' ? 'green' : 'purple'} />
+              <ChoiceButton variant="radar" testId={`stats-group-${group.toLowerCase()}`} key={group} selected={groupChoice === group} label={`Sınıf ${group}`} detail={`σ=${deviations[group].toFixed(1)}`} onClick={() => setGroupChoice(group)} tone={group === 'B' ? 'green' : 'purple'} />
             ))}
           </div>
 
           <PanelTitle icon={<BarChart3 className="h-4 w-4" />} title="Kutu-Bıyık Etiketi" />
           <div className="grid grid-cols-2 gap-3">
-            <ChoiceButton testId="stats-box-min" selected={boxChoice === 'min'} label="Minimum" detail="En sol uç" onClick={() => setBoxChoice('min')} tone="pink" />
-            <ChoiceButton testId="stats-box-q1" selected={boxChoice === 'q1'} label="Q1" detail="Alt çeyrek" onClick={() => setBoxChoice('q1')} tone="purple" />
-            <ChoiceButton testId="stats-box-median" selected={boxChoice === 'median'} label="Medyan" detail="Ortadaki çizgi" onClick={() => setBoxChoice('median')} tone="green" />
-            <ChoiceButton testId="stats-box-q3" selected={boxChoice === 'q3'} label="Q3" detail="Üst çeyrek" onClick={() => setBoxChoice('q3')} tone="purple" />
+            <ChoiceButton variant="radar" testId="stats-box-min" selected={boxChoice === 'min'} label="Minimum" detail="En sol uç" onClick={() => setBoxChoice('min')} tone="pink" />
+            <ChoiceButton variant="radar" testId="stats-box-q1" selected={boxChoice === 'q1'} label="Q1" detail="Alt çeyrek" onClick={() => setBoxChoice('q1')} tone="purple" />
+            <ChoiceButton variant="radar" testId="stats-box-median" selected={boxChoice === 'median'} label="Medyan" detail="Ortadaki çizgi" onClick={() => setBoxChoice('median')} tone="green" />
+            <ChoiceButton variant="radar" testId="stats-box-q3" selected={boxChoice === 'q3'} label="Q3" detail="Üst çeyrek" onClick={() => setBoxChoice('q3')} tone="purple" />
           </div>
 
           <PanelTitle icon={<CircleDot className="h-4 w-4" />} title="Deneysel Olasılık" />
@@ -169,14 +172,14 @@ export default function StatisticsProbabilityRadarApp() {
           </SciFiButton>
           <div className="grid grid-cols-3 gap-3">
             {(['0.25', '0.40', '0.65'] as ProbabilityChoice[]).map((value) => (
-              <ChoiceButton testId={`stats-prob-${value.replace('.', '-')}`} key={value} selected={probabilityChoice === value} label={value} detail="P(başarı)" onClick={() => setProbabilityChoice(value)} tone="cyan" />
+              <ChoiceButton variant="radar" testId={`stats-prob-${value.replace('.', '-')}`} key={value} selected={probabilityChoice === value} label={value} detail="P(başarı)" onClick={() => setProbabilityChoice(value)} tone="cyan" />
             ))}
           </div>
 
           <PanelTitle icon={<Target className="h-4 w-4" />} title="Tümevarım" />
           <div className="grid grid-cols-3 gap-3">
             {(['250', '400', '650'] as InductionChoice[]).map((value) => (
-              <ChoiceButton testId={`stats-induction-${value}`} key={value} selected={inductionChoice === value} label={value} detail="/1000" onClick={() => setInductionChoice(value)} tone="amber" />
+              <ChoiceButton variant="radar" testId={`stats-induction-${value}`} key={value} selected={inductionChoice === value} label={value} detail="/1000" onClick={() => setInductionChoice(value)} tone="amber" />
             ))}
           </div>
 
@@ -190,7 +193,31 @@ export default function StatisticsProbabilityRadarApp() {
           </div>
         </div>
       </div>
+      </div>
     </Grade9LabShell>
+  );
+}
+
+function RadarBrief({ activeMission, activeIndex, total, trials, observedProbability }: { activeMission: MissionStep; activeIndex: number; total: number; trials: number; observedProbability: number }) {
+  return (
+    <section className="relative overflow-hidden rounded-[34px] border border-lime-200/20 bg-lime-200/[0.045] p-5 shadow-[0_0_42px_rgba(190,242,100,0.10)]">
+      <div className="pointer-events-none absolute right-8 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full border border-lime-200/15" />
+      <div className="pointer-events-none absolute right-16 top-1/2 h-20 w-20 -translate-y-1/2 rounded-full border border-lime-200/15" />
+      <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="max-w-3xl">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-lime-100/65">radar taraması {activeIndex + 1}/{total}</p>
+          <h2 className="mt-2 text-3xl font-black text-white">{activeMission.title}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-lime-50/70">{activeMission.prompt}</p>
+        </div>
+        <div className="w-full min-w-0 rounded-3xl border border-lime-200/15 bg-black/35 p-3 lg:w-[250px] lg:shrink-0">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-lime-100/55">deney sinyali</p>
+          <div className="mt-2 flex items-end justify-between gap-3">
+            <span className="text-3xl font-black text-lime-100">{trials}</span>
+            <span className="rounded-full border border-lime-200/25 px-3 py-1 font-mono text-xs font-black text-lime-100">{observedProbability.toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
