@@ -169,18 +169,48 @@ export default function FunctionHologramRoomApp() {
               <rect width="360" height="360" fill="url(#function-grid)" />
               <line x1="0" y1="180" x2="360" y2="180" stroke="rgba(255,255,255,0.32)" strokeWidth="1.5" />
               <line x1="180" y1="0" x2="180" y2="360" stroke="rgba(255,255,255,0.32)" strokeWidth="1.5" />
+              <path d="M24 336 L336 24" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="2" strokeDasharray="7 8" />
+              <text x="302" y="48" fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="900">f(x)=x</text>
               {mode === 'inequality' ? (
-                <motion.polygon
-                  points={inequalityField}
-                  fill="rgba(0,229,255,0.16)"
-                  stroke="rgba(0,229,255,0.25)"
-                  initial={false}
-                  animate={{ opacity: [0.45, 0.8, 0.45] }}
-                  transition={{ duration: 1.8, repeat: Infinity }}
-                />
+                <>
+                  <motion.polygon
+                    points={inequalityField}
+                    fill="rgba(0,229,255,0.16)"
+                    stroke="rgba(0,229,255,0.25)"
+                    initial={false}
+                    animate={{ opacity: [0.45, 0.8, 0.45] }}
+                    transition={{ duration: 1.8, repeat: Infinity }}
+                  />
+                  {[68, 104, 140, 176, 212].map((y, index) => (
+                    <motion.line
+                      key={y}
+                      x1="36"
+                      x2="324"
+                      y1={y}
+                      y2={y}
+                      stroke="rgba(0,229,255,0.34)"
+                      strokeWidth="2"
+                      strokeDasharray="10 14"
+                      animate={{ x1: [36, 64, 36], x2: [324, 296, 324] }}
+                      transition={{ delay: index * 0.08, duration: 1.6, repeat: Infinity }}
+                    />
+                  ))}
+                </>
               ) : null}
               {mode === 'absolute' ? (
-                <path d="M 24 180 Q 180 180 336 24" fill="none" stroke="rgba(255,0,85,0.18)" strokeWidth="10" strokeLinecap="round" />
+                <>
+                  <line x1="28" y1={180 - k * 26} x2="332" y2={180 - k * 26} stroke="rgba(255,0,85,0.28)" strokeWidth="3" strokeDasharray="6 9" />
+                  <motion.path
+                    d={`M 28 ${180 - k * 26} C ${96 + r * 12} ${260 - k * 20}, ${128 + r * 18} ${220 - k * 16}, ${180 + r * 26} ${180 - k * 26}`}
+                    fill="none"
+                    stroke="rgba(255,0,85,0.42)"
+                    strokeWidth="9"
+                    strokeLinecap="round"
+                    animate={{ opacity: [0.25, 0.65, 0.25] }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                  />
+                  <text x={180 + r * 26 + 12} y={180 - k * 26 - 12} fill="#FF6B9A" fontSize="12" fontWeight="900">ayna çizgisi</text>
+                </>
               ) : null}
               <motion.polyline
                 points={graphPath}

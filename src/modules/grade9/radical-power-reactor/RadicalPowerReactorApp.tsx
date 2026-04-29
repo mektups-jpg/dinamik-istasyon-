@@ -9,6 +9,7 @@ import {
   useGrade9MissionProgress,
 } from '../shared/Grade9LabShell';
 import { SciFiButton } from '../../../components/ui/SciFiButton';
+import { ReactorStage } from './RadicalReactorStage';
 
 const MODULE_ID = 'radical-power-reactor';
 
@@ -258,6 +259,7 @@ function ReactorVisual({ activeKey, choices }: ReactorVisualProps) {
         </div>
 
         <div className="grid gap-3">
+          <ReactorStage activeKey={activeKey} choices={choices} />
           <FormulaCard icon={<Zap className="h-5 w-5" />} title="Üs Kuralı" text="Aynı taban çarpılırken üsler toplanır: a^m * a^n = a^(m+n)." active={activeKey === 'power'} />
           <FormulaCard icon={<SquareRadical className="h-5 w-5" />} title="Kök Çıkarma" text="Tam kare parça dışarı çıkar: √72 = √36 * √2 = 6√2." active={activeKey === 'radical'} />
           <FormulaCard icon={<Layers3 className="h-5 w-5" />} title="Aralık Mantığı" text="Açık kapı uç noktayı almaz, kapalı kapı dahil eder." active={activeKey === 'interval'} />

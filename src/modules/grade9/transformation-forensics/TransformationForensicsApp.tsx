@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Check, Crosshair, FlipHorizontal2, LocateFixed, RotateCcw, ScanSearch } from 'lucide-react';
 import { motion } from 'motion/react';
 import {
@@ -94,7 +94,7 @@ export default function TransformationForensicsApp() {
             <MetricPill variant="forensic" label="Döndürme" value={`${angle}°`} tone="purple" />
             <MetricPill variant="forensic" label="Ayna" value={axisLabel(axis)} tone="green" />
           </div>
-          <ForensicsGrid center={center} angle={angle} axis={axis} />
+          <ForensicsGrid activeIndex={progress.activeIndex} center={center} angle={angle} axis={axis} />
         </div>
 
         <div className="min-w-0 space-y-4">
@@ -177,34 +177,52 @@ function PanelTitle({ icon, title }: { icon: React.ReactNode; title: string }) {
 }
 
 interface ForensicsGridProps {
+  activeIndex: number;
   center: CenterChoice;
   angle: AngleChoice;
   axis: AxisChoice;
 }
 
-function ForensicsGrid({ center, angle, axis }: ForensicsGridProps) {
-  const rotationPoints = useMemo(() => {
-    const base = [
-      [2, 1],
-      [4, 1],
-      [3, 3],
-    ];
-    return base.map(([x, y]) => [-y, x]);
-  }, []);
+type TransformPoint = [number, number];
 
-  const reflectionPoints = useMemo(() => {
-    const base = [
-      [2, -1],
-      [4, -1],
-      [3, -3],
-    ];
-    return base.map(([x, y]) => [-x, y]);
-  }, []);
+const rotatePoint = ([x, y]: TransformPoint, [cx, cy]: TransformPoint, degrees: number): TransformPoint => {
+  const angleRadians = (degrees * Math.PI) / 180;
+  const dx = x - cx;
+  const dy = y - cy;
+  return [
+    cx + dx * Math.cos(angleRadians) - dy * Math.sin(angleRadians),
+    cy + dx * Math.sin(angleRadians) + dy * Math.cos(angleRadians),
+  ];
+};
 
-  const toSvg = ([x, y]: number[]) => `${220 + x * 34},${220 - y * 34}`;
-  const rotationPolygon = rotationPoints.map(toSvg).join(' ');
-  const reflectionPolygon = reflectionPoints.map(toSvg).join(' ');
-  const basePolygon = [[2, 1], [4, 1], [3, 3]].map(toSvg).join(' ');
+const reflectPoint = ([x, y]: TransformPoint, axis: AxisChoice): TransformPoint => {
+  if (axis === 'y-axis') return [-x, y];
+  if (axis === 'x-axis') return [x, -y];
+  return [y, x];
+};
+
+function ForensicsGrid({ activeIndex, center, angle, axis }: ForensicsGridProps) {
+  const rotationBase: TransformPoint[] = [[2, 1], [4, 1], [3, 3]];
+  const reflectionBase: TransformPoint[] = [[2, -1], [4, -1], [3, -3]];
+  const centerMap: Record<CenterChoice, TransformPoint> = {
+    origin: [0, 0],
+    'point-a': [2, 1],
+    'point-b': [-1, 4],
+  };
+  const visualAngle = activeIndex === 0 ? '90' : angle;
+  const isReflectionMission = activeIndex === 2;
+  const basePoints = isReflectionMission ? reflectionBase : rotationBase;
+  const targetPoints = isReflectionMission
+    ? reflectionBase.map((point) => reflectPoint(point, 'y-axis'))
+    : rotationBase.map((point) => rotatePoint(point, [0, 0], 90));
+  const selectedPoints = isReflectionMission
+    ? reflectionBase.map((point) => reflectPoint(point, axis))
+    : rotationBase.map((point) => rotatePoint(point, centerMap[center], Number(visualAngle)));
+
+  const toSvg = ([x, y]: TransformPoint) => `${220 + x * 34},${220 - y * 34}`;
+  const targetPolygon = targetPoints.map(toSvg).join(' ');
+  const selectedPolygon = selectedPoints.map(toSvg).join(' ');
+  const basePolygon = basePoints.map(toSvg).join(' ');
 
   const selectedCenter = center === 'origin' ? [220, 220] : center === 'point-a' ? [288, 186] : [186, 84];
   const axisLine = axis === 'y-axis'
@@ -227,24 +245,19 @@ function ForensicsGrid({ center, angle, axis }: ForensicsGridProps) {
         <line x1="220" y1="0" x2="220" y2="440" stroke="rgba(255,255,255,0.28)" strokeWidth="2" />
         <line {...axisLine} stroke="#00FF88" strokeWidth="4" strokeDasharray="8 8" />
         <polygon points={basePolygon} fill="rgba(0,229,255,0.18)" stroke="#00E5FF" strokeWidth="4" />
+        <polygon points={targetPolygon} fill="rgba(255,255,255,0.045)" stroke="rgba(255,255,255,0.55)" strokeWidth="4" strokeDasharray="10 8" />
         <motion.polygon
-          points={rotationPolygon}
-          fill="rgba(179,136,255,0.18)"
-          stroke="#B388FF"
+          points={selectedPolygon}
+          fill={isReflectionMission ? 'rgba(0,255,136,0.14)' : 'rgba(179,136,255,0.18)'}
+          stroke={isReflectionMission ? '#00FF88' : '#B388FF'}
           strokeWidth="4"
-          animate={{ opacity: angle === '90' ? [0.75, 1, 0.75] : 0.45 }}
+          animate={{ opacity: [0.55, 1, 0.55] }}
           transition={{ duration: 1.2, repeat: Infinity }}
-        />
-        <motion.polygon
-          points={reflectionPolygon}
-          fill="rgba(0,255,136,0.14)"
-          stroke="#00FF88"
-          strokeWidth="4"
-          animate={{ opacity: axis === 'y-axis' ? [0.65, 1, 0.65] : 0.38 }}
-          transition={{ duration: 1.4, repeat: Infinity }}
         />
         <circle cx={selectedCenter[0]} cy={selectedCenter[1]} r="11" fill="#FF0055" stroke="#fff" strokeWidth="3" />
         <text x={selectedCenter[0] + 16} y={selectedCenter[1] - 12} fill="#fff" fontWeight="900">{centerLabel(center)}</text>
+        <text x="34" y="34" fill="rgba(255,255,255,0.62)" fontSize="12" fontWeight="900">kesikli: hedef iz</text>
+        <text x="34" y="54" fill={isReflectionMission ? '#00FF88' : '#B388FF'} fontSize="12" fontWeight="900">renkli: seçimin hayaleti</text>
       </svg>
 
       <div className="relative grid gap-3 md:grid-cols-3">

@@ -270,6 +270,7 @@ interface CircuitVisualProps {
 function CircuitVisual({ inputA, inputB, gate, output, quantifier, flowOrder }: CircuitVisualProps) {
   const signalColor = output ? '#00FF88' : '#FF0055';
   const setLights = [true, false, true, false, false];
+  const implicationFault = gate === 'implies' && inputA && !inputB;
 
   return (
     <div className="relative min-h-[430px] overflow-hidden rounded-2xl border border-[#00E5FF]/20 bg-black/45 p-4">
@@ -287,6 +288,15 @@ function CircuitVisual({ inputA, inputB, gate, output, quantifier, flowOrder }: 
         <path d="M90 110 H250" stroke={inputA ? '#00FF88' : '#FF0055'} strokeWidth="8" strokeLinecap="round" filter="url(#logic-glow)" />
         <path d="M90 230 H250" stroke={inputB ? '#00FF88' : '#FF0055'} strokeWidth="8" strokeLinecap="round" filter="url(#logic-glow)" />
         <path d="M390 170 H540" stroke={signalColor} strokeWidth="10" strokeLinecap="round" filter="url(#logic-glow)" />
+        {inputA ? (
+          <motion.circle cx="96" cy="110" r="7" fill="#00FF88" filter="url(#logic-glow)" animate={{ cx: [96, 244, 96] }} transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }} />
+        ) : null}
+        {inputB ? (
+          <motion.circle cx="96" cy="230" r="7" fill="#00FF88" filter="url(#logic-glow)" animate={{ cx: [96, 244, 96] }} transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }} />
+        ) : null}
+        {output ? (
+          <motion.circle cx="404" cy="170" r="8" fill="#00FF88" filter="url(#logic-glow)" animate={{ cx: [404, 536, 404] }} transition={{ duration: 1.05, repeat: Infinity, ease: 'linear' }} />
+        ) : null}
         <circle cx="72" cy="110" r="32" fill={inputA ? 'rgba(0,255,136,0.16)' : 'rgba(255,0,85,0.16)'} stroke={inputA ? '#00FF88' : '#FF0055'} strokeWidth="3" />
         <circle cx="72" cy="230" r="32" fill={inputB ? 'rgba(0,255,136,0.16)' : 'rgba(255,0,85,0.16)'} stroke={inputB ? '#00FF88' : '#FF0055'} strokeWidth="3" />
         <text x="72" y="119" textAnchor="middle" fill="#fff" fontSize="26" fontWeight="900">{inputA ? '1' : '0'}</text>
@@ -300,6 +310,12 @@ function CircuitVisual({ inputA, inputB, gate, output, quantifier, flowOrder }: 
           transition={{ duration: 1.3, repeat: Infinity }}
         />
         <text x="330" y="181" textAnchor="middle" fill="#00E5FF" fontSize="32" fontWeight="900">{gateLabel(gate)}</text>
+        {implicationFault ? (
+          <motion.g animate={{ scale: [1, 1.12, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 0.7, repeat: Infinity }}>
+            <path d="M316 38 L340 72 L381 58 L358 94 L389 121 L348 116 L334 156 L320 116 L279 121 L310 94 L287 58 L328 72 Z" fill="rgba(255,0,85,0.22)" stroke="#FF0055" strokeWidth="3" />
+            <text x="334" y="102" textAnchor="middle" fill="#fff" fontSize="18" fontWeight="900">1=&gt;0</text>
+          </motion.g>
+        ) : null}
         <circle cx="570" cy="170" r="40" fill={output ? 'rgba(0,255,136,0.2)' : 'rgba(255,0,85,0.18)'} stroke={signalColor} strokeWidth="4" filter="url(#logic-glow)" />
         <text x="570" y="181" textAnchor="middle" fill="#fff" fontSize="34" fontWeight="900">{output ? '1' : '0'}</text>
       </svg>

@@ -252,6 +252,8 @@ function RadarVisual({ groupChoice, boxChoice, trials, successes }: RadarVisualP
   const arcEndY = 218 + Math.sin(arcEnd) * arcRadius;
   const largeArcFlag = observed > 0.5 ? 1 : 0;
   const probabilityArc = `M${arcStartX} ${arcStartY} A${arcRadius} ${arcRadius} 0 ${largeArcFlag} 1 ${arcEndX} ${arcEndY}`;
+  const selectedBoxValue = box[boxChoice];
+  const projectedSuccesses = Math.round(observed * 1000);
 
   return (
     <div className="relative min-h-[430px] overflow-hidden rounded-2xl border border-[#00E5FF]/20 bg-black/45 p-4">
@@ -294,6 +296,11 @@ function RadarVisual({ groupChoice, boxChoice, trials, successes }: RadarVisualP
         <line x1={scale(box.median)} y1="252" x2={scale(box.median)} y2="348" stroke={boxChoice === 'median' ? '#00FF88' : '#fff'} strokeWidth="6" />
         <circle cx={scale(box.min)} cy="300" r="7" fill="#FF6B9A" />
         <circle cx={scale(box.max)} cy="300" r="7" fill="#FF6B9A" />
+        <motion.g animate={{ opacity: [0.58, 1, 0.58] }} transition={{ duration: 1.2, repeat: Infinity }}>
+          <line x1={scale(selectedBoxValue)} y1="238" x2={scale(selectedBoxValue)} y2="356" stroke="#FBBF24" strokeWidth="3" strokeDasharray="6 7" />
+          <circle cx={scale(selectedBoxValue)} cy="238" r="9" fill="#FBBF24" filter="url(#stats-glow)" />
+          <text x={scale(selectedBoxValue)} y="224" textAnchor="middle" fill="#FBBF24" fontSize="12" fontWeight="900">{boxChoice.toUpperCase()}</text>
+        </motion.g>
 
         {observed > 0 ? (
           <motion.path
@@ -308,6 +315,18 @@ function RadarVisual({ groupChoice, boxChoice, trials, successes }: RadarVisualP
         <circle cx="470" cy="218" r="54" fill="rgba(0,255,136,0.08)" stroke="rgba(0,255,136,0.28)" strokeWidth="2" />
         <text x="470" y="212" textAnchor="middle" fill="#00FF88" fontSize="26" fontWeight="900">{observed.toFixed(2)}</text>
         <text x="470" y="236" textAnchor="middle" fill="rgba(255,255,255,0.58)" fontSize="12" fontWeight="900">P(başarı)</text>
+        <rect x="405" y="306" width="130" height="18" rx="9" fill="rgba(255,255,255,0.08)" />
+        <motion.rect
+          x="405"
+          y="306"
+          width={Math.max(4, observed * 130)}
+          height="18"
+          rx="9"
+          fill={trials >= 30 ? '#00FF88' : '#FBBF24'}
+          animate={{ opacity: [0.65, 1, 0.65] }}
+          transition={{ duration: 1.3, repeat: Infinity }}
+        />
+        <text x="470" y="347" textAnchor="middle" fill="rgba(255,255,255,0.66)" fontSize="12" fontWeight="900">1000 atış projeksiyonu: {projectedSuccesses}</text>
       </svg>
 
       <div className="relative grid gap-3 md:grid-cols-3">

@@ -143,7 +143,7 @@ export default function TriangleTensionLabApp() {
             <MetricPill variant="tension" label="BC" value={String(triangle.bc)} tone="cyan" />
             <MetricPill variant="tension" label="Oran" value="6/3 = 2" tone="amber" />
           </div>
-          <TriangleVisual angleA={angleA} sideChoice={sideChoice} triangle={triangle} />
+          <TriangleVisual activeIndex={progress.activeIndex} angleA={angleA} sideChoice={sideChoice} triangle={triangle} />
         </div>
 
         <div className="min-w-0 space-y-4">
@@ -235,13 +235,17 @@ interface TriangleShape {
 }
 
 interface TriangleVisualProps {
+  activeIndex: number;
   angleA: number;
   sideChoice: SideChoice;
   triangle: TriangleShape;
 }
 
-function TriangleVisual({ angleA, sideChoice, triangle }: TriangleVisualProps) {
+function TriangleVisual({ activeIndex, angleA, sideChoice, triangle }: TriangleVisualProps) {
   const sideStroke = (side: SideChoice) => sideChoice === side ? '#00E5FF' : 'rgba(255,255,255,0.45)';
+  const sideWidth = (side: SideChoice) => sideChoice === side ? 9 : 5;
+  const showSimilarity = activeIndex === 2 || activeIndex === 3;
+  const showTheorem = activeIndex === 4;
 
   return (
     <div className="relative min-h-[430px] overflow-hidden rounded-2xl border border-[#00E5FF]/20 bg-black/45 p-4">
@@ -256,17 +260,50 @@ function TriangleVisual({ angleA, sideChoice, triangle }: TriangleVisualProps) {
             </feMerge>
           </filter>
         </defs>
-        <motion.line x1="75" y1="286" x2={triangle.ax} y2={triangle.ay} stroke={sideStroke('AB')} strokeWidth="7" strokeLinecap="round" filter="url(#triangle-glow)" />
-        <motion.line x1={triangle.ax} y1={triangle.ay} x2="325" y2="286" stroke={sideStroke('AC')} strokeWidth="7" strokeLinecap="round" filter="url(#triangle-glow)" />
-        <motion.line x1="75" y1="286" x2="325" y2="286" stroke={sideStroke('BC')} strokeWidth="7" strokeLinecap="round" filter="url(#triangle-glow)" />
+        {showSimilarity ? (
+          <motion.polygon
+            points="105,286 205,126 305,286"
+            fill="rgba(179,136,255,0.08)"
+            stroke="#B388FF"
+            strokeWidth="4"
+            strokeDasharray="8 9"
+            animate={{ opacity: [0.45, 0.9, 0.45] }}
+            transition={{ duration: 1.4, repeat: Infinity }}
+          />
+        ) : null}
+        <motion.line x1="75" y1="286" x2={triangle.ax} y2={triangle.ay} stroke={sideStroke('AB')} strokeWidth={sideWidth('AB')} strokeLinecap="round" filter="url(#triangle-glow)" />
+        <motion.line x1={triangle.ax} y1={triangle.ay} x2="325" y2="286" stroke={sideStroke('AC')} strokeWidth={sideWidth('AC')} strokeLinecap="round" filter="url(#triangle-glow)" />
+        <motion.line x1="75" y1="286" x2="325" y2="286" stroke={sideStroke('BC')} strokeWidth={sideWidth('BC')} strokeLinecap="round" filter="url(#triangle-glow)" />
         <circle cx={triangle.ax} cy={triangle.ay} r="9" fill="#00FF88" />
         <circle cx="75" cy="286" r="9" fill="#B388FF" />
         <circle cx="325" cy="286" r="9" fill="#B388FF" />
         <text x={triangle.ax} y={triangle.ay - 16} textAnchor="middle" fill="#fff" fontWeight="900">A {angleA}°</text>
         <text x="56" y="314" fill="#fff" fontWeight="900">B 42°</text>
         <text x="310" y="314" fill="#fff" fontWeight="900">C</text>
-        <path d="M236 286 L236 226" stroke="rgba(255,255,255,0.35)" strokeDasharray="6 7" strokeWidth="3" />
+        <text x={(75 + triangle.ax) / 2 - 18} y={(286 + triangle.ay) / 2} fill="#B388FF" fontSize="12" fontWeight="900">AB {triangle.ab}</text>
+        <text x={(325 + triangle.ax) / 2 + 12} y={(286 + triangle.ay) / 2} fill="#00FF88" fontSize="12" fontWeight="900">AC {triangle.ac}</text>
+        <text x="186" y="309" fill="#00E5FF" fontSize="12" fontWeight="900">BC {triangle.bc}</text>
+        {activeIndex === 1 ? (
+          <motion.text x="200" y="52" textAnchor="middle" fill="#FBBF24" fontSize="18" fontWeight="900" animate={{ opacity: [0.55, 1, 0.55] }} transition={{ duration: 1.1, repeat: Infinity }}>
+            42° + 73° + 65° = 180°
+          </motion.text>
+        ) : null}
+        {showSimilarity ? (
+          <>
+            <text x="205" y="116" textAnchor="middle" fill="#B388FF" fontSize="14" fontWeight="900">ölçek x2</text>
+            <text x="250" y="250" fill="#B388FF" fontSize="12" fontWeight="900">6-8-10</text>
+            <text x="94" y="250" fill="#00E5FF" fontSize="12" fontWeight="900">3-4-5</text>
+          </>
+        ) : null}
+        <path d="M236 286 L236 226" stroke={showTheorem ? '#00E5FF' : 'rgba(255,255,255,0.35)'} strokeDasharray="6 7" strokeWidth={showTheorem ? 5 : 3} filter={showTheorem ? 'url(#triangle-glow)' : undefined} />
+        <path d="M75 286 H236 M236 286 H325" stroke={showTheorem ? '#FBBF24' : 'transparent'} strokeWidth="5" strokeLinecap="round" />
         <text x="246" y="258" fill="#00E5FF" fontSize="13" fontWeight="900">h²=p·k</text>
+        {showTheorem ? (
+          <>
+            <text x="146" y="278" textAnchor="middle" fill="#FBBF24" fontSize="13" fontWeight="900">p</text>
+            <text x="282" y="278" textAnchor="middle" fill="#FBBF24" fontSize="13" fontWeight="900">k</text>
+          </>
+        ) : null}
       </svg>
 
       <div className="relative grid gap-3 md:grid-cols-3">
