@@ -4,7 +4,8 @@ import { useAstroBotStore } from '../../store/useAstroBotStore';
 
 export function GlobalAstroBot() {
   const message = useAstroBotStore((state) => state.message);
-  
-  // We can always render AstroBot, it handles null message gracefully by unmounting the text box
+
+  if (!message) return null;
+
   return <AstroBot message={message} />;
 }

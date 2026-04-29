@@ -1,20 +1,19 @@
 # Current Task
 
 ## What We're Building
-Repository takeover, technical health cleanup, roadmap alignment, and next module planning.
+9. sınıf interaktif lab paketi: sayı/fonksiyon/mantık/geometri/dönüşüm/veri-olasılık modüllerinin çalışan v1 uygulaması.
 
 ## Status
-Review Needed
+Done
 
 ## Last Session Summary
-2026-04-28 — Pulled the GitHub project into `/Users/serhan/Documents/New project`, installed dependencies, repaired the stale lockfile, cleared `npm audit` vulnerabilities, added Git ignores for generated artifacts, removed the macOS-hostile `progress.md`/`PROGRESS.md` case collision from the tracked set, replaced the broken remote noise texture with local CSS, fixed the Polygon Collision SVG runtime errors, tightened Firebase auth/store typing plus listener cleanup, reviewed all project docs, rewrote `docs/ROADMAP.md` as an execution roadmap, and added an architecture review for the roadmap.
+2026-04-29 — Superpowers executing-plans/verification akışıyla `codex/grade9-labs` branch'i açıldı. Ortak `Grade9LabShell` ve görev ilerleme sistemi eklendi. 9. sınıf için 6 yeni interaktif modül kodlandı: `radical-power-reactor`, `function-hologram-room`, `logic-circuit-lab`, `triangle-tension-lab`, `transformation-forensics`, `statistics-probability-radar`. Registry çoklu `atomIds` desteğiyle güncellendi, dashboard'da 9. sınıf 7 aktif görev olarak görünüyor. Global AstroBot mesaj yokken modül UI'ını kapatmayacak şekilde düzeltildi. Browser Use dışındaki tarayıcı araçları kullanılmadan `?qa=1` güvenli test oturumunda 6/6 yeni modülün tüm görev zincirleri uçtan uca tamamlandı. Test sırasında bulunan AstroBot tıklama engeli, Kök/Üs test id çakışması, Üçgen açı kontrolü ve Veri Radarı 0 deney yayı düzeltildi. Son görsel Browser Use denetiminde orta genişlikte görev zinciri/sahne sıkışması giderildi, modül içi iki kolon kırılımı güvenli eşiğe çekildi ve Fonksiyon stepper hızlı tıklama state hatası onarıldı. `npm run build` geçti.
 
 ## Next Steps
-1. Continue eliminating remaining `any` usages in module files and the registry.
-2. Add Rollup manual chunks for Three.js, KaTeX, Matter.js, and Firebase to reduce the 868 kB main bundle warning.
-3. Audit iframe root layouts for remaining `min-h-screen`/`overflow-hidden` anti-patterns.
-4. Set up Firebase Hosting + GitHub Actions publish flow.
-5. Start the next recommended module: `Kuantum Filtre İstasyonu` for 6th grade.
+1. Yeni 9. sınıf modüllerinin pedagojik görev derinliğini artır: her modüle 2-3 ek seviye ve daha fazla yanlış cevap geri bildirimi ekle.
+2. Rollup manual chunks ile ana bundle uyarısını azalt.
+3. Firebase Hosting + GitHub Actions publish hattını kur.
+4. 9. sınıf modüllerinde ses efektleri ve tamamlanma animasyonlarını zenginleştir.
 
 ## Blockers
 - None

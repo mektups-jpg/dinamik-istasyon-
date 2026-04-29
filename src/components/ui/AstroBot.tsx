@@ -44,11 +44,11 @@ export function AstroBot({ message }: AstroBotProps) {
             initial={{ opacity: 0, scale: 0.8, y: 10, transformOrigin: 'bottom right' }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 10 }}
-            className={`bg-[#1F2833]/95 backdrop-blur-xl border text-white p-4 pt-6 rounded-2xl rounded-br-sm max-w-[340px] mb-8 relative pointer-events-auto flex items-start gap-3 ${colors[type]}`}
+            className={`bg-[#1F2833]/95 backdrop-blur-xl border text-white p-4 pt-6 rounded-2xl rounded-br-sm max-w-[340px] mb-8 relative pointer-events-none flex items-start gap-3 ${colors[type]}`}
           >
             <button 
               onClick={() => setIsVisible(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-white transition-colors p-1"
+              className="pointer-events-auto absolute top-2 right-2 text-gray-500 hover:text-white transition-colors p-1"
             >
               <X className="w-4 h-4" />
             </button>

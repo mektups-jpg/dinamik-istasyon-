@@ -35,6 +35,12 @@ Bu dosya, projenin genel vizyonunu, tamamlanan özellikleri ve gelecekteki planl
 
 ### 🧮 9. Sınıf Cebir (Algebra) Laboratuvarı
 - [x] **Denklem Denizaltısı (Equation Submarine):** Doğrusal denklem sistemlerinin (İki bilinmeyenli) çözümünü, denizaltının reaktörü ve oksijen sistemini onarma metaforu eşliğinde önce Taraf Tarafa Toplama, ardından Katsayı Dengeleme aşamalarıyla anlatan ve yerine koyma metodunu pekiştiren ileri seviye simülasyon (MAT.9.2.3.1).
+- [x] **Kök ve Üs Reaktörü:** Üslü/köklü ifadeler, sayı kümeleri, aralık kapıları ve işlem özelliklerini tek reaktör panelinde sadeleştiren 9. sınıf sayı laboratuvarı (MAT.9.1.1.x - MAT.9.1.5.x).
+- [x] **Fonksiyonel Hologram Odası:** f(x)=x referans lazerini eğim, yatay/dikey kaydırma, mutlak değer aynası ve eşitsizlik alanı üzerinden görselleştiren fonksiyon simülasyonu (MAT.9.2.1.x, MAT.9.2.2.x, MAT.9.2.3.2).
+- [x] **Akıllı Mantık Devreleri:** Algoritmik akış, VE/VEYA/İSE/YA DA kapıları ve her/bazı niceleyicilerini 0/1 devre tahtasında test eden mantık laboratuvarı (MAT.9.3.x).
+- [x] **Üçgen Gerilim Laboratuvarı:** Açı-kenar ilişkisi, benzerlik oranları ve Tales/Öklid/Pisagor kilitlerini canlı SVG üçgen üzerinde çalıştıran geometri modülü (MAT.9.4.1.x, MAT.9.5.2.x, MAT.9.5.3.x).
+- [x] **Dönüşüm Adli Bilişimi:** Döndürülmüş/yansıtılmış şekillerde dönüşüm merkezi, açı imzası ve ayna eksenini analiz ettiren dönüşüm modülü (MAT.9.5.1.x).
+- [x] **Veri ve Olasılık Radarı:** Standart sapma, kutu-bıyık medyanı, gözlemsel olasılık ve tümevarım tahminini tek radar arayüzünde birleştiren veri modülü (MAT.9.6.x, MAT.9.7.x).
 
 ### 🎮 İlkokul Odaklı Modüller (Eski Sürümler)
 - [x] **Sayı Doğrusu Zıplaması:** Toplama ve Çıkarma için neon uzay ekseni.
@@ -48,6 +54,7 @@ Bu dosya, projenin genel vizyonunu, tamamlanan özellikleri ve gelecekteki planl
 - [x] **Poligon Çatışma Testi (Üçgen Eşitsizliği):** Üçgenin kenar uzunluklarını slider ile ayarlayarak oluşup oluşamama durumunu (Üçgen Eşitsizliği - MAT.5.3.7.1) fiziksel olarak simüle eden laboratuvar. *Vibe Coder incelemesiyle `GameHeader` entegre edildi, AstroBot ipucu akışı (timeout debounce) mükemmelleştirildi. `Math.atan2` tabanlı kolların hatalı açı problemleri onarılarak mühendislik stili dashed-line eklentileri (U AÇIKLIK) yapıldı. Orantısız kenarlarda yaşanan SVG viewport clipping/taşıma sorunları (scale küçültmesiyle) engellendi. CSS transform-origin bazlı çubuk kopma (rotation) sorunları giderilerek direkt koordinat hesaplamalı (`x1, y1`) yaylı (`spring`) sisteme geçildi.*
 - [x] **Kod Refactoring (Kısmi):** Ortak UI bileşenleri (`AstroBot`, `GlobalAstroBot`, `Protractor`, `MeasurementPanel`) bağımsızlaştırılarak merkezileştirildi.
 - [x] **Codex Devralma ve Roadmap Senkronizasyonu:** Tüm proje dokümanları incelendi, `docs/ROADMAP.md` teknik omurga + publish hattı + müfredat sprintleri olarak yeniden düzenlendi. Sıradaki önerilen modül 6. sınıf **Kuantum Filtre İstasyonu** olarak belirlendi.
+- [x] **9. Sınıf Lab Paketi v1:** Ortak `Grade9LabShell` altyapısı kuruldu; 6 yeni 9. sınıf modülü registry ve dashboard'a bağlandı. Browser Use ile `?qa=1` güvenli test oturumunda 6/6 yeni modülün tüm görev zincirleri uçtan uca tamamlandı. AstroBot'un kontrol butonlarını tıklanamaz hale getirme riski, Kök/Üs test id çakışması, Üçgen açı slider test/UX eksiği ve veri radarı 0 deney yayı düzeltildi. Son görsel denetimde orta genişlikte yatay sahne sıkışması giderildi, görev zinciri kompakt yatay akışa alındı ve Fonksiyon stepper hızlı tıklama state hatası fonksiyonel update ile onarıldı.
 
 ---
 

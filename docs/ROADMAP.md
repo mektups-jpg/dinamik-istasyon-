@@ -109,9 +109,12 @@ Amaç: küçük yaş kullanıcıları için ürünün giriş deneyimini güçlen
 
 ### Sprint 3.4 - Lise Omurgası
 
-- [ ] 9. sınıf: Kök ve Üs Reaktörü.
-- [ ] 9. sınıf: Fonksiyonel Hologram Odası.
-- [ ] 9. sınıf: Akıllı Mantık Devreleri.
+- [x] 9. sınıf: Kök ve Üs Reaktörü.
+- [x] 9. sınıf: Fonksiyonel Hologram Odası.
+- [x] 9. sınıf: Akıllı Mantık Devreleri.
+- [x] 9. sınıf: Üçgen Gerilim Laboratuvarı.
+- [x] 9. sınıf: Dönüşüm Adli Bilişimi.
+- [x] 9. sınıf: Veri ve Olasılık Radarı.
 - [ ] 10. sınıf: Şifreli Kuantum Kasası.
 - [ ] 10. sınıf: Parabolik Eğri Simülatörü.
 - [ ] 10. sınıf: Lazer Teodoliti.

@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { lazy, type ComponentType, type LazyExoticComponent } from 'react';
 
 export type Category = 'Sayılar' | 'Geometri' | 'Fizik' | 'Olasılık' | 'Cebir' | 'Trigonometri' | 'Geometrik Şekiller';
 export type Difficulty = 'Kolay' | 'Orta' | 'Zor';
@@ -12,10 +12,11 @@ export interface ModuleMeta {
   difficulty: Difficulty;
   grade: number;
   path: string;
-  component: React.LazyExoticComponent<React.ComponentType<any>>;
+  component: LazyExoticComponent<ComponentType<Record<string, never>>>;
   thumbnail?: string;
   atomId?: string;
-  icon?: any;
+  atomIds?: string[];
+  icon?: ComponentType<{ className?: string }>;
 }
 
 export const modules: ModuleMeta[] = [
@@ -330,6 +331,49 @@ export const modules: ModuleMeta[] = [
     component: lazy(() => import('../modules/geometry/area-pi-lab/AreaPiApp'))
   },
   {
+    id: 'radical-power-reactor',
+    title: 'Kök ve Üs Reaktörü',
+    description: 'Üslü/köklü ifadeleri, aralık kapılarını, sayı kümelerini ve işlem özelliklerini tek reaktör panelinde sadeleştir.',
+    grade: 9,
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.1.1.1',
+      'MAT.9.1.1.2',
+      'MAT.9.1.2.1',
+      'MAT.9.1.2.2',
+      'MAT.9.1.3.1',
+      'MAT.9.1.3.2',
+      'MAT.9.1.3.3',
+      'MAT.9.1.3.4',
+      'MAT.9.1.4.1',
+      'MAT.9.1.4.2',
+      'MAT.9.1.5.1',
+      'MAT.9.1.5.2'
+    ],
+    path: '/embed/numbers/radical-power-reactor',
+    component: lazy(() => import('../modules/grade9/radical-power-reactor/RadicalPowerReactorApp'))
+  },
+  {
+    id: 'function-hologram-room',
+    title: 'Fonksiyonel Hologram Odası',
+    description: 'f(x)=x lazerini eğ, taşı, mutlak değer aynasına kır ve eşitsizlik çözüm alanını hologramda boya.',
+    grade: 9,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.2.1.1',
+      'MAT.9.2.1.2',
+      'MAT.9.2.1.3',
+      'MAT.9.2.1.4',
+      'MAT.9.2.2.1',
+      'MAT.9.2.2.2',
+      'MAT.9.2.3.2'
+    ],
+    path: '/embed/algebra/function-hologram-room',
+    component: lazy(() => import('../modules/grade9/function-hologram-room/FunctionHologramRoomApp'))
+  },
+  {
     id: 'equation-submarine',
     title: 'Denklem Denizaltısı',
     description: 'İki bilinmeyenli doğrusal denklem sistemlerini taraf tarafa toplayarak ve yerine koyarak çözün. Denizaltının reaktörünü onarın!',
@@ -339,5 +383,71 @@ export const modules: ModuleMeta[] = [
     atomId: 'MAT.9.2.3.1',
     path: '/embed/algebra/equation-submarine',
     component: lazy(() => import('../modules/algebra/equation-submarine/EquationSubmarineApp'))
+  },
+  {
+    id: 'logic-circuit-lab',
+    title: 'Akıllı Mantık Devreleri',
+    description: '0/1 akımlarını VE, VEYA, İSE ve YA DA kapılarından geçir; niceleyici radarında her/bazı ayrımını test et.',
+    grade: 9,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.3.1.1',
+      'MAT.9.3.2.1',
+      'MAT.9.3.2.2',
+      'MAT.9.3.2.3',
+      'MAT.9.3.2.4',
+      'MAT.9.3.3.1',
+      'MAT.9.3.3.2'
+    ],
+    path: '/embed/algebra/logic-circuit-lab',
+    component: lazy(() => import('../modules/grade9/logic-circuit-lab/LogicCircuitLabApp'))
+  },
+  {
+    id: 'triangle-tension-lab',
+    title: 'Üçgen Gerilim Laboratuvarı',
+    description: 'Açı-kenar gerilimini, benzerlik oranlarını ve Öklid/Pisagor/Tales teorem kilitlerini canlı üçgen üzerinde çöz.',
+    grade: 9,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.4.1.1',
+      'MAT.9.4.1.2',
+      'MAT.9.5.2.1',
+      'MAT.9.5.2.2',
+      'MAT.9.5.3.1',
+      'MAT.9.5.3.2',
+      'MAT.9.5.3.3'
+    ],
+    path: '/embed/geometry/triangle-tension-lab',
+    component: lazy(() => import('../modules/grade9/triangle-tension-lab/TriangleTensionLabApp'))
+  },
+  {
+    id: 'transformation-forensics',
+    title: 'Dönüşüm Adli Bilişimi',
+    description: 'Döndürülmüş ve yansıtılmış şekillerin merkez, açı ve ayna ekseni izlerini adli analiz ekranında yakala.',
+    grade: 9,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: ['MAT.9.5.1.1', 'MAT.9.5.1.2'],
+    path: '/embed/geometry/transformation-forensics',
+    component: lazy(() => import('../modules/grade9/transformation-forensics/TransformationForensicsApp'))
+  },
+  {
+    id: 'statistics-probability-radar',
+    title: 'Veri ve Olasılık Radarı',
+    description: 'Standart sapma, kutu-bıyık etiketi, gözlemsel olasılık ve tümevarımı tek veri radarında simüle et.',
+    grade: 9,
+    category: 'Olasılık',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.6.1.1',
+      'MAT.9.6.1.2',
+      'MAT.9.6.2.1',
+      'MAT.9.7.1.1',
+      'MAT.9.7.2.1'
+    ],
+    path: '/embed/probability/statistics-probability-radar',
+    component: lazy(() => import('../modules/grade9/statistics-probability-radar/StatisticsProbabilityRadarApp'))
   }
 ];
