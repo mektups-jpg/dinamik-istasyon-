@@ -1,13 +1,7 @@
-import React, { useMemo, useState } from 'react';
-import { Binary, Check, GitBranch, Lightbulb, Play, RotateCcw, Workflow } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Cable, Check, Power, Radar, RotateCcw, Workflow } from 'lucide-react';
 import { motion } from 'motion/react';
-import {
-  ChoiceButton,
-  Grade9LabShell,
-  MetricPill,
-  MissionStep,
-  useGrade9MissionProgress,
-} from '../shared/Grade9LabShell';
+import { Grade9LabShell, MissionStep, useGrade9MissionProgress } from '../shared/Grade9LabShell';
 import { SciFiButton } from '../../../components/ui/SciFiButton';
 
 const MODULE_ID = 'logic-circuit-lab';
@@ -23,43 +17,17 @@ const ATOM_IDS = [
 ];
 
 const MISSIONS: MissionStep[] = [
-  {
-    id: 'flow-order',
-    title: 'Akış Şeması',
-    atomId: 'MAT.9.3.1.1',
-    prompt: 'Problemi makine adımlarına böl. Doğru sıra: oku, karşılaştır, kapıdan geçir, sonucu yaz.',
-  },
-  {
-    id: 'and-gate',
-    title: 'VE Kapısı',
-    atomId: 'MAT.9.3.2.1',
-    prompt: 'VE kapısı yalnızca iki giriş de 1 ise ışık verir. A=1 ve B=1 akımını kur.',
-  },
-  {
-    id: 'implies-gate',
-    title: 'İSE 100 Kuralı',
-    atomId: 'MAT.9.3.2.3',
-    prompt: 'İSE kapısında tek çöküş A=1, B=0 durumudur. Bu patlama senaryosunu doğrula.',
-  },
-  {
-    id: 'xor-gate',
-    title: 'YA DA Kapısı',
-    atomId: 'MAT.9.3.2.4',
-    prompt: 'YA DA kapısı iki sinyal farklı olduğunda yanar. Girişlerden yalnızca birini 1 yap.',
-  },
-  {
-    id: 'quantifier-radar',
-    title: 'Niceleyici Radarı',
-    atomId: 'MAT.9.3.3.2',
-    prompt: 'Radar kümesinde en az bir aktif eleman var. Bu cümle için varlıksal niceleyiciyi seç.',
-  },
+  { id: 'flow-order', title: 'Akış Şeması', atomId: 'MAT.9.3.1.1', prompt: 'Makineyi sırayla kur: oku, karşılaştır, kapıdan geçir, sonucu yaz. Hatlar sırayla yanmalı.' },
+  { id: 'and-gate', title: 'VE Kapısı', atomId: 'MAT.9.3.2.1', prompt: 'VE kapısında çıkış yalnızca A=1 ve B=1 iken yanar. İki girişi de aktif et.' },
+  { id: 'implies-gate', title: 'İSE Hata Durumu', atomId: 'MAT.9.3.2.3', prompt: 'İSE kapısının tek çöküşünü üret: A=1 ve B=0. Bu durumda çıkış söner.' },
+  { id: 'xor-gate', title: 'YA DA Kapısı', atomId: 'MAT.9.3.2.4', prompt: 'YA DA kapısı iki sinyal farklıysa yanar. Girişlerden yalnızca biri aktif kalsın.' },
+  { id: 'quantifier-radar', title: 'Niceleyici Radarı', atomId: 'MAT.9.3.3.2', prompt: 'Radar kümesinde en az bir aktif eleman var. Bu durum varlıksal niceleyicidir.' },
 ];
 
 type Gate = 'and' | 'or' | 'implies' | 'xor';
 type Quantifier = 'forall' | 'exists';
-type FlowStep = 'Oku' | 'Karşılaştır' | 'Kapıdan geçir' | 'Sonucu yaz';
 
-const FLOW_STEPS: FlowStep[] = ['Oku', 'Karşılaştır', 'Kapıdan geçir', 'Sonucu yaz'];
+const FLOW_STEPS = ['Oku', 'Karşılaştır', 'Kapıdan geçir', 'Sonucu yaz'] as const;
 
 const evaluateGate = (gate: Gate, a: boolean, b: boolean): boolean => {
   if (gate === 'and') return a && b;
@@ -74,8 +42,8 @@ export default function LogicCircuitLabApp() {
   const [inputB, setInputB] = useState(false);
   const [gate, setGate] = useState<Gate>('and');
   const [quantifier, setQuantifier] = useState<Quantifier>('forall');
-  const [flowOrder, setFlowOrder] = useState<FlowStep[]>([]);
-
+  const [flowIndex, setFlowIndex] = useState(0);
+  const activeIndex = progress.activeIndex;
   const output = useMemo(() => evaluateGate(gate, inputA, inputB), [gate, inputA, inputB]);
 
   const resetPanel = () => {
@@ -83,7 +51,7 @@ export default function LogicCircuitLabApp() {
     setInputB(false);
     setGate('and');
     setQuantifier('forall');
-    setFlowOrder([]);
+    setFlowIndex(0);
   };
 
   const restart = () => {
@@ -91,24 +59,19 @@ export default function LogicCircuitLabApp() {
     progress.restart();
   };
 
-  const toggleFlow = (step: FlowStep) => {
-    setFlowOrder((current) => current.includes(step) ? current.filter((item) => item !== step) : [...current, step]);
-  };
+  const checks = [
+    flowIndex >= FLOW_STEPS.length,
+    gate === 'and' && inputA && inputB && output,
+    gate === 'implies' && inputA && !inputB && !output,
+    gate === 'xor' && inputA !== inputB && output,
+    quantifier === 'exists',
+  ];
 
   const handleCheck = () => {
-    const flowOk = flowOrder.join('|') === FLOW_STEPS.join('|');
-    const checks = [
-      flowOk,
-      gate === 'and' && inputA && inputB && output,
-      gate === 'implies' && inputA && !inputB && !output,
-      gate === 'xor' && inputA !== inputB && output,
-      quantifier === 'exists',
-    ];
-
     progress.submitMission({
-      ok: checks[progress.activeIndex] ?? false,
-      success: 'Devre doğru akımı verdi. Bir sonraki mantık kilidi açıldı.',
-      error: 'Devre hedef cümleyi üretmedi. Girişleri, kapıyı veya niceleyiciyi tekrar ayarla.',
+      ok: checks[activeIndex] ?? false,
+      success: 'Devre beklenen sinyali üretti. Bir sonraki mantık katmanı açılıyor.',
+      error: 'Devre hedef cümleyi üretmedi. Aktif girişleri, kapıyı veya radarı tekrar ayarla.',
     });
   };
 
@@ -118,108 +81,234 @@ export default function LogicCircuitLabApp() {
       subtitle="MAT.9.3.1.x / MAT.9.3.2.x / MAT.9.3.3.x"
       moduleId={MODULE_ID}
       missions={MISSIONS}
-      activeIndex={progress.activeIndex}
+      activeIndex={activeIndex}
       completed={progress.completed}
       onRestart={restart}
-      frameClassName="bg-[#03080f] [background-image:radial-gradient(circle_at_16%_18%,rgba(56,189,248,0.16),transparent_27%),radial-gradient(circle_at_82%_16%,rgba(59,130,246,0.12),transparent_24%),linear-gradient(180deg,#03080f_0%,#06111c_56%,#03060b_100%)]"
+      contentClassName="max-w-6xl px-4 py-5 sm:px-6 lg:px-8"
+      frameClassName="bg-[#03080f] [background-image:radial-gradient(circle_at_18%_18%,rgba(56,189,248,0.18),transparent_30%),radial-gradient(circle_at_82%_16%,rgba(59,130,246,0.13),transparent_26%),linear-gradient(180deg,#03080f_0%,#07121f_58%,#03060b_100%)]"
       badges={[
         { label: 'A/B', value: `${Number(inputA)}-${Number(inputB)}`, tone: 'cyan' },
         { label: 'Çıkış', value: output ? '1' : '0', tone: output ? 'green' : 'pink' },
       ]}
     >
-      <div className="space-y-4">
-        <CircuitBrief activeMission={progress.activeMission} activeIndex={progress.activeIndex} total={MISSIONS.length} output={output} flowCount={flowOrder.length} />
-      <div className="grid gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_350px]">
-        <div className="min-w-0 rounded-lg border border-dashed border-sky-300/20 bg-sky-950/20 p-4 shadow-[inset_0_0_35px_rgba(56,189,248,0.05)]">
-          <div className="mb-4 flex flex-wrap gap-2">
-            <MetricPill variant="circuit" label="Kapı" value={gate.toUpperCase()} tone="purple" />
-            <MetricPill variant="circuit" label="A" value={inputA ? '1' : '0'} tone={inputA ? 'green' : 'pink'} />
-            <MetricPill variant="circuit" label="B" value={inputB ? '1' : '0'} tone={inputB ? 'green' : 'pink'} />
-            <MetricPill variant="circuit" label="Niceleyici" value={quantifier === 'forall' ? 'HER' : 'BAZI'} tone="amber" />
-          </div>
-          <CircuitVisual inputA={inputA} inputB={inputB} gate={gate} output={output} quantifier={quantifier} flowOrder={flowOrder} />
-        </div>
-
-        <div className="min-w-0 space-y-4">
-          <div className="rounded-lg border border-dashed border-sky-300/20 bg-sky-300/[0.045] p-4">
-            <h4 className="mb-3 flex items-center gap-2 text-sm font-black uppercase tracking-wider text-white">
-              <Workflow className="h-4 w-4 text-[#00E5FF]" /> Akış Sırası
-            </h4>
-            <div className="grid gap-2">
-              {FLOW_STEPS.map((step) => (
-                <ChoiceButton
-                  variant="circuit"
-                  key={step}
-                  testId={`logic-flow-${step.toLowerCase().replaceAll(' ', '-')}`}
-                  selected={flowOrder.includes(step)}
-                  label={`${flowOrder.includes(step) ? flowOrder.indexOf(step) + 1 : '-'}  ${step}`}
-                  detail="Sıralamak için sırayla tıkla"
-                  onClick={() => toggleFlow(step)}
-                  tone="cyan"
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <ToggleNode testId="logic-input-a" label="A" value={inputA} onClick={() => setInputA((current) => !current)} />
-            <ToggleNode testId="logic-input-b" label="B" value={inputB} onClick={() => setInputB((current) => !current)} />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            {(['and', 'or', 'implies', 'xor'] as Gate[]).map((item) => (
-              <ChoiceButton
-                variant="circuit"
-                key={item}
-                testId={`logic-gate-${item}`}
-                selected={gate === item}
-                label={gateLabel(item)}
-                detail={gateDetail(item)}
-                onClick={() => setGate(item)}
-                tone={item === 'implies' ? 'amber' : 'purple'}
-              />
-            ))}
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <ChoiceButton variant="circuit" testId="logic-quantifier-forall" selected={quantifier === 'forall'} label="∀ Her" detail="Tüm elemanlar doğru" onClick={() => setQuantifier('forall')} tone="green" />
-            <ChoiceButton variant="circuit" testId="logic-quantifier-exists" selected={quantifier === 'exists'} label="∃ Bazı" detail="En az bir eleman doğru" onClick={() => setQuantifier('exists')} tone="cyan" />
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row xl:flex-col">
-            <SciFiButton data-testid="logic-check" onClick={handleCheck} className="min-h-[48px] flex-1" icon={<Check className="h-4 w-4" />}>
-              Devreyi Test Et
-            </SciFiButton>
-            <SciFiButton data-testid="logic-reset" variant="secondary" onClick={resetPanel} className="min-h-[48px] flex-1" icon={<RotateCcw className="h-4 w-4" />}>
-              Sıfırla
-            </SciFiButton>
-          </div>
-        </div>
-      </div>
+      <div className="grid min-h-[640px] gap-4 lg:grid-cols-[minmax(0,1fr)_330px]">
+        <CircuitScene activeIndex={activeIndex} inputA={inputA} inputB={inputB} gate={gate} output={output} flowIndex={flowIndex} quantifier={quantifier} />
+        <CircuitControls
+          mission={progress.activeMission}
+          activeIndex={activeIndex}
+          inputA={inputA}
+          inputB={inputB}
+          gate={gate}
+          quantifier={quantifier}
+          flowIndex={flowIndex}
+          setInputA={setInputA}
+          setInputB={setInputB}
+          setGate={setGate}
+          setQuantifier={setQuantifier}
+          setFlowIndex={setFlowIndex}
+          onCheck={handleCheck}
+          onReset={resetPanel}
+        />
       </div>
     </Grade9LabShell>
   );
 }
 
-function CircuitBrief({ activeMission, activeIndex, total, output, flowCount }: { activeMission: MissionStep; activeIndex: number; total: number; output: boolean; flowCount: number }) {
+interface CircuitSceneProps {
+  activeIndex: number;
+  inputA: boolean;
+  inputB: boolean;
+  gate: Gate;
+  output: boolean;
+  flowIndex: number;
+  quantifier: Quantifier;
+}
+
+function CircuitScene({ activeIndex, inputA, inputB, gate, output, flowIndex, quantifier }: CircuitSceneProps) {
+  const impliesFailure = activeIndex === 2 && gate === 'implies' && inputA && !inputB;
   return (
-    <section className="relative overflow-hidden rounded-xl border border-sky-300/20 bg-sky-300/[0.045] p-5 shadow-[0_0_42px_rgba(56,189,248,0.10)]">
+    <section data-testid="logic-scene" className="relative overflow-hidden rounded-lg border border-sky-300/18 bg-black/35 p-5 shadow-[0_0_55px_rgba(56,189,248,0.10)]">
       <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:linear-gradient(90deg,rgba(56,189,248,0.18)_1px,transparent_1px),linear-gradient(rgba(56,189,248,0.12)_1px,transparent_1px)] [background-size:44px_44px]" />
-      <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="max-w-3xl">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-sky-200/65">devre görevi {activeIndex + 1}/{total}</p>
-          <h2 className="mt-2 text-3xl font-black text-white">{activeMission.title}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-sky-50/70">{activeMission.prompt}</p>
-        </div>
-        <div className="flex w-full min-w-0 items-center justify-between rounded-lg border border-dashed border-sky-300/25 bg-black/35 p-3 lg:w-[250px] lg:shrink-0">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-sky-200/55">akış</p>
-            <p className="text-2xl font-black text-sky-100">{flowCount}/4</p>
-          </div>
-          <div className={`h-14 w-14 rounded-lg border ${output ? 'border-emerald-300/60 bg-emerald-300/15 shadow-[0_0_22px_rgba(0,255,136,0.2)]' : 'border-pink-300/50 bg-pink-300/10 shadow-[0_0_22px_rgba(255,0,85,0.16)]'}`} />
-        </div>
+      <div className="relative mb-4">
+        <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-sky-100/55">tek ana deney</p>
+        <h2 className="text-2xl font-black text-white">Sinyali Devreden Geçir</h2>
       </div>
+
+      <svg viewBox="0 0 720 500" className="relative h-[520px] w-full rounded-lg border border-white/10 bg-[#020611]/78">
+        <defs>
+          <filter id="circuit-glow">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+
+        {activeIndex === 0 ? (
+          <>
+            {FLOW_STEPS.map((step, index) => {
+              const x = 110 + index * 165;
+              const active = flowIndex > index;
+              return (
+                <g key={step}>
+                  {index < FLOW_STEPS.length - 1 ? <line x1={x + 48} y1="248" x2={x + 150} y2="248" stroke={flowIndex > index + 1 ? '#00FF88' : 'rgba(255,255,255,0.18)'} strokeWidth="7" strokeLinecap="round" /> : null}
+                  <rect x={x - 48} y="202" width="96" height="92" rx="18" fill={active ? 'rgba(0,255,136,0.13)' : 'rgba(255,255,255,0.045)'} stroke={active ? '#00FF88' : 'rgba(255,255,255,0.18)'} strokeWidth="4" />
+                  <text x={x} y="254" textAnchor="middle" fill={active ? '#00FF88' : '#fff'} fontSize="15" fontWeight="900">{step}</text>
+                </g>
+              );
+            })}
+            <text x="360" y="430" textAnchor="middle" fill="#38BDF8" fontSize="20" fontWeight="900">Algoritma, doğru sırada yanan adımlardır</text>
+          </>
+        ) : null}
+
+        {activeIndex > 0 && activeIndex < 4 ? (
+          <>
+            <WireNode x={130} y={160} label="A" on={inputA} />
+            <WireNode x={130} y={340} label="B" on={inputB} />
+            <line x1="178" y1="160" x2="315" y2="235" stroke={inputA ? '#00FF88' : 'rgba(255,255,255,0.16)'} strokeWidth="8" strokeLinecap="round" />
+            <line x1="178" y1="340" x2="315" y2="265" stroke={inputB ? '#00FF88' : 'rgba(255,255,255,0.16)'} strokeWidth="8" strokeLinecap="round" />
+            <rect x="315" y="185" width="160" height="130" rx="26" fill={impliesFailure ? 'rgba(255,0,85,0.18)' : 'rgba(56,189,248,0.11)'} stroke={impliesFailure ? '#FF0055' : '#38BDF8'} strokeWidth="5" filter={impliesFailure ? 'url(#circuit-glow)' : undefined} />
+            <text x="395" y="258" textAnchor="middle" fill="#fff" fontSize="34" fontWeight="900">{gateLabel(gate)}</text>
+            <line x1="475" y1="250" x2="590" y2="250" stroke={output ? '#00FF88' : impliesFailure ? '#FF0055' : 'rgba(255,255,255,0.16)'} strokeWidth="8" strokeLinecap="round" />
+            <circle cx="625" cy="250" r="42" fill={output ? 'rgba(0,255,136,0.16)' : 'rgba(255,0,85,0.12)'} stroke={output ? '#00FF88' : '#FF0055'} strokeWidth="5" />
+            <text x="625" y="263" textAnchor="middle" fill="#fff" fontSize="34" fontWeight="900">{output ? '1' : '0'}</text>
+            {impliesFailure ? (
+              <>
+                <motion.circle cx="395" cy="250" r="70" fill="none" stroke="#FF0055" strokeWidth="5" animate={{ r: [55, 95, 55], opacity: [0.9, 0.15, 0.9] }} transition={{ duration: 1, repeat: Infinity }} />
+                <text x="395" y="365" textAnchor="middle" fill="#FF6B9A" fontSize="20" fontWeight="900">1 =&gt; 0 İSE kapısını söndürür</text>
+              </>
+            ) : null}
+          </>
+        ) : null}
+
+        {activeIndex === 4 ? (
+          <>
+            {[0, 1, 2, 3, 4, 5].map((item) => {
+              const angle = (item / 6) * Math.PI * 2;
+              const active = item === 2;
+              return (
+                <g key={item}>
+                  <line x1="360" y1="250" x2={360 + Math.cos(angle) * 148} y2={250 + Math.sin(angle) * 148} stroke="rgba(255,255,255,0.12)" strokeWidth="2" />
+                  <circle cx={360 + Math.cos(angle) * 148} cy={250 + Math.sin(angle) * 148} r="24" fill={active ? '#00FF88' : 'rgba(255,255,255,0.08)'} stroke={active ? '#00FF88' : 'rgba(255,255,255,0.24)'} strokeWidth="4" />
+                </g>
+              );
+            })}
+            <circle cx="360" cy="250" r="95" fill="rgba(56,189,248,0.06)" stroke="rgba(56,189,248,0.34)" strokeWidth="4" />
+            <text x="360" y="258" textAnchor="middle" fill={quantifier === 'exists' ? '#00FF88' : '#FBBF24'} fontSize="38" fontWeight="900">{quantifier === 'exists' ? '∃' : '∀'}</text>
+            <text x="360" y="430" textAnchor="middle" fill="#38BDF8" fontSize="20" fontWeight="900">En az bir ışık yanıyorsa ∃ doğru okur</text>
+          </>
+        ) : null}
+      </svg>
     </section>
+  );
+}
+
+function WireNode({ x, y, label, on }: { x: number; y: number; label: string; on: boolean }) {
+  return (
+    <g>
+      <circle cx={x} cy={y} r="42" fill={on ? 'rgba(0,255,136,0.16)' : 'rgba(255,0,85,0.12)'} stroke={on ? '#00FF88' : '#FF0055'} strokeWidth="5" />
+      <text x={x} y={y - 4} textAnchor="middle" fill="#fff" fontSize="22" fontWeight="900">{label}</text>
+      <text x={x} y={y + 22} textAnchor="middle" fill="#fff" fontSize="20" fontWeight="900">{on ? '1' : '0'}</text>
+    </g>
+  );
+}
+
+interface CircuitControlsProps {
+  mission: MissionStep;
+  activeIndex: number;
+  inputA: boolean;
+  inputB: boolean;
+  gate: Gate;
+  quantifier: Quantifier;
+  flowIndex: number;
+  setInputA: (value: boolean) => void;
+  setInputB: (value: boolean) => void;
+  setGate: (value: Gate) => void;
+  setQuantifier: (value: Quantifier) => void;
+  setFlowIndex: (value: number) => void;
+  onCheck: () => void;
+  onReset: () => void;
+}
+
+function CircuitControls(props: CircuitControlsProps) {
+  const { mission, activeIndex, inputA, inputB, gate, quantifier, flowIndex, setInputA, setInputB, setGate, setQuantifier, setFlowIndex, onCheck, onReset } = props;
+
+  return (
+    <aside className="rounded-lg border border-dashed border-sky-300/22 bg-black/45 p-5 backdrop-blur-xl">
+      <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-sky-100/55">devre görevi {activeIndex + 1}/5</p>
+      <h3 className="mt-2 text-2xl font-black text-white">{mission.title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-sky-50/70">{mission.prompt}</p>
+
+      <div className="mt-6 rounded-lg border border-dashed border-white/12 bg-white/[0.045] p-4">
+        {activeIndex === 0 ? (
+          <div className="space-y-3">
+            {FLOW_STEPS.map((step, index) => (
+              <button
+                key={step}
+                data-testid={`logic-flow-${index + 1}`}
+                onClick={() => setFlowIndex(index === flowIndex ? flowIndex + 1 : flowIndex)}
+                className={`min-h-[52px] w-full rounded-lg border px-4 text-left font-black transition ${flowIndex > index ? 'border-[#00FF88]/40 bg-[#00FF88]/12 text-[#00FF88]' : 'border-white/10 bg-white/5 text-white/75 hover:border-sky-300/40'}`}
+              >
+                {index + 1}. {step}
+              </button>
+            ))}
+          </div>
+        ) : null}
+
+        {activeIndex > 0 && activeIndex < 4 ? (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <ToggleNode testId="logic-input-a" label="A" value={inputA} onClick={() => setInputA(!inputA)} />
+              <ToggleNode testId="logic-input-b" label="B" value={inputB} onClick={() => setInputB(!inputB)} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {(['and', 'or', 'implies', 'xor'] as Gate[]).map((item) => (
+                <button
+                  key={item}
+                  data-testid={`logic-gate-${item}`}
+                  onClick={() => setGate(item)}
+                  className={`min-h-[52px] rounded-lg border font-black transition ${gate === item ? 'border-sky-300/45 bg-sky-300/12 text-sky-100' : 'border-white/10 bg-white/5 text-white/70 hover:border-sky-300/35'}`}
+                >
+                  {gateLabel(item)}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {activeIndex === 4 ? (
+          <div className="grid gap-3">
+            <button data-testid="logic-quantifier-forall" onClick={() => setQuantifier('forall')} className={`min-h-[58px] rounded-lg border px-4 text-left font-black ${quantifier === 'forall' ? 'border-amber-300/45 bg-amber-300/12 text-amber-100' : 'border-white/10 bg-white/5 text-white/70'}`}>∀ Her eleman yanmalı</button>
+            <button data-testid="logic-quantifier-exists" onClick={() => setQuantifier('exists')} className={`min-h-[58px] rounded-lg border px-4 text-left font-black ${quantifier === 'exists' ? 'border-[#00FF88]/45 bg-[#00FF88]/12 text-[#00FF88]' : 'border-white/10 bg-white/5 text-white/70'}`}>∃ En az biri yeter</button>
+          </div>
+        ) : null}
+      </div>
+
+      <div className="mt-5 grid gap-3">
+        <SciFiButton data-testid="logic-check" onClick={onCheck} className="min-h-[50px]" icon={<Check className="h-4 w-4" />}>
+          Devreyi Test Et
+        </SciFiButton>
+        <SciFiButton data-testid="logic-reset" variant="secondary" onClick={onReset} className="min-h-[50px]" icon={<RotateCcw className="h-4 w-4" />}>
+          Sıfırla
+        </SciFiButton>
+      </div>
+      <div className="mt-5 rounded-lg border border-cyan-300/15 bg-cyan-300/[0.06] p-4 text-xs leading-relaxed text-cyan-50/70">
+        {activeIndex === 4 ? <Radar className="mb-2 h-4 w-4 text-cyan-200" /> : activeIndex === 0 ? <Workflow className="mb-2 h-4 w-4 text-cyan-200" /> : <Cable className="mb-2 h-4 w-4 text-cyan-200" />}
+        Mantık kapısı bir cevap kartı değil; girişlerin akımı nasıl değiştirdiğini gösteren bir devredir.
+      </div>
+    </aside>
+  );
+}
+
+function ToggleNode({ testId, label, value, onClick }: { testId: string; label: string; value: boolean; onClick: () => void }) {
+  return (
+    <motion.button
+      data-testid={testId}
+      whileTap={{ scale: 0.96 }}
+      onClick={onClick}
+      className={`min-h-[68px] rounded-lg border p-4 text-left ${value ? 'border-[#00FF88]/40 bg-[#00FF88]/12 text-[#00FF88]' : 'border-[#FF0055]/35 bg-[#FF0055]/10 text-[#FF6B9A]'}`}
+    >
+      <Power className="mb-1 h-4 w-4" />
+      <p className="font-mono text-3xl font-black">{label}={value ? '1' : '0'}</p>
+    </motion.button>
   );
 }
 
@@ -228,135 +317,4 @@ function gateLabel(gate: Gate): string {
   if (gate === 'or') return 'VEYA ∨';
   if (gate === 'xor') return 'YA DA ⊻';
   return 'İSE =>';
-}
-
-function gateDetail(gate: Gate): string {
-  if (gate === 'and') return 'Sadece 1-1 yanar';
-  if (gate === 'or') return 'Sadece 0-0 söner';
-  if (gate === 'xor') return 'Farklıysa yanar';
-  return '1=>0 söner';
-}
-
-interface ToggleNodeProps {
-  label: string;
-  value: boolean;
-  onClick: () => void;
-  testId: string;
-}
-
-function ToggleNode({ label, value, onClick, testId }: ToggleNodeProps) {
-  return (
-    <motion.button
-      data-testid={testId}
-      whileTap={{ scale: 0.96 }}
-      onClick={onClick}
-      className={`min-h-[64px] rounded-2xl border p-4 text-left ${value ? 'border-[#00FF88]/35 bg-[#00FF88]/10' : 'border-[#FF0055]/30 bg-[#FF0055]/10'}`}
-    >
-      <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/55">Giriş {label}</p>
-      <p className={`mt-1 font-mono text-3xl font-black ${value ? 'text-[#00FF88]' : 'text-[#FF6B9A]'}`}>{value ? '1' : '0'}</p>
-    </motion.button>
-  );
-}
-
-interface CircuitVisualProps {
-  inputA: boolean;
-  inputB: boolean;
-  gate: Gate;
-  output: boolean;
-  quantifier: Quantifier;
-  flowOrder: FlowStep[];
-}
-
-function CircuitVisual({ inputA, inputB, gate, output, quantifier, flowOrder }: CircuitVisualProps) {
-  const signalColor = output ? '#00FF88' : '#FF0055';
-  const setLights = [true, false, true, false, false];
-  const implicationFault = gate === 'implies' && inputA && !inputB;
-
-  return (
-    <div className="relative min-h-[430px] overflow-hidden rounded-2xl border border-[#00E5FF]/20 bg-black/45 p-4">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,rgba(179,136,255,0.15),transparent_48%)]" />
-      <svg viewBox="0 0 640 360" className="relative h-[300px] w-full">
-        <defs>
-          <filter id="logic-glow">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-        <path d="M90 110 H250" stroke={inputA ? '#00FF88' : '#FF0055'} strokeWidth="8" strokeLinecap="round" filter="url(#logic-glow)" />
-        <path d="M90 230 H250" stroke={inputB ? '#00FF88' : '#FF0055'} strokeWidth="8" strokeLinecap="round" filter="url(#logic-glow)" />
-        <path d="M390 170 H540" stroke={signalColor} strokeWidth="10" strokeLinecap="round" filter="url(#logic-glow)" />
-        {inputA ? (
-          <motion.circle cx="96" cy="110" r="7" fill="#00FF88" filter="url(#logic-glow)" animate={{ cx: [96, 244, 96] }} transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }} />
-        ) : null}
-        {inputB ? (
-          <motion.circle cx="96" cy="230" r="7" fill="#00FF88" filter="url(#logic-glow)" animate={{ cx: [96, 244, 96] }} transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }} />
-        ) : null}
-        {output ? (
-          <motion.circle cx="404" cy="170" r="8" fill="#00FF88" filter="url(#logic-glow)" animate={{ cx: [404, 536, 404] }} transition={{ duration: 1.05, repeat: Infinity, ease: 'linear' }} />
-        ) : null}
-        <circle cx="72" cy="110" r="32" fill={inputA ? 'rgba(0,255,136,0.16)' : 'rgba(255,0,85,0.16)'} stroke={inputA ? '#00FF88' : '#FF0055'} strokeWidth="3" />
-        <circle cx="72" cy="230" r="32" fill={inputB ? 'rgba(0,255,136,0.16)' : 'rgba(255,0,85,0.16)'} stroke={inputB ? '#00FF88' : '#FF0055'} strokeWidth="3" />
-        <text x="72" y="119" textAnchor="middle" fill="#fff" fontSize="26" fontWeight="900">{inputA ? '1' : '0'}</text>
-        <text x="72" y="239" textAnchor="middle" fill="#fff" fontSize="26" fontWeight="900">{inputB ? '1' : '0'}</text>
-        <motion.path
-          d="M250 70 H335 C392 70 420 270 335 270 H250 Q290 170 250 70"
-          fill="rgba(0,229,255,0.10)"
-          stroke="#00E5FF"
-          strokeWidth="3"
-          animate={{ opacity: [0.68, 1, 0.68] }}
-          transition={{ duration: 1.3, repeat: Infinity }}
-        />
-        <text x="330" y="181" textAnchor="middle" fill="#00E5FF" fontSize="32" fontWeight="900">{gateLabel(gate)}</text>
-        {implicationFault ? (
-          <motion.g animate={{ scale: [1, 1.12, 1], opacity: [0.7, 1, 0.7] }} transition={{ duration: 0.7, repeat: Infinity }}>
-            <path d="M316 38 L340 72 L381 58 L358 94 L389 121 L348 116 L334 156 L320 116 L279 121 L310 94 L287 58 L328 72 Z" fill="rgba(255,0,85,0.22)" stroke="#FF0055" strokeWidth="3" />
-            <text x="334" y="102" textAnchor="middle" fill="#fff" fontSize="18" fontWeight="900">1=&gt;0</text>
-          </motion.g>
-        ) : null}
-        <circle cx="570" cy="170" r="40" fill={output ? 'rgba(0,255,136,0.2)' : 'rgba(255,0,85,0.18)'} stroke={signalColor} strokeWidth="4" filter="url(#logic-glow)" />
-        <text x="570" y="181" textAnchor="middle" fill="#fff" fontSize="34" fontWeight="900">{output ? '1' : '0'}</text>
-      </svg>
-
-      <div className="relative grid gap-3 md:grid-cols-2">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-3">
-          <div className="mb-2 flex items-center gap-2 text-sm font-black text-white">
-            <GitBranch className="h-4 w-4 text-[#00E5FF]" /> Algoritma Sırası
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {flowOrder.length === 0 ? <span className="text-xs text-white/45">Henüz akış yok</span> : null}
-            {flowOrder.map((step, index) => (
-              <span key={`${step}-${index}`} className="rounded-full border border-[#00E5FF]/25 bg-[#00E5FF]/10 px-3 py-1 text-xs font-black text-[#00E5FF]">
-                {index + 1}. {step}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-3">
-          <div className="mb-3 flex items-center gap-2 text-sm font-black text-white">
-            <Binary className="h-4 w-4 text-[#B388FF]" /> Niceleyici Radarı
-          </div>
-          <div className="flex items-center gap-2">
-            {setLights.map((lit, index) => (
-              <span
-                key={index}
-                className={`flex h-9 w-9 items-center justify-center rounded-xl border font-mono text-sm font-black ${
-                  lit ? 'border-[#00FF88]/35 bg-[#00FF88]/10 text-[#00FF88]' : 'border-white/10 bg-black/25 text-white/35'
-                }`}
-              >
-                {lit ? 1 : 0}
-              </span>
-            ))}
-            <span className="ml-auto flex items-center gap-2 text-xs font-black text-white">
-              <Lightbulb className={`h-4 w-4 ${quantifier === 'exists' ? 'text-[#00FF88]' : 'text-white/35'}`} />
-              {quantifier === 'exists' ? 'En az 1' : 'Hepsi'}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 }

@@ -1,56 +1,21 @@
 import React, { useMemo, useState } from 'react';
-import { BarChart3, Check, CircleDot, Gauge, Play, RotateCcw, Target } from 'lucide-react';
+import { BarChart3, Check, Play, Radar, RotateCcw } from 'lucide-react';
 import { motion } from 'motion/react';
-import {
-  ChoiceButton,
-  Grade9LabShell,
-  MetricPill,
-  MissionStep,
-  useGrade9MissionProgress,
-} from '../shared/Grade9LabShell';
+import { Grade9LabShell, MissionStep, useGrade9MissionProgress } from '../shared/Grade9LabShell';
 import { SciFiButton } from '../../../components/ui/SciFiButton';
 
 const MODULE_ID = 'statistics-probability-radar';
 
-const ATOM_IDS = [
-  'MAT.9.6.1.1',
-  'MAT.9.6.1.2',
-  'MAT.9.6.2.1',
-  'MAT.9.7.1.1',
-  'MAT.9.7.2.1',
-];
+const ATOM_IDS = ['MAT.9.6.1.1', 'MAT.9.6.1.2', 'MAT.9.6.2.1', 'MAT.9.7.1.1', 'MAT.9.7.2.1'];
 
 const MISSIONS: MissionStep[] = [
-  {
-    id: 'stable-group',
-    title: 'Standart Sapma Radarı',
-    atomId: 'MAT.9.6.2.1',
-    prompt: 'Üç sınıfın not kümelerini karşılaştır. En dar dağılıma sahip, yani en istikrarlı grubu seç.',
-  },
-  {
-    id: 'boxplot-label',
-    title: 'Kutu-Bıyık Kapsülü',
-    atomId: 'MAT.9.6.1.2',
-    prompt: 'Kutu-bıyık grafiğinde veriyi ikiye bölen merkezi etiketi seç. Bu çizgi medyandır.',
-  },
-  {
-    id: 'experimental-probability',
-    title: 'Gözlemsel Olasılık',
-    atomId: 'MAT.9.7.1.1',
-    prompt: 'Deney çarkını en az 30 kez çalıştır ve gelen başarı oranına en yakın olasılığı seç.',
-  },
-  {
-    id: 'induction-probability',
-    title: 'Tümevarım Yayılımı',
-    atomId: 'MAT.9.7.2.1',
-    prompt: 'Deneysel oranı 1000 atışlık evrene genelle. Yaklaşık başarı sayısını seç.',
-  },
+  { id: 'stable-cloud', title: 'Dağılım Bulutunu Sıkıştır', atomId: 'MAT.9.6.2.1', prompt: 'Üç sınıf bulutunu karşılaştır. En dar ve en istikrarlı veri bulutu B sınıfıdır.' },
+  { id: 'boxplot-reader', title: 'Medyan Tarayıcısını Ortaya Getir', atomId: 'MAT.9.6.1.2', prompt: 'Kutu-bıyık okuyucuda veriyi iki eş yarıya bölen çizgiyi medyana kilitle.' },
+  { id: 'probability-machine', title: 'Deney Makinesini Çalıştır', atomId: 'MAT.9.7.1.1', prompt: 'Çarkı en az 30 kez çevir. Gözlenen başarı oranı yaklaşık 0.40 olmalı.' },
+  { id: 'induction-projector', title: 'Oranı 1000 Atışa Yansıt', atomId: 'MAT.9.7.2.1', prompt: '0.40 oranını büyük evrene büyüt. 1000 denemede yaklaşık 400 başarı beklenir.' },
 ];
 
 type GroupChoice = 'A' | 'B' | 'C';
-type BoxChoice = 'min' | 'q1' | 'median' | 'q3';
-type ProbabilityChoice = '0.25' | '0.40' | '0.65';
-type InductionChoice = '250' | '400' | '650';
 
 const groups: Record<GroupChoice, number[]> = {
   A: [42, 60, 72, 88, 96],
@@ -61,7 +26,7 @@ const groups: Record<GroupChoice, number[]> = {
 const trialPattern = [true, false, false, true, false, true, false, false, true, false];
 
 const mean = (values: number[]) => values.reduce((sum, value) => sum + value, 0) / values.length;
-const standardDeviation = (values: number[]) => {
+const deviation = (values: number[]) => {
   const avg = mean(values);
   return Math.sqrt(values.reduce((sum, value) => sum + (value - avg) ** 2, 0) / values.length);
 };
@@ -69,26 +34,28 @@ const standardDeviation = (values: number[]) => {
 export default function StatisticsProbabilityRadarApp() {
   const progress = useGrade9MissionProgress({ moduleId: MODULE_ID, missions: MISSIONS, completionAtomIds: ATOM_IDS });
   const [groupChoice, setGroupChoice] = useState<GroupChoice>('A');
-  const [boxChoice, setBoxChoice] = useState<BoxChoice>('min');
-  const [probabilityChoice, setProbabilityChoice] = useState<ProbabilityChoice>('0.25');
-  const [inductionChoice, setInductionChoice] = useState<InductionChoice>('250');
+  const [compression, setCompression] = useState(0);
+  const [medianScanner, setMedianScanner] = useState(42);
   const [trials, setTrials] = useState(0);
   const [successes, setSuccesses] = useState(0);
+  const [projection, setProjection] = useState(250);
+
+  const deviations = useMemo(() => ({
+    A: deviation(groups.A),
+    B: deviation(groups.B),
+    C: deviation(groups.C),
+  }), []);
 
   const observedProbability = trials === 0 ? 0 : successes / trials;
-  const deviations = useMemo(() => ({
-    A: standardDeviation(groups.A),
-    B: standardDeviation(groups.B),
-    C: standardDeviation(groups.C),
-  }), []);
+  const activeIndex = progress.activeIndex;
 
   const resetPanel = () => {
     setGroupChoice('A');
-    setBoxChoice('min');
-    setProbabilityChoice('0.25');
-    setInductionChoice('250');
+    setCompression(0);
+    setMedianScanner(42);
     setTrials(0);
     setSuccesses(0);
+    setProjection(250);
   };
 
   const restart = () => {
@@ -99,9 +66,7 @@ export default function StatisticsProbabilityRadarApp() {
   const runTrials = () => {
     let batchSuccess = 0;
     for (let i = 0; i < 10; i += 1) {
-      if (trialPattern[(trials + i) % trialPattern.length]) {
-        batchSuccess += 1;
-      }
+      if (trialPattern[(trials + i) % trialPattern.length]) batchSuccess += 1;
     }
     setTrials((current) => current + 10);
     setSuccesses((current) => current + batchSuccess);
@@ -109,165 +74,96 @@ export default function StatisticsProbabilityRadarApp() {
 
   const handleCheck = () => {
     const checks = [
-      groupChoice === 'B',
-      boxChoice === 'median',
-      trials >= 30 && probabilityChoice === '0.40',
-      trials >= 30 && inductionChoice === '400',
+      groupChoice === 'B' && compression >= 95,
+      Math.abs(medianScanner - 70) <= 1,
+      trials >= 30 && Math.abs(observedProbability - 0.4) < 0.01,
+      trials >= 30 && projection === 400,
     ];
-
     progress.submitMission({
-      ok: checks[progress.activeIndex] ?? false,
-      success: 'Radar okuması doğru. Bir sonraki veri katmanı açıldı.',
-      error: 'Veri yorumu hedefe uymadı. Dağılım genişliği, medyan veya deney sayısını tekrar kontrol et.',
+      ok: checks[activeIndex] ?? false,
+      success: 'Veri laboratuvarı doğru okundu. Bir sonraki analiz katmanı açılıyor.',
+      error: 'Radar hedefe ulaşmadı. Aktif sahnedeki ana kontrolü matematiksel hedefe getir.',
     });
   };
 
   return (
     <Grade9LabShell
       title="Veri ve Olasılık Radarı"
-      subtitle="MAT.9.6.1.x / MAT.9.6.2.x / MAT.9.7.x"
+      subtitle="MAT.9.6.x / MAT.9.7.x"
       moduleId={MODULE_ID}
       missions={MISSIONS}
-      activeIndex={progress.activeIndex}
+      activeIndex={activeIndex}
       completed={progress.completed}
       onRestart={restart}
-      frameClassName="bg-[#061006] [background-image:radial-gradient(circle_at_18%_18%,rgba(190,242,100,0.16),transparent_27%),radial-gradient(circle_at_80%_16%,rgba(0,229,255,0.10),transparent_24%),linear-gradient(180deg,#061006_0%,#07150d_55%,#030803_100%)]"
+      contentClassName="max-w-6xl px-4 py-5 sm:px-6 lg:px-8"
+      frameClassName="bg-[#061006] [background-image:radial-gradient(circle_at_18%_18%,rgba(190,242,100,0.16),transparent_28%),radial-gradient(circle_at_82%_16%,rgba(0,229,255,0.10),transparent_26%),linear-gradient(180deg,#061006_0%,#07150d_55%,#030803_100%)]"
       badges={[
         { label: 'Deney', value: `${trials} atış`, tone: 'cyan' },
         { label: 'Oran', value: observedProbability.toFixed(2), tone: 'green' },
       ]}
     >
-      <div className="space-y-4">
-        <RadarBrief activeMission={progress.activeMission} activeIndex={progress.activeIndex} total={MISSIONS.length} trials={trials} observedProbability={observedProbability} />
-      <div className="grid gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="min-w-0 rounded-[34px] border border-lime-200/15 bg-lime-950/20 p-4 shadow-[inset_0_0_35px_rgba(190,242,100,0.05)]">
-          <div className="mb-4 flex flex-wrap gap-2">
-            <MetricPill variant="radar" label="Sınıf A σ" value={deviations.A.toFixed(1)} tone="pink" />
-            <MetricPill variant="radar" label="Sınıf B σ" value={deviations.B.toFixed(1)} tone="green" />
-            <MetricPill variant="radar" label="Sınıf C σ" value={deviations.C.toFixed(1)} tone="purple" />
-            <MetricPill variant="radar" label="Başarı" value={`${successes}/${trials || 0}`} tone="amber" />
-          </div>
-          <RadarVisual groupChoice={groupChoice} boxChoice={boxChoice} trials={trials} successes={successes} />
-        </div>
-
-        <div className="min-w-0 space-y-4">
-          <PanelTitle icon={<Gauge className="h-4 w-4" />} title="İstikrarlı Grup" />
-          <div className="grid grid-cols-3 gap-3">
-            {(['A', 'B', 'C'] as GroupChoice[]).map((group) => (
-              <ChoiceButton variant="radar" testId={`stats-group-${group.toLowerCase()}`} key={group} selected={groupChoice === group} label={`Sınıf ${group}`} detail={`σ=${deviations[group].toFixed(1)}`} onClick={() => setGroupChoice(group)} tone={group === 'B' ? 'green' : 'purple'} />
-            ))}
-          </div>
-
-          <PanelTitle icon={<BarChart3 className="h-4 w-4" />} title="Kutu-Bıyık Etiketi" />
-          <div className="grid grid-cols-2 gap-3">
-            <ChoiceButton variant="radar" testId="stats-box-min" selected={boxChoice === 'min'} label="Minimum" detail="En sol uç" onClick={() => setBoxChoice('min')} tone="pink" />
-            <ChoiceButton variant="radar" testId="stats-box-q1" selected={boxChoice === 'q1'} label="Q1" detail="Alt çeyrek" onClick={() => setBoxChoice('q1')} tone="purple" />
-            <ChoiceButton variant="radar" testId="stats-box-median" selected={boxChoice === 'median'} label="Medyan" detail="Ortadaki çizgi" onClick={() => setBoxChoice('median')} tone="green" />
-            <ChoiceButton variant="radar" testId="stats-box-q3" selected={boxChoice === 'q3'} label="Q3" detail="Üst çeyrek" onClick={() => setBoxChoice('q3')} tone="purple" />
-          </div>
-
-          <PanelTitle icon={<CircleDot className="h-4 w-4" />} title="Deneysel Olasılık" />
-          <SciFiButton data-testid="stats-run-trials" variant="secondary" onClick={runTrials} className="min-h-[48px] w-full" icon={<Play className="h-4 w-4" />}>
-            10 Deney Çalıştır
-          </SciFiButton>
-          <div className="grid grid-cols-3 gap-3">
-            {(['0.25', '0.40', '0.65'] as ProbabilityChoice[]).map((value) => (
-              <ChoiceButton variant="radar" testId={`stats-prob-${value.replace('.', '-')}`} key={value} selected={probabilityChoice === value} label={value} detail="P(başarı)" onClick={() => setProbabilityChoice(value)} tone="cyan" />
-            ))}
-          </div>
-
-          <PanelTitle icon={<Target className="h-4 w-4" />} title="Tümevarım" />
-          <div className="grid grid-cols-3 gap-3">
-            {(['250', '400', '650'] as InductionChoice[]).map((value) => (
-              <ChoiceButton variant="radar" testId={`stats-induction-${value}`} key={value} selected={inductionChoice === value} label={value} detail="/1000" onClick={() => setInductionChoice(value)} tone="amber" />
-            ))}
-          </div>
-
-          <div className="flex flex-col gap-3 sm:flex-row xl:flex-col">
-            <SciFiButton data-testid="stats-check" onClick={handleCheck} className="min-h-[48px] flex-1" icon={<Check className="h-4 w-4" />}>
-              Veriyi Onayla
-            </SciFiButton>
-            <SciFiButton data-testid="stats-reset" variant="secondary" onClick={resetPanel} className="min-h-[48px] flex-1" icon={<RotateCcw className="h-4 w-4" />}>
-              Sıfırla
-            </SciFiButton>
-          </div>
-        </div>
-      </div>
+      <div className="grid min-h-[640px] gap-4 lg:grid-cols-[minmax(0,1fr)_330px]">
+        <RadarScene
+          activeIndex={activeIndex}
+          groupChoice={groupChoice}
+          compression={compression}
+          medianScanner={medianScanner}
+          trials={trials}
+          successes={successes}
+          projection={projection}
+        />
+        <RadarControls
+          mission={progress.activeMission}
+          activeIndex={activeIndex}
+          groupChoice={groupChoice}
+          compression={compression}
+          medianScanner={medianScanner}
+          trials={trials}
+          observedProbability={observedProbability}
+          projection={projection}
+          deviations={deviations}
+          setGroupChoice={setGroupChoice}
+          setCompression={setCompression}
+          setMedianScanner={setMedianScanner}
+          runTrials={runTrials}
+          setProjection={setProjection}
+          onCheck={handleCheck}
+          onReset={resetPanel}
+        />
       </div>
     </Grade9LabShell>
   );
 }
 
-function RadarBrief({ activeMission, activeIndex, total, trials, observedProbability }: { activeMission: MissionStep; activeIndex: number; total: number; trials: number; observedProbability: number }) {
-  return (
-    <section className="relative overflow-hidden rounded-[34px] border border-lime-200/20 bg-lime-200/[0.045] p-5 shadow-[0_0_42px_rgba(190,242,100,0.10)]">
-      <div className="pointer-events-none absolute right-8 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full border border-lime-200/15" />
-      <div className="pointer-events-none absolute right-16 top-1/2 h-20 w-20 -translate-y-1/2 rounded-full border border-lime-200/15" />
-      <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="max-w-3xl">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.34em] text-lime-100/65">radar taraması {activeIndex + 1}/{total}</p>
-          <h2 className="mt-2 text-3xl font-black text-white">{activeMission.title}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-lime-50/70">{activeMission.prompt}</p>
-        </div>
-        <div className="w-full min-w-0 rounded-3xl border border-lime-200/15 bg-black/35 p-3 lg:w-[250px] lg:shrink-0">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-lime-100/55">deney sinyali</p>
-          <div className="mt-2 flex items-end justify-between gap-3">
-            <span className="text-3xl font-black text-lime-100">{trials}</span>
-            <span className="rounded-full border border-lime-200/25 px-3 py-1 font-mono text-xs font-black text-lime-100">{observedProbability.toFixed(2)}</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PanelTitle({ icon, title }: { icon: React.ReactNode; title: string }) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-3">
-      <h4 className="flex items-center gap-2 text-sm font-black uppercase tracking-wider text-white">
-        <span className="text-[#00E5FF]">{icon}</span> {title}
-      </h4>
-    </div>
-  );
-}
-
-interface RadarVisualProps {
+interface RadarSceneProps {
+  activeIndex: number;
   groupChoice: GroupChoice;
-  boxChoice: BoxChoice;
+  compression: number;
+  medianScanner: number;
   trials: number;
   successes: number;
+  projection: number;
 }
 
-function RadarVisual({ groupChoice, boxChoice, trials, successes }: RadarVisualProps) {
-  const values = groups[groupChoice];
+function RadarScene({ activeIndex, groupChoice, compression, medianScanner, trials, successes, projection }: RadarSceneProps) {
   const observed = trials === 0 ? 0 : successes / trials;
+  const selectedValues = groups[groupChoice];
+  const spreadScale = groupChoice === 'B' ? 1 - compression / 150 : 1;
   const box = { min: 42, q1: 55, median: 70, q3: 82, max: 96 };
-  const boxScale = (value: number) => 250 + ((value - box.min) / (box.max - box.min)) * 170;
-  const boxLabels: Record<BoxChoice, string> = {
-    min: 'Minimum',
-    q1: 'Q1',
-    median: 'Medyan',
-    q3: 'Q3',
-  };
-  const arcRadius = 72;
-  const arcStart = -Math.PI / 2;
-  const arcEnd = arcStart + observed * Math.PI * 2;
-  const arcStartX = 510 + Math.cos(arcStart) * arcRadius;
-  const arcStartY = 160 + Math.sin(arcStart) * arcRadius;
-  const arcEndX = 510 + Math.cos(arcEnd) * arcRadius;
-  const arcEndY = 160 + Math.sin(arcEnd) * arcRadius;
-  const largeArcFlag = observed > 0.5 ? 1 : 0;
-  const probabilityArc = `M${arcStartX} ${arcStartY} A${arcRadius} ${arcRadius} 0 ${largeArcFlag} 1 ${arcEndX} ${arcEndY}`;
-  const selectedBoxValue = box[boxChoice];
-  const projectedSuccesses = Math.round(observed * 1000);
-  const boxY = 205;
+  const boxScale = (value: number) => 160 + ((value - box.min) / (box.max - box.min)) * 360;
+  const scannerX = boxScale(medianScanner);
+  const projectedFill = projection / 1000;
 
   return (
-    <div className="relative min-h-[430px] overflow-hidden rounded-2xl border border-[#00E5FF]/20 bg-black/45 p-4">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(0,229,255,0.13),transparent_46%)]" />
-      <svg viewBox="0 0 640 390" className="relative h-[350px] w-full">
+    <section data-testid="stats-scene" className="relative overflow-hidden rounded-[34px] border border-lime-200/18 bg-black/35 p-5 shadow-[0_0_55px_rgba(190,242,100,0.10)]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_48%_36%,rgba(0,229,255,0.12),transparent_52%)]" />
+      <div className="relative mb-4">
+        <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-lime-100/55">tek ana deney</p>
+        <h2 className="text-2xl font-black text-white">Veriyi Hareket Ettir, Kuralı Gör</h2>
+      </div>
+      <svg viewBox="0 0 720 500" className="relative h-[520px] w-full rounded-[28px] border border-white/10 bg-[#020602]/70">
         <defs>
-          <filter id="stats-glow">
+          <filter id="radar-glow">
             <feGaussianBlur stdDeviation="4" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
@@ -275,93 +171,160 @@ function RadarVisual({ groupChoice, boxChoice, trials, successes }: RadarVisualP
             </feMerge>
           </filter>
         </defs>
-        {[0, 1, 2].map((ring) => (
-          <circle key={ring} cx="185" cy="170" r={52 + ring * 42} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="2" />
-        ))}
-        {values.map((value, index) => {
-          const angle = (index / values.length) * Math.PI * 2 - Math.PI / 2;
-          const radius = 34 + value * 1.25;
-          const x = 185 + Math.cos(angle) * radius;
-          const y = 170 + Math.sin(angle) * radius;
-          return (
-            <motion.circle
-              key={`${value}-${index}`}
-              cx={x}
-              cy={y}
-              r="9"
-              fill={groupChoice === 'B' ? '#00FF88' : '#B388FF'}
-              filter="url(#stats-glow)"
-              animate={{ scale: [1, 1.18, 1] }}
-              transition={{ delay: index * 0.08, duration: 1.2, repeat: Infinity }}
-            />
-          );
-        })}
-        <text x="185" y="176" textAnchor="middle" fill="#fff" fontWeight="900">Sınıf {groupChoice}</text>
 
-        <rect x="232" y="86" width="210" height="178" rx="22" fill="rgba(0,229,255,0.055)" stroke="rgba(0,229,255,0.22)" strokeWidth="2" />
-        <text x="337" y="116" textAnchor="middle" fill="#00E5FF" fontSize="13" fontWeight="900">KUTU-BIYIK OKUYUCU</text>
-        <text x="337" y="138" textAnchor="middle" fill="rgba(255,255,255,0.58)" fontSize="11" fontWeight="900">verinin orta %50 bölgesi</text>
-        <line x1={boxScale(box.min)} y1={boxY} x2={boxScale(box.max)} y2={boxY} stroke="rgba(255,255,255,0.52)" strokeWidth="4" strokeLinecap="round" />
-        <line x1={boxScale(box.min)} y1={boxY - 22} x2={boxScale(box.min)} y2={boxY + 22} stroke="#FF6B9A" strokeWidth="4" strokeLinecap="round" />
-        <line x1={boxScale(box.max)} y1={boxY - 22} x2={boxScale(box.max)} y2={boxY + 22} stroke="#FF6B9A" strokeWidth="4" strokeLinecap="round" />
-        <rect x={boxScale(box.q1)} y={boxY - 24} width={boxScale(box.q3) - boxScale(box.q1)} height="48" rx="12" fill="rgba(0,229,255,0.13)" stroke="#00E5FF" strokeWidth="3" />
-        <line x1={boxScale(box.median)} y1={boxY - 32} x2={boxScale(box.median)} y2={boxY + 32} stroke={boxChoice === 'median' ? '#00FF88' : '#fff'} strokeWidth="6" strokeLinecap="round" />
-        {[
-          { key: 'min', label: 'Min', value: box.min },
-          { key: 'q1', label: 'Q1', value: box.q1 },
-          { key: 'median', label: 'Medyan', value: box.median },
-          { key: 'q3', label: 'Q3', value: box.q3 },
-          { key: 'max', label: 'Max', value: box.max },
-        ].map((item) => (
-          <text key={item.key} x={boxScale(item.value)} y={boxY + 52} textAnchor="middle" fill="rgba(255,255,255,0.62)" fontSize="10" fontWeight="900">{item.label}</text>
-        ))}
-        <motion.g animate={{ opacity: [0.58, 1, 0.58] }} transition={{ duration: 1.2, repeat: Infinity }}>
-          <line x1={boxScale(selectedBoxValue)} y1={boxY - 52} x2={boxScale(selectedBoxValue)} y2={boxY + 42} stroke="#FBBF24" strokeWidth="3" strokeDasharray="6 7" />
-          <circle cx={boxScale(selectedBoxValue)} cy={boxY - 52} r="9" fill="#FBBF24" filter="url(#stats-glow)" />
-          <text x={boxScale(selectedBoxValue)} y={boxY - 66} textAnchor="middle" fill="#FBBF24" fontSize="12" fontWeight="900">{boxLabels[boxChoice]}</text>
-        </motion.g>
-
-        {observed > 0 ? (
-          <motion.path
-            d={probabilityArc}
-            fill="none"
-            stroke="#00FF88"
-            strokeWidth="12"
-            strokeLinecap="round"
-            filter="url(#stats-glow)"
-          />
+        {activeIndex === 0 ? (
+          <>
+            {[70, 115, 160].map((r) => <circle key={r} cx="360" cy="240" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="2" />)}
+            {selectedValues.map((value, index) => {
+              const angle = (index / selectedValues.length) * Math.PI * 2 - Math.PI / 2;
+              const radius = (34 + value * 1.25) * spreadScale;
+              return (
+                <motion.circle
+                  key={`${groupChoice}-${value}`}
+                  cx={360 + Math.cos(angle) * radius}
+                  cy={240 + Math.sin(angle) * radius}
+                  r="13"
+                  fill={groupChoice === 'B' ? '#00FF88' : '#B388FF'}
+                  filter="url(#radar-glow)"
+                  animate={{ scale: [1, 1.16, 1] }}
+                  transition={{ delay: index * 0.08, duration: 1.2, repeat: Infinity }}
+                />
+              );
+            })}
+            <text x="360" y="248" textAnchor="middle" fill="#fff" fontSize="28" fontWeight="900">Sınıf {groupChoice}</text>
+            <text x="360" y="432" textAnchor="middle" fill="#BEF264" fontSize="18" fontWeight="900">Bulut daraldıkça standart sapma küçülür</text>
+          </>
         ) : null}
-        <circle cx="510" cy="160" r="54" fill="rgba(0,255,136,0.08)" stroke="rgba(0,255,136,0.28)" strokeWidth="2" />
-        <text x="510" y="154" textAnchor="middle" fill="#00FF88" fontSize="26" fontWeight="900">{observed.toFixed(2)}</text>
-        <text x="510" y="178" textAnchor="middle" fill="rgba(255,255,255,0.58)" fontSize="12" fontWeight="900">P(başarı)</text>
-        <rect x="445" y="262" width="130" height="18" rx="9" fill="rgba(255,255,255,0.08)" />
-        <motion.rect
-          x="445"
-          y="262"
-          width={Math.max(4, observed * 130)}
-          height="18"
-          rx="9"
-          fill={trials >= 30 ? '#00FF88' : '#FBBF24'}
-          animate={{ opacity: [0.65, 1, 0.65] }}
-          transition={{ duration: 1.3, repeat: Infinity }}
-        />
-        <text x="510" y="303" textAnchor="middle" fill="rgba(255,255,255,0.66)" fontSize="12" fontWeight="900">1000 atış projeksiyonu: {projectedSuccesses}</text>
-      </svg>
 
-      <div className="relative grid gap-3 md:grid-cols-3">
-        <InfoCard title="σ Daralır" text="Sapma küçüldükçe grup daha istikrarlı görünür." />
-        <InfoCard title="Medyan" text="Kutu içindeki çizgi veriyi iki yarıya böler." />
-        <InfoCard title="Deney" text="Gözlenen oran büyüyen örneklemle evrene yayılır." />
-      </div>
-    </div>
+        {activeIndex === 1 ? (
+          <>
+            <rect x="110" y="120" width="500" height="250" rx="30" fill="rgba(0,229,255,0.055)" stroke="rgba(0,229,255,0.22)" strokeWidth="3" />
+            <text x="360" y="158" textAnchor="middle" fill="#00E5FF" fontSize="18" fontWeight="900">KUTU-BIYIK OKUYUCU</text>
+            <line x1={boxScale(box.min)} y1="260" x2={boxScale(box.max)} y2="260" stroke="rgba(255,255,255,0.54)" strokeWidth="5" strokeLinecap="round" />
+            <line x1={boxScale(box.min)} y1="230" x2={boxScale(box.min)} y2="290" stroke="#FF6B9A" strokeWidth="5" />
+            <line x1={boxScale(box.max)} y1="230" x2={boxScale(box.max)} y2="290" stroke="#FF6B9A" strokeWidth="5" />
+            <rect x={boxScale(box.q1)} y="224" width={boxScale(box.q3) - boxScale(box.q1)} height="72" rx="16" fill="rgba(0,229,255,0.14)" stroke="#00E5FF" strokeWidth="4" />
+            <line x1={boxScale(box.median)} y1="210" x2={boxScale(box.median)} y2="310" stroke="#00FF88" strokeWidth="7" strokeLinecap="round" />
+            {[
+              ['Min', box.min], ['Q1', box.q1], ['Medyan', box.median], ['Q3', box.q3], ['Max', box.max],
+            ].map(([label, value]) => <text key={label} x={boxScale(Number(value))} y="335" textAnchor="middle" fill="rgba(255,255,255,0.66)" fontSize="13" fontWeight="900">{label}</text>)}
+            <motion.line x1={scannerX} y1="178" x2={scannerX} y2="350" stroke="#FBBF24" strokeWidth="4" strokeDasharray="8 8" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.1, repeat: Infinity }} />
+            <text x={scannerX} y="190" textAnchor="middle" fill="#FBBF24" fontSize="15" fontWeight="900">Tarayıcı</text>
+          </>
+        ) : null}
+
+        {activeIndex === 2 ? (
+          <>
+            <circle cx="360" cy="235" r="118" fill="rgba(0,255,136,0.08)" stroke="rgba(0,255,136,0.35)" strokeWidth="4" />
+            <motion.path d={`M360 235 L360 117 A118 118 0 ${observed > 0.5 ? 1 : 0} 1 ${360 + Math.sin(observed * Math.PI * 2) * 118} ${235 - Math.cos(observed * Math.PI * 2) * 118} Z`} fill="rgba(0,255,136,0.20)" animate={{ opacity: [0.55, 0.9, 0.55] }} transition={{ duration: 1.2, repeat: Infinity }} />
+            <text x="360" y="230" textAnchor="middle" fill="#00FF88" fontSize="42" fontWeight="900">{observed.toFixed(2)}</text>
+            <text x="360" y="264" textAnchor="middle" fill="rgba(255,255,255,0.62)" fontSize="16" fontWeight="900">{successes}/{trials || 0} başarı</text>
+            <text x="360" y="424" textAnchor="middle" fill="#BEF264" fontSize="18" fontWeight="900">30 atıştan sonra oran 0.40'a oturur</text>
+          </>
+        ) : null}
+
+        {activeIndex === 3 ? (
+          <>
+            <rect x="130" y="205" width="460" height="60" rx="30" fill="rgba(255,255,255,0.08)" />
+            <motion.rect x="130" y="205" width={460 * projectedFill} height="60" rx="30" fill="#00FF88" filter="url(#radar-glow)" animate={{ opacity: [0.7, 1, 0.7] }} transition={{ duration: 1.3, repeat: Infinity }} />
+            <text x="360" y="165" textAnchor="middle" fill="#00FF88" fontSize="36" fontWeight="900">{projection}/1000</text>
+            <text x="360" y="305" textAnchor="middle" fill="rgba(255,255,255,0.66)" fontSize="16" fontWeight="900">küçük örneklem oranı büyük evrene yansır</text>
+            <text x="360" y="430" textAnchor="middle" fill="#BEF264" fontSize="18" fontWeight="900">0.40 x 1000 = 400</text>
+          </>
+        ) : null}
+      </svg>
+    </section>
   );
 }
 
-function InfoCard({ title, text }: { title: string; text: string }) {
+interface RadarControlsProps {
+  mission: MissionStep;
+  activeIndex: number;
+  groupChoice: GroupChoice;
+  compression: number;
+  medianScanner: number;
+  trials: number;
+  observedProbability: number;
+  projection: number;
+  deviations: Record<GroupChoice, number>;
+  setGroupChoice: (value: GroupChoice) => void;
+  setCompression: (value: number) => void;
+  setMedianScanner: (value: number) => void;
+  runTrials: () => void;
+  setProjection: (value: number) => void;
+  onCheck: () => void;
+  onReset: () => void;
+}
+
+function RadarControls(props: RadarControlsProps) {
+  const { mission, activeIndex, groupChoice, compression, medianScanner, trials, observedProbability, projection, deviations, setGroupChoice, setCompression, setMedianScanner, runTrials, setProjection, onCheck, onReset } = props;
+
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.045] p-3">
-      <p className="text-sm font-black text-white">{title}</p>
-      <p className="mt-1 text-xs leading-relaxed text-slate-300">{text}</p>
-    </div>
+    <aside className="rounded-[34px] border border-lime-200/18 bg-black/45 p-5 backdrop-blur-xl">
+      <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-lime-100/55">radar görevi {activeIndex + 1}/4</p>
+      <h3 className="mt-2 text-2xl font-black text-white">{mission.title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-lime-50/70">{mission.prompt}</p>
+
+      <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.045] p-4">
+        {activeIndex === 0 ? (
+          <div className="space-y-3">
+            {(['A', 'B', 'C'] as GroupChoice[]).map((group) => (
+              <button
+                key={group}
+                data-testid={`stats-cloud-${group.toLowerCase()}`}
+                onClick={() => setGroupChoice(group)}
+                className={`min-h-[54px] w-full rounded-2xl border px-4 text-left font-black transition ${groupChoice === group ? 'border-lime-200/45 bg-lime-200/12 text-lime-100' : 'border-white/10 bg-white/5 text-white/70 hover:border-lime-200/35'}`}
+              >
+                Sınıf {group} <span className="ml-2 font-mono text-xs text-white/45">σ={deviations[group].toFixed(1)}</span>
+              </button>
+            ))}
+            <ExperimentSlider testId="stats-compression" label="seçili bulutu sıkıştır" value={compression} onChange={setCompression} completeValue={100} />
+          </div>
+        ) : null}
+        {activeIndex === 1 ? (
+          <ExperimentSlider testId="stats-median-scanner" label={`tarayıcı: ${medianScanner}`} value={medianScanner} min={42} max={96} onChange={setMedianScanner} completeValue={70} />
+        ) : null}
+        {activeIndex === 2 ? (
+          <div className="space-y-4">
+            <SciFiButton data-testid="stats-run-trials" variant="secondary" onClick={runTrials} className="min-h-[54px] w-full" icon={<Play className="h-4 w-4" />}>
+              10 Deney Çalıştır
+            </SciFiButton>
+            <div className="rounded-2xl border border-lime-200/15 bg-lime-200/[0.06] p-4 font-mono text-sm text-lime-50">
+              {trials} atış, oran {observedProbability.toFixed(2)}
+            </div>
+          </div>
+        ) : null}
+        {activeIndex === 3 ? (
+          <ExperimentSlider testId="stats-projection" label={`1000 atış projeksiyonu: ${projection}`} value={projection} min={250} max={650} onChange={setProjection} completeValue={400} />
+        ) : null}
+      </div>
+
+      <div className="mt-5 grid gap-3">
+        <SciFiButton data-testid="stats-check" onClick={onCheck} className="min-h-[50px]" icon={<Check className="h-4 w-4" />}>
+          Veriyi Onayla
+        </SciFiButton>
+        <SciFiButton data-testid="stats-reset" variant="secondary" onClick={onReset} className="min-h-[50px]" icon={<RotateCcw className="h-4 w-4" />}>
+          Sıfırla
+        </SciFiButton>
+      </div>
+      <div className="mt-5 rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.06] p-4 text-xs leading-relaxed text-cyan-50/70">
+        <Radar className="mb-2 h-4 w-4 text-cyan-200" />
+        Radarın amacı cevap ezberi değil; verinin davranışını hareket ettirerek görmek.
+      </div>
+    </aside>
+  );
+}
+
+function ExperimentSlider({ testId, label, value, onChange, min = 0, max = 100, completeValue }: { testId: string; label: string; value: number; onChange: (value: number) => void; min?: number; max?: number; completeValue: number }) {
+  return (
+    <label className="block">
+      <span className="mb-3 flex items-center gap-2 text-xs font-black uppercase tracking-[0.22em] text-white/60">
+        <BarChart3 className="h-4 w-4 text-[#BEF264]" /> {label}
+      </span>
+      <input data-testid={testId} type="range" min={min} max={max} step="1" value={value} onChange={(event) => onChange(Number(event.target.value))} className="h-12 w-full accent-[#BEF264]" />
+      <button type="button" data-testid={`${testId}-complete`} onClick={() => onChange(completeValue)} className="mt-3 min-h-[44px] w-full rounded-xl border border-lime-200/20 bg-lime-200/10 text-sm font-black uppercase tracking-wider text-lime-100 hover:border-lime-200/45">
+        Hedefe Sürükle
+      </button>
+    </label>
   );
 }
