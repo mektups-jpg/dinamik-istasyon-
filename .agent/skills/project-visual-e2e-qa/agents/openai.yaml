@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Visual E2E QA"
+  short_description: "Browser Use ile görsel ve işlevsel uçtan uca modül denetimi."
+  default_prompt: "Bu modülü Browser Use ile görsel QA ve uçtan uca test et; bulduğun kusurları düzelt ve doğrula."

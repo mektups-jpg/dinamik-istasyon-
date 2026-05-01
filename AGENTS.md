@@ -27,6 +27,7 @@ Ajan, kullanıcının talebinin türüne göre aşağıdaki yetenekleri (skills)
 - 🧠 **[Brainstorm Partner] (`.agent/skills/project-brainstorm-partner/SKILL.md`)**: Yeni bir fikir üzerine düşünürken, vizyonu netleştirmek için UX, Kazanım Bağlantısı ve Riskler süzgecinden geçiren beyin fırtınası aracıdır.
 - 🏗️ **[Module Builder] (`.agent/skills/project-module-builder/SKILL.md`)**: Yeni bir matematik/eğitim modülü yapılacağı zaman sıfırdan `framer-motion` etkileşimleriyle, kazanım kontrol sistemleriyle ve AstroBot entegrasyonuyla kurgu kodlar.
 - 🔍 **[Code Reviewer] (`.agent/skills/project-code-reviewer/SKILL.md`)**: Kod bittikten veya kullanıcı talep ettikten sonra mevcut sınırları ve Vibe kurallarını tarayıcıdan geçirip performans ve UI testlerini yapar.
+- 🧪 **[Visual E2E QA] (`.agent/skills/project-visual-e2e-qa/SKILL.md`)**: Kullanıcı "uçtan uca test et", "görsel hata var mı bak", "denetle" veya "test et" dediğinde Browser Use ile screenshot tabanlı görsel QA, yanlış/doğru akış, completion, console ve build doğrulamasını birlikte çalıştırır.
 - ✂️ **[Refactor Master] (`.agent/skills/project-refactor-master/SKILL.md`)**: Kod 300+ satırı geçtiğinde veya spagetti olmaya başladığında bunu usta bir mimar edasıyla modüler parçalara ve klasörlere böler.
 
 **Vibe Coder Kit Evrensel Yetenekleri (Yeni Eklendi):**

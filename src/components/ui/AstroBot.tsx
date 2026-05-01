@@ -20,6 +20,8 @@ export function AstroBot({ message }: AstroBotProps) {
 
   useEffect(() => {
     setIsVisible(true);
+    const timer = window.setTimeout(() => setIsVisible(false), 4200);
+    return () => window.clearTimeout(timer);
   }, [message?.id]);
 
   const type = message?.type || 'info';

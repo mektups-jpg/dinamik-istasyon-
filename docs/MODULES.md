@@ -15,6 +15,14 @@ Tüm modüller aşağıdaki görsel ve mekanik felsefeye göre kodlanacaktır (S
   * Bir modül başarıyla bitirildiğinde ekranda patlayan vektörel konfetiler ve kazanılan rozetin tatmin edici bir 3D eğimle (tilt) ekrana gelmesi.
 * **Ödül Döngüsü:** Geçilen her modül, öğrencinin profil kartındaki "Enerji Kapasitesini" (XP) dolduran görsel bir batarya animasyonunu tetikler.
 
+## 🎨 MODÜL TASARIM KALİTE ÇİZGİSİ
+Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresine göre planlanacaktır. Kullanıcının güçlü tercihleri:
+* **3D geometri hissi:** Silindir/prizma modüllerindeki açma-kapama, döndürme, büyütme/küçültme ve yakından inceleme hissi referans alınır.
+* **1. sınıf sadeliği:** İlkokul modüllerindeki oyunlu, net, tek bakışta anlaşılır akış lise modüllerine de taşınır.
+* **Tek ana oyuncak:** Her modül önce "öğrenci neyle oynayacak?" sorusuna cevap verir. Geniş üniteler tek ekrana yığılmaz; gerekirse ayrı makro modüllere bölünür.
+* **Anlamlı görsel:** Sahnedeki her şekil, ışık, hedef, iz veya animasyon matematiksel bir anlam taşır. Sadece dekoratif duran öğeler kullanılmaz.
+* **Özgün kimlik:** GameHeader, AstroBot ve completion/progress ortak kalır; ana sahne ve kontrol dili modülün konusuna özel tasarlanır.
+
 ---
 
 ## 🏫 İLKOKUL 1. SINIF MODÜLLERİ
@@ -394,42 +402,49 @@ Tüm modüller aşağıdaki görsel ve mekanik felsefeye göre kodlanacaktır (S
 
 ## 🛰️ LİSE 9. SINIF MODÜLLERİ
 
-### 1. Kök ve Üs Reaktörü (Sayı Kümeleri / Aralıklar)
-* **Konsept:** Sayı kümelerinin (Doğal, Tam, Rasyonel, İrrasyonel) iç içe geçmiş klasörler gibi görüntülendiği arayüz. Gelişmiş "Üs/Kök İşlem Motoru" ile karmaşık üslü ve köklü ifadeler sürüklenerek birbirine çarptırıldığında anında sadeleşir. Ayrıca sayı doğrusunda açık parantez `()` lazerinin sayıyı almadığı (hariç), köşeli parantez `[]` kalkanının ise sayıyı içine hapsettiği (dahil) aralık (İnterval) simülatörü.
+### 1. Kök ve Üs Reaktörü (Üslü / Köklü İfadeler)
+* **Konsept:** Öğrenci üslü ifadeleri sürüklenebilir enerji çekirdekleri gibi reaktör yuvalarına çarpıştırır; aynı taban çarpışınca üslerin toplandığını doğrudan görür. Köklü ifade katmanında `√72` içinden `√36` tam kare bloğu dışarı çıkar, `√2` kalıntısı kök içinde kalır. Modül tek bakışta iki fiziksel işlem öğretir: aynı tabanda üs birleşimi ve kökten tam kare ayırma.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.9.1.1.x` / `MAT.9.1.2.x` (Gerçek sayıların köklü ve üslü formlarını hesaplama / basitleştirme)
-  * `MAT.9.1.3.x` (Açık ve kapalı kapı `[]`, `()` mantığıyla aralıkları birleştirme / kesiştirme)
-  * `MAT.9.1.4.x` / `MAT.9.1.5.x` (Rasyonel ve irrasyonel şemsiyesi, toplama ve çarpmanın dağılma kanunları)
+* **Sonraki Makro Modüller:**
+  * `MAT.9.1.3.x` için **Aralık Kapıları İstasyonu**: açık/kapalı uçlar, kesişim ve birleşim sayı doğrusunda kapı-kalkan metaforuyla ayrılacak.
+  * `MAT.9.1.4.x` / `MAT.9.1.5.x` için **Gerçek Sayı Atlası ve İşlem Yasaları**: sayı kümeleri ve işlem özellikleri ayrı, sakin bir sınıflandırma/dağıtma deneyine taşınacak.
 
-### 2. Fonksiyonel Hologram Odası (Doğrusal & Mutlak Değer)
-* **Konsept:** Kartezyen ızgaranın $X-Y$ eksenleri üzerinde duran f(x)=x isimli yeşil bir lazer çizgisi. Öğrenci konsoldan `y ekseninde kaydır (+k)` veya `eğimi değiştir (*a)` tuşlarına bastıkça lazer ip gibi esneyip taşınır. "Mutlak Değer Aynası" $|x|$ çalıştırıldığında doğrunun negatif yeraltına geçen kısmı kırılarak $V$ şeklini oluşturup pozitif atmosfere seker.
+### 2. Fonksiyonel Hologram Odası (Doğrusal Fonksiyon Kalibrasyonu)
+* **Konsept:** Kartezyen ızgarada duran lazer çizgisi iki canlı düğümle kontrol edilir. Mavi kaynak düğümü sürüklenince `r` ve `k` grafiği yatay/dikey taşır; yeşil eğim kolu çekilince `a` katsayısı lazeri döndürür. Öğrenci formül paneliyle uğraşmaz; hedef hologram çizgisiyle gerçek lazeri üst üste getirerek `f(x)=a(x-r)+k` dönüşümünü görür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.9.2.1.x` ($f(x)=x$ fonksiyonu, y ekseni kaydırması, x ekseni kaydırması ve eğim (a) manipülasyonu)
-  * `MAT.9.2.2.x` ($f(x)=|x|$ ayna grafiği ve tepe noktası/V kurgusunun formülü)
-  * `MAT.9.2.3.x` (Doğrusal problemler ve eşitsizlik kurguları)
+* **Ayrılan Gelecek Makro Modüller:**
+  * `MAT.9.2.2.x` için **Mutlak Değer Ayna Odası**: negatif ışının yukarı katlanması ve tepe noktası tek ayna mekaniğiyle işlenecek.
+  * `MAT.9.2.3.2` için **Eşitsizlik Güvenlik Alanı**: $y \ge f(x)$ gibi çözüm bölgeleri lazer sis/tarama alanı olarak ayrı kurulacak.
 
 ### 3. Akıllı Mantık Devreleri (Logic Gates)
-* **Konsept:** Fiziksel bir elektronik devre tasarlama tahtası. Öğrenci kabloların uçlarına $1$ (Akım Var) ve $0$ (Akım Yok) verir. Kablolar VE ($\wedge$), VEYA ($\vee$) ve YA DA ($\veebar$) kapılarına bağlanır. Parça 100 kuralına takılırsa İSE ($\Rightarrow$) kapısı patlar. En alt panelde Evrensel ($\forall$) ve Varlıksal ($\exists$) radar ekranında "Her eleman yanıyor" veya "En az 1 tane yanıyor" ikaz lambaları kontrol edilir.
+* **Konsept:** Fiziksel bir elektronik devre test tezgahı. Öğrencinin tek oyuncağı A/B anahtarlarıdır; aktif kapı kartuşu göreve göre değişir. VE, VEYA, İSE ve YA DA kapıları aynı kablo düzeninde farklı çıkış üretir. Mini doğruluk tablosu sahnede yanar, İSE kapısında `1=>0` tek hata durumu özel kırmızı arıza animasyonuyla görünür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.9.3.1.x` / `MAT.9.3.2.x` (Akış şeması algoritması ve VE, VEYA, YA DA, İSE mantıksal doğruluk kapıları/tabloları)
-  * `MAT.9.3.3.x` (Her ($\forall$) ve Bazı ($\exists$) niceleyicileri ile küme doğrulaması)
+  * `MAT.9.3.2.x` (VE, VEYA, İSE ve YA DA mantıksal doğruluk kapıları)
+* **Ayrılan Gelecek Makro Modüller:**
+  * `MAT.9.3.1.x` için **Algoritma Akış Hattı**: problemi ardışık bloklara bölme, kablo sıralama değil süreç tasarımı olarak ele alınacak.
+  * `MAT.9.3.3.x` için **Niceleyici Radar Avı**: Her/Bazı niceleyicileri küme elemanlarını tarayan ayrı radar/arama deneyine taşınacak.
 
-### 4. Kenar-Açı Vektör Simülasyonu (Teoremler)
-* **Konsept:** Kenarları ve açı düğümlerinden gerilerek hareket ettirilebilen dinamik bir üçgen vektörü. Açı büyüyünce karşısındaki ip de otomatik esner. İki farklı üçgenin benzer/eş açılara sahip olduğu tespit edilince, makine sistemde Tales (Parça-Bütün) ve Öklid ($h^2 = p\cdot k$) teoremlerinin gizli şifrelerini (denklem) aydınlatarak karmaşık Pisagor kilitlerini çözer.
+### 4. Üçgen Gerilim Laboratuvarı (Kenar-Açı)
+* **Konsept:** Köşeleri doğrudan sürüklenebilen canlı üçgen vektörü. Öğrenci özellikle bir köşeyi çekerek açının büyümesini, karşı kenarın uzamasını ve en büyük açı ile en uzun karşı kenarın aynı anda parlamasını görür. Ardından aynı üçgenin A-B-C açı parçalarını 180° ispat rayına sürükleyerek iç açı toplamını doğrular.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.9.4.1.x` / `MAT.9.5.2.x` (Kenar-açı boy uzama/kısalması ve Benzerlik / Eşleşen denklem çıkarımı)
-  * `MAT.9.5.3.x` (Tales, Öklid dik-kök şifresi ve ileri Pisagor işlemleri)
+  * `MAT.9.4.1.x` (Üçgende açı-kenar ilişkisi ve iç açı toplamı doğrulaması)
+* **Sonraki Makro Modüller:**
+  * `MAT.9.5.2.x` için **Benzerlik Ölçek Stüdyosu**: eş açılar ve orantılı kenarlar üzerinden iki üçgeni üst üste bindirme.
+  * `MAT.9.5.3.x` için **Dik Üçgen Teorem Laboratuvarı**: Tales, Öklid ve Pisagor bağlantılarını ayrı ispat deneyleriyle açma.
 
 ### 5. Yansıma ve Döndürme Adli Bilişimi (Dönüşüm)
-* **Konsept:** Bir suç mahalli veya kaza analizi ekranı. Döndürülmüş veya yansıtılmış karmaşık parçaların "eski haline (orijinal rotasına)" dönmek için merkez noktasını (Orijin/Eksen) arayan bir hedef bulucu (Tracking). Orijin eksenini saptayarak simetri ayna merkezini onaylar.
+* **Konsept:** Tek ana oyuncak bir adli iz eşleştirme ekranı. Öğrenci önce döndürme merkezini doğrudan sahnedeki orijine sürükler, sonra açı halkasını 90° izine çevirir, son katmanda da ayna eksenini sahnedeki çizgilerden seçer. Kural, hayalet şeklin hedef iz ile çakışmasıyla sezgisel olarak görünür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.9.5.1.x` (Açı formundan döndürme merkezini ve ayna eksenini adli analizi)
 
-### 6. Standart Sapma ve Tümevarım Radarı (İstatistik ve Olasılık)
-* **Konsept:** Grupların (sınıfların) puan yığınları arasında en istikrarlı/az dalgalı rotayı bulan "Standart Sapma" ölçüm ve Kutup Kutu-Bıyık (Box-Plot) radar ekranı. Sisteme düşen "Son 100 veriye" bakıp bir sonraki olayı makinede çarkı çevirerek tahmin etme (Deneysel) ve bunu tüm dünyadaki evrene (Tümevarımsal Olasılık) haritalandırarak sonuç çıkarma.
+### 6. Veri Karar Radarı (İstatistiksel Dağılım)
+* **Konsept:** Üç sınıfın puan bulutları aynı anda görünür, fakat öğrenci sadece bir sigma tarayıcısını hareket ettirir. Tarayıcı en dar dağılım olan Sınıf B üzerinde kilitlenince “istikrar = küçük standart sapma” sezgisi oluşur. İkinci katmanda kutu-bıyık grafiğinde medyan okuyucu sürüklenir; doğru çizgiye oturduğunda medyanın veriyi iki eş yarıya böldüğü görünür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.9.6.1.x` / `MAT.9.6.2.x` (Standart sapma, Kutu-Bıyık analizi ve istikrarlı grup seçimi)
-  * `MAT.9.7.1.x` / `MAT.9.7.2.x` (Deneyimden olasılık tahmini ve Evrene Tümevarımsal veri yayılımı)
+  * `MAT.9.6.1.x` / `MAT.9.6.2.x` (Standart sapma, kutu-bıyık analizi ve istikrarlı grup seçimi)
+* **Sonraki Makro Modüller:**
+  * `MAT.9.7.1.x` / `MAT.9.7.2.x` için **Olasılık Deney Makinesi**: gözlemsel oran ve tümevarımsal projeksiyon, veri radarından ayrı bir çark/deney makinesi olarak yapılacak.
 
 ## 🛰️ LİSE 10. SINIF MODÜLLERİ
 

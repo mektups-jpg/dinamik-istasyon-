@@ -333,7 +333,7 @@ export const modules: ModuleMeta[] = [
   {
     id: 'radical-power-reactor',
     title: 'Kök ve Üs Reaktörü',
-    description: 'Üslü/köklü ifadeleri, aralık kapılarını, sayı kümelerini ve işlem özelliklerini tek reaktör panelinde sadeleştir.',
+    description: 'Üslü ifadeleri reaktörde birleştir, köklü ifadelerde tam kare parçayı kökten ayır.',
     grade: 9,
     category: 'Sayılar',
     difficulty: 'Orta',
@@ -341,15 +341,7 @@ export const modules: ModuleMeta[] = [
       'MAT.9.1.1.1',
       'MAT.9.1.1.2',
       'MAT.9.1.2.1',
-      'MAT.9.1.2.2',
-      'MAT.9.1.3.1',
-      'MAT.9.1.3.2',
-      'MAT.9.1.3.3',
-      'MAT.9.1.3.4',
-      'MAT.9.1.4.1',
-      'MAT.9.1.4.2',
-      'MAT.9.1.5.1',
-      'MAT.9.1.5.2'
+      'MAT.9.1.2.2'
     ],
     path: '/embed/numbers/radical-power-reactor',
     component: lazy(() => import('../modules/grade9/radical-power-reactor/RadicalPowerReactorApp'))
@@ -357,7 +349,7 @@ export const modules: ModuleMeta[] = [
   {
     id: 'function-hologram-room',
     title: 'Fonksiyonel Hologram Odası',
-    description: 'f(x)=x lazerini eğ, taşı, mutlak değer aynasına kır ve eşitsizlik çözüm alanını hologramda boya.',
+    description: 'f(x)=x lazerini iki kontrol düğümüyle taşı ve eğ; a, r, k parametrelerinin grafiği nasıl değiştirdiğini canlı gör.',
     grade: 9,
     category: 'Cebir',
     difficulty: 'Orta',
@@ -365,10 +357,7 @@ export const modules: ModuleMeta[] = [
       'MAT.9.2.1.1',
       'MAT.9.2.1.2',
       'MAT.9.2.1.3',
-      'MAT.9.2.1.4',
-      'MAT.9.2.2.1',
-      'MAT.9.2.2.2',
-      'MAT.9.2.3.2'
+      'MAT.9.2.1.4'
     ],
     path: '/embed/algebra/function-hologram-room',
     component: lazy(() => import('../modules/grade9/function-hologram-room/FunctionHologramRoomApp'))
@@ -387,18 +376,15 @@ export const modules: ModuleMeta[] = [
   {
     id: 'logic-circuit-lab',
     title: 'Akıllı Mantık Devreleri',
-    description: '0/1 akımlarını VE, VEYA, İSE ve YA DA kapılarından geçir; niceleyici radarında her/bazı ayrımını test et.',
+    description: 'A/B anahtarlarını açıp kapatarak VE, VEYA, İSE ve YA DA kapılarının çıkış sinyalini canlı devrede gör.',
     grade: 9,
     category: 'Cebir',
     difficulty: 'Orta',
     atomIds: [
-      'MAT.9.3.1.1',
       'MAT.9.3.2.1',
       'MAT.9.3.2.2',
       'MAT.9.3.2.3',
-      'MAT.9.3.2.4',
-      'MAT.9.3.3.1',
-      'MAT.9.3.3.2'
+      'MAT.9.3.2.4'
     ],
     path: '/embed/algebra/logic-circuit-lab',
     component: lazy(() => import('../modules/grade9/logic-circuit-lab/LogicCircuitLabApp'))
@@ -406,18 +392,13 @@ export const modules: ModuleMeta[] = [
   {
     id: 'triangle-tension-lab',
     title: 'Üçgen Gerilim Laboratuvarı',
-    description: 'Açı-kenar gerilimini, benzerlik oranlarını ve Öklid/Pisagor/Tales teorem kilitlerini canlı üçgen üzerinde çöz.',
+    description: 'Köşeleri sürüklenebilen canlı üçgende açı-kenar ilişkisini ve iç açı toplamını keşfet.',
     grade: 9,
     category: 'Geometri',
     difficulty: 'Orta',
     atomIds: [
       'MAT.9.4.1.1',
-      'MAT.9.4.1.2',
-      'MAT.9.5.2.1',
-      'MAT.9.5.2.2',
-      'MAT.9.5.3.1',
-      'MAT.9.5.3.2',
-      'MAT.9.5.3.3'
+      'MAT.9.4.1.2'
     ],
     path: '/embed/geometry/triangle-tension-lab',
     component: lazy(() => import('../modules/grade9/triangle-tension-lab/TriangleTensionLabApp'))
@@ -435,17 +416,15 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'statistics-probability-radar',
-    title: 'Veri ve Olasılık Radarı',
-    description: 'Standart sapma, kutu-bıyık etiketi, gözlemsel olasılık ve tümevarımı tek veri radarında simüle et.',
+    title: 'Veri Karar Radarı',
+    description: 'Veri bulutunu tarayarak en istikrarlı grubu bul ve kutu-bıyık grafiğinde medyanı kilitle.',
     grade: 9,
     category: 'Olasılık',
     difficulty: 'Orta',
     atomIds: [
       'MAT.9.6.1.1',
       'MAT.9.6.1.2',
-      'MAT.9.6.2.1',
-      'MAT.9.7.1.1',
-      'MAT.9.7.2.1'
+      'MAT.9.6.2.1'
     ],
     path: '/embed/probability/statistics-probability-radar',
     component: lazy(() => import('../modules/grade9/statistics-probability-radar/StatisticsProbabilityRadarApp'))
