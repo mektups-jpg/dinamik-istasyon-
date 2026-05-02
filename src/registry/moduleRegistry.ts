@@ -3,6 +3,7 @@ import { lazy, type ComponentType, type LazyExoticComponent } from 'react';
 export type Category = 'Sayılar' | 'Geometri' | 'Fizik' | 'Olasılık' | 'Cebir' | 'Trigonometri' | 'Geometrik Şekiller';
 export type Difficulty = 'Kolay' | 'Orta' | 'Zor';
 export type GradeRange = 'İlkokul' | 'Ortaokul' | 'Lise';
+export type ModuleStatus = 'active' | 'archived';
 
 export interface ModuleMeta {
   id: string;
@@ -17,6 +18,8 @@ export interface ModuleMeta {
   atomId?: string;
   atomIds?: string[];
   icon?: ComponentType<{ className?: string }>;
+  status?: ModuleStatus;
+  archiveNote?: string;
 }
 
 export const modules: ModuleMeta[] = [
@@ -98,7 +101,9 @@ export const modules: ModuleMeta[] = [
     difficulty: 'Zor',
     grade: 11,
     path: '/embed/trig/pendulum',
-    component: lazy(() => import('../modules/trig/pendulum/TrigPendulumApp'))
+    component: lazy(() => import('../modules/trig/pendulum/TrigPendulumApp')),
+    status: 'archived',
+    archiveNote: 'Eski dalga deneyi. 11. sınıf aktif akışında yerini Trigonometrik Osiloskop aldı.'
   },
   {
     id: 'algebraic-dimensions',
@@ -178,7 +183,9 @@ export const modules: ModuleMeta[] = [
     difficulty: 'Orta',
     grade: 11,
     path: '/embed/geometry/unit-circle',
-    component: lazy(() => import('../modules/geometry/unit-circle/UnitCircleApp'))
+    component: lazy(() => import('../modules/geometry/unit-circle/UnitCircleApp')),
+    status: 'archived',
+    archiveNote: 'Eski keşif aracı. Sin/cos kısmı Trigonometrik Osiloskop ile, tan/cot kısmı Tanjant Asimptot Kapıları ile yenilenecek.'
   },
   {
     id: 'cylinder-3d',
@@ -278,7 +285,9 @@ export const modules: ModuleMeta[] = [
     difficulty: 'Orta',
     grade: 11,
     path: '/embed/physics/laser-defense',
-    component: lazy(() => import('../modules/physics/laser-defense/LaserApp'))
+    component: lazy(() => import('../modules/physics/laser-defense/LaserApp')),
+    status: 'archived',
+    archiveNote: 'Fizik/yansıma prototipi. 11. sınıf matematik makro atom kuyruğundan ayrıldı.'
   },
   {
     id: 'pythagoras',
@@ -298,7 +307,9 @@ export const modules: ModuleMeta[] = [
     difficulty: 'Orta',
     grade: 11,
     path: '/embed/physics/slope-rollercoaster',
-    component: lazy(() => import('../modules/physics/slope-rollercoaster/RollercoasterApp'))
+    component: lazy(() => import('../modules/physics/slope-rollercoaster/RollercoasterApp')),
+    status: 'archived',
+    archiveNote: 'Eski eğim/fizik prototipi. 11. sınıf aktif matematik modüllerinden ayrıldı.'
   },
   {
     id: 'polygon-collision-test',
@@ -428,5 +439,114 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/probability/statistics-probability-radar',
     component: lazy(() => import('../modules/grade9/statistics-probability-radar/StatisticsProbabilityRadarApp'))
+  },
+  {
+    id: 'parabola-shape-studio',
+    title: 'Parabol Şekil Stüdyosu',
+    description: 'Parabolün tepe noktasını ve genişlik kolunu sürükleyerek a, h ve k dönüşümlerini canlı hologramda keşfet.',
+    grade: 10,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.2.2.1',
+      'MAT.10.2.2.2',
+      'MAT.10.2.2.3',
+      'MAT.10.2.2.4'
+    ],
+    path: '/embed/algebra/parabola-shape-studio',
+    component: lazy(() => import('../modules/grade10/parabola-shape-studio/ParabolaShapeStudioApp'))
+  },
+  {
+    id: 'domain-gates',
+    title: 'Tanım Kümesi Kapıları',
+    description: 'Karekök güvenli bölgesini ve rasyonel fonksiyon asimptot duvarını x=0 çizgisine kilitle.',
+    grade: 10,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.2.3.1',
+      'MAT.10.2.3.2',
+      'MAT.10.2.4.1',
+      'MAT.10.2.4.2'
+    ],
+    path: '/embed/algebra/domain-gates',
+    component: lazy(() => import('../modules/grade10/domain-gates/DomainGatesApp'))
+  },
+  {
+    id: 'function-filter',
+    title: 'Fonksiyon Mu Filtresi',
+    description: 'Dikey doğru lazeriyle fonksiyon şartını test et ve tanım kümesi portlarını kurala bağla.',
+    grade: 10,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.2.1.1',
+      'MAT.10.2.1.2'
+    ],
+    path: '/embed/algebra/function-filter',
+    component: lazy(() => import('../modules/grade10/function-filter/FunctionFilterApp'))
+  },
+  {
+    id: 'trigonometric-theodolite',
+    title: 'Trigonometrik Teodolit',
+    description: 'Dik üçgende karşı, komşu ve hipotenüs ölçülerini seçerek sin, cos, tan ve cot oranlarını kur.',
+    grade: 10,
+    category: 'Trigonometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.4.1.1',
+      'MAT.10.4.1.2',
+      'MAT.10.4.1.3',
+      'MAT.10.4.1.4'
+    ],
+    path: '/embed/trigonometry/trigonometric-theodolite',
+    component: lazy(() => import('../modules/grade10/trigonometric-theodolite/TrigonometricTheodoliteApp'))
+  },
+  {
+    id: 'analytic-route-map',
+    title: 'Analitik Rota Haritası',
+    description: 'İki istasyonu sürükleyerek mesafe, eğim, doğru denklemi ve içten bölme noktasını canlı rota üzerinde keşfet.',
+    grade: 10,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.5.1.1',
+      'MAT.10.5.1.2',
+      'MAT.10.5.2.1',
+      'MAT.10.5.2.2'
+    ],
+    path: '/embed/geometry/analytic-route-map',
+    component: lazy(() => import('../modules/grade10/analytic-route-map/AnalyticRouteMapApp'))
+  },
+  {
+    id: 'trigonometric-oscilloscope',
+    title: 'Trigonometrik Osiloskop',
+    description: 'Birim çember faz kolunu döndürerek sinüs ve kosinüs referans dalgalarını canlı çiz.',
+    grade: 11,
+    category: 'Trigonometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.1.1.1',
+      'MAT.11.1.1.2'
+    ],
+    path: '/embed/trigonometry/trigonometric-oscilloscope',
+    component: lazy(() => import('../modules/grade11/trigonometric-oscilloscope/TrigonometricOscilloscopeApp'))
+  },
+  {
+    id: 'tangent-asymptote-gates',
+    title: 'Tanjant Asimptot Kapıları',
+    description: 'Tanjant ve kotanjant grafiklerinin yasak duvarlarını sürükleyerek asimptot davranışını görünür hale getir.',
+    grade: 11,
+    category: 'Trigonometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.1.1.3',
+      'MAT.11.1.1.4'
+    ],
+    path: '/embed/trigonometry/tangent-asymptote-gates',
+    component: lazy(() => import('../modules/grade11/tangent-asymptote-gates/TangentAsymptoteGatesApp'))
   }
 ];
+
+export const activeModules = modules.filter((module) => module.status !== 'archived');
+export const archivedModules = modules.filter((module) => module.status === 'archived');

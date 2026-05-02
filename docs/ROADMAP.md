@@ -12,10 +12,10 @@ Bu doküman, mevcut kod tabanı ve proje belgeleri incelendikten sonra uygulanac
 | Alan | Durum |
 | --- | --- |
 | Hedef makro modül | 73 |
-| Registry'de aktif modül | 32 |
-| Yaklaşık üretim oranı | %44 |
+| Registry'de aktif modül | 43 |
+| Yaklaşık üretim oranı | %59 |
 | En dolu sınıf | 5. sınıf tamamlandı, 8. sınıf 3D/geometri ağırlıklı |
-| En boş sınıf | 10. sınıf henüz modülsüz |
+| En boş sınıf | 11-12. sınıf henüz seyrek |
 | Ana teknik risk | Modüller arası template tutarsızlığı, iframe root layout sorunları, kalan `any` tipleri, büyük ana bundle |
 
 ## Çalışma İlkeleri
@@ -25,6 +25,7 @@ Bu doküman, mevcut kod tabanı ve proje belgeleri incelendikten sonra uygulanac
 3. Embed root layout kuralı: `h-full w-full overflow-y-auto overflow-x-hidden`; root seviyesinde `min-h-screen` kullanılmaz.
 4. Dekoratif absolute overlay'ler `pointer-events-none` alır.
 5. Modül tamamlandı sayılması için build geçmeli, tarayıcı console temiz olmalı, temel desktop/mobile görsel kontrol yapılmalı.
+6. 10-11. sınıf uzun geliştirme sırası `docs/DEVELOPMENT_QUEUE_10_11.md` üzerinden, bitiş standardı `docs/MODULE_DONE_CRITERIA.md` üzerinden takip edilir.
 
 ## Faz 0 - Devralma ve Stabilizasyon
 
@@ -115,10 +116,16 @@ Amaç: küçük yaş kullanıcıları için ürünün giriş deneyimini güçlen
 - [x] 9. sınıf: Üçgen Gerilim Laboratuvarı.
 - [x] 9. sınıf: Dönüşüm Adli Bilişimi.
 - [x] 9. sınıf: Veri ve Olasılık Radarı.
+- [x] 10. sınıf: Fonksiyon Mu Filtresi.
+- [x] 10. sınıf: Parabol Şekil Stüdyosu.
+- [x] 10. sınıf: Tanım Kümesi Kapıları.
+- [x] 10. sınıf: Trigonometrik Teodolit.
+- [x] 10. sınıf: Analitik Rota Haritası.
+- [x] 11. sınıf: Trigonometrik Osiloskop.
 - [ ] 10. sınıf: Şifreli Kuantum Kasası.
-- [ ] 10. sınıf: Parabolik Eğri Simülatörü.
-- [ ] 10. sınıf: Lazer Teodoliti.
 - [ ] 11. sınıf: Logaritmik Büyüme Reaktörü.
+
+Not: 10-11 sınıf modülleri artık geniş başlıklarla değil, `docs/DEVELOPMENT_QUEUE_10_11.md` içindeki dar makro deney kuyruğuyla üretilecek. İlk önerilen sprint `10-01 Parabol Şekil Stüdyosu`, `10-02 Tanım Kümesi Kapıları` ve `11-01 Trigonometrik Osiloskop` sırasıdır.
 - [ ] 12. sınıf: Limit Sensörü ve Türev Eğim Sürücüsü.
 
 ## Modül Definition of Done

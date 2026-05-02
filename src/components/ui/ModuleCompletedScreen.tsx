@@ -24,7 +24,7 @@ export function ModuleCompletedScreen({
       initial={{ opacity: 0, scale: 0.9, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, y: -20 }}
-      className="flex flex-col items-center justify-center p-8 bg-black/60 rounded-3xl border border-yellow-500/30 backdrop-blur-xl shadow-[0_0_50px_rgba(234,179,8,0.2)] max-w-2xl mx-auto w-full my-8 relative overflow-hidden"
+      className="flex flex-col items-center justify-center p-5 sm:p-8 bg-black/60 rounded-3xl border border-yellow-500/30 backdrop-blur-xl shadow-[0_0_50px_rgba(234,179,8,0.2)] max-w-2xl mx-auto w-full my-8 relative overflow-hidden"
     >
       {/* Background glow */}
       <div className="absolute inset-0 bg-gradient-to-t from-yellow-500/10 to-transparent pointer-events-none" />
@@ -45,7 +45,7 @@ export function ModuleCompletedScreen({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="text-4xl md:text-5xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-4 text-center"
+        className="max-w-full break-words text-center text-2xl font-black uppercase leading-tight tracking-[0.08em] text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-4 sm:text-4xl sm:tracking-widest md:text-5xl"
       >
         {title}
       </motion.h2>

@@ -455,33 +455,51 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.10.1.2.x` (EBOB ve EKOK algoritmalarını çoklu sayılarda hesaplama)
   * `MAT.10.1.3.x` (Bölme işlemi yapmadan modüler kalan bulma taktikleri)
 
-### 2. Parabolik Eğri Simülatörü ve Asimptot Tüneli (Fonksiyonlar)
-* **Konsept:** Ekranda `y=x²` kasesi yaratılan 3D bir parabol fırını. Kase `a` değeri manipüle edilerek daraltılıp genişletilir veya tepe noktası kaydırılarak uydunun yönü değiştirilir. `y=1/x` veya $\sqrt{x}$ (İrrasyonel) modüllerine geçildiğinde, ekran belirli bölgelerde (Paydayı 0 yapan veya çok içi negatif olan yerlerde) "KÖR NOKTA / KARA DELİK" sinyali (Asimptot/Tanımsızlık) verir. (Ters Çevir) düğmesiyle tüm fonksiyon simetrik ve çapraz olarak takla atar.
+### 2. Fonksiyon Mu Filtresi (Fonksiyon Şartları) ✅
+* **Konsept:** Tek ana oyuncak dikey lazer filtresi. Öğrenci lazeri bir bağıntı üzerinde gezdirir; aynı x değeri iki farklı y üretirse kırmızı alarm verir ve ilişki fonksiyon olarak reddedilir. Son katmanda `f(x)=2x+1` kuralı, tanım kümesi giriş portlarını doğru çıkış portlarına bağlayan görsel bir ağ olur.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.10.2.1.x` (Dikey doğru testi ile Bağıntı/Fonksiyon filtresi ve Tanım eşleştirme)
-  * `MAT.10.2.2.x` / `MAT.10.2.3.x` / `MAT.10.2.4.x` (Karesel Parabol bükümü, Karekök/Rasyonel fonksiyon asimptot ve tanımsızlık uyarıları)
-  * `MAT.10.2.5.x` / `MAT.10.2.6.x` (fonksiyonların tersini alma ($f^{-1}$) ve işaret tablosuyla karesel büyüklük/küçüklük eşitsizlikleri)
+  * `MAT.10.2.1.x` (Dikey doğru testiyle fonksiyon doğrulama ve tanım kümesi elemanlarını matematiksel kuralla eşleştirme)
+* **Erişilebilir Etkileşim:**
+  * Dikey tarayıcı sürüklenir; odaklanan tarayıcı sağ/sol oklarla küçük adım atar ve `Home` ile aktif hedefe hizalanır. Portlar tıklanır veya klavyeyle seçilebilir.
 
-### 3. Otomatik Dizgi Terminali (Kombinasyon, Sayma ve Cebir)
+### 3. Parabol Şekil Stüdyosu (Karesel Fonksiyonlar) ✅
+* **Konsept:** Ekranda `y=x²` kasesi yaratılan sakin bir hologram stüdyosu. Öğrenci mavi tepe düğümünü sürükleyerek `h` ve `k` kaymasını, pembe genişlik kolunu yukarı/aşağı çekerek `a` katsayısının parabolü daraltıp genişletmesini görür. Sarı kesik hedef hologram, canlı parabolün nereye oturacağını gösterir.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.10.2.2.x` (Referans parabolü çizme, parabolü daraltma/genişletme ve tepe noktasını eksenlerde kaydırma)
+* **Ayrılan Gelecek Makro Modüller:**
+  * `MAT.10.2.5.x` için **Ters Fonksiyon Aynası**, `MAT.10.2.6.x` için **İşaret Tablosu Tarayıcısı** ayrı modüllerdir.
+
+### 4. Tanım Kümesi Kapıları (Karekök ve Rasyonel Fonksiyon) ✅
+* **Konsept:** Tek ana oyuncak koordinat kapı ekranı. Öğrenci karekök başlangıç düğümünü ve güvenli bölge kapısını x=0 çizgisine kilitleyerek `x≥0` fikrini görür; rasyonel katmanda asimptot duvarı ve `x≠0` alarmı aynı hedef çizgide kilitlenir. Kırmızı cam yasak alan, grafiğin nerede doğmadığını veya geçemediğini matematiksel olarak görünür kılar.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.10.2.3.x` / `MAT.10.2.4.x` (Karekök referans grafiği, güvenli tanım bölgesi, rasyonel referans grafiği ve payda sıfır/asimptot yasağı)
+* **Erişilebilir Etkileşim:**
+  * Kapılar sürüklenir; ayrıca odaklanan handle sağ/sol oklarla ince ayar yapar ve `Home` ile orijin çizgisine hizalanır.
+
+### 5. Otomatik Dizgi Terminali (Kombinasyon, Sayma ve Cebir)
 * **Konsept:** Holografik bir üretim veya montaj hattı. Öğrenciye bir sipariş gelir ("Ya araba ya motor ver," veya "Önce gövde, sonra motor ve en son boya şasisi diz"). Eğer istenenler birbirinden bağımsız ayrık durumlarsa (Toplama yoluyla), aynı paralel bantlara düşerler. Peş peşe sıralı bir montajsa (Çarpma yoluyla sayma ve Permütasyon temeli) bant ucuza bağlanır. Tüm dizgi bilgisayar komutlarıyla algoritmaya dönüştürülür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.10.3.1.x` (Toplama yoluyla ayrık, Çarpma yoluyla eklemli kombinatuvar sayma algoritmaları)
   * `MAT.10.3.2.x` (Girdi-çıktı mantıklı karmaşık cebir bilgisayar akış şemaları)
 
-### 4. Lazer Teodoliti ve Trigonometrik Kalkan (Kosinüs/Sinüs Teoremleri)
-* **Konsept:** Sanal bir inşaat / topografi kamerasından (Teodolit) bakış. Hedef dağın zirvesine kitlenince vizör 3 parametreyi anında ölçer: "Karşı dik / Hipotenüs = Sinüs", veya komşuyu ölçerek "Kosinüs". Dar veya geniş açılı bozuk bir araziyle (Dik üçgen olmayan) karşılaşıldığında ana makine Sinüs ve Kosinüs Teoremlerini ateşleyip aradaki fiziksel bataklık mesafesini çözer. Ortaya $sin^2x + cos^2x = 1$ kalkanı atılarak hileli denklemlerden (özdeşliklerden) kurtulunur.
+### 6. Trigonometrik Teodolit (Dik Üçgen Oranları) ✅
+* **Konsept:** Sanal bir topografi teodoliti. Öğrenci sarı açı kolunu canlı dik üçgen üzerinde görür; karşı, komşu ve hipotenüs kenarlarını doğrudan seçerek sin, cos, tan ve cot oranlarını kurar. Amaç formül ezberi değil, "hangi kenar pay, hangi kenar payda?" sorusunu tek ölçüm masasında görünür hale getirmektir.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.10.4.1.x` (Sin, Cos, Tan, Cot karşı/komşu/hipotenüs oran vizörü)
-  * `MAT.10.4.2.x` / `MAT.10.4.3.x` (Pisagor/Trig özdeşlik kalkanları ve taban sabitken alanı esnetme ilüzyonları)
-  * `MAT.10.4.4.x` (Dik olmayan arazilerde Sinüs / Kosinüs teoremleriyle kenar veya açı keşfi)
+* **Erişilebilir Etkileşim:**
+  * Açı kolu sahnedeki uç tutamaçtan sürüklenir; kenarlar tıklanarak önce pay, sonra payda olarak oran okuyucuya kilitlenir.
+* **Ayrılan Gelecek Makro Modüller:**
+  * `MAT.10.4.2.x` için **Birim Çember Kalkanı**, `MAT.10.4.3.x` için **Sabit Alan Üçgen Rayı**, `MAT.10.4.4.x` için **Sinüs-Kosinüs Arazi Ölçeri** ayrı modüllerdir.
 
-### 5. Analitik Işınlanma Rotası (Nokta ve Doğru Analitiği)
-* **Konsept:** İki uydu / istasyon koordinatı ($x_1, y_1$ ve $x_2, y_2$) arasındaki doğrusal mesafeyi ve uçuş eğimini (m) bağlayan navigasyon siber haritası. Öğrenci hedef koordinatları girer, `y-y_1 = m(x-x_1)` ışınlanma formülü devreye girer ve uzay aracı belirtilen eğime milimetrik tutunarak seyahat eder. Gerekirse rotayı havada içten bölen gizli transfer noktası da koordinatlarla fişlenir.
+### 7. Analitik Rota Haritası (Nokta ve Doğru Analitiği) ✅
+* **Konsept:** İki uydu / istasyon koordinatı ($x_1, y_1$ ve $x_2, y_2$) arasındaki doğrusal mesafeyi ve uçuş eğimini (m) bağlayan navigasyon siber haritası. Öğrenci A ve B istasyonlarını koordinat düzleminde doğrudan taşır; `Δx`, `Δy`, mesafe, eğim ve `y-y_1 = m(x-x_1)` denklemi aynı rota üzerinde canlı okunur. Son katmanda rotayı içten bölen mor transfer istasyonu yalnız gerektiğinde açılır ve `AP:PB = 1:3` oranına hizalanır.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.10.5.1.x` (İki nokta arası mesafe radarı ve doğruyu içten/hedefli bölen ara istasyon koordinat tespiti)
   * `MAT.10.5.2.x` (Doğrunun eğimini dikey/yatay oranlayarak saptama ve analitik uçuş denklemini oluşturma)
+* **Erişilebilir Etkileşim:**
+  * A/B istasyonları sürüklenir; odaklanan istasyon ok tuşlarıyla küçük adım atar ve `Home` ile aktif hedefe hizalanır. Transfer düğümü sadece içten bölme görevinde görünür.
 
-### 6. Çapraz Matris ve Koşullu Olasılık Sireni (Veri Analizi)
+### 8. Çapraz Matris ve Koşullu Olasılık Sireni (Veri Analizi)
 * **Konsept:** Büyük ekranda "Torbadan 1 top çekildi ama GERİ ATILMADI!" diye kırmızı bir siren çalar ve toplam top ($%100$ küme) sayısı anında dinamik bir animasyonla azalır (Bağımlı Olaylar). Veya "Zarın ÇİFT geldiği kesin!" uyarısıyla ihtimaller daralır ve Koşullu Olasılık filtresi açılır. Sağ tarafta ise cinsiyet/medya tercihleri gibi kategorik veriler Çapraz Matrise yüklenip, medyadaki yalan / hatalı anket (Yanlış korelasyon) sonuçları ifşa edilir.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.10.6.1.x` / `MAT.10.6.2.x` (Çapraz tablolar ile ilişkisellik testi ve yanlış yorumlanmış/spekülatif medya anketi teşhisi)
@@ -491,30 +509,48 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
 
 ## 🛰️ LİSE 11. SINIF MODÜLLERİ
 
-### 1. Trigonometrik Osiloskop ve Sarkaç (İleri Dalga Analizi)
-* **Konsept:** Merkezde dönen bir birim çembere bağlı pistonlar (sarkaçlar). Pistonlar $X$ (zaman) ekseni boyunca hareket ettikçe, uçlarındaki dijital kalemler ekrana kusursuz bir $f(x)=sin(x)$ veya $cos(x)$ dalgası çizer (Osiloskop). $Tan(x)$ şalteri açıldığında ekranda "Asimptot Kalkanları (90° ve 270°)" belirir ve dalga asla o çizgileri geçemez. Ekrana düşen karmaşık trigonometrik denklemlerin "dalga köklerini" bularak kalkanları imha eder.
-* **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.11.1.1.x` (Sinüs, Kosinüs, Tanjant, Kotanjant fonksiyonları periyodik ve asimptot grafikleri)
-  * `MAT.11.1.2.x` (İçinde trigonometrik oran barındıran gelişmiş denklemlerin kök bulumu)
+### 1. ✅ Trigonometrik Osiloskop (Sin/Cos Dalga Analizi)
+* **Konsept:** Merkezde dönen bir birim çemberin faz kolu, sağdaki dijital osiloskop ekranına sinüs veya kosinüs dalgası çizdirir. Öğrenci faz kolunu doğrudan sürükler veya odaklayıp `Home` ile aktif hedefe kilitler; 90°, 180° ve 360° fazlarında dikey/yatay izdüşümün dalga değerini nasıl ürettiğini görür.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.1.1.1` (f(x)=sin(x) referans fonksiyonunun periyodik dalga grafiği)
+  * `MAT.11.1.1.2` (f(x)=cos(x) referans fonksiyonunun periyodik dalga grafiği)
+* **Route:** `/embed/trigonometry/trigonometric-oscilloscope`
+* **Not:** Tanjant/kotanjant asimptotları `11-02 Tanjant Asimptot Kapıları`, trigonometrik denklem kökleri `11-03 Trigonometrik Kök Avcısı` olarak ayrı makro deneylere ayrıldı.
 
-### 2. Logaritmik Büyüme Reaktörü ve Tersine Mühendislik ($e^x$ & $ln x$)
+### 2. ✅ Tanjant Asimptot Kapıları (Tan/Cot Yasak Duvarları)
+* **Konsept:** 0°-360° arası trigonometrik grafik tünelinde öğrenci neon asimptot kapılarını doğrudan sürükler. `tan(x)` için 90° ve 270° duvarları; `cot(x)` için 0°, 180° ve 360° duvarları kilitlenir. Son katmanda tarayıcı 180° kotanjant duvarına yaklaşınca değer büyür ama çizginin üzerinde nokta oluşmadığı görsel olarak anlaşılır.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.1.1.3` (`f(x)=tan(x)` referans fonksiyonunun asimptotlu grafiği)
+  * `MAT.11.1.1.4` (`f(x)=cot(x)` referans fonksiyonunun asimptotlu grafiği)
+* **Route:** `/embed/trigonometry/tangent-asymptote-gates`
+* **Durum:** Browser Use ile yanlış deneme, dört görev zinciri, completion, console ve dashboard aktif sayım kontrolü geçti.
+
+### Legacy Arşiv / Eski Deneyler
+Bu modüller silinmedi; route'ları korunuyor. Ancak yeni 11. sınıf aktif görev akışından çıkarıldılar çünkü SSOT atom kapsamı, tek ana oyuncak standardı veya 11. sınıf matematik odağıyla artık uyumlu değiller.
+
+* `trig-pendulum` / `/embed/trig/pendulum`: Eski dalga deneyi; sin/cos kapsamında yerini `Trigonometrik Osiloskop` aldı.
+* `unit-circle` / `/embed/geometry/unit-circle`: Eski birim çember keşif aracı; sin/cos kısmı osiloskopa taşındı, tan/cot kısmı `11-02 Tanjant Asimptot Kapıları` olarak yeniden yapılacak.
+* `laser-defense` / `/embed/physics/laser-defense`: Fizik/yansıma prototipi; aktif 11. sınıf matematik kuyruğundan ayrıldı.
+* `slope-rollercoaster` / `/embed/physics/slope-rollercoaster`: Eğim/fizik prototipi; aktif 11. sınıf matematik kuyruğundan ayrıldı.
+
+### 3. Logaritmik Büyüme Reaktörü ve Tersine Mühendislik ($e^x$ & $ln x$)
 * **Konsept:** İki farklı büyüme simülatörü. Bir yanda (Bakteri/Virüs yayılımı) tabanı 1'den büyük ($a>1$) patlayarak artan *Üstel Fonksiyon* grafiği. Diğer yanda "Tersine Mühendislik (Invert) Şalteri". Bu şalter çekildiğinde rampa aynı eksende bükülür ve Logaritma makinesine dönüşür! Simülatöre giren "Deprem Şiddeti (Richter)" ve "Ses Dalgaları (Desibel)" logaritmik olarak filtrelenerek zararsız veriye dönüştürülür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.11.1.3.x` / `MAT.11.1.4.x` / `MAT.11.1.5.x` (Artan/Azalan üstel fonksiyonlar, Tersini alma ve Logaritmik eşlenik grafikleri)
   * `MAT.11.1.6.x` (Bakteri/nüfus (üstel) ve Richter/Desibel (Logaritma) gerçek yaşam simülasyonları)
 
-### 3. Fonksiyon Synthesizer'ı (Bileşke ve Dört İşlem)
+### 4. Fonksiyon Synthesizer'ı (Bileşke ve Dört İşlem)
 * **Konsept:** DJ mikseri / Bilgisayar anakartı gibi bir sentezleyici. $f(x)$ ve $g(x)$ portlarına fonksiyonlar takılır. "+", "-", "x", "/" tuşlarına basıldıkça ikisi aynı tanım kümesinde işleme girer. `(f o g)` "Bileşke Bağlantısı" kablosu takıldığında, $g(x)$ makinesi tamamen eriyip $f(x)$ makinesinin *içine* girer (Nested Functions) ve ekranda yepyeni bir mutasyon algoritması belirir.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.11.1.7.x` / `MAT.11.1.8.x` (İki fonksiyonu iç içe bağlama (Bileşke/fog) ve eş tanımkümeli fonksiyonlarda 4 işlem mekanikleri)
 
-### 4. Çokgen Anatomi Masası (İçbükey/Dışbükey ve Mozaik)
+### 5. Çokgen Anatomi Masası (İçbükey/Dışbükey ve Mozaik)
 * **Konsept:** Parçalanmış geometrik cam şekiller. Dışbükey (Konveks) parçaların tüm köşeleri dışarı bakarken, makine "İçbükey (Konkav) Uyarı!" diyerek içeri çökük bir açıyı ($>180°$) kırmızı lazerle işaretler. Kenarları saydırarak $n(n-3)/2$ çapraz köşegen tespiti lazeri atılır. Öğrenci düzgün çokgenleri mouse ile sürükleyerek "boşluksuz mozaik ve fayans kaplamaları" tasarlar.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.11.2.1.x` / `MAT.11.2.2.x` (Üçgenden dörtgen alan/açı ispatı ve Özel Dörtgenlerin köşegen özellik testleri)
   * `MAT.11.2.3.x` / `MAT.11.2.4.x` / `MAT.11.2.5.x` (İçbükey/Dışbükey klasörü, Simetri/Köşegen formülleri ve Mozaik fayans optimizasyonu)
 
-### 5. Korelasyon Tarayıcısı ve Scatter (Serpilme) Radarı
+### 6. Korelasyon Tarayıcısı ve Scatter (Serpilme) Radarı
 * **Konsept:** Ekranda anlamsız gibi duran yüzlerce veri noktasının bulunduğu uzay radarı (Scatter Plot). Öğrenci "Eğilim Çizgisi"ni çektiği an noktaların yukarı tırmandığını (Pozitif Doğrusal İlişki) veya aşağı kırıldığını (Negatif Korelasyon) gözlemler. Alt ekrandaki istihbarat panelinde, yalan / kusurlu iki nicel anket arasındaki tutarsızlık çapraz kontrole sokulup çürütülür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.11.3.1.x` (İstatistiksel Serpilme (Scatter) grafiğini kurgulama ve Pozitif/Negatif eğilim ilişkisini çıkarma)

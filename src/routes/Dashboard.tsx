@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { modules, ModuleMeta } from '../registry/moduleRegistry';
+import { activeModules, archivedModules, ModuleMeta } from '../registry/moduleRegistry';
 import { useGameStore } from '../store/useGameStore';
 import { useAtomStore } from '../store/useAtomStore';
 import { Battery, Play, Lock, ChevronLeft, Hexagon, Fingerprint, X, User as UserIcon, LogOut } from 'lucide-react';
@@ -25,7 +25,11 @@ export default function Dashboard() {
   };
 
   const getModulesForGrade = (grade: number): ModuleMeta[] => {
-    return modules.filter(m => m.grade === grade);
+    return activeModules.filter(m => m.grade === grade);
+  };
+
+  const getArchivedModulesForGrade = (grade: number): ModuleMeta[] => {
+    return archivedModules.filter(m => m.grade === grade);
   };
 
   const getBotMessage = (): BotMessage => {
@@ -34,11 +38,16 @@ export default function Dashboard() {
 
     if (selectedGrade !== null) {
       const count = getModulesForGrade(selectedGrade).length;
+      const archiveCount = getArchivedModulesForGrade(selectedGrade).length;
       if (count === 0) {
-        text = `${selectedGrade}. Sınıf reaktörleri şu an inşa ediliyor komutanım! Lütfen başka bir kapı dene.`;
-        type = 'error';
+        text = archiveCount > 0
+          ? `${selectedGrade}. Sınıfta aktif yeni görev yok; ${archiveCount} eski deney arşivde tutuluyor.`
+          : `${selectedGrade}. Sınıf reaktörleri şu an inşa ediliyor komutanım! Lütfen başka bir kapı dene.`;
+        type = archiveCount > 0 ? 'info' : 'error';
       } else {
-        text = `${selectedGrade}. Sınıf laboratuvarlarında seni ${count} aktif görev bekliyor. Tıkla ve başlat!`;
+        text = archiveCount > 0
+          ? `${selectedGrade}. Sınıf laboratuvarlarında seni ${count} aktif görev bekliyor. ${archiveCount} eski deney arşivde ayrı tutuluyor.`
+          : `${selectedGrade}. Sınıf laboratuvarlarında seni ${count} aktif görev bekliyor. Tıkla ve başlat!`;
         type = 'success';
       }
     }
@@ -92,7 +101,7 @@ export default function Dashboard() {
           {(() => {
             const TOTAL_MODULES = 73;
             // Geliştirme ilerlemesi: Kayıtlı olan modül sayısı
-            const completedCount = modules.length;
+            const completedCount = activeModules.length;
             const progressPercent = Math.min(100, Math.round((completedCount / TOTAL_MODULES) * 100));
 
             return (
@@ -190,6 +199,25 @@ export default function Dashboard() {
                   ))}
                 </div>
               )}
+
+              {getArchivedModulesForGrade(selectedGrade).length > 0 && (
+                <section className="mt-12 rounded-3xl border border-amber-300/15 bg-amber-300/[0.035] p-5 sm:p-6">
+                  <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                      <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-amber-200/70">Arşiv</p>
+                      <h3 className="text-2xl font-black text-white">Eski Deneyler</h3>
+                    </div>
+                    <p className="max-w-xl text-sm text-gray-400">
+                      Bu modüller silinmedi; yeni MEB atom ve tek ana oyuncak standardına uymadığı için aktif görev akışından ayrıldı.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {getArchivedModulesForGrade(selectedGrade).map(mod => (
+                      <ArchiveModuleCard key={mod.id} mod={mod} />
+                    ))}
+                  </div>
+                </section>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -201,6 +229,31 @@ export default function Dashboard() {
       {/* ASTRO-BOT (Rehber) */}
       <AstroBot message={getBotMessage()} />
     </div>
+  );
+}
+
+function ArchiveModuleCard({ mod }: { mod: ModuleMeta }) {
+  return (
+    <Link
+      to={mod.path}
+      className="group relative flex flex-col rounded-3xl border border-amber-200/10 bg-black/35 p-5 opacity-80 transition-all duration-300 hover:border-amber-200/30 hover:opacity-100"
+    >
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="rounded-2xl border border-amber-200/15 bg-amber-200/10 px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-amber-100">
+          Legacy
+        </div>
+        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+          {mod.category}
+        </span>
+      </div>
+      <h4 className="text-lg font-black text-white">{mod.title}</h4>
+      <p className="mt-2 text-sm leading-relaxed text-gray-400">{mod.description}</p>
+      {mod.archiveNote && (
+        <p className="mt-4 rounded-2xl border border-amber-200/10 bg-amber-200/[0.04] p-3 text-xs leading-relaxed text-amber-100/75">
+          {mod.archiveNote}
+        </p>
+      )}
+    </Link>
   );
 }
 
