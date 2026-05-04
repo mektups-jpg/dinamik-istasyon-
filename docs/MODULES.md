@@ -525,36 +525,91 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
 * **Route:** `/embed/trigonometry/tangent-asymptote-gates`
 * **Durum:** Browser Use ile yanlış deneme, dört görev zinciri, completion, console ve dashboard aktif sayım kontrolü geçti.
 
+### 2B. ✅ Trigonometrik Kök Avcısı (Trigonometrik Denklem Kökleri)
+* **Konsept:** Öğrenci 0°-360° dalga tünelinde iki kök işaretçisini hedef ışının dalgayı kestiği açılara taşır. Sinüs, kosinüs, tanjant ve kotanjant kökleri aynı ana oyuncakta fakat görev görev açılır; tan/cot tanımsızlık duvarları kök olmayan kesimleri görünür kılar.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.1.2.1` (sinüslü trigonometrik denklemlerin kökleri)
+  * `MAT.11.1.2.2` (kosinüslü trigonometrik denklemlerin kökleri)
+  * `MAT.11.1.2.3` (tanjantlı trigonometrik denklemlerin kökleri)
+  * `MAT.11.1.2.4` (kotanjantlı trigonometrik denklemlerin kökleri)
+* **Route:** `/embed/trigonometry/trigonometric-root-hunter`
+* **Durum:** `npm run module:check`, `npm run build`, `git diff --check`, Browser Use yanlış/doğru akış, completion, console ve dar viewport kontrolü geçti. Gemini 3 Flash kapanışı 92/100 PASS, must-fix yok.
+
 ### Legacy Arşiv / Eski Deneyler
 Bu modüller silinmedi; route'ları korunuyor. Ancak yeni 11. sınıf aktif görev akışından çıkarıldılar çünkü SSOT atom kapsamı, tek ana oyuncak standardı veya 11. sınıf matematik odağıyla artık uyumlu değiller.
 
 * `trig-pendulum` / `/embed/trig/pendulum`: Eski dalga deneyi; sin/cos kapsamında yerini `Trigonometrik Osiloskop` aldı.
-* `unit-circle` / `/embed/geometry/unit-circle`: Eski birim çember keşif aracı; sin/cos kısmı osiloskopa taşındı, tan/cot kısmı `11-02 Tanjant Asimptot Kapıları` olarak yeniden yapılacak.
+* `unit-circle` / `/embed/geometry/unit-circle`: Eski birim çember keşif aracı; sin/cos kısmı osiloskopa, tan/cot kısmı `11-02 Tanjant Asimptot Kapıları` modülüne taşındı.
 * `laser-defense` / `/embed/physics/laser-defense`: Fizik/yansıma prototipi; aktif 11. sınıf matematik kuyruğundan ayrıldı.
 * `slope-rollercoaster` / `/embed/physics/slope-rollercoaster`: Eğim/fizik prototipi; aktif 11. sınıf matematik kuyruğundan ayrıldı.
 
-### 3. Logaritmik Büyüme Reaktörü ve Tersine Mühendislik ($e^x$ & $ln x$)
-* **Konsept:** İki farklı büyüme simülatörü. Bir yanda (Bakteri/Virüs yayılımı) tabanı 1'den büyük ($a>1$) patlayarak artan *Üstel Fonksiyon* grafiği. Diğer yanda "Tersine Mühendislik (Invert) Şalteri". Bu şalter çekildiğinde rampa aynı eksende bükülür ve Logaritma makinesine dönüşür! Simülatöre giren "Deprem Şiddeti (Richter)" ve "Ses Dalgaları (Desibel)" logaritmik olarak filtrelenerek zararsız veriye dönüştürülür.
-* **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.11.1.3.x` / `MAT.11.1.4.x` / `MAT.11.1.5.x` (Artan/Azalan üstel fonksiyonlar, Tersini alma ve Logaritmik eşlenik grafikleri)
-  * `MAT.11.1.6.x` (Bakteri/nüfus (üstel) ve Richter/Desibel (Logaritma) gerçek yaşam simülasyonları)
+### 3. ✅ Üstel Büyüme Reaktörü (Artan/Azalan Üstel Grafik)
+* **Konsept:** Öğrenci `a` taban çekirdeğini tek bir reaktör rayında sürükler. `a=1` nötr kapısının sağında `a>1` artan üstel eğri, solunda `0<a<1` azalan üstel eğri canlı olarak değişir. Logaritma, ters alma ve gerçek yaşam problemleri bu modüle sıkıştırılmaz.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.1.3.1` (`a>1` için `f(x)=a^x` artan grafik)
+  * `MAT.11.1.3.2` (`0<a<1` için `f(x)=a^x` azalan grafik)
+* **Route:** `/embed/algebra/exponential-growth-reactor`
+* **Durum:** Browser Use ile görsel smoke, yanlış deneme, gerçek sürükleme, `Home` görev hizalama, completion ve console warning/error kontrolü geçti.
 
-### 4. Fonksiyon Synthesizer'ı (Bileşke ve Dört İşlem)
-* **Konsept:** DJ mikseri / Bilgisayar anakartı gibi bir sentezleyici. $f(x)$ ve $g(x)$ portlarına fonksiyonlar takılır. "+", "-", "x", "/" tuşlarına basıldıkça ikisi aynı tanım kümesinde işleme girer. `(f o g)` "Bileşke Bağlantısı" kablosu takıldığında, $g(x)$ makinesi tamamen eriyip $f(x)$ makinesinin *içine* girer (Nested Functions) ve ekranda yepyeni bir mutasyon algoritması belirir.
-* **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.11.1.7.x` / `MAT.11.1.8.x` (İki fonksiyonu iç içe bağlama (Bileşke/fog) ve eş tanımkümeli fonksiyonlarda 4 işlem mekanikleri)
+### 4. ✅ Logaritma Ters Ayna Odası (Üstelden Logaritmaya)
+* **Konsept:** Üstel eğri `y=x` aynasına gönderilir; öğrenci ayna gücünü %100'e çıkardığında x ve y rolleri yer değiştirir ve grafik `y=log_a(x)` olur. Sonraki görevlerde taban sürgüsü `a>1` ve `0<a<1` bölgelerinde logaritma grafiğinin artan/azalan davranışını gösterir.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.1.4.1` (Üstel fonksiyonun tersini logaritmik formata dönüştürme)
+  * `MAT.11.1.5.1` (`a>1` için logaritmik fonksiyon grafiği)
+  * `MAT.11.1.5.2` (`0<a<1` için logaritmik fonksiyon grafiği)
+* **Route:** `/embed/algebra/logarithm-inverse-mirror`
+* **Durum:** Browser Use ile görsel smoke, yanlış onay, ayna/taban gerçek sürükleme, üç görev zinciri, completion ve console warning/error kontrolü geçti.
 
-### 5. Çokgen Anatomi Masası (İçbükey/Dışbükey ve Mozaik)
+### 4B. ✅ Richter-Desibel Ölçek Simülatörü
+* **Konsept:** Öğrenci aynı ölçek ölçer üzerinde üç gerçek yaşam durumunu test eder: üstel büyüme odasında oranı büyütür, desibel modunda ses şiddeti oranını log ölçeğine sıkıştırır, Richter modunda deprem genlik oranının küçük sayı artışına nasıl dönüştüğünü görür. Ana oyuncak tek kalır: büyük oranı küçük okunabilir ölçeğe dönüştüren dinamik ölçer.
+* **Sağladığı Atom Grupları (Plan):**
+  * `MAT.11.1.6.1` (Gerçek yaşamdaki büyüme oranlarını üstel fonksiyon denklemiyle çözme)
+  * `MAT.11.1.6.2` (Yüksek frekanslı ses şiddeti oranlarını desibel log fonksiyonuyla çözme)
+  * `MAT.11.1.6.3` (Deprem şiddeti oranlarını Richter log fonksiyonuyla çözme)
+* **Route:** `/embed/algebra/richter-desibel-scale-simulator`
+* **Durum:** Route ve uygulama tamamlandı. Browser Use ile yanlış onay, üç görev zinciri, completion ve console warning/error kontrolü geçti. Gemini 3 Flash ilk turda büyüme modu başlığı, küçük formül metni ve desibel oran vurgusu için must-fix verdi; düzeltmeler sonrası 94/100 PASS ve must-fix yok.
+
+### 5A. 🚧 Fonksiyon Bileşke Portları
+* **Konsept:** Öğrenci `x` kapsülünü önce `g` makinesine takar; çıkan `g(x)` kapsülünü fiziksel kabloyla `f` makinesinin giriş portuna bağlar. Finalde tek ışıklı zincir `x -> g -> f` ve `f(g(x))` sonucunu gösterir. Dört işlem aynı ekrana sıkıştırılmaz.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.1.7.1` (İki farklı fonksiyonu iç içe geçirerek bileşke fonksiyon kurgulama)
+* **Route:** `/embed/algebra/function-composition-ports`
+* **Durum:** SSOT ve spec başlangıcı yapıldı; uygulama/Browser Use/Gemini kapıları sıradaki checkpoint.
+
+### 5B. Fonksiyon İşlem Mikseri
+* **Konsept:** DJ mikseri / bilgisayar anakartı gibi bir sentezleyici. `f(x)` ve `g(x)` portlarına fonksiyonlar takılır; `+`, `-`, `x`, `/` tuşlarına basıldıkça ikisi aynı tanım kümesinde işleme girer.
+* **Sağladığı Atom Grupları (Plan):**
+  * `MAT.11.1.8.x` (Aynı tanım kümesindeki iki fonksiyonda dört işlem mekanikleri)
+
+### 6A. ✅ Dörtgen Ayrıştırma Masası
+* **Konsept:** Öğrenci dörtgeni köşegen bıçağıyla iki üçgene ayırır. İlk görevde iki üçgenin `180° + 180° = 360°` iç açı toplamını gösterir; ikinci görevde alan birleştirici rayı `T1 + T2 = Dörtgen alanı` toplam haznesine kilitler.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.2.1.1` (Dörtgeni köşegenden iki üçgene ayırarak iç açı toplamını 360° kanıtlama)
+  * `MAT.11.2.1.2` (İki üçgenin alanını birleştirerek dörtgen alanını hesaplama)
+* **Route:** `/embed/geometry/quadrilateral-decomposition-table`
+* **Durum:** Browser Use ile görsel smoke, yanlış onay, iki görev zinciri, alan birleştirme sahnesi, completion ve console warning/error kontrolü geçti.
+
+### 6B. Çokgen Anatomi Masası (İçbükey/Dışbükey ve Mozaik)
 * **Konsept:** Parçalanmış geometrik cam şekiller. Dışbükey (Konveks) parçaların tüm köşeleri dışarı bakarken, makine "İçbükey (Konkav) Uyarı!" diyerek içeri çökük bir açıyı ($>180°$) kırmızı lazerle işaretler. Kenarları saydırarak $n(n-3)/2$ çapraz köşegen tespiti lazeri atılır. Öğrenci düzgün çokgenleri mouse ile sürükleyerek "boşluksuz mozaik ve fayans kaplamaları" tasarlar.
-* **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.11.2.1.x` / `MAT.11.2.2.x` (Üçgenden dörtgen alan/açı ispatı ve Özel Dörtgenlerin köşegen özellik testleri)
+* **Sağladığı Atom Grupları (Plan):**
+  * `MAT.11.2.2.x` (Özel Dörtgenlerin kenar ve köşegen özellik testleri)
   * `MAT.11.2.3.x` / `MAT.11.2.4.x` / `MAT.11.2.5.x` (İçbükey/Dışbükey klasörü, Simetri/Köşegen formülleri ve Mozaik fayans optimizasyonu)
 
-### 6. Korelasyon Tarayıcısı ve Scatter (Serpilme) Radarı
-* **Konsept:** Ekranda anlamsız gibi duran yüzlerce veri noktasının bulunduğu uzay radarı (Scatter Plot). Öğrenci "Eğilim Çizgisi"ni çektiği an noktaların yukarı tırmandığını (Pozitif Doğrusal İlişki) veya aşağı kırıldığını (Negatif Korelasyon) gözlemler. Alt ekrandaki istihbarat panelinde, yalan / kusurlu iki nicel anket arasındaki tutarsızlık çapraz kontrole sokulup çürütülür.
-* **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.11.3.1.x` (İstatistiksel Serpilme (Scatter) grafiğini kurgulama ve Pozitif/Negatif eğilim ilişkisini çıkarma)
-  * `MAT.11.3.2.x` (Dışarıdan (Medyadan) verilmiş ikili verilerdeki tutarsızlık / korelasyon yalanlarını teşhis etme)
+### 7A. ✅ Korelasyon Serpilme Radarı
+* **Konsept:** Öğrenci dört veri kapsülünü koordinat radarında hedef halkalara taşır. Aynı nokta bulutu daha sonra pozitif ve negatif doğrusal ilişki düzenlerine geçirilir; eğilim ışını veri bulutunun genel yönünü canlı gösterir. Nedensellik/medya eleştirisi bu modüle sıkıştırılmaz.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.3.1.1` (İki sayısal değişkeni serpilme grafiğinde noktalama)
+  * `MAT.11.3.1.2` (Pozitif doğrusal ilişkiyi serpilme eğiliminden okuma)
+  * `MAT.11.3.1.3` (Negatif doğrusal ilişkiyi serpilme eğiliminden okuma)
+* **Route:** `/embed/statistics/correlation-scatter-radar`
+* **Durum:** `npm run module:check`, `npm run build`, `git diff --check`, Browser Use yanlış/doğru akış, completion ve console kontrolü geçti. Gemini 3 Flash ilk turda okunabilirlik must-fixleri verdi; eksen/koordinat kontrastı ve eğilim ışını düzeltildi, ikinci turda must-fix kalmadı.
+
+### 7B. ✅ Medya Korelasyon Denetçisi
+* **Konsept:** Öğrenci medya iddiasını tek denetim masasında inceler. Önce veri izinin negatif ilişki gösterdiğini tarama merceğiyle doğrular; sonra "kesin düşürür" gibi fazla güçlü sebep-sonuç dilini işaretler; son görevde sonucu "ilişki var, tek başına neden kanıtı değil" güvenli mührüne taşır.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.3.2.1` (Dışarıdan verilmiş iki nicel değişkenli istatistiksel sonuçların tutarlılığını eleştirme)
+* **Route:** `/embed/statistics/media-correlation-auditor`
+* **Durum:** `npm run module:check`, `npm run build`, `git diff --check`, Browser Use yanlış/doğru akış, completion ve console kontrolü geçti. Gemini 3 Flash must-fix olarak küçük metin, sürgü anlamı ve eksen etiketlerini yakaladı; kontrast, `Tarama/Mühür` etiketleri ve eksen açıklamaları düzeltildi, son tur 92/100 PASS verdi.
 
 ---
 

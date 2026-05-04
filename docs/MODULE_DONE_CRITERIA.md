@@ -26,11 +26,13 @@ Bu dosya, "modül tamamlandı" demeden önce çalıştırılacak kalite kapısı
 Her modül için asgari doğrulama:
 
 ```bash
+npm run module:check -- <module-id>
 npm run build
 git diff --check
 ```
 
 Browser Use ile:
+- Browser Use IAB preflight once yapilir; takilirsa ajan kendi ic recovery merdivenini dener: Browser Use bootstrap yenileme, yeni tab, dev server kontrolu/baslatma, taze query reload, screenshot timeout durumunda Browser Use DOM/CUA/console kaniti.
 - Modül `?qa=1` açılır.
 - Başlık, ana sahne ve ana oyuncak görünür.
 - En az bir yanlış deneme AstroBot hata/uyarı mesajı üretir.
@@ -38,6 +40,14 @@ Browser Use ile:
 - Completion ekranı görünür.
 - Console'da yeni warning/error yoktur.
 - Orta viewport ve mobil/embed smoke kontrol edilir.
+
+Gemini 3 Flash ile:
+- Browser Use ekran görüntüleri ve modül kapsamı gönderilir.
+- `VERDICT`, skor, `MUST_FIX` ve `SHOULD_FIX` ayrımı istenir.
+- `MUST_FIX` açıkken modül `Done` yapılamaz.
+- Gemini skoru 85 altında kalırsa veya internal kalite skoru 90 altında kalırsa modül `Done` yapılamaz.
+- Kapsam büyüten fikirler yalnız `v2/future` notu olarak tutulur.
+- Kapanış puanı `docs/MODULE_QUALITY_SCORECARD.md` içine işlenir.
 
 ## 5. Dokümantasyon Kapısı
 - `docs/DEVELOPMENT_QUEUE_10_11.md` status güncellenir.
@@ -49,3 +59,10 @@ Browser Use ile:
 - Build ve Browser Use QA geçerse modül veya büyük refactor commitlenebilir temiz bir parçaya ayrılır.
 - Commit mesajı modül adı, atom aralığı ve test sonucunu yansıtmalıdır.
 - Kullanıcı değişiklikleri veya ilgisiz dosyalar commit'e karıştırılmamalıdır.
+
+## 7. Otonom Geçiş Kapısı
+- Modül state'i `Ready -> Spec Draft -> Implementing -> Static Verified -> Browser Use QA -> Gemini Critique -> Done` çizgisini izlemelidir.
+- Browser Use IAB bulunamazsa once ic recovery uygulanir. Recovery sonrasi hâlâ bulunamazsa modül `In Progress` kalır; başka browser aracıyla `Done` yapılmaz.
+- Internal kalite skoru en az 90/100 olmalı ve `docs/MODULE_QUALITY_SCORECARD.md` içinde kanıt satırı bulunmalıdır.
+- Tüm hard gate'ler geçmeden sıradaki modüle başlanmaz.
+- Detaylı işleyiş için `docs/AUTONOMOUS_MODULE_PIPELINE.md` referans alınır.

@@ -545,6 +545,108 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/trigonometry/tangent-asymptote-gates',
     component: lazy(() => import('../modules/grade11/tangent-asymptote-gates/TangentAsymptoteGatesApp'))
+  },
+  {
+    id: 'trigonometric-root-hunter',
+    title: 'Trigonometrik Kök Avcısı',
+    description: 'Sin, cos, tan ve cot denklemlerinin köklerini dalga ile hedef ışının kesişimlerinde yakala.',
+    grade: 11,
+    category: 'Trigonometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.1.2.1',
+      'MAT.11.1.2.2',
+      'MAT.11.1.2.3',
+      'MAT.11.1.2.4'
+    ],
+    path: '/embed/trigonometry/trigonometric-root-hunter',
+    component: lazy(() => import('../modules/grade11/trigonometric-root-hunter/TrigonometricRootHunterApp'))
+  },
+  {
+    id: 'exponential-growth-reactor',
+    title: 'Üstel Büyüme Reaktörü',
+    description: 'Taban çekirdeğini sürükleyerek a>1 artan ve 0<a<1 azalan üstel grafikleri canlı gör.',
+    grade: 11,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.1.3.1',
+      'MAT.11.1.3.2'
+    ],
+    path: '/embed/algebra/exponential-growth-reactor',
+    component: lazy(() => import('../modules/grade11/exponential-growth-reactor/ExponentialGrowthReactorApp'))
+  },
+  {
+    id: 'logarithm-inverse-mirror',
+    title: 'Logaritma Ters Ayna Odası',
+    description: 'Üstel eğriyi y=x aynasında ters çevirerek logaritma grafiğinin artan ve azalan hallerini keşfet.',
+    grade: 11,
+    category: 'Cebir',
+    difficulty: 'Zor',
+    atomIds: [
+      'MAT.11.1.4.1',
+      'MAT.11.1.5.1',
+      'MAT.11.1.5.2'
+    ],
+    path: '/embed/algebra/logarithm-inverse-mirror',
+    component: lazy(() => import('../modules/grade11/logarithm-inverse-mirror/LogarithmInverseMirrorApp'))
+  },
+  {
+    id: 'richter-desibel-scale-simulator',
+    title: 'Richter-Desibel Ölçek Simülatörü',
+    description: 'Üstel büyüme, desibel ve Richter oranlarını tek kadranda büyütüp log ölçeğinde sıkıştırarak oku.',
+    grade: 11,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.1.6.1',
+      'MAT.11.1.6.2',
+      'MAT.11.1.6.3'
+    ],
+    path: '/embed/algebra/richter-desibel-scale-simulator',
+    component: lazy(() => import('../modules/grade11/richter-desibel-scale-simulator/RichterDesibelScaleSimulatorApp'))
+  },
+  {
+    id: 'quadrilateral-decomposition-table',
+    title: 'Dörtgen Ayrıştırma Masası',
+    description: 'Dörtgeni köşegen bıçağıyla iki üçgene ayırarak iç açı toplamı ve alan toplamını canlı gör.',
+    grade: 11,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.2.1.1',
+      'MAT.11.2.1.2'
+    ],
+    path: '/embed/geometry/quadrilateral-decomposition-table',
+    component: lazy(() => import('../modules/grade11/quadrilateral-decomposition-table/QuadrilateralDecompositionTableApp'))
+  },
+  {
+    id: 'correlation-scatter-radar',
+    title: 'Korelasyon Serpilme Radarı',
+    description: 'Veri noktalarını serpilme radarında taşıyarak pozitif ve negatif doğrusal ilişkiyi canlı oku.',
+    grade: 11,
+    category: 'Olasılık',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.3.1.1',
+      'MAT.11.3.1.2',
+      'MAT.11.3.1.3'
+    ],
+    path: '/embed/statistics/correlation-scatter-radar',
+    component: lazy(() => import('../modules/grade11/correlation-scatter-radar/CorrelationScatterRadarApp'))
+  },
+  {
+    id: 'media-correlation-auditor',
+    title: 'Medya Korelasyon Denetçisi',
+    description: 'Hazır medya iddiasını veri izi, nedensellik alarmı ve güvenli sonuç mührüyle denetle.',
+    grade: 11,
+    category: 'Olasılık',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.3.2.1'
+    ],
+    path: '/embed/statistics/media-correlation-auditor',
+    component: lazy(() => import('../modules/grade11/media-correlation-auditor/MediaCorrelationAuditorApp'))
   }
 ];
 

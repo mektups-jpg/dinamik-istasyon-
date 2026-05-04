@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { GameHeader } from '../../../components/ui/GameHeader';
 import { ModuleCompletedScreen } from '../../../components/ui/ModuleCompletedScreen';
@@ -91,7 +91,7 @@ export function useHighSchoolMissionProgress({ moduleId, missions, completionAto
       return true;
     }
 
-    setActiveIndex(activeIndex + 1);
+    setActiveIndex((currentIndex) => Math.min(currentIndex + 1, missions.length - 1));
     showMessage(success, 'success');
     return true;
   };
@@ -125,9 +125,14 @@ export function HighSchoolLabShell({
   contentClassName = 'max-w-7xl px-4 py-5 sm:px-6 lg:px-8',
 }: HighSchoolLabShellProps) {
   const activeMission = missions[activeIndex] ?? missions[0];
+  const frameRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    frameRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+  }, [activeIndex, completed]);
 
   return (
-    <div className={`h-full w-full overflow-x-hidden overflow-y-auto text-white selection:bg-[#00E5FF] selection:text-[#050510] ${frameClassName}`}>
+    <div ref={frameRef} className={`h-full w-full overflow-x-hidden overflow-y-auto text-white selection:bg-[#00E5FF] selection:text-[#050510] ${frameClassName}`}>
       <GameHeader
         title={title}
         subtitle={subtitle}

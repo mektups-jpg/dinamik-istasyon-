@@ -45,7 +45,8 @@ export function ModuleCompletedScreen({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="max-w-full break-words text-center text-2xl font-black uppercase leading-tight tracking-[0.08em] text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-4 sm:text-4xl sm:tracking-widest md:text-5xl"
+        className="max-w-full break-words text-center text-xl font-black uppercase leading-tight tracking-[0.05em] text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-600 mb-4 sm:text-3xl sm:tracking-[0.08em] md:text-4xl"
+        style={{ overflowWrap: 'anywhere' }}
       >
         {title}
       </motion.h2>

@@ -12,8 +12,8 @@ Bu doküman, mevcut kod tabanı ve proje belgeleri incelendikten sonra uygulanac
 | Alan | Durum |
 | --- | --- |
 | Hedef makro modül | 73 |
-| Registry'de aktif modül | 43 |
-| Yaklaşık üretim oranı | %59 |
+| Registry'de aktif modül | 46 |
+| Yaklaşık üretim oranı | %63 |
 | En dolu sınıf | 5. sınıf tamamlandı, 8. sınıf 3D/geometri ağırlıklı |
 | En boş sınıf | 11-12. sınıf henüz seyrek |
 | Ana teknik risk | Modüller arası template tutarsızlığı, iframe root layout sorunları, kalan `any` tipleri, büyük ana bundle |
@@ -122,8 +122,15 @@ Amaç: küçük yaş kullanıcıları için ürünün giriş deneyimini güçlen
 - [x] 10. sınıf: Trigonometrik Teodolit.
 - [x] 10. sınıf: Analitik Rota Haritası.
 - [x] 11. sınıf: Trigonometrik Osiloskop.
+- [x] 11. sınıf: Tanjant Asimptot Kapıları.
+- [x] 11. sınıf: Trigonometrik Kök Avcısı.
+- [x] 11. sınıf: Üstel Büyüme Reaktörü.
+- [x] 11. sınıf: Logaritma Ters Ayna Odası.
+- [x] 11. sınıf: Richter-Desibel Ölçek Simülatörü.
 - [ ] 10. sınıf: Şifreli Kuantum Kasası.
-- [ ] 11. sınıf: Logaritmik Büyüme Reaktörü.
+- [x] 11. sınıf: Dörtgen Ayrıştırma Masası.
+- [x] 11. sınıf: Korelasyon Serpilme Radarı.
+- [x] 11. sınıf: Medya Korelasyon Denetçisi.
 
 Not: 10-11 sınıf modülleri artık geniş başlıklarla değil, `docs/DEVELOPMENT_QUEUE_10_11.md` içindeki dar makro deney kuyruğuyla üretilecek. İlk önerilen sprint `10-01 Parabol Şekil Stüdyosu`, `10-02 Tanım Kümesi Kapıları` ve `11-01 Trigonometrik Osiloskop` sırasıdır.
 - [ ] 12. sınıf: Limit Sensörü ve Türev Eğim Sürücüsü.
