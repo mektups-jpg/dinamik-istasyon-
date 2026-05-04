@@ -1,6 +1,11 @@
 node_modules/
 dist/
 .DS_Store
+.agent/*.png
+.agent/*.jpg
+.agent/*.jpeg
+.agent/*.json
+.tmp-*
 
 *.log
 npm-debug.log*
