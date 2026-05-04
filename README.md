@@ -1,4 +1,8 @@
-# 🚀 Matnastik Laboratuvarı
+# Matnastik Platform Merkezi / Dinamik İstasyon
+
+Bu proje Matnastik Platform Merkezi'nin öğrenciye dönük interaktif matematik laboratuvarı hattıdır.
+
+## Matnastik Laboratuvarı
 
 Bu proje, 1. sınıftan 12. sınıfa kadar (K-12) tüm matematik ve geometri konularını kapsayan, **Kumon ve Mathnasium gibi geleneksel eğitim devlerine rakip olmayı hedefleyen** yeni nesil bir dijital eğitim platformudur.
 

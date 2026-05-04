@@ -1,4 +1,6 @@
-# Otomasyon Kartı
+# Matnastik Platform Merkezi / Dinamik İstasyon
+
+Bu otomasyon Matnastik Platform Merkezi'nin öğrenci deneyimi ve interaktif modül hattıdır.
 
 ## Ad
 
