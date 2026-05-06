@@ -13,6 +13,104 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Sonraki küçük adım:
 ```
 
+## 2026-05-06 17:47 - 10-05 Browser Use QA Handoff
+- Okunan bağlam: `AGENTS.md`, `.agent/skills/project-context-primer/SKILL.md`, `.agent/skills/project-visual-e2e-qa/SKILL.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/module-specs/10-05-sign-table-scanner.md`, Browser Use skill yönergesi ve ilgili source dosyaları.
+- Yapılan iş: Önceki sohbetten kalan durum çözüldü; tarayıcı `function-composition-ports` route'unda olsa da dokümanlara göre `11-07` `Done`, aktif açık iş `10-05 sign-table-scanner`. Browser Use IAB bu tur bağlandı. Canlı QA'da kök tutamaçlarının görsel `x=2/x=3` hedeflerine sürüklenince state'in hedefe ulaşmadığı yakalandı; kök progress hesabı genel bant rayı yerine kendi görsel hareket aralığına bağlandı ve root slider'larına `aria-valuenow` eklendi.
+- Değişen dosyalar: `src/modules/grade10/sign-table-scanner/signTableModel.ts`, `src/modules/grade10/sign-table-scanner/SignTableScannerApp.tsx`, `src/modules/grade10/sign-table-scanner/SignTableScene.tsx`, `docs/module-specs/10-05-sign-table-scanner.md`, `docs/MODULES.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/browser-use-shots/10-05-*.png`.
+- Test: Browser Use ile `/embed/algebra/sign-table-scanner?qa=1` açıldı; yanlış deneme AstroBot hata mesajı üretti, kökler gerçek sürüklemeyle hedeflere kilitlendi, pozitif dış bant ve negatif iç bant tamamlandı, completion DOM'u ve dar/embed completion görüntüsü doğrulandı, console warning/error `[]`. `npm run module:check -- sign-table-scanner` 20 pass / 0 warn / 0 fail; `npm run build` geçti; `git diff --check` temiz.
+- Sonraki küçük adım: `GEMINI_API_KEY` veya `GOOGLE_API_KEY` sağlanınca kaydedilen Browser Use screenshot'larıyla Gemini 3 Flash kapanışını al; must-fix yoksa `10-05` için queue/progress/modules/scorecard `Done` yap ve `10-07 Sabit Alan Üçgen Rayı` spec'e başla.
+
+## 2026-05-06 03:25 - 10-05 İşaret Tablosu Tarayıcısı Static Verified
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/module-specs/10-05-sign-table-scanner.md` ve Browser Use skill yönergesi.
+- Yapılan iş: `sign-table-scanner` uygulaması route'a bağlı halde statik kapılardan geçirildi. Kaynak incelemede hareketli kök tutamaçlarının başlangıçta hedefte değilken `2/3` etiketi taşıdığı ve öğrencide "zaten doğru yerde" yanılgısı oluşturabileceği görüldü; sabit `x=2`, `x=3` hedef lazerleri eklendi, hareketli tutamaçlar `sol/sağ` kök olarak ayrıldı. Dev server `127.0.0.1:3000` üzerinde çalışıyor.
+- Değişen dosyalar: `src/modules/grade10/sign-table-scanner/SignTableScene.tsx`, `docs/module-specs/10-05-sign-table-scanner.md`, `docs/MODULES.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass / 0 warn / 0 fail; `npm run build` geçti; `git diff --check` temiz. Browser Use IAB önce eski pipe hatası verdi, `js_reset` sonrası taze `setupAtlasRuntime({ backend: 'iab' })` recovery denemesi `No Codex IAB backends were discovered` ile bloklandı. Computer Use, MCP Docker veya harici Playwright kullanılmadı.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/algebra/sign-table-scanner?qa=1` için görsel smoke, yanlış/doğru akış, completion, console, responsive/embed ve Gemini 3 Flash kapanışını tamamla.
+
+## 2026-05-06 03:35 - 10-05 Browser Use QA Retry
+- Okunan bağlam: `.agent/CURRENT_TASK.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/module-specs/10-05-sign-table-scanner.md` ve Browser Use skill yönergesi.
+- Yapılan iş: `sign-table-scanner` aynı kalite kapısında tutuldu; sıradaki modüle geçilmedi. Dev server `127.0.0.1:3000` üzerinde çalışır durumda doğrulandı.
+- Değişen dosyalar: `.agent/WORKLOG.md`.
+- Test: Browser Use IAB `js_reset` ve taze `setupAtlasRuntime({ backend: 'iab' })` ile tekrar denendi; recovery sonrası yine `No Codex IAB backends were discovered` verdi. Computer Use, MCP Docker veya harici Playwright kullanılmadı. `npm run module:check -- sign-table-scanner` 20 pass / 0 warn / 0 fail, `npm run build` geçti, `git diff --check` temiz.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/algebra/sign-table-scanner?qa=1` için görsel smoke, yanlış/doğru akış, completion, console, responsive/embed ve Gemini 3 Flash kapanışını tamamla.
+
+## 2026-05-06 03:46 - 10-05 Browser Use QA Retry 2
+- Okunan bağlam: `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, Browser Use skill yönergesi ve `.agent/knowledge/infra/browser-use-iab-discovery.md` kaydı.
+- Yapılan iş: `sign-table-scanner` aynı kalite kapısında tutuldu; IAB discovery sorunu daha önceki gotcha ile aynı kökte kaldığı için yeni ürün kodu değiştirilmedi ve sıradaki modüle geçilmedi.
+- Değişen dosyalar: `.agent/WORKLOG.md`.
+- Test: Browser Use IAB `js_reset` ve taze `setupAtlasRuntime({ backend: 'iab' })` ile tekrar denendi; recovery sonrası yine `No Codex IAB backends were discovered` verdi. Computer Use, MCP Docker veya harici Playwright kullanılmadı. `npm run module:check -- sign-table-scanner` 20 pass / 0 warn / 0 fail, `npm run build` geçti, `git diff --check` temiz.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/algebra/sign-table-scanner?qa=1` için canlı QA ve Gemini 3 Flash kapanışını tamamla.
+
+## 2026-05-06 00:39 - 11-08 Fonksiyon İşlem Mikseri QA Kapanışı
+- Okunan bağlam: Browser Use skill yönergesi, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/module-specs/11-08-function-operation-mixer.md` ve mevcut `function-operation-mixer` sahnesi.
+- Yapılan iş: Browser Use IAB bu kez bağlandı. İlk turda gerçek kadran tıklamalarıyla akış geçerken `Home` fallback'in SVG kadranı ilerletmediği görüldü; Gemini 3 Flash ilk turu da bunu ve `f/g` etiket yakınlığını should-fix olarak verdi. `OperationMixerScene` içinde kadran grupları `focusable` yapıldı ve etiketler kapsüllerden ayrıldı.
+- Değişen dosyalar: `src/modules/grade11/function-operation-mixer/OperationMixerScene.tsx`, `docs/module-specs/11-08-function-operation-mixer.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: Browser Use final turunda görsel smoke, yanlış onay, `Home` fallback ile toplama/çıkarma/çarpma/bölme, bölme `kilit`, completion ve console `[]` geçti. Gemini 3 Flash final turu 96/100 PASS, must-fix yok. `npm run module:check -- function-operation-mixer` 23 pass / 0 warn / 0 fail, `npm run build` ve `git diff --check` temiz.
+- Sonraki küçük adım: `11-10 Özel Dörtgen Tanı Masası` için SSOT atom doğrulaması ve spec hazırlığına başla.
+
+## 2026-05-05 21:34 - 11-10 Özel Dörtgen Tanı Masası İlk Dilim
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MEB_ATOMLARI.md`, `project-context-primer`, `project-module-builder` ve `documentation-sync` skill yönergeleri.
+- Yapılan iş: `MAT.11.2.2.1` ve `MAT.11.2.2.2` SSOT'tan doğrulandı. `special-quadrilateral-diagnostic-table` spec'i eklendi, queue `In Progress` yapıldı ve route `/embed/geometry/special-quadrilateral-diagnostic-table` registry'ye bağlandı. Modül tek ana oyuncak olarak kenar/köşegen tarayıcısı ve özel dörtgen sınıflandırma kilitleriyle kuruldu; `Home` fallback izi eklendi.
+- Değişen dosyalar: `docs/module-specs/11-10-special-quadrilateral-diagnostic-table.md`, `src/modules/grade11/special-quadrilateral-diagnostic-table/*`, `src/registry/moduleRegistry.ts`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- special-quadrilateral-diagnostic-table` 21 pass / 0 warn / 0 fail, `npm run build` geçti ve `git diff --check` temiz. Browser Use IAB önce eski pipe hatası, recovery sonrası `No Codex IAB backends were discovered` verdi. Computer Use, MCP Docker veya harici Playwright kullanılmadı.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/geometry/special-quadrilateral-diagnostic-table?qa=1` için görsel smoke, yanlış/doğru akış, completion, console ve Gemini 3 Flash değerlendirmesini tamamla.
+
+## 2026-05-05 21:52 - 11-10 Browser Use QA Retry
+- Okunan bağlam: `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/module-specs/11-10-special-quadrilateral-diagnostic-table.md` ve Browser Use skill yönergesi.
+- Yapılan iş: `special-quadrilateral-diagnostic-table` aynı kalite kapısında tutuldu; dev server `127.0.0.1:3000` HTTP 200 olarak doğrulandı. Browser Use IAB preflight recovery merdiveni tekrar uygulandı.
+- Değişen dosyalar: `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: Browser Use IAB recovery sonrası yine `No Codex IAB backends were discovered` verdi. Computer Use, MCP Docker veya harici Playwright kullanılmadı. `npm run module:check -- special-quadrilateral-diagnostic-table` 21 pass / 0 warn / 0 fail, `npm run build` geçti, `git diff --check` temiz.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/geometry/special-quadrilateral-diagnostic-table?qa=1` için görsel smoke, yanlış/doğru akış, completion, console ve Gemini 3 Flash değerlendirmesini tamamla.
+
+## 2026-05-06 Manual Continue - 11-10 QA Kapanışı
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `docs/module-specs/11-10-special-quadrilateral-diagnostic-table.md`, `docs/MODULE_DONE_CRITERIA.md` ve `docs/MODULE_QUALITY_SCORECARD.md`.
+- Yapılan iş: Browser Use IAB tekrar bağlandı. `special-quadrilateral-diagnostic-table` için kare yanlış kilit özel uyarısı, `Home` fallback ile kenar/köşegen tarayıcıları, doğru eşkenar dörtgen/dikdörtgen kilitleri ve completion doğrulandı. Gemini 3 Flash ilk turu kare/eşkenar dörtgen kapsama ayrımı için must-fix verdi; görev metni, hedef etiketi, kural paneli ve kare hata mesajı `dik açı yok` ayrımıyla düzeltildi. Final Gemini turu 98/100 PASS verdi, must-fix yok.
+- Değişen dosyalar: `src/modules/grade11/special-quadrilateral-diagnostic-table/diagnosticModel.ts`, `DiagnosticControls.tsx`, `SpecialQuadrilateralDiagnosticTableApp.tsx`, `docs/module-specs/11-10-special-quadrilateral-diagnostic-table.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: Browser Use final akışı, completion ve console `[]` geçti. Gemini final 98/100 PASS. `npm run module:check -- special-quadrilateral-diagnostic-table` 21 pass / 0 warn / 0 fail, `npm run build` geçti, `git diff --check` temiz.
+- Sonraki küçük adım: `11-11 Konkav-Konveks Lazer Dedektörü` için SSOT/spec hazırlığına başla.
+
+## 2026-05-06 Manual Continue - 11-11 Konkav-Konveks Spec
+- Okunan bağlam: `docs/MEB_ATOMLARI.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_DESIGN_GUIDE.md` ve `docs/MODULE_DONE_CRITERIA.md`.
+- Yapılan iş: `MAT.11.2.3.1` ve `MAT.11.2.3.2` SSOT'tan doğrulandı. `docs/module-specs/11-11-concave-convex-laser-detector.md` eklendi; ana oyuncak lazer açı dedektörü olarak sabitlendi. Queue `11-11` status'u `In Progress` yapıldı ve `docs/MODULES.md` içinde konkav/konveks kapsamı köşegen/mozaik kapsamından ayrıldı.
+- Değişen dosyalar: `docs/module-specs/11-11-concave-convex-laser-detector.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- concave-convex-laser-detector --spec-only` 5 pass / 1 expected warn / 0 fail, `git diff --check` temiz.
+- Sonraki küçük adım: `concave-convex-laser-detector` uygulama klasörünü kur, registry route'unu bağla ve statik kapılardan sonra Browser Use + Gemini kalite döngüsüne geç.
+
+## 2026-05-06 01:20 - 11-11 Konkav-Konveks Uygulama Dilimi
+- Okunan bağlam: `.agent/CURRENT_TASK.md`, `docs/module-specs/11-11-concave-convex-laser-detector.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_DONE_CRITERIA.md`, Browser Use skill yönergesi ve önceki 11. sınıf modül mimarileri.
+- Yapılan iş: `concave-convex-laser-detector` klasörü kuruldu ve route `/embed/geometry/concave-convex-laser-detector` registry'ye bağlandı. Modül tek ana oyuncak olarak lazer açı probu, konveks/konkav kilitleri, 180° eşik raporu ve `Home` fallback ile uygulandı. Gemini 3 Flash kaynak incelemesi ilk turda lazer ışınının köşe köşe sıçramasını must-fix verdi; lazer ucu polygon yolu üzerinde sürekli ilerleyecek, açı etiketleri centroid yönüne taşınacak ve konkav raporda `en az bir açı >180°` yazacak şekilde düzeltildi. İkinci kaynak incelemesinde must-fix kalmadı.
+- Değişen dosyalar: `src/modules/grade11/concave-convex-laser-detector/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/11-11-concave-convex-laser-detector.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/gemini-11-11-concave-convex-laser-detector-source-review*.json`.
+- Test: `npm run module:check -- concave-convex-laser-detector` 19 pass / 0 warn / 0 fail, `npm run build` geçti, `git diff --check` temiz. Browser Use IAB `js_reset` ve taze `setupAtlasRuntime({ backend: 'iab' })` sonrası `No Codex IAB backends were discovered` verdi; Computer Use, MCP Docker veya harici Playwright kullanılmadı.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/geometry/concave-convex-laser-detector?qa=1` için görsel smoke, yanlış/doğru akış, completion, console ve screenshot tabanlı Gemini final değerlendirmesini tamamla.
+
+## 2026-05-06 01:41 - 11-11 Browser Use QA Retry
+- Okunan bağlam: `.agent/CURRENT_TASK.md`, `docs/module-specs/11-11-concave-convex-laser-detector.md`, `docs/DEVELOPMENT_QUEUE_10_11.md` ve Browser Use skill yönergesi.
+- Yapılan iş: `concave-convex-laser-detector` aynı kalite kapısında tutuldu; sıradaki modüle geçilmedi. Dev server route'u `127.0.0.1:3000` üzerinde HTTP 200 olarak doğrulandı.
+- Değişen dosyalar: `.agent/WORKLOG.md`.
+- Test: Browser Use IAB `js_reset` ve taze `setupAtlasRuntime({ backend: 'iab' })` ile iki kez denendi; recovery sonrası yine `No Codex IAB backends were discovered` verdi. Computer Use, MCP Docker veya harici Playwright kullanılmadı. `npm run module:check -- concave-convex-laser-detector` 19 pass / 0 warn / 0 fail, `npm run build` geçti, `git diff --check` temiz.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/geometry/concave-convex-laser-detector?qa=1` için görsel smoke, yanlış/doğru akış, completion, console ve screenshot tabanlı Gemini final değerlendirmesini tamamla.
+
+## 2026-05-06 01:58 - 11-11 QA Kapanışı ve 11-12 Spec
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `docs/module-specs/11-11-concave-convex-laser-detector.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md` ve `docs/MEB_ATOMLARI.md`.
+- Yapılan iş: Browser Use IAB bu tur bağlandı. `concave-convex-laser-detector` için yanlış konveks/konkav kilitleri, `Home` fallback ile iki doğru görev, completion ve console `[]` doğrulandı. Görsel QA'da konkav görevde sağ panelin alarm yerine `90°` göstermesi yakalandı; aktif açı etiketi `266°` alarm açısına bağlandı ve tekrar Browser Use ile doğrulandı. Gemini 3 Flash final görsel turu 96/100 PASS verdi, must-fix yok. Queue/modules/progress/scorecard/spec `11-11 Done` olarak güncellendi. Aynı turda `11-12 Çokgen Köşegen ve Simetri Atölyesi` için `MAT.11.2.4.1`, `MAT.11.2.4.2`, `MAT.11.2.4.3` SSOT'tan doğrulandı ve spec dosyası eklendi.
+- Değişen dosyalar: `src/modules/grade11/concave-convex-laser-detector/detectorModel.ts`, `docs/module-specs/11-11-concave-convex-laser-detector.md`, `docs/module-specs/11-12-polygon-diagonal-symmetry-workshop.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/browser-use-shots/11-11-*.png`, `.agent/gemini-11-11-concave-convex-laser-detector-final.json`.
+- Test: `npm run module:check -- concave-convex-laser-detector` 19 pass / 0 warn / 0 fail, `npm run build` geçti, `git diff --check` temiz. Browser Use final akışı completion ve console `[]` geçti. Gemini final 96/100 PASS. `npm run module:check -- polygon-diagonal-symmetry-workshop --spec-only` 6 pass / 1 expected warn / 0 fail.
+- Sonraki küçük adım: `polygon-diagonal-symmetry-workshop` uygulama klasörünü kur, registry route'unu bağla ve statik kapılardan sonra Browser Use + Gemini kalite döngüsüne geç.
+
+## 2026-05-06 00:12 - 11-08 Browser Use QA Retry
+- Okunan bağlam: `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `PROGRESS.md` ve Browser Use skill yönergesi.
+- Yapılan iş: `function-operation-mixer` aynı kalite kapısında tutuldu; 11. sınıf kilidi korunarak sıradaki modüle geçilmedi. Dev server `127.0.0.1:3000` HTTP 200 olarak doğrulandı.
+- Değişen dosyalar: `.agent/WORKLOG.md`.
+- Test: Browser Use IAB `js_reset` sonrası taze `setupAtlasRuntime({ backend: 'iab' })` ile tekrar denendi; `No Codex IAB backends were discovered` verdi. Computer Use, MCP Docker veya harici Playwright kullanılmadı. `npm run module:check -- function-operation-mixer` 23 pass / 0 warn / 0 fail, `npm run build` geçti, `git diff --check` temiz.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/algebra/function-operation-mixer?qa=1` için görsel smoke, yanlış/doğru akış, completion, console ve Gemini 3 Flash değerlendirmesini tamamla.
+
+## 2026-05-05 23:59 - 11-08 Fonksiyon İşlem Mikseri Uygulama
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/module-specs/11-08-function-operation-mixer.md` ve Browser Use skill yönergesi.
+- Yapılan iş: `function-operation-mixer` modülü `types`, `operationMixerModel`, `OperationMixerScene`, `OperationMixerControls` ve `FunctionOperationMixerApp` parçalarıyla kuruldu. Route `/embed/algebra/function-operation-mixer` registry'ye bağlandı. Ana oyuncak iki fonksiyon değer akışı, dört konumlu işlem kadranı ve çıktı rayı olarak çalışıyor; bölme görevinde `g(x)=0` hattı `kilit` güvenlik kapağına dönüşüyor.
+- Değişen dosyalar: `src/modules/grade11/function-operation-mixer/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/11-08-function-operation-mixer.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- function-operation-mixer` 23 pass / 0 warn / 0 fail verdi; `npm run build` geçti; `git diff --check` temiz. Dev server `127.0.0.1:3000` HTTP 200. Browser Use IAB önce mevcut runtime, sonra `js_reset` sonrası taze bootstrap ile denendi; iki deneme de `No Codex IAB backends were discovered` verdi. Computer Use, MCP Docker veya harici Playwright kullanılmadı. Browser Use ve Gemini kapıları bloklu olduğu için modül `In Progress` kalıyor.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/algebra/function-operation-mixer?qa=1` için görsel smoke, yanlış/doğru akış, completion, console ve Gemini 3 Flash değerlendirmesini tamamla.
+
 ## 2026-05-02 - 11-09 Dörtgen Ayrıştırma Masası İlk Dilim
 - Okunan bağlam: `docs/MEB_ATOMLARI.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `HighSchoolLabShell` ve mevcut 11. sınıf modül desenleri.
 - Yapılan iş: `MAT.11.2.1.1` ve `MAT.11.2.1.2` kapsamı SSOT'tan doğrulandı. `docs/module-specs/11-09-quadrilateral-decomposition-table.md` eklendi. Modül tek ana oyuncak olarak köşegen bıçağı + alan birleştirici rayı şeklinde kuruldu ve route `/embed/geometry/quadrilateral-decomposition-table` registry'ye bağlandı. Kullanıcı geri bildirimi sonrası ikinci görevde bıçak rayı gizlendi, alan çipleri üçgenlerden toplam haznesine akan daha anlamlı bir düzene alındı.
@@ -501,3 +599,609 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Değişen dosyalar: `docs/module-specs/11-07-function-composition-ports.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
 - Test: Spec-only guard çalıştırılacak.
 - Sonraki küçük adım: `function-composition-ports` uygulama klasörünü ve registry route'unu kur.
+
+## 2026-05-05 Manual Resume - 11-07 Fonksiyon Bileşke Portları Implementation
+- Okunan bağlam: `AGENTS.md`, gerçek `saatlik-codex-takip` otomasyon dosyası, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/module-specs/11-07-function-composition-ports.md`, `HighSchoolLabShell`, mevcut 11. sınıf modül kalıpları ve Browser Use skill yönergesi.
+- Otomasyon durumu: `/Users/serhan/.codex/automations/saatlik-codex-takip/automation.toml` içinde heartbeat `ACTIVE`, `RRULE:FREQ=MINUTELY;INTERVAL=10`. Prompt hâlâ 11. sınıf kilidi, Browser Use-only QA, Gemini 3 Flash ve internal kalite skoru kapılarını içeriyor.
+- Yapılan iş: `src/modules/grade11/function-composition-ports/` altında `types`, `compositionModel`, `CompositionPortScene`, `CompositionPortControls` ve `FunctionCompositionPortsApp` eklendi. Route `/embed/algebra/function-composition-ports` registry'ye bağlandı. Tek ana oyuncak `x=3` kapsülü -> `g(x)=2x+1` makinesi -> `g(x)=7` kapsülü -> `f(u)=u²-4` port zinciri olarak uygulandı; `Home` fallback x kapsülünü g portuna, ara çıktıyı f portuna hizalıyor.
+- Değişen dosyalar: `src/modules/grade11/function-composition-ports/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/11-07-function-composition-ports.md`, `docs/MODULES.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- function-composition-ports` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Browser Use canlı QA bu oturumda bloklu kaldı: Browser Use skill tam okundu, ancak tool discovery `node_repl/js` aracını açığa çıkarmadı ve sadece Computer Use araçlarını gösterdi. Computer Use, MCP Docker veya harici Playwright kullanılmadı; modül `Done` yapılmadı.
+- Sonraki küçük adım: Browser Use Node REPL `js` aracı açıldığında `/embed/algebra/function-composition-ports?qa=1` için görsel smoke, yanlış/doğru akış, completion, console ve responsive/embed QA'yı tamamla; ardından Gemini 3 Flash kapanışına sok.
+
+## 2026-05-05 Manual Continue - 11-07 Fonksiyon Bileşke Portları Done
+- Okunan bağlam: `Project Context Primer`, `Project Visual E2E QA`, Browser Use skill, `.agent/CURRENT_TASK.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_QUALITY_SCORECARD.md`, modül spec'i ve kaynak dosyalar.
+- Yapılan iş: Browser Use Node REPL `js` aracı açığa çıktıktan sonra `/embed/algebra/function-composition-ports?qa=1` canlı doğrulandı. İlk görsel turda görev çipi kırpılması yakalandı ve sahne başlığı çipi dar viewport'ta satırlanacak hale getirildi. Gemini 3 Flash'ın teknik atom etiketi/kontrast önerileri uygulandı. Son Gemini turunda AstroBot toast'ının sağ kontrol panelindeki metrikleri kapattığı yakalandı; `AstroBot` global yerleşimi `xl` altı ekranlarda sol alta alınarak çakışma giderildi.
+- Değişen dosyalar: `src/modules/grade11/function-composition-ports/*`, `src/components/ui/AstroBot.tsx`, `src/registry/moduleRegistry.ts`, `docs/module-specs/11-07-function-composition-ports.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/gemini-11-07-function-composition-ports.json`, `.agent/browser-use-shots/*`.
+- Test: `npm run module:check -- function-composition-ports` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Browser Use ile başlangıç görünürlüğü, yanlış onay AstroBot hatası, `Home` fallback ile iki port bağlantısı, stage 2/3, completion ve taze console `[]` geçti. Gemini 3 Flash final turu 96/100 PASS, must-fix yok.
+- Sonraki küçük adım: 11. sınıf kilidinde sıradaki Backlog modül `11-08 Fonksiyon İşlem Mikseri` için SSOT atom doğrulaması ve spec hazırlığına başla.
+
+## 2026-05-05 Manual Continue - 11-08 Fonksiyon İşlem Mikseri Spec
+- Yapılan iş: `MAT.11.1.8.1`, `MAT.11.1.8.2`, `MAT.11.1.8.3`, `MAT.11.1.8.4` SSOT'tan doğrulandı. `11-08 Fonksiyon İşlem Mikseri` queue status'u `In Progress` yapıldı ve `docs/module-specs/11-08-function-operation-mixer.md` eklendi. Ana oyuncak iki fonksiyon değer akışı, ortada `+/-/×/÷` işlem kadranı ve sağda çıktı rayı olarak sabitlendi; bölme görevinde `g(x)=0` istasyonu güvenlik kapağıyla gösterilecek.
+- Değişen dosyalar: `docs/module-specs/11-08-function-operation-mixer.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- function-operation-mixer --spec-only` 7 pass/1 expected warning/0 fail; `git diff --check` temiz.
+- Sonraki küçük adım: `function-operation-mixer` uygulama klasörünü ve registry route'unu kur.
+
+## 2026-05-06 Manual Continue - 11-12 Çokgen Köşegen ve Simetri Atölyesi Done
+- Okunan bağlam: `.agent/CURRENT_TASK.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/module-specs/11-12-polygon-diagonal-symmetry-workshop.md`, önceki 11. sınıf modül mimarileri ve Browser Use skill yönergesi.
+- Yapılan iş: `src/modules/grade11/polygon-diagonal-symmetry-workshop/` altında `types`, `polygonWorkshopModel`, `PolygonWorkshopScene`, `PolygonWorkshopControls` ve `PolygonDiagonalSymmetryWorkshopApp` eklendi. Route `/embed/geometry/polygon-diagonal-symmetry-workshop` registry'ye bağlandı. Modül tek ana oyuncak olarak çokgen kalibrasyon masası, köşegen lazeri, dış açı yürüyüşü ve simetri aynasıyla kuruldu.
+- Browser Use QA: Test id'leri tekil doğrulandı. Yanlış onay AstroBot hatası, `Home` fallback ile n=6/köşegen/dış açı/simetri hedefleri, üç görev geçişi, completion ve console warning/error `[]` geçti. Görsel QA'da dar embed görünümde görev rozeti kırpılması, alt ray/etiket sıkışması ve `9 köşegen` hedef dilinin karışması yakalandı; rozet satırlandı, raylar ferahlatıldı, değerler ray sağına taşındı ve `HEDEF: 9 köşegen` dili eklendi.
+- Gemini kapalı çevrim: İlk Gemini 3 Flash turu 88/100 PASS ama alt ray sıkışması, yüzde etiketi çakışması ve hedef metni için must-fix verdi. Düzeltmelerden sonra final Gemini 98/100 PASS, must-fix yok.
+- Değişen dosyalar: `src/modules/grade11/polygon-diagonal-symmetry-workshop/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/11-12-polygon-diagonal-symmetry-workshop.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/browser-use-shots/11-12-*.png`, `.agent/gemini-11-12-*.json`.
+- Test: `npm run module:check -- polygon-diagonal-symmetry-workshop` 21 pass/0 warn/0 fail, `npm run build` geçti, `git diff --check` temiz. Browser Use final akışı completion ve console `[]` geçti. Gemini final 98/100 PASS.
+- Sonraki küçük adım: `11-13 Mozaik Kaplama Atölyesi` uygulama klasörünü kur, registry route'unu bağla ve Browser Use + Gemini kalite döngüsüne geç.
+
+## 2026-05-06 Manual Continue - 11-13 Mozaik Kaplama Atölyesi Spec
+- Yapılan iş: `MAT.11.2.5.1` ve `MAT.11.2.5.2` SSOT'tan doğrulandı. `11-13 Mozaik Kaplama Atölyesi` queue status'u `In Progress` yapıldı ve `docs/module-specs/11-13-mosaic-tiling-workshop.md` eklendi. Ana oyuncak boşluk/üst üste binme alarmı veren mozaik kaplama masası, sürüklenebilir fayanslar ve döndürme kadranı olarak sabitlendi.
+- Değişen dosyalar: `docs/module-specs/11-13-mosaic-tiling-workshop.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- mosaic-tiling-workshop --spec-only` 5 pass/1 expected warning/0 fail; `git diff --check` temiz.
+- Sonraki küçük adım: `mosaic-tiling-workshop` uygulama klasörünü ve registry route'unu kur.
+
+## 2026-05-06 Manual Continue - 11-13 Mozaik Kaplama Atölyesi Done
+- Okunan bağlam: Browser Use skill, `docs/module-specs/11-13-mosaic-tiling-workshop.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_QUALITY_SCORECARD.md`, önceki 11. sınıf modül mimarileri ve Gemini kalite kapısı.
+- Yapılan iş: `src/modules/grade11/mosaic-tiling-workshop/` altında `types`, `mosaicModel`, `MosaicScene`, `MosaicControls` ve `MosaicTilingWorkshopApp` eklendi. Route `/embed/geometry/mosaic-tiling-workshop` registry'ye bağlandı. Modül tek ana oyuncak olarak mozaik kaplama masası, boşluk alarmı, sürüklenebilir altıgen/üçgen fayanslar, 360° açı halkası, hizalama rayı ve mühür kontrolleriyle kuruldu.
+- Browser Use QA: Test id'leri tekil doğrulandı. Yanlış onay AstroBot hatası verdi; `Home` fallback ile altıgen yuva, üçgen + döndürme kadranı ve hizalama rayı tamamlandı. Üç görev zinciri, completion auto-scroll ve console warning/error `[]` geçti.
+- Gemini kapalı çevrim: İlk Gemini 3 Flash turu 88/100 PASS ama kadran hitbox'ı, merkez derece/etiket çakışması ve mühür kontrol dili için must-fix verdi. Ray dokunma alanı büyütüldü, pasif çokgen etiketleri merkez derece göstergesini ezmeyecek şekilde gizlendi, mühürler üst etiket/seçili nokta ile ayrıştırıldı ve completion görünürlüğü için auto-scroll eklendi. Final Gemini 98/100 PASS, must-fix yok.
+- Değişen dosyalar: `src/modules/grade11/mosaic-tiling-workshop/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/11-13-mosaic-tiling-workshop.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/browser-use-shots/11-13-*.png`, `.agent/gemini-11-13-*.json`.
+- Test: `npm run module:check -- mosaic-tiling-workshop` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Browser Use final akışı completion ve console `[]` geçti. Gemini final 98/100 PASS.
+- Sonraki küçük adım: 11. sınıf yeni üretim kuyruğu tamamlandığı için 10. sınıf kilidinde `10-04 Ters Fonksiyon Aynası` SSOT atom doğrulaması ve spec hazırlığına başla.
+
+## 2026-05-06 Manual Continue - 10-04 Ters Fonksiyon Aynası Spec
+- Yapılan iş: `MAT.10.2.5.1`, `MAT.10.2.5.2`, `MAT.10.2.5.3` ve `MAT.10.2.5.4` SSOT'tan doğrulandı. `10-04 Ters Fonksiyon Aynası` queue status'u `In Progress` yapıldı ve `docs/module-specs/10-04-inverse-function-mirror.md` eklendi. Ana oyuncak `y=x` aynası, giriş/çıkış kapsülleri, ters makine portları ve dal seçimi kapısı olarak sabitlendi.
+- Değişen dosyalar: `docs/module-specs/10-04-inverse-function-mirror.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- inverse-function-mirror --spec-only` 7 pass/1 expected warning/0 fail; `git diff --check` temiz.
+- Sonraki küçük adım: `inverse-function-mirror` uygulama klasörünü ve registry route'unu kur.
+
+## 2026-05-06 Manual Continue - 10-04 Ters Fonksiyon Aynası Done
+- Okunan bağlam: `docs/module-specs/10-04-inverse-function-mirror.md`, `docs/MEB_ATOMLARI.md`, mevcut 10. sınıf modül mimarileri, Browser Use skill yönergesi ve Gemini kalite kapısı.
+- Yapılan iş: `src/modules/grade10/inverse-function-mirror/` altında `types`, `inverseModel`, `InverseMirrorScene`, `InverseMirrorControls` ve `InverseFunctionMirrorApp` eklendi. Route `/embed/algebra/inverse-function-mirror` registry'ye bağlandı. Modül tek ana oyuncak olarak `y=x` ayna odası, giriş/çıkış kapsülleri, dal kapısı, ters port makinesi ve mühür kontrolleriyle kuruldu.
+- Browser Use QA: Test id'leri tekil doğrulandı. Yanlış onay AstroBot hatası verdi; `Home` fallback ile doğrusal ters, dal kapısı ve rasyonel tersleme görevleri tamamlandı. Completion auto-scroll ve console warning/error `[]` geçti.
+- Gemini kapalı çevrim: İlk Gemini 3 Flash turu 92/100 PASS ama rasyonel görevde kapsül/makine sıkışması ve `y=x aynası` etiketi çakışma riski için must-fix verdi. Kapsüller dış portlara alındı, ayna etiketi rozet yapıldı. Final Gemini 100/100 PASS, must-fix yok.
+- Değişen dosyalar: `src/modules/grade10/inverse-function-mirror/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/10-04-inverse-function-mirror.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/browser-use-shots/10-04-*.png`, `.agent/gemini-10-04-*.json`.
+- Test: `npm run module:check -- inverse-function-mirror` 22 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Browser Use final akışı completion ve console `[]` geçti. Gemini final 100/100 PASS.
+- Sonraki küçük adım: 10. sınıf kuyruğunda `10-05 İşaret Tablosu Tarayıcısı` SSOT atom doğrulaması ve spec hazırlığına başla.
+
+## 2026-05-06 Manual Continue - 10-05 İşaret Tablosu Tarayıcısı Spec
+- Yapılan iş: `MAT.10.2.6.1` ve `MAT.10.2.6.2` SSOT'tan doğrulandı. `10-05 İşaret Tablosu Tarayıcısı` queue status'u `In Progress` yapıldı ve `docs/module-specs/10-05-sign-table-scanner.md` eklendi. Ana oyuncak kök duraklarıyla bölünen sayı doğrusu, pozitif/negatif lazer bandı ve büyüklük/küçüklük aralık kapıları olarak sabitlendi.
+- Değişen dosyalar: `docs/module-specs/10-05-sign-table-scanner.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- sign-table-scanner --spec-only` 5 pass/1 expected warning/0 fail; `git diff --check` temiz.
+- Sonraki küçük adım: `sign-table-scanner` uygulama klasörünü ve registry route'unu kur.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 3
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL resetlendi ve `setupAtlasRuntime({ backend: 'iab' })` yeniden denendi; recovery sonrası hâlâ `No Codex IAB backends were discovered` sonucu alındı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor.
+- Sonraki küçük adım: Browser Use IAB keşfi geri geldiğinde aynı modülde görsel smoke, yanlış/doğru akış, completion, console, responsive ve Gemini 3 Flash kapılarını tamamla.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 4
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `docs/module-specs/10-05-sign-table-scanner.md` ve `SignTableScene`/`SignTableScannerApp` kaynakları.
+- Browser Use durumu: Node REPL tekrar resetlendi ve IAB backend preflight yeniden denendi; bu tur tüm adaylar timeout verdi ve IAB backend yine keşfedilemedi. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Statik inceleme: Kök hedefleri, hareketli `sol/sağ` tutamaçları, `Home` fallback, test-id kontratı ve görev geçiş state'i tekrar kontrol edildi; yeni kod değişikliği gerektiren statik sorun görülmedi.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz; dev server `127.0.0.1:3000` üzerinde dinliyor. Build bir önceki retry'da temizdi, kod değişmedi.
+- Sonraki küçük adım: Browser Use IAB keşfi geri geldiğinde canlı QA ve Gemini 3 Flash kapanışını tamamla; modül bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 5
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve git çalışma durumu.
+- Browser Use durumu: Node REPL temiz state'e alındı, `setupAtlasRuntime({ backend: 'iab' })` tekrar denendi; IAB backend yine keşfedilemedi. Tanı bu kez aday pipe'ların `get-info/connect` aşamasında başarısız olduğunu gösterdi. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Kod değişmediği için build tekrar koşulmadı; önceki build temiz.
+- Sonraki küçük adım: Browser Use IAB geri gelince aynı modülde canlı QA ve Gemini 3 Flash değerlendirmesini tamamla.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 6
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`; dev server `127.0.0.1:3000` üzerinde hâlâ aktif.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelene kadar modül `In Progress / Static Verified / Browser Use QA Blocked` olarak tutulacak; canlı QA olmadan `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 7
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `docs/MODULE_DONE_CRITERIA.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Browser Use IAB geri gelene kadar aynı modülde kal; canlı QA/Gemini olmadan `Done` veya sıradaki modüle geçiş yok.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 8
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`; dev server `127.0.0.1:3000` üzerinde aktif.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, aday pipe'lar `get-info/connect` aşamasında başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelene kadar aynı modülde bekle; canlı Browser Use + Gemini kapısı olmadan modül kapanmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 9
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve değişiklik özeti.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince canlı QA ve Gemini 3 Flash kapanışı; aksi halde modül `In Progress` kalır.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 10
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`). Tanı aday pipe'ların `get-info/connect` aşamasında başarısız olduğunu gösterdi. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince canlı QA ve Gemini 3 Flash kapanışı; aksi halde modül `In Progress / Static Verified / Browser Use QA Blocked` kalır.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 11
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/MODULE_DONE_CRITERIA.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`). Tanı yine `discovered/get-info`, `legacy-iab/connect` ve `legacy-chrome/connect` adaylarının başarısız olduğunu gösterdi. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince aynı modülde canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden sıradaki modüle başlanmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 12
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 13
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/AUTONOMOUS_MODULE_PIPELINE.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 14
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/module-specs/10-05-sign-table-scanner.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 15
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/MODULE_QUALITY_SCORECARD.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 16
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 17
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/MODULE_DONE_CRITERIA.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 18
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/MODULE_QUALITY_SCORECARD.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 19
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 20
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/AUTONOMOUS_MODULE_PIPELINE.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 21
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 22
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 23
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 24
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/AUTONOMOUS_MODULE_PIPELINE.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 25
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/AUTONOMOUS_MODULE_PIPELINE.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 26
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/MODULE_DONE_CRITERIA.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 27
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 28
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/timeout`, `legacy-iab/timeout`, `legacy-chrome/timeout`). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. İlk kontrolde dev server dinlemiyordu; `npm run dev -- --host 127.0.0.1 --port 3000` yeniden başlatıldı ve `127.0.0.1:3000` dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 29
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 30
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 31
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 32
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 33
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 34
+- Okunan bağlam: Browser Use skill yönergesi, `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md` ve `docs/MODULES.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 35
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 36
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/DEVELOPMENT_QUEUE_10_11.md` ve `docs/MODULE_DONE_CRITERIA.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 37
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/DEVELOPMENT_QUEUE_10_11.md` ve `docs/MODULE_QUALITY_SCORECARD.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 38
+- Okunan bağlam: Browser Use skill yönergesi, `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md` ve `docs/MODULES.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 39
+- Okunan bağlam: Browser Use skill yönergesi, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md` ve `docs/DEVELOPMENT_QUEUE_10_11.md`.
+- Browser Use durumu: Node REPL reset + IAB preflight tekrarlandı; backend yine keşfedilemedi (`browsers=0`, `iabBrowsers=0`, `discovered/get-info`, `legacy-iab/connect`, `legacy-chrome/connect` başarısız). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Dev server `127.0.0.1:3000` üzerinde dinliyor. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 40
+- Okunan bağlam: Browser Use skill yönergesi, `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md` ve `docs/MODULES.md`.
+- Browser Use durumu: Bu uyandırmada Browser Use için gerekli Node REPL `js` yürütme aracı tool discovery ile açığa çıkmadı; bu nedenle `setupAtlasRuntime({ backend: 'iab' })` preflight güvenli biçimde çalıştırılamadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Vite dev server `127.0.0.1:3000` üzerinde yeniden başlatıldı. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 41
+- Okunan bağlam: Browser Use skill yönergesi, `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md` ve `docs/MODULES.md` ilgili kayıtları.
+- Browser Use durumu: Node REPL `js` yürütme aracı tool discovery ile yine açığa çıkmadı; `setupAtlasRuntime({ backend: 'iab' })` preflight güvenli biçimde başlatılamadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. Vite dev server foreground kontrolde temiz başlıyor; Browser Use kapısı çalışmadığı için canlı QA'ya geçilmedi. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 42
+- Okunan bağlam: Browser Use skill yönergesi, `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md` ve `docs/MODULES.md` ilgili kayıtları.
+- Browser Use durumu: Node REPL `js` yürütme aracı tool discovery ile yine açığa çıkmadı; `setupAtlasRuntime({ backend: 'iab' })` preflight güvenli biçimde başlatılamadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. 3000 portunda dinleyici yok. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince 10-05 canlı görsel/akış QA ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 43
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md` ve `docs/MODULES.md` ilgili kayıtları yenilendi.
+- Browser Use durumu: Yönergedeki discovery sırası uygulandı (`node_repl js`, `mcp__node_repl__js`, `js`, `node_repl js JavaScript execution`); Node REPL `js` yürütme aracı açığa çıkmadı. `setupAtlasRuntime({ backend: 'iab' })` çalıştırılamadığı için Browser Use canlı QA başlatılmadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. 3000 portunda dinleyici yok. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince `/embed/algebra/sign-table-scanner?qa=1` canlı görsel/akış QA, console/responsive kontrolü ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 44
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec kayıtları yenilendi.
+- Browser Use durumu: Yönergedeki discovery sırası tekrar uygulandı (`node_repl js`, `mcp__node_repl__js`, `js`, `node_repl js JavaScript execution`); Node REPL `js` yürütme aracı açığa çıkmadı. `setupAtlasRuntime({ backend: 'iab' })` çalıştırılamadığı için Browser Use canlı QA başlatılmadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. 3000 portunda dinleyici yok. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince `/embed/algebra/sign-table-scanner?qa=1` canlı görsel/akış QA, console/responsive kontrolü ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 45
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec kayıtları yenilendi.
+- Browser Use durumu: Yönergedeki discovery sırası tekrar uygulandı (`node_repl js`, `mcp__node_repl__js`, `js`, `node_repl js JavaScript execution`); Node REPL `js` yürütme aracı açığa çıkmadı. `setupAtlasRuntime({ backend: 'iab' })` çalıştırılamadığı için Browser Use canlı QA başlatılmadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. 3000 portunda dinleyici yok. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince `/embed/algebra/sign-table-scanner?qa=1` canlı görsel/akış QA, console/responsive kontrolü ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 46
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec kayıtları yenilendi.
+- Browser Use durumu: Yönergedeki discovery sırası tekrar uygulandı (`node_repl js`, `mcp__node_repl__js`, `js`, `node_repl js JavaScript execution`); Node REPL `js` yürütme aracı açığa çıkmadı. `setupAtlasRuntime({ backend: 'iab' })` çalıştırılamadığı için Browser Use canlı QA başlatılmadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. 3000 portunda dinleyici yok. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince `/embed/algebra/sign-table-scanner?qa=1` canlı görsel/akış QA, console/responsive kontrolü ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 47
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec kayıtları yenilendi.
+- Browser Use durumu: Yönergedeki discovery sırası tekrar uygulandı (`node_repl js`, `mcp__node_repl__js`, `js`, `node_repl js JavaScript execution`); Node REPL `js` yürütme aracı açığa çıkmadı. `setupAtlasRuntime({ backend: 'iab' })` çalıştırılamadığı için Browser Use canlı QA başlatılmadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. 3000 portunda dinleyici yok. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince `/embed/algebra/sign-table-scanner?qa=1` canlı görsel/akış QA, console/responsive kontrolü ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 48
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec kayıtları yenilendi.
+- Browser Use durumu: Yönergedeki discovery sırası tekrar uygulandı (`node_repl js`, `mcp__node_repl__js`, `js`, `node_repl js JavaScript execution`); Node REPL `js` yürütme aracı açığa çıkmadı. `setupAtlasRuntime({ backend: 'iab' })` çalıştırılamadığı için Browser Use canlı QA başlatılmadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. 3000 portunda dinleyici yok. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince `/embed/algebra/sign-table-scanner?qa=1` canlı görsel/akış QA, console/responsive kontrolü ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 49
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md` ve 10-05 durum kayıtları yenilendi.
+- Browser Use durumu: Yönergedeki discovery sırası tekrar uygulandı (`node_repl js`, `mcp__node_repl__js`, `js`, `node_repl js JavaScript execution`); Node REPL `js` yürütme aracı açığa çıkmadı. `setupAtlasRuntime({ backend: 'iab' })` çalıştırılamadığı için Browser Use canlı QA başlatılmadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. 3000 portunda dinleyici yok. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince `/embed/algebra/sign-table-scanner?qa=1` canlı görsel/akış QA, console/responsive kontrolü ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 50
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md`, `PROGRESS.md` ve 10-05 spec/durum kayıtları yenilendi.
+- Browser Use durumu: Yönergedeki discovery sırası tekrar uygulandı (`node_repl js`, `mcp__node_repl__js`, `js`, `node_repl js JavaScript execution`); Node REPL `js` yürütme aracı açığa çıkmadı. `setupAtlasRuntime({ backend: 'iab' })` çalıştırılamadığı için Browser Use canlı QA başlatılmadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `git diff --check` temiz. 3000 portunda dinleyici yok. Kod değişmediği için build tekrarlanmadı; son build temiz.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince `/embed/algebra/sign-table-scanner?qa=1` canlı görsel/akış QA, console/responsive kontrolü ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 51
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec/durum kayıtları yenilendi.
+- Browser Use durumu: Yönergedeki discovery sırası tekrar uygulandı (`node_repl js`, `mcp__node_repl__js`, `js`, `node_repl js JavaScript execution`); Node REPL `js` yürütme aracı açığa çıkmadı. `setupAtlasRuntime({ backend: 'iab' })` çalıştırılamadığı için Browser Use canlı QA başlatılmadı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. 3000 portunda dinleyici yok. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Sonraki küçük adım: Node REPL `js` aracı ve IAB geri gelince `/embed/algebra/sign-table-scanner?qa=1` canlı görsel/akış QA, console/responsive kontrolü ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 52
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md`, `docs/module-specs/10-05-sign-table-scanner.md` ve 10-05 kod kontratı yenilendi.
+- Browser Use durumu: Bu kez Node REPL `js` aracı tool discovery ile açığa çıktı ve Vite dev server `127.0.0.1:3000` üzerinde başlatıldı. İlk `setupAtlasRuntime({ backend: 'iab' })` çağrısı ve recovery için `js_reset` sonrası taze bootstrap aynı sonuçla durdu: `No Codex IAB backends were discovered` (`browsers=0`, `iabBrowsers=0`). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince aynı route `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry52` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console, responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 53
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `AGENTS.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec/durum kayıtları yenilendi.
+- Browser Use durumu: Node REPL `js` aracı mevcut kaldı ve dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=2`, `candidates=4`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry53` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 54
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `AGENTS.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec/durum kayıtları yenilendi.
+- Browser Use durumu: Node REPL `js` aracı tool discovery ile mevcut; dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=4`, `candidates=6`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry54` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 55
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `AGENTS.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec/durum kayıtları yenilendi.
+- Browser Use durumu: Dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=4`, `candidates=6`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry55` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 56
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `AGENTS.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec/durum kayıtları yenilendi.
+- Browser Use durumu: Dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=4`, `candidates=6`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry56` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 57
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `AGENTS.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10-05 spec/durum kayıtları yenilendi.
+- Browser Use durumu: Dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=4`, `candidates=6`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry57` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 58
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md` ve `docs/module-specs/10-05-sign-table-scanner.md` kayıtları yenilendi. 11. sınıf kuyruğu tamamen `Done`; aktif bloklu kapanış 10-05 canlı QA.
+- Browser Use durumu: Dev server `127.0.0.1:3000` üzerinde hazırken taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=4`, `candidates=6`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry58` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 59
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `AGENTS.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve `docs/module-specs/10-05-sign-table-scanner.md` kayıtları yenilendi. 11. sınıf kuyruğu tamamen `Done`; aktif bloklu kapanış 10-05 canlı QA.
+- Browser Use durumu: Dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=5`, `candidates=7`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry59` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 60
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `AGENTS.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve `docs/module-specs/10-05-sign-table-scanner.md` kayıtları yenilendi. 11. sınıf kuyruğu tamamen `Done`; aktif bloklu kapanış 10-05 canlı QA.
+- Browser Use durumu: Dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=5`, `candidates=7`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry60` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 61
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve `docs/module-specs/10-05-sign-table-scanner.md` kayıtları yenilendi. 11. sınıf kuyruğu tamamen `Done`; aktif bloklu kapanış 10-05 canlı QA.
+- Browser Use durumu: Dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=5`, `candidates=7`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry61` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 62
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve `docs/module-specs/10-05-sign-table-scanner.md` kayıtları yenilendi. 11. sınıf kuyruğu tamamen `Done`; aktif bloklu kapanış 10-05 canlı QA.
+- Browser Use durumu: Dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=5`, `candidates=7`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry62` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 63
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve `docs/module-specs/10-05-sign-table-scanner.md` kayıtları yenilendi. 11. sınıf kuyruğu tamamen `Done`; aktif bloklu kapanış 10-05 canlı QA.
+- Browser Use durumu: Dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=5`, `candidates=7`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry63` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 64
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve `docs/module-specs/10-05-sign-table-scanner.md` kayıtları yenilendi. 11. sınıf kuyruğu tamamen `Done`; aktif bloklu kapanış 10-05 canlı QA.
+- Browser Use durumu: Dev server `127.0.0.1:3000` üzerinde başlatıldı. Taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=7`, `candidates=9`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry64` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Browser Use QA Retry 65
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve `docs/module-specs/10-05-sign-table-scanner.md` kayıtları yenilendi. 11. sınıf kuyruğu tamamen `Done`; aktif bloklu kapanış 10-05 canlı QA.
+- Browser Use durumu: `127.0.0.1:3000` üzerinde mevcut dev server dinleyicisi kullanıldı. Taze Node REPL kernel ile `setupAtlasRuntime({ backend: 'iab' })` çağrısı `No Codex IAB backends were discovered` verdi (`listedPipes=8`, `candidates=10`, `browsers=0`, `iabBrowsers=0`). `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- sign-table-scanner` 20 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use canlı screenshot/DOM/console kanıtı IAB discovery nedeniyle üretilemedi.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/algebra/sign-table-scanner?qa=1&browserUse=retry65` üzerinden yanlış akış, `Home` fallback ile üç görev, completion, console/responsive/embed ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Heartbeat - 10-05 Gemini Gate Check
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve `docs/module-specs/10-05-sign-table-scanner.md` kayıtları yenilendi. 11. sınıf kuyruğu tamamen `Done`; aktif açık kapı 10-05 Gemini kapanışı.
+- Durum: Önceki manuel handoff'a göre Browser Use IAB canlı QA geçti ve screenshot kanıtları `.agent/browser-use-shots/10-05-*.png` altında mevcut. Bu turda Browser Use tekrarına gerek kalmadı; `GEMINI_API_KEY` / `GOOGLE_API_KEY` ortamda olmadığı yeniden doğrulandı, bu yüzden Gemini 3 Flash kapanışı çalıştırılamadı.
+- Test: `npm run module:check -- sign-table-scanner` 21 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. 3000 portunda mevcut dev server dinleyicisine dokunulmadı.
+- Sonraki küçük adım: `GEMINI_API_KEY` veya `GOOGLE_API_KEY` sağlanınca kaydedilen Browser Use screenshot'larıyla Gemini 3 Flash kapanışını al; must-fix yoksa `10-05` için queue/progress/modules/scorecard `Done` yap ve `10-07 Sabit Alan Üçgen Rayı` spec'e başla.
+
+## 2026-05-06 Manual Long Run - 10-07 Browser Use QA
+- Okunan bağlam: `10-07 Sabit Alan Üçgen Rayı` için `MAT.10.4.3.1` SSOT kapsamı doğrulandı; sinüs/kosinüs teoremleri ayrı `10-08 Sinüs-Kosinüs Arazi Ölçeri` modülüne bırakıldı. Spec dosyası `docs/module-specs/10-07-constant-area-triangle-rail.md` olarak eklendi.
+- Yapılan iş: `src/modules/grade10/constant-area-triangle-rail/` altında type, model, scene, controls ve app parçaları kuruldu. Route `/embed/geometry/constant-area-triangle-rail` registry'ye bağlandı. Ana oyuncak, tepe noktasının tabana paralel rayda kaymasına rağmen yüksekliğin ve alanın sabit kalmasını gösteren üçgen alan rayı.
+- Browser Use QA: `/embed/geometry/constant-area-triangle-rail?qa=1` üzerinde yanlış deneme AstroBot hatası, `Home` fallback ile sol hedef, sağ hedef ve orta alan mührü görevleri, completion ekranı ve console `[]` geçti. Screenshot kanıtları `.agent/browser-use-shots/10-07-*.png` altında.
+- Test: `npm run module:check -- constant-area-triangle-rail` 19 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Durum: `GEMINI_API_KEY` / `GOOGLE_API_KEY` ortamda olmadığı için Gemini 3 Flash kapanışı çalıştırılamadı. Queue/spec/modules/progress kayıtları `Gemini Blocked` olarak bırakıldı; modül `Done` değil.
+- Sonraki küçük adım: `10-08 Sinüs-Kosinüs Arazi Ölçeri` için SSOT atomlarını netleştir, spec'i yaz, route/test-id kontratını guard'dan geçir ve uygulamaya başla.
+
+## 2026-05-06 Heartbeat - 10-08 Spec Draft
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md` ve 10. sınıf trigonometri modül kayıtları yenilendi. 11. sınıf yeni üretim kuyruğu `Done`; Gemini anahtarı olmadığı için 10. sınıfta Browser Use QA Verified / Gemini Blocked seviyesine kadar ilerleme politikası sürüyor.
+- Yapılan iş: `10-08 Sinüs-Kosinüs Arazi Ölçeri` için `MAT.10.4.4.1` ve `MAT.10.4.4.2` SSOT'tan doğrulandı. `docs/module-specs/10-08-sine-cosine-terrain-surveyor.md` eklendi. Queue satırı `Backlog -> In Progress` yapıldı. Kapsam, kosinüs teoremiyle eksik kenar ve sinüs teoremiyle bilinmeyen açıya daraltıldı; dik üçgen oranları, sabit alan ve birim çember ayrı modüllerde bırakıldı.
+- Test: `npm run module:check -- sine-cosine-terrain-surveyor --spec-only` 5 pass/1 expected warn/0 fail; `git diff --check` temiz. Bu dilim doküman/spec-only olduğu için build tekrar çalıştırılmadı.
+- Sonraki küçük adım: Route'u registry'ye bağla, `src/modules/grade10/sine-cosine-terrain-surveyor/` içinde type/model/scene/controls/app parçalarını kur, tam `module:check`, build ve Browser Use QA kapılarına geç.
+
+## 2026-05-06 Manual Long Run - 10-08 Browser Use QA
+- Yapılan iş: `src/modules/grade10/sine-cosine-terrain-surveyor/` altında type, model, scene, controls ve app parçaları kuruldu. Route `/embed/geometry/sine-cosine-terrain-surveyor` registry'ye bağlandı. Ana oyuncak, kosinüs lensiyle eksik kenar ve sinüs lensiyle bilinmeyen açı ölçen arazi üçgen masası.
+- Browser Use QA: `/embed/geometry/sine-cosine-terrain-surveyor?qa=1` üzerinde yanlış deneme AstroBot hatası, `Home` fallback ile kosinüs mesafe kablosu, sinüs açı vizörü, arazi raporu, completion ve taze console `[]` geçti. İlk canlı görüntüde dar embed sahnesi kontrol panelini fazla aşağı itti; mobil/base SVG yüksekliği küçültülerek kontrol paneli başlangıcı ilk ekrana alındı. Screenshot kanıtları `.agent/browser-use-shots/10-08-*.png` altında.
+- Test: `npm run module:check -- sine-cosine-terrain-surveyor` 22 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Durum: `GEMINI_API_KEY` / `GOOGLE_API_KEY` ortamda olmadığı için Gemini 3 Flash kapanışı çalıştırılamadı. Queue/spec/modules/progress kayıtları `Gemini Blocked` olarak bırakıldı; modül `Done` değil.
+- Sonraki küçük adım: `10-09 Birim Çember Kalkanı` için SSOT atomunu netleştir, spec'i yaz, route/test-id kontratını guard'dan geçir ve uygulamaya başla.
+
+## 2026-05-06 Heartbeat - 10-09 Spec-only Verified
+- Okunan bağlam: Browser Use skill yönergesi tek okumada tam yüklendi; `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `PROGRESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/MEB_ATOMLARI.md`, 10-08 ve 10-09 spec/kod kayıtları yenilendi.
+- Yapılan iş: 10-08 uygulamasının mevcut kaynak/registry durumunu yeniden denetledim; `10-08` için `module:check` 22/22, `npm run build` ve `git diff --check` temiz. `10-09 Birim Çember Kalkanı` spec'i mevcut ve SSOT atomu `MAT.10.4.2.1`; spec-only guard `4 pass / 1 expected warn / 0 fail` verdi. `.agent/CURRENT_TASK.md` 10-09 uygulama adımına göre güncellendi.
+- Browser Use durumu: Bu heartbeat'te Browser Use IAB preflight ve `js_reset` sonrası recovery iki kez `No Codex IAB backends were discovered` verdi (`listedPipes=11`, `candidates=13`, `browsers=0`, `iabBrowsers=0`). Computer Use, MCP Docker ve harici Playwright kullanılmadı. 10-08 için önceki Browser Use screenshot kanıtları `.agent/browser-use-shots/10-08-*.png` altında kalıyor.
+- Test: `npm run module:check -- sine-cosine-terrain-surveyor` 22 pass/0 warn/0 fail; `npm run module:check -- unit-circle-identity-shield --spec-only` 4 pass/1 expected warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Gemini anahtarı kontrolünde `GEMINI_API_KEY` / `GOOGLE_API_KEY` yok.
+- Sonraki küçük adım: `src/modules/grade10/unit-circle-identity-shield/` uygulama klasörünü kur, route'u registry'ye bağla ve tam `module:check` + build + diff kapılarını çalıştır.
+
+## 2026-05-06 Manual Long Run - 10-09 Browser Use QA
+- Yapılan iş: `src/modules/grade10/unit-circle-identity-shield/` altında type, model, scene, controls ve app parçaları kuruldu. Route `/embed/trigonometry/unit-circle-identity-shield` registry'ye bağlandı. Ana oyuncak, açı düğümü olan birim çember kalkanı ve `cos²` / `sin²` enerji plakalarının toplam `1` çekirdeğine bağlanması.
+- Browser Use QA: `/embed/trigonometry/unit-circle-identity-shield?qa=1` üzerinde yanlış deneme AstroBot hatası, `Home` fallback ile cos² plakası, sin² plakası, kalkan mührü, completion ve taze sayfa console `[]` geçti. Screenshot kanıtları `.agent/browser-use-shots/10-09-*.png` altında.
+- Test: `npm run module:check -- unit-circle-identity-shield` 19 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Durum: `GEMINI_API_KEY` / `GOOGLE_API_KEY` ortamda olmadığı için Gemini 3 Flash kapanışı çalıştırılamadı. Queue/spec/modules/progress kayıtları `Gemini Blocked` olarak bırakıldı; modül `Done` değil.
+- Sonraki küçük adım: `10-11 Asal Kilit Kasası` için SSOT atomunu netleştir, spec'i yaz, route/test-id kontratını guard'dan geçir ve uygulamaya başla.
+
+## 2026-05-06 Heartbeat - 10-11 Static Verified / Browser Use Blocked
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md`, `docs/module-specs/10-11-prime-lock-vault.md` ve ilgili registry/kod kayıtları yenilendi.
+- Yapılan iş: `10-11 Asal Kilit Kasası` için mevcut spec, registry ve uygulama doğrulandı. `src/modules/grade10/prime-lock-vault/` altında `PrimeLockVaultApp`, `PrimeVaultScene`, `PrimeVaultControls`, `primeVaultModel` ve `types` mevcut. `docs/MODULES.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `PROGRESS.md`, `docs/module-specs/10-11-prime-lock-vault.md`, `.agent/CURRENT_TASK.md` ve kalite defterinde 10-09 satırı güncellendi.
+- Test: `npm run module:check -- prime-lock-vault` 28 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Browser Use durumu: Browser Use skill yönergesi tek okumada tam yüklendi. `setupAtlasRuntime({ backend: 'iab' })` preflight ve `js_reset` sonrası recovery iki kez `No Codex IAB backends were discovered` verdi (`listedPipes=12`, `candidates=14`, `browsers=0`, `iabBrowsers=0`). Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Gemini durumu: `GEMINI_API_KEY` / `GOOGLE_API_KEY` ortamda ve `.env*` dosyalarında yok.
+- Sonraki küçük adım: IAB backend keşfi geri gelince `/embed/numbers/prime-lock-vault?qa=1&browserUse=heartbeat` üzerinden yanlış akış, `Home` fallback ile iki görev, completion, console/responsive/embed kontrolü ve screenshot kanıtları alınacak; Browser Use geçmeden `Done` yapılmayacak.
+
+## 2026-05-06 Manual Long Run - 10-11 Done
+- Okunan bağlam: `docs/module-specs/10-11-prime-lock-vault.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULE_QUALITY_SCORECARD.md`, Browser Use skill ve Gemini kapanış şablonu yenilendi.
+- Yapılan iş: Kullanıcının verdiği Gemini anahtarı `.env.local` içine `GEMINI_API_KEY` ve `GOOGLE_API_KEY` olarak kaydedildi; `.gitignore` bu dosyayı zaten hariç tuttuğu için secret git'e alınmıyor. `PrimeLockVault` içinde cevap veren hata ipuçları yönlendirici dile çekildi, sonuç/metrik/formül kartları kilitlenmeden doğru cevabı göstermeyecek hale getirildi, bölen taşları ferahlatıldı ve AstroBot küçük/orta embed'de aksiyon butonlarının üstüne binmemesi için üst konuma alındı.
+- Browser Use QA: `/embed/numbers/prime-lock-vault?qa=1&run=post-gemini-fix-2` üzerinde yanlış deneme, `Home` fallback ile asal lazer görevi, tam bölen rafı görevi, completion ve console `[]` geçti. DOM kontrolünde başlangıçta `30 = 2 x 3 x 5` yok, yanlış ipucu eski cevap cümlesini içermiyor, görev 2 çözülmeden tam bölen listesi görünmüyor. Screenshot kanıtları `.agent/browser-use-shots/10-11-postfix-*.png` altında.
+- Gemini kapalı çevrim: İlk Gemini turu 82/100 PASS_WITH_WARNINGS ama hata ipucunun cevabı söylemesi ve AstroBot toast yerleşimi için must-fix verdi. Düzeltmelerden sonra final Gemini 92/100 PASS, must-fix yok. Rapor `.agent/gemini-reports/10-11-prime-lock-vault-final.txt`.
+- Test: `npm run module:check -- prime-lock-vault` 28 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Durum: Queue/spec/modules/progress/scorecard kayıtları `Done` olarak güncellendi. Sonraki küçük adım: Gemini anahtarı artık bulunduğu için önce `Gemini Blocked` kalan 10-05/10-07/10-08/10-09 kapanışlarını al, sonra `10-12 EBOB/EKOK Dişli Kutusu` üretimine geç.
+
+## 2026-05-06 Manual Long Run - 10-05 Done
+- Okunan bağlam: `docs/module-specs/10-05-sign-table-scanner.md`, 10-05 Browser Use screenshot kanıtları, `SignTableScene`, `SignTableControls`, `signTableModel` ve kalite kapısı dokümanları yenilendi.
+- Gemini kapalı çevrim: İlk Gemini turu 88/100 PASS_WITH_WARNINGS ama köklerin çakışma belirsizliği ve kök görevinde eşitsizlik sürecinin yeterince görünmemesi için must-fix verdi. Düzeltmelerden sonra final Gemini 96/100 PASS, must-fix yok. Rapor `.agent/gemini-reports/10-05-sign-table-scanner-final.txt`.
+- Yapılan iş: Sol ve sağ kökler ayrı görsel raylarla sınırlandı, `çakışmaz boşluk` etiketi eklendi, ilk görevden itibaren `Akış: kökleri bul -> >0 dış bant -> <0 iç bant` bilgisi görünür oldu, hedef lazerleri kalınlaştırıldı ve pulse aldı, işaret kuralı metni güçlendirildi. AstroBot küçük/orta ekranda sağ-üst/altı konuma çekildi.
+- Browser Use QA: `/embed/algebra/sign-table-scanner?qa=1&run=post-gemini-fix` üzerinde yanlış deneme, `Home` fallback ile kökler, pozitif bant, negatif bant, completion ve console `[]` geçti. Screenshot kanıtları `.agent/browser-use-shots/10-05-postfix-*.png` altında.
+- Test: `npm run module:check -- sign-table-scanner` 21 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Durum: Queue/spec/modules/progress/scorecard kayıtları `Done` olarak güncellendi. Sonraki küçük adım: `10-07 Sabit Alan Üçgen Rayı` Gemini kapanışı.
+
+## 2026-05-06 Heartbeat - 10-07 Done
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/module-specs/10-07-constant-area-triangle-rail.md`, 10-07 source dosyaları ve Browser Use/Gemini kanıtları.
+- Gemini kapalı çevrim: İlk Gemini turu 88/100 PASS_WITH_WARNINGS ve sağ hedefte sol yön başarı mesajı için must-fix verdi. Mevcut post-fix Browser Use kanıtlarıyla final Gemini 96/100 PASS, must-fix yok. Rapor `.agent/gemini-reports/10-07-constant-area-triangle-rail-final.txt`.
+- Yapılan iş: Başarı dili yön belirtmek yerine ray hareketi ve sabit alan büyüklüğünü anlatacak şekilde düzeltildi. Formül dili `taban · yükseklik / 2` olarak güncellendi. Queue/spec/modules/progress/scorecard kayıtları `Done` yapıldı.
+- Test: `npm run module:check -- constant-area-triangle-rail` 19 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Browser Use QA kanıtları `.agent/browser-use-shots/10-07-postfix-*.png` altında.
+- Sonraki küçük adım: `10-08 Sinüs-Kosinüs Arazi Ölçeri` için mevcut Browser Use screenshot kanıtlarıyla Gemini 3 Flash kapanışını çalıştır; must-fix yoksa `Done`, varsa düzeltme + Browser Use doğrulama.
+
+## 2026-05-06 Heartbeat - 10-08 Done
+- Okunan bağlam: `docs/module-specs/10-08-sine-cosine-terrain-surveyor.md`, 10-08 Browser Use screenshot kanıtları, source dosyaları, queue/progress/modules/scorecard kayıtları ve Gemini kapanış şablonu.
+- Gemini kapalı çevrim: Mevcut Browser Use kanıtlarıyla Gemini 3 Flash finali 96/100 PASS verdi, must-fix yok. Rapor `.agent/gemini-reports/10-08-sine-cosine-terrain-surveyor.txt`. Toast/buton yakınlığı should-fix olarak nonblocking kaldı.
+- Yapılan iş: Queue/spec/modules/progress/scorecard kayıtları `Done` yapıldı; 10-08 için internal skor 96, Gemini skor 96 kaydedildi.
+- Test: `npm run module:check -- sine-cosine-terrain-surveyor` 22 pass/0 warn/0 fail; bu uyanışta `npm run build` geçti ve `git diff --check` temiz. Browser Use QA kanıtları `.agent/browser-use-shots/10-08-*.png` altında.
+- Sonraki küçük adım: `10-09 Birim Çember Kalkanı` için mevcut Browser Use screenshot kanıtlarıyla Gemini 3 Flash kapanışını çalıştır; must-fix yoksa `Done`, varsa düzeltme + Browser Use doğrulama.
+
+## 2026-05-06 Heartbeat - 10-09 Gemini Quota Blocked
+- Okunan bağlam: `docs/module-specs/10-09-unit-circle-identity-shield.md`, 10-09 Browser Use screenshot kanıtları ve source dosyaları.
+- Yapılan iş: `10-09 Birim Çember Kalkanı` için Gemini kapanışı başlatıldı; mevcut kanıtlar `.agent/browser-use-shots/10-09-*.png`. Gemini 3 Flash ilk çağrı 429 `RESOURCE_EXHAUSTED` verdi; API retry gecikmesi sonrası ikinci deneme de ücretsiz katman kota limitine takıldı. Engel kaydı `.agent/gemini-reports/10-09-unit-circle-identity-shield-quota-block.txt`.
+- Test: `npm run module:check -- unit-circle-identity-shield` 19 pass/0 warn/0 fail. Bu uyanışta `npm run build` geçti ve `git diff --check` temiz. Modül `Done` yapılmadı; queue/spec/modules/progress/scorecard `Gemini Blocked` durumunda kaldı.
+- Sonraki küçük adım: Gemini 3 Flash kotası açılınca aynı Browser Use kanıtlarıyla `10-09` kapanışını tekrar dene; must-fix yoksa `Done`, varsa düzeltme + Browser Use doğrulama.
+
+## 2026-05-06 Manual Long Run - 10-09 Done
+- Yapılan iş: Kullanıcının Tier 1 Gemini key'i `.env.local` içine kaydedildi; `GEMINI_API_KEY` ve `GOOGLE_API_KEY` aynı yeni değere çekildi, `.env.local` `.gitignore` altında kalıyor. Eski key ile çalışan retry süreci durduruldu.
+- Gemini kapalı çevrim: `10-09 Birim Çember Kalkanı` mevcut Browser Use kanıtlarıyla Gemini 3 Flash finali 92/100 PASS verdi, must-fix yok. Rapor `.agent/gemini-reports/10-09-unit-circle-identity-shield.txt`. Toast/buton yakınlığı should-fix olarak nonblocking kaldı.
+- Browser Use QA: Güncel AstroBot yerleşimiyle `/embed/trigonometry/unit-circle-identity-shield?qa=1&run=post-gemini-key-full` üzerinde yanlış deneme smoke, `Home` fallback ile cos²/sin²/kalkan mührü akışı, completion ve console `[]` tekrar geçti. Yeni kanıtlar `.agent/browser-use-shots/10-09-post-key-*.png` altında.
+- Test: `npm run module:check -- unit-circle-identity-shield` 19 pass/0 warn/0 fail; `npm run build` geçti ve `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi. Queue/spec/modules/progress/scorecard kayıtları `Done` yapıldı.
+- Sonraki küçük adım: `10-12 EBOB/EKOK Dişli Kutusu` için SSOT doğrulaması ve spec-only guard.
+
+## 2026-05-06 Manual Long Run - 10-12 Spec Start
+- Okunan bağlam: `docs/MEB_ATOMLARI.md` içinde `MAT.10.1.2.1` EBOB ve `MAT.10.1.2.2` EKOK atomları doğrulandı; `docs/DEVELOPMENT_QUEUE_10_11.md` içinde `10-12 EBOB/EKOK Dişli Kutusu` sıradaki backlog modülüydü.
+- Yapılan iş: `docs/module-specs/10-12-gcd-lcm-gearbox.md` eklendi. Ana oyuncak `12 = 2² · 3` ve `18 = 2 · 3²` girişlerini aynı dişli kutusunda karşılaştırıyor; EBOB için ortak küçük kuvvetler `2` ve `3`, EKOK için birleşik büyük kuvvetler `2²=4` ve `3²=9` seçilecek.
+- Sonraki küçük adım: `npm run module:check -- gcd-lcm-gearbox --spec-only`, ardından uygulama klasörü ve registry route'u.
+
+## 2026-05-06 19:22 - 10-12 Uygulama ve Statik Kapı
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md`, `docs/module-specs/10-12-gcd-lcm-gearbox.md` ve mevcut 10. sınıf modül kalıpları.
+- Yapılan iş: `10-12 EBOB/EKOK Dişli Kutusu` için uygulama klasörü ve registry bağlantısı mevcut durumdan doğrulandı. App/Scene/Controls/model/types parçaları `12 = 2² · 3` ve `18 = 2 · 3²` üzerinden EBOB küçük ortak kuvvet ve EKOK büyük birleşik kuvvet seçimlerini kuruyor. `docs/MODULES.md` içine `1B` kayıt eklendi ve `.agent/CURRENT_TASK.md` Browser Use kapanışına taşındı.
+- Değişen dosyalar: `docs/MODULES.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- gcd-lcm-gearbox --spec-only` 5 pass / 1 expected warn / 0 fail; `npm run module:check -- gcd-lcm-gearbox` 22 pass / 0 warn / 0 fail; `npm run build` geçti, yalnız mevcut Vite büyük chunk uyarısı var. `git diff --check` temiz. Dev server `127.0.0.1:3000` route'u HTTP 200 döndürüyor. Browser Use IAB preflight ve `js_reset` recovery iki kez `No Codex IAB backends were discovered` verdi; Computer Use/MCP Docker/harici Playwright kullanılmadı.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/numbers/gcd-lcm-gearbox?qa=1` canlı QA akışını tamamla.
+
+## 2026-05-06 Manual Long Run - 10-12 Browser Use Pane Blocked
+- Browser Use durumu: IAB route'u bir kez DOM seviyesinde açtı ve `gcd-lcm-scene` görüldü; ancak `Page.captureScreenshot` CDP timeout verdi. Recovery için tab kapatılıp yeni tab denenince pane artık aktif görünmedi ve setup/new tab denemesi `No active Codex browser pane available` verdi.
+- Not: Computer Use uygulama listesi yalnız kurtarma teşhisi için yoklandı; Browser QA yerine kullanılmadı. MCP Docker/harici Playwright kullanılmadı.
+- Durum: `10-12` `In Progress` kalıyor. Browser Use pane geri gelince yanlış deneme, `Home` fallback ile üç görev, completion, console, screenshot ve Gemini 3 Flash kapanışı yapılacak.
+
+## 2026-05-06 Heartbeat 19:41 - 10-12 Browser Use IAB Recovery Blocked
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md`, `docs/module-specs/10-12-gcd-lcm-gearbox.md` ve Browser Use skill yönergesi.
+- Yapılan iş: `10-12 EBOB/EKOK Dişli Kutusu` statik kapıda tutuldu; route HTTP 200 ve uygulama/registry kontratları mevcut. Browser Use IAB preflight taze kernelde `No Codex IAB backends were discovered` verdi (`listedPipes=12`, `candidates=14`, `browsers=0`, `iabBrowsers=0`); `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- gcd-lcm-gearbox` 22 pass / 0 warn / 0 fail; `npm run build` geçti, yalnız mevcut Vite büyük chunk uyarısı var; `git diff --check` temiz.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/numbers/gcd-lcm-gearbox?qa=1&run=heartbeat-10-12-recovery` üzerinde yanlış deneme, `Home` fallback ile EBOB/EKOK/mühür görevleri, completion, console, screenshot ve Gemini 3 Flash kapanışı yapılacak; bu kapılar geçmeden `10-12` Done yapılmayacak.
+
+## 2026-05-06 Manual Long Run - 10-13 Spec Start
+- Okunan bağlam: `docs/MEB_ATOMLARI.md` içinde `MAT.10.1.3.1` bölme yapmadan modüler kalan atomu doğrulandı; queue içinde `10-13 Kalan Kapısı` sıradaki backlog modülü.
+- Yapılan iş: `docs/module-specs/10-13-remainder-gate.md` eklendi. Ana oyuncak modüler kalan kapısı; `758 mod 9`, `748 mod 5` ve `3714 mod 4` için rakam toplamı, son basamak ve son iki basamak lensleri kullanılacak.
+- Sonraki küçük adım: spec-only guard, uygulama klasörü ve registry route'u.
+
+## 2026-05-06 Manual Long Run - 10-13 Static Verified
+- Yapılan iş: `src/modules/grade10/remainder-gate/` altında `types`, `remainderModel`, `RemainderGateScene`, `RemainderGateControls` ve `RemainderGateApp` eklendi. Registry route'u `/embed/numbers/remainder-gate` olarak bağlandı.
+- Test: `npm run module:check -- remainder-gate --spec-only` 4 pass/1 expected warn/0 fail; `npm run module:check -- remainder-gate` 21 pass/0 warn/0 fail; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Durum: Browser Use pane bloklu olduğu için `10-13` `Static Verified` seviyesinde; canlı QA ve Gemini kapanışı bekliyor.
+
+## 2026-05-06 Manual Long Run - 10-14 Spec Start
+- Okunan bağlam: `docs/MEB_ATOMLARI.md` içinde `MAT.10.3.1.1` çarpma yoluyla sayma ve `MAT.10.3.1.2` toplama yoluyla sayma atomları doğrulandı.
+- Yapılan iş: `docs/module-specs/10-14-counting-assembly-line.md` eklendi. Ana oyuncak sayma montaj hattı; `3 renk × 2 rozet = 6` ve `4 drone + 3 rover = 7` ayrımı kurulacak.
+- Sonraki küçük adım: spec-only guard, uygulama klasörü ve registry route'u.
+
+## 2026-05-06 Heartbeat 19:54 - 10-12 Browser Use IAB Still Blocked
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md`, `docs/module-specs/10-12-gcd-lcm-gearbox.md` ve Browser Use skill yönergesi.
+- Yapılan iş: Aktif en üst `In Progress` modül `10-12` aynı kalite kapısında tutuldu. Browser Use IAB taze preflight `No Codex IAB backends were discovered` verdi (`listedPipes=12`, `candidates=14`, `browsers=0`, `iabBrowsers=0`); `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- gcd-lcm-gearbox` 22 pass / 0 warn / 0 fail; route `http://127.0.0.1:3000/embed/numbers/gcd-lcm-gearbox?qa=1` HTTP 200; `npm run build` geçti, yalnız mevcut Vite büyük chunk uyarısı var; `git diff --check` temiz.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/numbers/gcd-lcm-gearbox?qa=1&run=heartbeat-10-12-recovery-1954` üzerinde yanlış deneme, `Home` fallback ile EBOB/EKOK/mühür görevleri, completion, console/responsive/embed, screenshot ve Gemini 3 Flash kapanışı yapılacak.
+
+## 2026-05-06 Heartbeat 20:06 - 10-12 Browser Use IAB Still Blocked
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md`, `docs/module-specs/10-12-gcd-lcm-gearbox.md` ve Browser Use skill yönergesi.
+- Yapılan iş: Aktif en üst `In Progress` modül `10-12` aynı kalite kapısında tutuldu. Browser Use IAB taze preflight `No Codex IAB backends were discovered` verdi (`listedPipes=12`, `candidates=14`, `browsers=0`, `iabBrowsers=0`); `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- gcd-lcm-gearbox` 22 pass / 0 warn / 0 fail; route `http://127.0.0.1:3000/embed/numbers/gcd-lcm-gearbox?qa=1` HTTP 200; `npm run build` geçti, yalnız mevcut Vite büyük chunk uyarısı var; `git diff --check` temiz.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/numbers/gcd-lcm-gearbox?qa=1&run=heartbeat-10-12-recovery-2006` üzerinde yanlış deneme, `Home` fallback ile EBOB/EKOK/mühür görevleri, completion, console/responsive/embed, screenshot ve Gemini 3 Flash kapanışı yapılacak.
+
+## 2026-05-06 Heartbeat 20:19 - 10-12 Browser Use IAB Still Blocked
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/module-specs/10-12-gcd-lcm-gearbox.md` ve Browser Use skill yönergesi.
+- Yapılan iş: Aktif en üst `In Progress` modül `10-12` aynı kalite kapısında tutuldu. Browser Use IAB taze preflight `No Codex IAB backends were discovered` verdi (`listedPipes=13`, `candidates=15`, `browsers=0`, `iabBrowsers=0`); `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- gcd-lcm-gearbox` 22 pass / 0 warn / 0 fail; route `http://127.0.0.1:3000/embed/numbers/gcd-lcm-gearbox?qa=1` HTTP 200; `npm run build` geçti, yalnız mevcut Vite büyük chunk uyarısı var; `git diff --check` temiz.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/numbers/gcd-lcm-gearbox?qa=1&run=heartbeat-10-12-recovery-2019` üzerinde yanlış deneme, `Home` fallback ile EBOB/EKOK/mühür görevleri, completion, console/responsive/embed, screenshot ve Gemini 3 Flash kapanışı yapılacak.
+
+## 2026-05-06 Heartbeat 20:32 - 10-12 Browser Use IAB Still Blocked
+- Okunan bağlam: `AGENTS.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `.agent/WORKLOG.md`, `docs/MODULE_DESIGN_GUIDE.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/MODULES.md`, `docs/MEB_ATOMLARI.md`, `docs/module-specs/10-12-gcd-lcm-gearbox.md` ve Browser Use skill yönergesi.
+- Yapılan iş: Aktif en üst `In Progress` modül `10-12` aynı kalite kapısında tutuldu. Browser Use IAB taze preflight `No Codex IAB backends were discovered` verdi (`listedPipes=13`, `candidates=15`, `browsers=0`, `iabBrowsers=0`); `js_reset` sonrası recovery bootstrap aynı sonuçla kapandı. Computer Use, MCP Docker ve harici Playwright kullanılmadı.
+- Test: `npm run module:check -- gcd-lcm-gearbox` 22 pass / 0 warn / 0 fail; route `http://127.0.0.1:3000/embed/numbers/gcd-lcm-gearbox?qa=1` HTTP 200; `npm run build` geçti, yalnız mevcut Vite büyük chunk uyarısı var; `git diff --check` temiz.
+- Sonraki küçük adım: Browser Use IAB geri geldiğinde `/embed/numbers/gcd-lcm-gearbox?qa=1&run=heartbeat-10-12-recovery-2032` üzerinde yanlış deneme, `Home` fallback ile EBOB/EKOK/mühür görevleri, completion, console/responsive/embed, screenshot ve Gemini 3 Flash kapanışı yapılacak.
+
+## 2026-05-06 Manual Long Run - 10. ve 11. Sınıf Kapanış
+- Yapılan iş: Kullanıcının "10 ve 11. sınıfı bitir" hedefi için kalan 10. sınıf modülleri kapatıldı. `10-12 EBOB/EKOK Dişli Kutusu`, `10-13 Kalan Kapısı`, `10-14 Sayma Montaj Hattı`, `10-15 Cebir Algoritma Makinesi`, `10-16 Çapraz Tablo Dedektifi`, `10-17 Koşullu Olasılık Filtresi` ve `10-18 Bağımlı Çekiliş Makinesi` uygulama/spec/registry/doküman kapılarıyla `Done` oldu.
+- Browser Use QA: Browser Use IAB final turunda 7/7 modül için güncel başlangıç ve completion screenshot'ları alındı. Her modülde yanlış onay, `Home` fallback ile doğru görev zinciri, completion ekranı ve app console warn/error `[]` geçti. Kanıtlar `.agent/browser-use-shots/10-12-*` ... `.agent/browser-use-shots/10-18-*` altında.
+- Gemini 3 Flash final: `gemini-3-flash-preview` ile güncel ekranlardan final raporları üretildi. Skorlar: 10-12 96, 10-13 95, 10-14 96, 10-15 98, 10-16 96, 10-17 98, 10-18 94; must-fix yok. Raporlar `.agent/gemini-reports/*-final.txt`.
+- Gemini should-fix rötuşları: EBOB/EKOK mühür etiketi netleştirildi, kalan/sayma/çapraz tablo/koşullu/bağımlı olasılık küçük metin kontrastları iyileştirildi, cebir sözde kodu Türkçeleştirildi, `4'ten` ve `örnek uzay` dili düzeltildi.
+- Test: Toplu `npm run module:check` 7/7 geçti; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Doküman senkronu: `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md` ve `.agent/CURRENT_TASK.md` güncellendi. Aktif blocker kalmadı.

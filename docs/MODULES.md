@@ -455,6 +455,29 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.10.1.2.x` (EBOB ve EKOK algoritmalarını çoklu sayılarda hesaplama)
   * `MAT.10.1.3.x` (Bölme işlemi yapmadan modüler kalan bulma taktikleri)
 
+### 1A. Asal Kilit Kasası (Done)
+* **Konsept:** Öğrenci `30` sayısını asal lazerlerle `2 x 3 x 5` çekirdeğine ayırır; sonra tam bölen rafında `1, 2, 3, 5, 6, 10, 15, 30` taşlarını seçerek sayı-bölen ilişkisini kilitler.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.1.1.1` (Asal çarpanları izole etme)
+  * `MAT.10.1.1.2` (Tam bölen listesini oluşturma)
+* **Route:** `/embed/numbers/prime-lock-vault`
+* **Durum:** `npm run module:check -- prime-lock-vault` 28/28, `npm run build` ve `git diff --check` temiz. Browser Use ile yanlış deneme, `Home` fallback üzerinden asal lazer görevi, tam bölen rafı görevi, completion ve console `[]` geçti. Gemini 3 Flash ilk turda hata ipucunun cevabı söylemesini ve AstroBot toast yerleşimini must-fix verdi; ipuçları yönlendirici dile çekildi, sonuç/metrik kartları doğru kilitlenmeden önce gizlendi, AstroBot küçük/orta embed'de üst konuma alındı ve bölen taşları ferahlatıldı. Final Gemini 92/100 PASS, must-fix yok.
+
+### 1B. EBOB/EKOK Dişli Kutusu (Done)
+* **Konsept:** `12 = 2² · 3` ve `18 = 2 · 3²` iki giriş motoru olarak aynı dişli kutusunda görünür. Öğrenci EBOB için ortak küçük kuvvetleri `2` ve `3`, EKOK için birleşik büyük kuvvetleri `2² = 4` ve `3² = 9` kilitler.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.1.2.1` (Birden fazla sayının EBOB'unu hesaplama)
+  * `MAT.10.1.2.2` (Birden fazla sayının EKOK'unu hesaplama)
+* **Route:** `/embed/numbers/gcd-lcm-gearbox`
+* **Durum:** `npm run module:check -- gcd-lcm-gearbox` 22/22, `npm run build` ve `git diff --check` geçti. Browser Use final QA ile yanlış deneme, `Home` fallback üzerinden EBOB/EKOK/mühür zinciri, completion ve console `[]` doğrulandı. Gemini 3 Flash finali 96/100 PASS verdi, must-fix yok.
+
+### 1C. Kalan Kapısı (Done)
+* **Konsept:** Öğrenci sayı kapsülünü modüler kapı rayında hedefe taşır; `758 mod 9` için rakam toplamı, `748 mod 5` için son basamak, `3714 mod 4` için son iki basamak lensini açar ve kalan tokenını kilitler.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.1.3.1` (Bölme işlemi yapmadan kalan sonucunu modüler izlerle tespit etme)
+* **Route:** `/embed/numbers/remainder-gate`
+* **Durum:** `npm run module:check -- remainder-gate` 21/21, `npm run build` ve `git diff --check` geçti. Browser Use final QA ile yanlış deneme, `Home` fallback üzerinden üç kalan kapısı, completion ve console `[]` doğrulandı. Gemini 3 Flash finali 95/100 PASS verdi, must-fix yok.
+
 ### 2. Fonksiyon Mu Filtresi (Fonksiyon Şartları) ✅
 * **Konsept:** Tek ana oyuncak dikey lazer filtresi. Öğrenci lazeri bir bağıntı üzerinde gezdirir; aynı x değeri iki farklı y üretirse kırmızı alarm verir ve ilişki fonksiyon olarak reddedilir. Son katmanda `f(x)=2x+1` kuralı, tanım kümesi giriş portlarını doğru çıkış portlarına bağlayan görsel bir ağ olur.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
@@ -476,11 +499,44 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
 * **Erişilebilir Etkileşim:**
   * Kapılar sürüklenir; ayrıca odaklanan handle sağ/sol oklarla ince ayar yapar ve `Home` ile orijin çizgisine hizalanır.
 
+### 4B. ✅ Ters Fonksiyon Aynası
+* **Konsept:** Öğrenci doğrusal, karesel, karekök ve rasyonel fonksiyon makinelerini `y=x` aynasına yaklaştırır; giriş/çıkış kapsülleri yer değiştirince ters fonksiyonun grafikte yansıma, cebirde de `x-y` rol değişimi olduğunu görür.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.2.5.1` (Doğrusal fonksiyonun tersini bulma)
+  * `MAT.10.2.5.2` (Karesel fonksiyonun tersini bulma)
+  * `MAT.10.2.5.3` (Karekök fonksiyonunun tersini bulma)
+  * `MAT.10.2.5.4` (Rasyonel fonksiyonun tersini bulma)
+* **Route:** `/embed/algebra/inverse-function-mirror`
+* **Durum:** `npm run module:check`, `npm run build`, `git diff --check`, Browser Use yanlış/doğru akış, completion ve console warning/error `[]` kontrolü geçti. Gemini 3 Flash ilk turda rasyonel görevde kapsül/makine sıkışması ve `y=x aynası` etiketi çakışma riski için must-fix verdi; kapsüller dış portlara açıldı, ayna etiketi rozet yapıldı. Final Gemini 100/100 PASS, must-fix yok.
+
+### 4C. İşaret Tablosu Tarayıcısı (Done)
+* **Konsept:** Öğrenci kök noktalarını sayı doğrusu üzerinde lazer duraklarına taşır; parabolün hangi aralıklarda pozitif/negatif olduğunu renkli enerji bandı gösterir. Büyük/küçük çözüm bölgeleri aynı ana oyuncakta seçilir.
+* **Sağladığı Atom Grupları (Plan):**
+  * `MAT.10.2.6.1` (İkinci dereceden denklemlerle kurulan büyüklük problemlerini işaret tablosuyla çözme)
+  * `MAT.10.2.6.2` (İkinci dereceden denklemlerle kurulan küçüklük problemlerini işaret tablosuyla çözme)
+* **Route:** `/embed/algebra/sign-table-scanner`
+* **Durum:** Route ve uygulama bağlandı; `npm run module:check -- sign-table-scanner`, `npm run build` ve `git diff --check` geçti. Hareketli kök tutamaçları ile sabit `x=2`, `x=3` hedef lazerleri ayrıştırıldı. Browser Use canlı QA'da kök tutamaçlarının hedefe sürüklenince state hedefe ulaşmaması yakalanıp düzeltildi; yanlış deneme, kök sürükleme, pozitif/negatif bant zinciri, completion ve console `[]` geçti. Gemini 3 Flash ilk turda köklerin çakışma belirsizliği ve eşitsizlik sürecinin kök görevinde yeterince görünmemesi için must-fix verdi; ayrı sol/sağ kök rayları, `çakışmaz boşluk`, sürekli akış etiketi, güçlendirilmiş hedef lazerleri ve okunur işaret kuralı eklendi. Final Gemini 96/100 PASS, must-fix yok.
+
 ### 5. Otomatik Dizgi Terminali (Kombinasyon, Sayma ve Cebir)
 * **Konsept:** Holografik bir üretim veya montaj hattı. Öğrenciye bir sipariş gelir ("Ya araba ya motor ver," veya "Önce gövde, sonra motor ve en son boya şasisi diz"). Eğer istenenler birbirinden bağımsız ayrık durumlarsa (Toplama yoluyla), aynı paralel bantlara düşerler. Peş peşe sıralı bir montajsa (Çarpma yoluyla sayma ve Permütasyon temeli) bant ucuza bağlanır. Tüm dizgi bilgisayar komutlarıyla algoritmaya dönüştürülür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.10.3.1.x` (Toplama yoluyla ayrık, Çarpma yoluyla eklemli kombinatuvar sayma algoritmaları)
   * `MAT.10.3.2.x` (Girdi-çıktı mantıklı karmaşık cebir bilgisayar akış şemaları)
+
+### 5A. Sayma Montaj Hattı (Done)
+* **Konsept:** Öğrenci aynı ürüne bağlanan bağımsız seçimlerde `3 renk × 2 rozet = 6`, ayrık seçeneklerde `4 drone + 3 rover = 7` ayrımını tek montaj hattında kilitler.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.3.1.1` (Çarpma yoluyla sayma)
+  * `MAT.10.3.1.2` (Toplama yoluyla sayma)
+* **Route:** `/embed/probability/counting-assembly-line`
+* **Durum:** `npm run module:check -- counting-assembly-line` 22/22, `npm run build` ve `git diff --check` geçti. Browser Use final QA ile yanlış deneme, `Home` fallback üzerinden ürün/toplam/mühür zinciri, completion ve console `[]` doğrulandı. Gemini 3 Flash finali 96/100 PASS verdi, must-fix yok.
+
+### 5B. Cebir Algoritma Makinesi (Done)
+* **Konsept:** Öğrenci `x=3` girdisini `((x+2)^2-4)/3` işlem boru hattından geçirip `7` çıktısına bağlar; son görevde akışı Türkçe sözde kod mührüyle kilitler.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.3.2.1` (Cebirsel işlemi algoritmik girdi-çıktı akışına dönüştürme)
+* **Route:** `/embed/algebra/algebra-algorithm-machine`
+* **Durum:** `npm run module:check -- algebra-algorithm-machine` 21/21, `npm run build` ve `git diff --check` geçti. Browser Use final QA ile yanlış deneme, `Home` fallback üzerinden girdi/işlem-çıktı/kod mührü zinciri, completion ve console `[]` doğrulandı. Gemini 3 Flash finali 98/100 PASS verdi, must-fix yok.
 
 ### 6. Trigonometrik Teodolit (Dik Üçgen Oranları) ✅
 * **Konsept:** Sanal bir topografi teodoliti. Öğrenci sarı açı kolunu canlı dik üçgen üzerinde görür; karşı, komşu ve hipotenüs kenarlarını doğrudan seçerek sin, cos, tan ve cot oranlarını kurar. Amaç formül ezberi değil, "hangi kenar pay, hangi kenar payda?" sorusunu tek ölçüm masasında görünür hale getirmektir.
@@ -490,6 +546,28 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * Açı kolu sahnedeki uç tutamaçtan sürüklenir; kenarlar tıklanarak önce pay, sonra payda olarak oran okuyucuya kilitlenir.
 * **Ayrılan Gelecek Makro Modüller:**
   * `MAT.10.4.2.x` için **Birim Çember Kalkanı**, `MAT.10.4.3.x` için **Sabit Alan Üçgen Rayı**, `MAT.10.4.4.x` için **Sinüs-Kosinüs Arazi Ölçeri** ayrı modüllerdir.
+
+### 6A. Sabit Alan Üçgen Rayı (Done)
+* **Konsept:** Öğrenci sabit `AB` tabanı üstünde kalan `C` tepe noktasını tabana paralel rayda sola, sağa ve orta mühür noktasına taşır. Üçgenin şekli eğilir ama yükseklik kablosu ve alan büyüklüğü sabit kaldığı için `A = taban · yükseklik / 2` ilişkisi ekranda değişmeden görünür.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.4.3.1` (Sabit taban ve paralel tepe rayı ile aynı alana sahip farklı üçgenleri görme)
+* **Route:** `/embed/geometry/constant-area-triangle-rail`
+* **Durum:** `npm run module:check -- constant-area-triangle-rail`, `npm run build` ve `git diff --check` geçti. Browser Use ile yanlış deneme, `Home` fallback üzerinden sol/sağ/orta hedef, completion ve console `[]` doğrulandı. Gemini 3 Flash ilk turda sağ hedefte sol yön başarı mesajını must-fix verdi; başarı metinleri ray/alan büyüklüğü diline çekildi, etiket kontrastı ve çarpım sembolü düzeltildi. Final Gemini 96/100 PASS, must-fix yok.
+
+### 6B. Sinüs-Kosinüs Arazi Ölçeri (Done)
+* **Konsept:** Öğrenci dik olmayan bir arazi üçgeninde doğru teorem lensini seçer. Kosinüs lensi iki kenar ve aradaki açıdan eksik `BC` mesafe kablosunu ölçer; sinüs lensi bilinen açı-kenar çiftinden bilinmeyen `B` açısını vizörle buldurur. Son rapor görevi iki teoremin kullanım şartını tek mühür çizgisinde ayırır.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.4.4.1` (Kosinüs teoremi ile eksik kenar ölçümü)
+  * `MAT.10.4.4.2` (Sinüs teoremi ile bilinmeyen açı ölçümü)
+* **Route:** `/embed/geometry/sine-cosine-terrain-surveyor`
+* **Durum:** `npm run module:check -- sine-cosine-terrain-surveyor`, `npm run build` ve `git diff --check` geçti. Browser Use ile yanlış deneme, `Home` fallback üzerinden kosinüs/sinüs/rapor görevleri, completion ve console `[]` doğrulandı. Gemini 3 Flash finali 96/100 PASS verdi, must-fix yok; aktif formül paneli iki teoremi kalabalıklaştırmadan doğru ayrıştırıyor.
+
+### 6C. Birim Çember Kalkanı (Done)
+* **Konsept:** Öğrenci birim çember üzerindeki açı düğümünü taşır; yatay izdüşüm `cos x`, dikey izdüşüm `sin x` olarak görünür. `cos²x` ve `sin²x` enerji plakaları dolarken merkez kalkan çekirdeği toplamın her açıda `1` kaldığını gösterir.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.4.2.1` (`sin²x + cos²x = 1` özdeşliğini birim çember/Pisagor bağıyla görme)
+* **Route:** `/embed/trigonometry/unit-circle-identity-shield`
+* **Durum:** `npm run module:check -- unit-circle-identity-shield`, `npm run build` ve `git diff --check` geçti. Browser Use ile yanlış deneme, `Home` fallback üzerinden cos²/sin²/kalkan mührü görevleri, completion ve console `[]` doğrulandı. Gemini 3 Flash finali 92/100 PASS verdi, must-fix yok; toast/buton yakınlığı should-fix olarak nonblocking kaldı ve güncel AstroBot yerleşimiyle IAB smoke tekrarlandı.
 
 ### 7. Analitik Rota Haritası (Nokta ve Doğru Analitiği) ✅
 * **Konsept:** İki uydu / istasyon koordinatı ($x_1, y_1$ ve $x_2, y_2$) arasındaki doğrusal mesafeyi ve uçuş eğimini (m) bağlayan navigasyon siber haritası. Öğrenci A ve B istasyonlarını koordinat düzleminde doğrudan taşır; `Δx`, `Δy`, mesafe, eğim ve `y-y_1 = m(x-x_1)` denklemi aynı rota üzerinde canlı okunur. Son katmanda rotayı içten bölen mor transfer istasyonu yalnız gerektiğinde açılır ve `AP:PB = 1:3` oranına hizalanır.
@@ -504,6 +582,27 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.10.6.1.x` / `MAT.10.6.2.x` (Çapraz tablolar ile ilişkisellik testi ve yanlış yorumlanmış/spekülatif medya anketi teşhisi)
   * `MAT.10.7.1.x` / `MAT.10.7.2.x` (Daralan örneklemde Koşullu Olasılık ve Bağımlı Olaylarda/Geri konulmayan toplarda küme bozulma animasyonu)
+
+### 8A. Çapraz Tablo Dedektifi (Done)
+* **Konsept:** Öğrenci planlı çalışma satırı ile yükseldi sütununun kesişimindeki `28` hücresini okur, beklenen `19` değerine göre `+9` sapmayı yakalar ve medya iddiasını yanlılık bayrağıyla denetler.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.6.1.1`, `MAT.10.6.1.2`, `MAT.10.6.2.1`
+* **Route:** `/embed/statistics/cross-table-detective`
+* **Durum:** `npm run module:check -- cross-table-detective` 22/22, `npm run build` ve `git diff --check` geçti. Browser Use final QA ile yanlış deneme, `Home` fallback üzerinden hücre/sapma/medya raporu zinciri, completion ve console `[]` doğrulandı. Gemini 3 Flash finali 96/100 PASS verdi, must-fix yok.
+
+### 8B. Koşullu Olasılık Filtresi (Done)
+* **Konsept:** Öğrenci zar örnek uzayını önce `çift geldi` koşuluyla `{2,4,6}` kümesine daraltır; sonra `4'ten büyük` hedefini yeni örnek uzayda sayarak `1/3` sonucunu mühürler.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.7.1.1`
+* **Route:** `/embed/probability/conditional-probability-filter`
+* **Durum:** `npm run module:check -- conditional-probability-filter` 20/20, `npm run build` ve `git diff --check` geçti. Browser Use final QA ile yanlış deneme, `Home` fallback üzerinden koşul/hedef/kesir mührü zinciri, completion ve console `[]` doğrulandı. Gemini 3 Flash finali 98/100 PASS verdi, must-fix yok.
+
+### 8C. Bağımlı Çekiliş Makinesi (Done)
+* **Konsept:** Öğrenci 3 kırmızı / 2 mavi torbadan ilk kırmızıyı geri koymadan çıkarır; örnek uzayı `2 kırmızı / 4 toplam` olarak günceller ve ikinci kırmızı olasılığını `1/2` olarak kilitler.
+* **Sağladığı Atom Grupları:**
+  * `MAT.10.7.2.1`
+* **Route:** `/embed/probability/dependent-draw-machine`
+* **Durum:** `npm run module:check -- dependent-draw-machine` 20/20, `npm run build` ve `git diff --check` geçti. Browser Use final QA ile yanlış deneme, `Home` fallback üzerinden ilk çekiliş/örnek uzay/görev mührü zinciri, completion ve console `[]` doğrulandı. Gemini 3 Flash finali 94/100 PASS verdi, must-fix yok.
 
 ---
 
@@ -569,17 +668,22 @@ Bu modüller silinmedi; route'ları korunuyor. Ancak yeni 11. sınıf aktif gör
 * **Route:** `/embed/algebra/richter-desibel-scale-simulator`
 * **Durum:** Route ve uygulama tamamlandı. Browser Use ile yanlış onay, üç görev zinciri, completion ve console warning/error kontrolü geçti. Gemini 3 Flash ilk turda büyüme modu başlığı, küçük formül metni ve desibel oran vurgusu için must-fix verdi; düzeltmeler sonrası 94/100 PASS ve must-fix yok.
 
-### 5A. 🚧 Fonksiyon Bileşke Portları
+### 5A. ✅ Fonksiyon Bileşke Portları
 * **Konsept:** Öğrenci `x` kapsülünü önce `g` makinesine takar; çıkan `g(x)` kapsülünü fiziksel kabloyla `f` makinesinin giriş portuna bağlar. Finalde tek ışıklı zincir `x -> g -> f` ve `f(g(x))` sonucunu gösterir. Dört işlem aynı ekrana sıkıştırılmaz.
 * **Sağladığı Atom Grupları:**
   * `MAT.11.1.7.1` (İki farklı fonksiyonu iç içe geçirerek bileşke fonksiyon kurgulama)
 * **Route:** `/embed/algebra/function-composition-ports`
-* **Durum:** SSOT ve spec başlangıcı yapıldı; uygulama/Browser Use/Gemini kapıları sıradaki checkpoint.
+* **Durum:** Browser Use ile görsel smoke, yanlış onay AstroBot hatası, `Home` fallback üzerinden iki port bağlantısı, üç görev zinciri, completion ve taze console warning/error kontrolü geçti. Gemini 3 Flash final turu 96/100 PASS verdi, must-fix yok. QA sırasında sahnedeki teknik atom etiketi sadeleştirildi, zincir bandı kontrastı artırıldı ve AstroBot toast'ının sağ kontrol panelini kapatması global yerleşim düzeltmesiyle giderildi.
 
-### 5B. Fonksiyon İşlem Mikseri
-* **Konsept:** DJ mikseri / bilgisayar anakartı gibi bir sentezleyici. `f(x)` ve `g(x)` portlarına fonksiyonlar takılır; `+`, `-`, `x`, `/` tuşlarına basıldıkça ikisi aynı tanım kümesinde işleme girer.
-* **Sağladığı Atom Grupları (Plan):**
-  * `MAT.11.1.8.x` (Aynı tanım kümesindeki iki fonksiyonda dört işlem mekanikleri)
+### 5B. ✅ Fonksiyon İşlem Mikseri
+* **Konsept:** DJ mikseri / bilgisayar anakartı gibi bir sentezleyici. `f(x)` ve `g(x)` değer akışları ortadaki `+`, `-`, `×`, `÷` kadranından geçer; sağdaki çıktı rayı yeni fonksiyon değerlerini üretir. Bölme görevinde `g(x)=0` olan istasyon kırmızı güvenlik kapağıyla kapanır.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.1.8.1` (Aynı tanım kümesindeki iki fonksiyonu toplama)
+  * `MAT.11.1.8.2` (Aynı tanım kümesindeki iki fonksiyonu çıkarma)
+  * `MAT.11.1.8.3` (Aynı tanım kümesindeki iki fonksiyonu çarpma)
+  * `MAT.11.1.8.4` (Aynı tanım kümesindeki iki fonksiyonu bölme)
+* **Route:** `/embed/algebra/function-operation-mixer`
+* **Durum:** Browser Use IAB tekrar denemesinde açıldı; görsel smoke, yanlış onay AstroBot hatası, `Home` fallback ile dört işlem görevi, bölme `kilit` güvenliği, completion ve console warning/error `[]` kontrolü geçti. İlk QA turunda SVG kadranın `Home` fallback'i çalışmadığı ve `f/g` etiketlerinin ilk kapsüllere fazla yakın olduğu yakalandı; `focusable` kadran hedefleri ve etiket hizası düzeltildi. Gemini 3 Flash final turu 96/100 PASS verdi, must-fix yok. `npm run module:check -- function-operation-mixer` 23/23, `npm run build` ve `git diff --check` temiz.
 
 ### 6A. ✅ Dörtgen Ayrıştırma Masası
 * **Konsept:** Öğrenci dörtgeni köşegen bıçağıyla iki üçgene ayırır. İlk görevde iki üçgenin `180° + 180° = 360°` iç açı toplamını gösterir; ikinci görevde alan birleştirici rayı `T1 + T2 = Dörtgen alanı` toplam haznesine kilitler.
@@ -589,11 +693,38 @@ Bu modüller silinmedi; route'ları korunuyor. Ancak yeni 11. sınıf aktif gör
 * **Route:** `/embed/geometry/quadrilateral-decomposition-table`
 * **Durum:** Browser Use ile görsel smoke, yanlış onay, iki görev zinciri, alan birleştirme sahnesi, completion ve console warning/error kontrolü geçti.
 
-### 6B. Çokgen Anatomi Masası (İçbükey/Dışbükey ve Mozaik)
-* **Konsept:** Parçalanmış geometrik cam şekiller. Dışbükey (Konveks) parçaların tüm köşeleri dışarı bakarken, makine "İçbükey (Konkav) Uyarı!" diyerek içeri çökük bir açıyı ($>180°$) kırmızı lazerle işaretler. Kenarları saydırarak $n(n-3)/2$ çapraz köşegen tespiti lazeri atılır. Öğrenci düzgün çokgenleri mouse ile sürükleyerek "boşluksuz mozaik ve fayans kaplamaları" tasarlar.
-* **Sağladığı Atom Grupları (Plan):**
-  * `MAT.11.2.2.x` (Özel Dörtgenlerin kenar ve köşegen özellik testleri)
-  * `MAT.11.2.3.x` / `MAT.11.2.4.x` / `MAT.11.2.5.x` (İçbükey/Dışbükey klasörü, Simetri/Köşegen formülleri ve Mozaik fayans optimizasyonu)
+### 6B. ✅ Özel Dörtgen Tanı Masası
+* **Konsept:** Öğrenci özel dörtgeni isim kartından değil, teşhis masasında çıkan özellik izlerinden tanır. İlk görevde eşkenar dörtgen numunesinin kenarları taranır; dört kenar eşitliği ve karşı kenar paralelliği doğru sınıflandırma kilidine bağlanır. İkinci görevde dikdörtgen numunesinin köşegenleri taranır; eşit köşegen ve orta noktada kesişme izi doğru kilidi açar.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.2.2.1` (Özel dörtgenleri kenar özelliklerine göre sınıflandırma)
+  * `MAT.11.2.2.2` (Özel dörtgenleri köşegen kesişim özelliklerine göre sınıflandırma)
+* **Route:** `/embed/geometry/special-quadrilateral-diagnostic-table`
+* **Durum:** Browser Use ile görsel smoke, kareyi yanlış kilit seçme özel uyarısı, `Home` fallback üzerinden kenar/köşegen tarayıcıları, doğru eşkenar dörtgen/dikdörtgen kilitleri, completion ve console warning/error `[]` kontrolü geçti. Gemini 3 Flash ilk turda "4 kenar eşit" ifadesinin kareyi de kapsadığı must-fix'ini verdi; görev metni, hedef etiketi, kural paneli ve kare seçimi hata mesajı `dik açı yok` ayrımıyla düzeltildi. Final Gemini turu 98/100 PASS verdi, must-fix yok. `npm run module:check -- special-quadrilateral-diagnostic-table` 21/21, `npm run build` ve `git diff --check` temiz.
+
+### 6C. ✅ Konkav-Konveks Lazer Dedektörü
+* **Konsept:** Öğrenci lazer probunu çokgen köşelerinde dolaştırır. Bütün iç açılar 180° altındaysa sahne konveks mühür alır; içeri göçmüş tek köşede kırmızı alarm halkası yanar ve konkav kilidi açılır. Köşegen/simetri/mozaik kapsamı bu deneyin dışında tutulur.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.2.3.1` (Bütün iç açıları 180°'den küçük olan dışbükey/konveks şekli etiketleme)
+  * `MAT.11.2.3.2` (En az bir iç açısı 180°'den büyük olan içbükey/konkav şekli etiketleme)
+* **Route:** `/embed/geometry/concave-convex-laser-detector`
+* **Durum:** `npm run module:check`, `npm run build`, `git diff --check`, Browser Use görsel smoke, yanlış/doğru akış, completion ve console warning/error `[]` kontrolü geçti. Browser Use QA sırasında konkav görevde sağ panelin `90°` göstermesi, kırmızı alarm köşesinin ise `266°` olması yakalandı; aktif açı etiketi alarm açısına bağlandı. Gemini 3 Flash final görsel turu 96/100 PASS verdi, must-fix yok.
+
+### 6D. ✅ Çokgen Köşegen ve Simetri Atölyesi
+* **Konsept:** Öğrenci düzgün çokgenin kenar sayısını ayarlar; köşegen lazerleri tek köşeden ve tüm köşelerden patlayarak `n(n-3)/2` sayımını doğurur. Aynı sahnede dış açı yürüyüşü 360° halkayı kapatır ve simetri aynası düzgün çokgenin eksenlerini tek tek kilitler.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.2.4.1` (Dışbükey çokgen köşegen sayısı)
+  * `MAT.11.2.4.2` (Dış açı toplamı 360°)
+  * `MAT.11.2.4.3` (Düzgün çokgen simetri ekseni sayısı)
+* **Route:** `/embed/geometry/polygon-diagonal-symmetry-workshop`
+* **Durum:** `npm run module:check`, `npm run build`, `git diff --check`, Browser Use yanlış/doğru akış, completion ve console warning/error `[]` kontrolü geçti. Browser Use görsel QA'da dar embed görünümde görev rozeti/alt ray sıkışması yakalandı; hedef rozeti satırlandı, raylar ferahlatıldı ve `HEDEF: 9 köşegen` dili netleştirildi. Gemini 3 Flash ilk tur must-fix verdi; düzeltmelerden sonra final 98/100 PASS, must-fix yok.
+
+### 6E. ✅ Mozaik Kaplama Atölyesi
+* **Konsept:** Öğrenci çokgen fayansları mozaik kaplama masasında yuvalara taşır; boşluk/üst üste binme alarmı, bir noktadaki açıların 360° kapanması ve desenin ray boyunca hizalanması aynı ana oyuncak üzerinde görünür.
+* **Sağladığı Atom Grupları:**
+  * `MAT.11.2.5.1` (Çokgenlerle mozaik kaplama problemleri)
+  * `MAT.11.2.5.2` (Çokgenlerle fayans hizalama problemleri)
+* **Route:** `/embed/geometry/mosaic-tiling-workshop`
+* **Durum:** `npm run module:check`, `npm run build`, `git diff --check`, Browser Use yanlış/doğru akış, completion ve console warning/error `[]` kontrolü geçti. Gemini 3 Flash ilk turda döndürme rayı hitbox'ı, merkez etiket çakışması ve mühür kontrol dili için must-fix verdi; ray dokunma alanı büyütüldü, pasif çokgen etiketleri merkez dereceyi ezmeyecek şekilde gizlendi, mühürler üst etiket/seçili nokta ile ayrıştırıldı ve completion için otomatik yukarı kaydırma eklendi. Final Gemini 98/100 PASS, must-fix yok.
 
 ### 7A. ✅ Korelasyon Serpilme Radarı
 * **Konsept:** Öğrenci dört veri kapsülünü koordinat radarında hedef halkalara taşır. Aynı nokta bulutu daha sonra pozitif ve negatif doğrusal ilişki düzenlerine geçirilir; eğilim ışını veri bulutunun genel yönünü canlı gösterir. Nedensellik/medya eleştirisi bu modüle sıkıştırılmaz.

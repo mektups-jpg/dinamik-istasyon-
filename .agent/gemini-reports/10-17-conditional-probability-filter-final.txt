@@ -1,0 +1,9 @@
+{
+  "verdict": "PASS",
+  "score": 98,
+  "must_fix": [],
+  "should_fix": [
+    "Capitalize the instructional sentence 'koşul gelince...' for better formal alignment with Turkish grammar."
+  ],
+  "notes": "The module is mathematically sound and perfectly aligned with MAT.10.7.1. The pedagogical approach of showing the 'shrinking universe' (evren küçülür) is the gold standard for teaching conditional probability. UI hierarchy is clear, and the completion state provides good closure."
+}

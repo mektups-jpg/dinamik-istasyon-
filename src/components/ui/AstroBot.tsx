@@ -34,10 +34,10 @@ export function AstroBot({ message }: AstroBotProps) {
 
   return (
     <motion.div 
-      initial={{ x: 100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
+      initial={{ y: 18, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.5 }}
-      className="fixed bottom-8 right-8 flex items-end gap-4 z-50 pointer-events-none"
+      className="pointer-events-none fixed right-4 top-24 z-50 flex max-w-[min(88vw,360px)] items-end gap-3 xl:bottom-8 xl:top-auto xl:right-8 xl:max-w-none xl:gap-4"
     >
       <AnimatePresence mode="wait">
         {message && isVisible && (
@@ -46,7 +46,7 @@ export function AstroBot({ message }: AstroBotProps) {
             initial={{ opacity: 0, scale: 0.8, y: 10, transformOrigin: 'bottom right' }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 10 }}
-            className={`bg-[#1F2833]/95 backdrop-blur-xl border text-white p-4 pt-6 rounded-2xl rounded-br-sm max-w-[340px] mb-8 relative pointer-events-none flex items-start gap-3 ${colors[type]}`}
+            className={`bg-[#1F2833]/95 backdrop-blur-xl border text-white p-4 pt-6 rounded-2xl rounded-br-sm max-w-[280px] mb-8 relative pointer-events-none flex items-start gap-3 sm:max-w-[320px] xl:max-w-[340px] ${colors[type]}`}
           >
             <button 
               onClick={() => setIsVisible(false)}

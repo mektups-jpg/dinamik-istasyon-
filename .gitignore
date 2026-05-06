@@ -5,6 +5,8 @@ dist/
 .agent/*.jpg
 .agent/*.jpeg
 .agent/*.json
+.agent/browser-use-shots/
+.agent/dev-server.pid
 .tmp-*
 
 *.log

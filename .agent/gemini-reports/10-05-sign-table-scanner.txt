@@ -1,0 +1,36 @@
+**VERDICT: PASS_WITH_WARNINGS**
+**SCORE: 88/100**
+
+**MUST_FIX:**
+- **Köklerin Çakışma Kontrolü:** "Sol" ve "Sağ" kök düğmeleri birbirinin üzerinden geçebiliyor mu? Eğer geçebiliyorsa, "sol" etiketi sağda kaldığında pedagojik bir paradoks oluşur. Bu sürükleme alanına birbirlerini itme veya sınır koyma (collision/limit) eklenmeli.
+- **Alt Formül Dinamiği:** Ekran 1 ve 2'de denklem $x^2 - 5x + 6 = 0$ olarak görünüyor. Ekran 3'te $>0$ oluyor. Kullanıcı daha kökleri yerleştirirken hedefin bir eşitsizlik çözmek olduğunu (örneğin sol üstte veya ana başlık altında) her an görmeli. Sadece sürgü çekilince formülün değişmesi "sonuç odaklı" kalıyor, "süreç odaklı" değil.
+
+**SHOULD_FIX:**
+- **Metin Okunabilirliği:** "kökler sayı doğrusunu + / - / + bölgelerine ayırır" yazısı çok ince ve küçük. Özellikle mobil cihazlarda (responsive/embed) bu yazı ve altındaki $x=2$ / $x=3$ lazer etiketleri göz yorabilir. Font ağırlığı bir tık artırılmalı.
+- **Parabol Sensörü İfadesi:** "parabol sensörü yukarı bakıyor" ifadesi görselin çok içinde kalmış. Parabolün kolları yukarıda olduğu için metnin parabolün hemen üstünde olması karışıklık yaratıyor; bu metin tepe noktasının (R,K) yakınına veya daha yukarıya izole edilmeli.
+
+**MATH_ACCURACY:**
+- **Tam Puan:** $x^2 - 5x + 6$ için kökler 2 ve 3 doğrudur. Baş katsayı pozitif ($a=1$) olduğu için işaret dizilimi + / - / + şeklindedir. Görseldeki yeşil (pozitif) ve turuncu (negatif) bantlar matematiksel olarak kusursuz eşleşiyor.
+
+**FIRST_3_SECONDS:**
+- **Netlik:** Orta düzey. Kullanıcı "sol" ve "sağ" yazan parlayan topları gördüğünde bunları sürüklemesi gerektiğini anlar. Ancak hedef lazerleri ($x=2, x=3$) başlangıçta çok silik. Kullanıcı nereye götüreceğini anlamak için 1-2 saniye "bakınabilir". Lazer çizgilerine hafif bir "pulse" efekti verilebilir.
+
+**VISUAL_LAYOUT:**
+- **Cyber-Lab Teması:** Dinamik İstasyon estetiğine uygun, temiz ve karanlık mod odaklı.
+- **Renk Kodlaması:** Pozitif bölgeler için "yeşil/mint", negatif için "altın/turuncu" kullanımı evrensel başarıda.
+
+**RESPONSIVE_EMBED:**
+- **Görünüm:** Yanlardan verilen boşluklar ve merkeze hizalama güvenli duruyor. Ancak completion ekranındaki (Ekran 5) butonların büyüklüğü, mobil dikey kullanımda "safe area" dışına çıkma riski taşıyor (alt bar ile çakışma ihtimali).
+
+**INTERACTION_ACCESSIBILITY:**
+- **Sürükle-Bırak:** Kök duraklarının dairesel alanı (hitbox) parmakla kullanım için yeterince geniş görünüyor.
+- **Geri Bildirim:** Kökler hedefe oturduğunda "kilit" ikonunun çıkması ve rengin dolması (Ekran 2) mükemmel bir UX geri bildirimi.
+
+**COGNITIVE_LOAD:**
+- **Düşük ve Odaklı:** Modül, öğrenciyi genel fonksiyon karmaşasından kurtarıp sadece "işaret/bölge" ilişkisine odaklıyor. "İç bölge" ve "Dış bölge" terimleri bilişsel yükü azaltan harika birer köprü terim.
+
+**V2_IDEAS_NOT_BLOCKING:**
+- **Katsayı Değişimi:** Gelecek versiyonda $x^2$ katsayısı negatif yapılarak ($a<0$) parabolün kollarının aşağı dönmesi ve işaret tablosunun - / + / - olması denetlenebilir.
+- **Çözüm Kümesi Yazımı:** Bantlar yandığında alt kısımda $[2, 3]$ veya $(-\infty, 2) \cup (3, \infty)$ gibi aralık notasyonunun da dinamik olarak belirmesi pedagojik kalıcılığı artırır.
+
+**Ekran görüntüsü analizi tamamlandı. Teknik olarak başarılı, ufak tipografik ve limit dokunuşlarıyla yayına hazır.**

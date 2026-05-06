@@ -1,0 +1,10 @@
+{
+  "verdict": "PASS",
+  "score": 96,
+  "must_fix": [],
+  "should_fix": [
+    "Increase font size for the 'min(2², 2¹)' and 'max' exponent logic labels to improve mobile readability",
+    "Ensure the contrast of the dark grey text on the dark background in the completion screen description is slightly higher"
+  ],
+  "notes": "The mathematical logic for prime factor comparison (min for EBOB, max for EKOK) is perfectly executed. The 'gear' metaphor aligns well with the curriculum's mechanical approach to factorization. Visual hierarchy is strong, and the Turkish terminology is accurate and thematic."
+}

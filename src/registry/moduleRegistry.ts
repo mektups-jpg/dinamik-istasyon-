@@ -473,6 +473,36 @@ export const modules: ModuleMeta[] = [
     component: lazy(() => import('../modules/grade10/domain-gates/DomainGatesApp'))
   },
   {
+    id: 'inverse-function-mirror',
+    title: 'Ters Fonksiyon Aynası',
+    description: 'y=x aynasında giriş ve çıkış kapsüllerini rol değişimine taşıyarak doğrusal, karesel/karekök ve rasyonel tersliği keşfet.',
+    grade: 10,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.2.5.1',
+      'MAT.10.2.5.2',
+      'MAT.10.2.5.3',
+      'MAT.10.2.5.4'
+    ],
+    path: '/embed/algebra/inverse-function-mirror',
+    component: lazy(() => import('../modules/grade10/inverse-function-mirror/InverseFunctionMirrorApp'))
+  },
+  {
+    id: 'sign-table-scanner',
+    title: 'İşaret Tablosu Tarayıcısı',
+    description: 'Kök duraklarını sayı doğrusuna kilitle, pozitif ve negatif çözüm bölgelerini lazer bantlarıyla seç.',
+    grade: 10,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.2.6.1',
+      'MAT.10.2.6.2'
+    ],
+    path: '/embed/algebra/sign-table-scanner',
+    component: lazy(() => import('../modules/grade10/sign-table-scanner/SignTableScannerApp'))
+  },
+  {
     id: 'function-filter',
     title: 'Fonksiyon Mu Filtresi',
     description: 'Dikey doğru lazeriyle fonksiyon şartını test et ve tanım kümesi portlarını kurala bağla.',
@@ -485,6 +515,115 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/algebra/function-filter',
     component: lazy(() => import('../modules/grade10/function-filter/FunctionFilterApp'))
+  },
+  {
+    id: 'prime-lock-vault',
+    title: 'Asal Kilit Kasası',
+    description: '30 sayısını asal lazerlerle parçala ve tam bölen rafını eksiksiz kilitle.',
+    grade: 10,
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.1.1.1',
+      'MAT.10.1.1.2'
+    ],
+    path: '/embed/numbers/prime-lock-vault',
+    component: lazy(() => import('../modules/grade10/prime-lock-vault/PrimeLockVaultApp'))
+  },
+  {
+    id: 'gcd-lcm-gearbox',
+    title: 'EBOB/EKOK Dişli Kutusu',
+    description: '12 ve 18 sayılarını aynı asal dişli kutusunda karşılaştırarak EBOB ve EKOK seçim kuralını kilitle.',
+    grade: 10,
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.1.2.1',
+      'MAT.10.1.2.2'
+    ],
+    path: '/embed/numbers/gcd-lcm-gearbox',
+    component: lazy(() => import('../modules/grade10/gcd-lcm-gearbox/GcdLcmGearboxApp'))
+  },
+  {
+    id: 'remainder-gate',
+    title: 'Kalan Kapısı',
+    description: 'Bölme işlemi yapmadan rakam toplamı, son basamak ve son iki basamak izleriyle kalan tokenını kilitle.',
+    grade: 10,
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.1.3.1'
+    ],
+    path: '/embed/numbers/remainder-gate',
+    component: lazy(() => import('../modules/grade10/remainder-gate/RemainderGateApp'))
+  },
+  {
+    id: 'counting-assembly-line',
+    title: 'Sayma Montaj Hattı',
+    description: 'Çarpma ve toplama yoluyla saymayı aynı üretim hattında ayrıştır.',
+    grade: 10,
+    category: 'Olasılık',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.3.1.1',
+      'MAT.10.3.1.2'
+    ],
+    path: '/embed/probability/counting-assembly-line',
+    component: lazy(() => import('../modules/grade10/counting-assembly-line/CountingAssemblyLineApp'))
+  },
+  {
+    id: 'algebra-algorithm-machine',
+    title: 'Cebir Algoritma Makinesi',
+    description: 'Girdi, işlem blokları ve çıktı portuyla cebirsel ifadeyi algoritmik akışa çevir.',
+    grade: 10,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.3.2.1'
+    ],
+    path: '/embed/algebra/algebra-algorithm-machine',
+    component: lazy(() => import('../modules/grade10/algebra-algorithm-machine/AlgebraAlgorithmMachineApp'))
+  },
+  {
+    id: 'cross-table-detective',
+    title: 'Çapraz Tablo Dedektifi',
+    description: '2x2 çapraz tabloda kategori hücresini, sapma sinyalini ve medya yanlılığı bayrağını denetle.',
+    grade: 10,
+    category: 'Olasılık',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.6.1.1',
+      'MAT.10.6.1.2',
+      'MAT.10.6.2.1'
+    ],
+    path: '/embed/statistics/cross-table-detective',
+    component: lazy(() => import('../modules/grade10/cross-table-detective/CrossTableDetectiveApp'))
+  },
+  {
+    id: 'conditional-probability-filter',
+    title: 'Koşullu Olasılık Filtresi',
+    description: 'Zar evrenini koşulla daralt, hedef olayı yeni evrende say ve 1/3 sonucunu mühürle.',
+    grade: 10,
+    category: 'Olasılık',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.7.1.1'
+    ],
+    path: '/embed/probability/conditional-probability-filter',
+    component: lazy(() => import('../modules/grade10/conditional-probability-filter/ConditionalProbabilityFilterApp'))
+  },
+  {
+    id: 'dependent-draw-machine',
+    title: 'Bağımlı Çekiliş Makinesi',
+    description: 'Geri konmayan kırmızı top sonrası torba evrenini güncelle ve ikinci olasılığı yeni evrenden hesapla.',
+    grade: 10,
+    category: 'Olasılık',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.7.2.1'
+    ],
+    path: '/embed/probability/dependent-draw-machine',
+    component: lazy(() => import('../modules/grade10/dependent-draw-machine/DependentDrawMachineApp'))
   },
   {
     id: 'trigonometric-theodolite',
@@ -501,6 +640,46 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/trigonometry/trigonometric-theodolite',
     component: lazy(() => import('../modules/grade10/trigonometric-theodolite/TrigonometricTheodoliteApp'))
+  },
+  {
+    id: 'constant-area-triangle-rail',
+    title: 'Sabit Alan Üçgen Rayı',
+    description: 'Tepe noktasını tabana paralel rayda kaydırarak aynı taban ve yüksekliğin alanı sabit tuttuğunu keşfet.',
+    grade: 10,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.4.3.1'
+    ],
+    path: '/embed/geometry/constant-area-triangle-rail',
+    component: lazy(() => import('../modules/grade10/constant-area-triangle-rail/ConstantAreaTriangleRailApp'))
+  },
+  {
+    id: 'sine-cosine-terrain-surveyor',
+    title: 'Sinüs-Kosinüs Arazi Ölçeri',
+    description: 'Dik olmayan arazi üçgeninde kosinüsle eksik kenarı, sinüsle bilinmeyen açıyı ölç.',
+    grade: 10,
+    category: 'Trigonometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.4.4.1',
+      'MAT.10.4.4.2'
+    ],
+    path: '/embed/geometry/sine-cosine-terrain-surveyor',
+    component: lazy(() => import('../modules/grade10/sine-cosine-terrain-surveyor/SineCosineTerrainSurveyorApp'))
+  },
+  {
+    id: 'unit-circle-identity-shield',
+    title: 'Birim Çember Kalkanı',
+    description: 'Birim çemberde sin² ve cos² enerji plakalarını birleştirerek toplamın 1 kaldığını keşfet.',
+    grade: 10,
+    category: 'Trigonometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.10.4.2.1'
+    ],
+    path: '/embed/trigonometry/unit-circle-identity-shield',
+    component: lazy(() => import('../modules/grade10/unit-circle-identity-shield/UnitCircleIdentityShieldApp'))
   },
   {
     id: 'analytic-route-map',
@@ -607,6 +786,35 @@ export const modules: ModuleMeta[] = [
     component: lazy(() => import('../modules/grade11/richter-desibel-scale-simulator/RichterDesibelScaleSimulatorApp'))
   },
   {
+    id: 'function-composition-ports',
+    title: 'Fonksiyon Bileşke Portları',
+    description: 'x kapsülünü önce g makinesinden geçirip çıkan değeri f portuna bağlayarak f(g(x)) zincirini kur.',
+    grade: 11,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.1.7.1'
+    ],
+    path: '/embed/algebra/function-composition-ports',
+    component: lazy(() => import('../modules/grade11/function-composition-ports/FunctionCompositionPortsApp'))
+  },
+  {
+    id: 'function-operation-mixer',
+    title: 'Fonksiyon İşlem Mikseri',
+    description: 'f ve g değer akışlarını +, -, çarpma ve bölme kapılarından geçirerek yeni fonksiyon çıktılarını üret.',
+    grade: 11,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.1.8.1',
+      'MAT.11.1.8.2',
+      'MAT.11.1.8.3',
+      'MAT.11.1.8.4'
+    ],
+    path: '/embed/algebra/function-operation-mixer',
+    component: lazy(() => import('../modules/grade11/function-operation-mixer/FunctionOperationMixerApp'))
+  },
+  {
     id: 'quadrilateral-decomposition-table',
     title: 'Dörtgen Ayrıştırma Masası',
     description: 'Dörtgeni köşegen bıçağıyla iki üçgene ayırarak iç açı toplamı ve alan toplamını canlı gör.',
@@ -619,6 +827,63 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/geometry/quadrilateral-decomposition-table',
     component: lazy(() => import('../modules/grade11/quadrilateral-decomposition-table/QuadrilateralDecompositionTableApp'))
+  },
+  {
+    id: 'special-quadrilateral-diagnostic-table',
+    title: 'Özel Dörtgen Tanı Masası',
+    description: 'Kenar ve köşegen tarayıcılarıyla özel dörtgenlerin kimliğini ezber yerine özellik iziyle teşhis et.',
+    grade: 11,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.2.2.1',
+      'MAT.11.2.2.2'
+    ],
+    path: '/embed/geometry/special-quadrilateral-diagnostic-table',
+    component: lazy(() => import('../modules/grade11/special-quadrilateral-diagnostic-table/SpecialQuadrilateralDiagnosticTableApp'))
+  },
+  {
+    id: 'concave-convex-laser-detector',
+    title: 'Konkav-Konveks Lazer Dedektörü',
+    description: 'Açı probunu çokgen köşelerinde gezdirerek 180° altı ve >180° işaretlerinden konveks/konkav tanısını koy.',
+    grade: 11,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.2.3.1',
+      'MAT.11.2.3.2'
+    ],
+    path: '/embed/geometry/concave-convex-laser-detector',
+    component: lazy(() => import('../modules/grade11/concave-convex-laser-detector/ConcaveConvexLaserDetectorApp'))
+  },
+  {
+    id: 'polygon-diagonal-symmetry-workshop',
+    title: 'Çokgen Köşegen ve Simetri Atölyesi',
+    description: 'Düzgün çokgen masasında köşegen lazerleri, 360° dış açı yürüyüşü ve simetri aynasını tek oyuncakta kalibre et.',
+    grade: 11,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.2.4.1',
+      'MAT.11.2.4.2',
+      'MAT.11.2.4.3'
+    ],
+    path: '/embed/geometry/polygon-diagonal-symmetry-workshop',
+    component: lazy(() => import('../modules/grade11/polygon-diagonal-symmetry-workshop/PolygonDiagonalSymmetryWorkshopApp'))
+  },
+  {
+    id: 'mosaic-tiling-workshop',
+    title: 'Mozaik Kaplama Atölyesi',
+    description: 'Çokgen fayansları sürükleyip döndürerek boşluksuz mozaik, 360° açı halkası ve hizalı desen kilidini kur.',
+    grade: 11,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.11.2.5.1',
+      'MAT.11.2.5.2'
+    ],
+    path: '/embed/geometry/mosaic-tiling-workshop',
+    component: lazy(() => import('../modules/grade11/mosaic-tiling-workshop/MosaicTilingWorkshopApp'))
   },
   {
     id: 'correlation-scatter-radar',

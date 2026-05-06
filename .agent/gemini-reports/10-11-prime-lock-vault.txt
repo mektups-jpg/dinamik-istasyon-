@@ -1,0 +1,34 @@
+**VERDICT: PASS_WITH_WARNINGS**
+**SCORE: 82/100**
+
+**MUST_FIX:**
+- **UI Çakışması (Z-Index/Padding):** Yanlış deneme ekranında (Ekran 2) alttan çıkan kırmızı hata toast mesajı, "KASAYI ONAYLA" butonunun üzerine biniyor. Kapatma "X" butonu ile etkileşim zorlaşmış. Butonun alt marjı veya toast mesajının konumu responsive kurallarına göre revize edilmeli.
+- **Spoiler İçeren İpucu:** Yanlış deneme sonrası çıkan mesaj "Yalnız 30 sayısını bölen asal lazerleri seç: 2, 3 ve 5" şeklinde doğrudan cevabı veriyor. 10. sınıf seviyesinde bu bir "öğrenme" değil "komut uygulama" halidir. İpucu "30'un asal çarpanlarını tekrar düşün" gibi yönlendirici olmalı, cevabı dikte etmemeli.
+
+**SHOULD_FIX:**
+- **Aktif Hedef Görünürlüğü:** "AKTİF HEDEF: 2 x 3 x 5" yazısı görev tamamlanmadan orada duruyorsa (Ekran 2), öğrencinin asal çarpanları bulma bilişsel sürecini devre dışı bırakıyor. Bu bilgi, ancak öğrenci doğru seçimi yaptıktan sonra "kilit açılma onayı" olarak belirmeli.
+- **Alt Panel Sıkışıklığı:** Tam bölen rafındaki taşlar (1-30 arası) mobil dikey görünümde çok dip dibe. Dokunmatik hassasiyeti (fat finger syndrome) için aralarındaki boşluk (gap) 2px kadar artırılmalı.
+
+**MATH_ACCURACY:**
+- **Tam Puan:** 30 sayısının asal çarpanları (2,3,5) ve bölen listesi (1, 2, 3, 5, 6, 10, 15, 30) matematiksel olarak kusursuz. Yanlış seçenekler (4, 8, 9, 12 vb.) çeldirici olarak doğru seçilmiş.
+
+**FIRST_3_SECONDS:**
+- **Netlik:** Çok iyi. "Hedef Sayı 30" merkeze odaklanmış. Siber/Laboratuvar teması lise öğrencisi için ilgi çekici. Ne yapılacağı (seç ve tara) görsel hiyerarşiden anlaşılabiliyor.
+
+**VISUAL_LAYOUT:**
+- Tema tutarlılığı yüksek. Font seçimleri (monospaced ve sans-serif kombinasyonu) "kasa/teknoloji" hissini destekliyor. Tarayıcı (SCAN) animasyonu/iz çizgisi derinlik katmış.
+
+**RESPONSIVE_EMBED:**
+- Modül embed dikey kurguda çalışıyor ancak "KASAYI ONAYLA" butonu ekranın en altına çok yapışık. Bazı mobil cihazlarda "swipe up" barı ile çakışma riski var. Alt güvenli alan (safe area padding) eklenmeli.
+
+**INTERACTION_ACCESSIBILITY:**
+- Asal lazerlerin seçilmesiyle "Seçilen Asal" kısmının güncellenmesi etkileşim hissini güçlendiriyor. Scan slider'ının (tarayıcı) manuel sürüklenmesi "oyun" hissini pekiştiren bir pedagojik dokunuş.
+
+**COGNITIVE_LOAD:**
+- Görev ikiye bölünmüş (Asal lazerler -> Tam bölen rafı). Bu, 10. sınıf öğrencisinin odağını koruması için ideal. Bilgi bombardımanı yok, adım adım ilerleme (scaffolding) başarılı.
+
+**V2_IDEAS_NOT_BLOCKING:**
+- Sayı 30 sabit kalmamalı; her girişte 42, 60, 72 gibi farklı "kasalar" gelerek tekrar oynanabilirlik artırılabilir.
+- Lazerler seçildiğinde 30 sayısından fiziksel olarak ışın geçmesi ve sayının parçalanması görsel şöleni artırabilirdi.
+
+**Ekran görüntüsü analizi:** Başlangıç, yanlış deneme ve tamamlama akışları teknik olarak sorunsuz çalışıyor (console temiz). Sadece yukarıda belirtilen "doğrudan cevap verme" ve "buton çakışması" düzeltilirse ürün kalitesi "Gold" seviyesine çıkar.

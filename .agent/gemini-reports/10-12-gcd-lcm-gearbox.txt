@@ -1,0 +1,7 @@
+{
+  "verdict": "Pass",
+  "score": 94,
+  "must_fix": "None",
+  "should_fix": "Clarify the '6 / 36' display in the 'rapor mührü' (report seal) box to explicitly label which is EBOB and which is EKOK, as it currently resembles a fraction. Increase the font size or contrast for the 'min(2^2, 2^1)' and 'max' logic text, as these are critical pedagogical elements but are currently difficult to read on smaller screens.",
+  "notes": "The mathematical logic using prime factorization and the min/max exponent method is perfectly aligned with Grade 10 curriculum standards. The visual hierarchy successfully guides the eye from the input numbers (12 and 18) through the factorization process to the final results. The 'gear' (dişli) metaphor is consistently applied across the UI and terminology. The completion feedback in the second image is clear and provides a sense of achievement."
+}

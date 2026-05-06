@@ -2,7 +2,7 @@
 
 ## Durum
 
-Backlog / spec-only. Bu modülün fikir ve kalite sözleşmesi hazırdır; ancak registry kaydı ve kaynak kod klasörü henüz yoktur. Tamamlanmış modül gibi yayınlanmamalıdır.
+Done. Registry kaydı, kaynak kod, Browser Use canlı QA, Gemini 3 Flash kapanışı ve doküman senkronu tamamlandı.
 
 ## Amaç
 11. sınıf öğrencisine bileşke fonksiyonu `f(g(x))` ifadesini cebirsel sembol yığını olarak değil, bir makinenin çıktısının ikinci makinenin girdisine bağlanması olarak göstermek. Öğrenci `x` kapsülünü önce `g` makinesinden geçirir, çıkan değeri kabloyla `f` portuna takar ve final çıktının neden `f(g(x))` olduğunu görür.
@@ -62,3 +62,11 @@ Tek sahne bir **fonksiyon port istasyonu** olur:
 - Gemini 3 Flash:
   - Başlangıç, ara çıktı ve final zincir ekranları öğrenci netliği, sıra algısı, bilişsel yük ve görsel hiyerarşi açısından değerlendirilir.
   - Must-fix yok, Gemini skor >=85 ve internal skor >=90 olmadan Done yapılmaz.
+
+## QA Kapanışı
+- `npm run module:check -- function-composition-ports`: 20 pass / 0 warn / 0 fail.
+- `npm run build`: geçti; yalnız repo genelindeki mevcut chunk-size uyarısı var.
+- `git diff --check`: temiz.
+- Browser Use IAB: başlangıç görünürlüğü, yanlış onay AstroBot hatası, `Home` fallback ile `x -> g`, `g(x) -> f`, final mühür, completion ve taze console `[]` geçti.
+- Görsel düzeltmeler: teknik atom etiketi sahneden sadeleştirildi, zincir bandı kontrastı artırıldı, AstroBot toast'ının sağ kontrol panelini kapatması global yerleşim düzeltmesiyle giderildi.
+- Gemini 3 Flash: 96/100 PASS, must-fix yok.

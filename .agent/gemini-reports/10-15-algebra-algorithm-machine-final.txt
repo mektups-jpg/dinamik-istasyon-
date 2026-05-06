@@ -1,0 +1,9 @@
+{
+  "verdict": "PASS",
+  "score": 98,
+  "must_fix": [],
+  "should_fix": [
+    "Increase contrast for the small descriptive text 'cebirsel ifade, girdi portundan...' to improve accessibility on smaller screens."
+  ],
+  "notes": "The mathematical logic is 100% accurate: (3+2)^2 = 25, 25-4 = 21, 21/3 = 7. The UI effectively bridges the gap between algebraic expressions and algorithmic thinking (MAT.10.3.2). Visual hierarchy is excellent, and the 'sözde kod mührü' provides a strong pedagogical link to computer science."
+}

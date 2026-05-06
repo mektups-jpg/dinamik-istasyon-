@@ -1,0 +1,35 @@
+**VERDICT: PASS**
+**SCORE: 96/100**
+
+**MUST_FIX:**
+- (Görsel kanıtlara göre kritik bir engel bulunamadı. Önceki Gemini "must-fix" düzeltmelerinin (ray ayrımı, lazer kalınlığı) başarıyla uygulandığı görülüyor.)
+
+**SHOULD_FIX:**
+- **Kök Kilitlenme Görseli (Ekran 3):** Kökler doğru yere geldiğinde "Kök Durakları" başlığı "Büyüklük Bandı" olarak değişiyor. Ancak robotun konuşma balonu ("Kök durakları doğru...") ana başlığın ve akış etiketinin üzerine biniyor. Robot balonunun `z-index` veya konumu, üstteki "Akış:..." bilgisini tamamen kapatmayacak şekilde bir tık aşağı veya yana çekilebilir.
+- **Onay Butonu:** Yanlış deneme ekranında (Ekran 2) "Aralığı Onayla" butonu çok parlak ve baskın. Kökleri henüz taşımamış bir öğrencinin önce etkileşime (sürüklemeye) odaklanması için, kökler hedefe girmeden bu buton "disabled" (pasif/gri) görünüp, hedef yakalandığında bu parlaklığa ulaşırsa bilişsel yönlendirme güçlenir.
+
+**MATH_ACCURACY:**
+- Tam isabet. $x^2-5x+6$ denkleminin kökleri 2 ve 3'tür. Baş katsayı (a=1 > 0) olduğu için kollar yukarıdır; bu da dış bölgelerin pozitif (+), iç bölgenin negatif (-) olmasını gerektirir. "Parabol sensörü yukarı bakıyor" ibaresi ile bu durum pedagojik olarak harika desteklenmiş.
+
+**FIRST_3_SECONDS:**
+- **Netlik:** Çok yüksek. "Sol kök" ve "Sağ kök" etiketleri, rayların ayrılmış olması öğrenciye "burayı tut ve kaydır" mesajını anında veriyor.
+- **Hedef:** "Akış: kökleri bul -> ..." etiketi sayesinde öğrenci bir yol haritasına sahip.
+
+**VISUAL_LAYOUT:**
+- Önceki versiyonlardaki köklerin birbirinin içinden geçme riski, fiziksel ray ayrımı (sol kök üstte, sağ kök altta/farklı yollarda) ve "çakışmaz boşluk" uyarısı ile tamamen çözülmüş.
+- "Parabol sensörü" metaforu, soyut bir kuralı somut bir ölçüm aracına dönüştürerek görsel hiyerarşiyi güçlendirmiş.
+
+**RESPONSIVE_EMBED:**
+- Metin boyutları lise öğrencisi için okunabilir seviyede. "İşaret Kuralı" kutusu içindeki küçük açıklamalar (Ekran 2) mobilde sınırda kalabilir ama mevcut haliyle hiyerarşi bozulmamış.
+
+**INTERACTION_ACCESSIBILITY:**
+- Köklerin raylara hapsedilmesi, serbest sürüklemede yaşanabilecek "nereye koyacağım?" karmaşasını bitirmiş. Lazer çizgilerinin pulse efekti (tanımda belirtilen) hedefi netleştiriyor.
+
+**COGNITIVE_LOAD:**
+- Görev 1/3, 2/3 şeklinde parçalanmış. Tek seferde tüm eşitsizlik çözümünü istemek yerine önce sınırları (kökleri), sonra bölgeleri buldurmak yükü kademelendiriyor.
+
+**V2_IDEAS_NOT_BLOCKING:**
+- İleride rasyonel fonksiyonlar geldiğinde, "boşluk" yerine "tanımsızlık kutbu" gibi farklı görsel raylar eklenebilir.
+- Kökler lazerle eşleştiğinde kısa bir "haptik feedback" (titreşim) mobil cihazlarda tatmin hissini artırabilir.
+
+**Özet:** Modül, matematiksel modelleme ve kullanıcı deneyimi açısından yüksek standartta. "Çakışmaz boşluk" mantığı, öğrenci hatalarını fiziksel olarak imkansız kılarak sürtünmeyi azaltmış. Kayıt mühürlendi.

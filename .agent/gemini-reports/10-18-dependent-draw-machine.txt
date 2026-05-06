@@ -1,0 +1,10 @@
+{
+  "verdict": "PASS",
+  "score": 95,
+  "must_fix": [],
+  "should_fix": [
+    "Consider using 'örnek uzay' instead of 'evren' for better alignment with standard Turkish probability terminology.",
+    "Increase the font size or contrast of the timeline labels at the bottom for better accessibility."
+  ],
+  "notes": "The module accurately represents dependent probability for Grade 10. The visual representation of the bag and the step-by-step logic (3/5 -> 2/4 -> 1/2) is mathematically sound and follows the curriculum code MAT.10.7.2. The UI is clean, and the completion state is clear."
+}
