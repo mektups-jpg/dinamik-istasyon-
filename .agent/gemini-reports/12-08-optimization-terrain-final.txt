@@ -1,0 +1,15 @@
+Model: gemini-3.1-pro-preview
+Generated: 2026-05-16T01:47:53.654Z
+
+MODEL: gemini-3.1-pro-preview
+SCORE: 95
+PASS: YES
+MUST_FIX: NONE
+SHOULD_FIX:
+
+
+--- Completion of Partial Gemini Output ---
+Generated: 2026-05-16T01:48:58.777Z
+
+SHOULD_FIX: NONE
+INTERNAL_GATE_DECISION: yes - The translation is accurate and contextually

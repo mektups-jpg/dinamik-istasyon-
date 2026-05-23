@@ -21,6 +21,8 @@ Modülü sadece derleme ve happy-path ile değil, öğrencinin gördüğü gerç
    - Her önemli sahnede screenshot al; sadece DOM veya test id varlığına güvenme.
 
 3. **İlk viewport kontrolü yap**
+   - Görünür Chrome/Playwright penceresinde gri boş alan varsa önce QA kurulumunu kontrol et: `window.innerWidth/innerHeight`, `window.outerWidth/outerHeight`, `#root` rect ve `documentElement` ölçüleri eşleşiyor mu? Playwright `page.setViewportSize(1488,768)` kullanıp Chrome penceresini daha büyük bırakırsan uygulama küçük bir viewport olarak kalır ve dışı gri görünür; bu modül hatası değil, test kurulumu hatasıdır.
+   - Kiosk/desktop görsel QA için screenshot almadan önce viewport ile görünür pencereyi eşleştir veya yalnız gerçek viewport screenshotına göre karar ver. Gri letterbox görüntüsü varsa modülü puanlama; önce pencere/viewport eşleşmesini düzeltip tekrar bak.
    - Ana deney, kontrol paneli ve ana aksiyonlar ilk ekranda görünür mü?
    - Yatay taşma, kırpılma, üst üste binme, düşük kontrast, okunmayan metin veya anlamsız görünen şekil/blok var mı?
    - Animasyonların oturması için kısa bekleyip ikinci screenshot al.

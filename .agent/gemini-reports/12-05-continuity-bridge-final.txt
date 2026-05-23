@@ -1,0 +1,37 @@
+# 12-05 continuity-bridge Gemini visual QA
+
+Model: gemini-3.1-pro-preview
+Screenshots:
+- .agent/browser-use-shots/12-05-continuity-bridge-00-start.png
+- .agent/browser-use-shots/12-05-continuity-bridge-25-wrong.png
+- .agent/browser-use-shots/12-05-continuity-bridge-50-mid.png
+- .agent/browser-use-shots/12-05-continuity-bridge-75-edge.png
+- .agent/browser-use-shots/12-05-continuity-bridge-100-complete.png
+- .agent/browser-use-shots/12-05-continuity-bridge-viewport-1488x768.png
+
+SCORE: 95
+PASS: YES
+MUST_FIX:
+- NONE
+
+SHOULD_FIX:
+- Replace the programming operator `!=` with the standard mathematical not-equal symbol `≠` in the discontinuity formula (`lim x->0- f(x) != lim x->0+ f(x)`).
+- Remove the placeholder developer text ("Review Needed: Kaptan canlı göz kontrolünden sonra Showcase Ready kararı verilecek.") on the final completion screen.
+
+VISUAL_RUBRIC:
+- first_3_seconds: 10/10 The neon rails and central gap/pin instantly convey the idea of checking if a path is connected and continuous.
+- main_toy: 10/10 The bridge visualization is large, central, and highly thematic. The right-side panel properly acts as a secondary control mechanism without detracting from the main visual.
+- feedback: 10/10 Excellent visual states for different continuity failures (e.g., jump discontinuity, missing point) and clear error highlighting (neon pink).
+- tech_value: 10/10 Perfectly translates the 3-part algebraic definition of continuity into a tangible, mechanical metaphor.
+- desktop_fit: 10/10 The wide aspect ratio is well-utilized, providing plenty of space for the graph/bridge while keeping controls neatly organized on the side.
+
+PEDAGOGY:
+The "continuity bridge" is a fantastic conceptual model. It breaks down the formal definition (left limit = right limit, and limit = f(a)) into physical, testable parts (left rail, right rail, and the f(a) locking pin). Having the student act as an inspector diagnosing *why* a function is discontinuous (jump vs. hole) directly assesses the MAT.12.2.3.1 objective far better than static textbook problems or the overly simplistic "don't lift your pencil" explanation. The completion screen brilliantly summarizes these three specific math conditions.
+
+RISK:
+Very low risk. The visual design is highly polished, the math representation is highly effective, and the desktop layout is optimal. Just a few minor typographical cleanups are needed before final deployment.
+
+POST_GEMINI_POLISH:
+- `!=` was replaced with the mathematical `≠` symbol in the jump-discontinuity expression.
+- The final completion note was rewritten from deployment/review language into student-facing continuity proof language.
+- The completion screenshot was refreshed after these polish changes: `.agent/browser-use-shots/12-05-continuity-bridge-100-complete.png`.

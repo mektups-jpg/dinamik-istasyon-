@@ -3,7 +3,7 @@ import { lazy, type ComponentType, type LazyExoticComponent } from 'react';
 export type Category = 'Sayılar' | 'Geometri' | 'Fizik' | 'Olasılık' | 'Cebir' | 'Trigonometri' | 'Geometrik Şekiller';
 export type Difficulty = 'Kolay' | 'Orta' | 'Zor';
 export type GradeRange = 'İlkokul' | 'Ortaokul' | 'Lise';
-export type ModuleStatus = 'active' | 'archived';
+export type ModuleStatus = 'active' | 'archived' | 'draft' | 'review-needed' | 'showcase-ready';
 
 export interface ModuleMeta {
   id: string;
@@ -265,7 +265,9 @@ export const modules: ModuleMeta[] = [
     difficulty: 'Zor',
     grade: 12,
     path: '/embed/probability/galton-board',
-    component: lazy(() => import('../modules/probability/galton-board/GaltonApp'))
+    component: lazy(() => import('../modules/probability/galton-board/GaltonApp')),
+    status: 'archived',
+    archiveNote: 'Eski olasılık deneyi. 12. sınıf yeni üretim paketi Review Needed modüllerden ilerleyecek.'
   },
   {
     id: 'identity-blocks',
@@ -912,8 +914,224 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/statistics/media-correlation-auditor',
     component: lazy(() => import('../modules/grade11/media-correlation-auditor/MediaCorrelationAuditorApp'))
+  },
+  {
+    id: 'sequence-wheel',
+    title: 'Dizi Çarkı',
+    description: 'Aritmetik fark, geometrik oran ve dizi-fonksiyon ayrımını tek tam sahne çarkında dene.',
+    grade: 12,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.12.1.1.1',
+      'MAT.12.1.1.2',
+      'MAT.12.1.1.3'
+    ],
+    path: '/embed/algebra/sequence-wheel',
+    component: lazy(() => import('../modules/grade12/sequence-wheel/SequenceWheelApp')),
+    status: 'showcase-ready',
+    archiveNote: '12. sınıf altın şablon Kaptan görsel onayıyla Showcase Ready.'
+  },
+  {
+    id: 'polynomial-vault',
+    title: 'Polinom Kasası',
+    description: 'Polinom terimlerini büyük derece raflarında tara; derece, başkatsayı ve sabit terimi kasadan çıkar.',
+    grade: 12,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.12.1.2.1',
+      'MAT.12.1.2.2',
+      'MAT.12.1.2.3',
+      'MAT.12.1.2.4',
+      'MAT.12.1.2.5'
+    ],
+    path: '/embed/algebra/polynomial-vault',
+    component: lazy(() => import('../modules/grade12/polynomial-vault/PolynomialVaultApp')),
+    status: 'showcase-ready',
+    archiveNote: '12. sınıf Polinom Kasası Kaptan görsel onayıyla Showcase Ready.'
+  },
+  {
+    id: 'inequality-orbit',
+    title: 'İşaret Yörünge Radarı',
+    description: 'Kök, yasak nokta ve çözüm aralıklarını tek yörünge radarında tara.',
+    grade: 12,
+    category: 'Cebir',
+    difficulty: 'Zor',
+    atomIds: [
+      'MAT.12.1.3.1',
+      'MAT.12.1.3.2',
+      'MAT.12.1.3.3',
+      'MAT.12.1.3.4'
+    ],
+    path: '/embed/algebra/inequality-orbit',
+    component: lazy(() => import('../modules/grade12/inequality-orbit/InequalityOrbitApp')),
+    status: 'showcase-ready',
+    archiveNote: '12. sınıf İşaret Yörünge Radarı Kaptan görsel onayıyla Showcase Ready.'
+  },
+  {
+    id: 'limit-asymptote-sensor',
+    title: 'Limit Asimptot Sensörü',
+    description: 'Sol-sağ yaklaşımı, sonsuz asimptot tünelini ve 0/0 çarpan vincini tek pistte kilitle.',
+    grade: 12,
+    category: 'Cebir',
+    difficulty: 'Zor',
+    atomIds: [
+      'MAT.12.2.1.1',
+      'MAT.12.2.1.2',
+      'MAT.12.2.2.1',
+      'MAT.12.2.2.2',
+      'MAT.12.2.2.3'
+    ],
+    path: '/embed/calculus/limit-asymptote-sensor',
+    component: lazy(() => import('../modules/grade12/limit-asymptote-sensor/LimitAsymptoteApp')),
+    status: 'showcase-ready',
+    archiveNote: '12. sınıf Limit Asimptot Sensörü Kaptan görsel onayıyla Showcase Ready.'
+  },
+  {
+    id: 'continuity-bridge',
+    title: 'Süreklilik Köprüsü',
+    description: 'Limit raylarını ve f(a) nokta pimini aynı köprü kilidinde birleştir.',
+    grade: 12,
+    category: 'Cebir',
+    difficulty: 'Zor',
+    atomIds: [
+      'MAT.12.2.3.1'
+    ],
+    path: '/embed/calculus/continuity-bridge',
+    component: lazy(() => import('../modules/grade12/continuity-bridge/ContinuityBridgeApp')),
+    status: 'showcase-ready',
+    archiveNote: '12. sınıf Süreklilik Köprüsü Kaptan görsel onayıyla Showcase Ready.'
+  },
+  {
+    id: 'derivative-slope-driver',
+    title: 'Türev Eğim Sürücüsü',
+    description: 'Kesen doğrunun teğet kızağına yaklaşmasını ve anlık eğim fikrini sürüş pistinde kilitle.',
+    grade: 12,
+    category: 'Cebir',
+    difficulty: 'Zor',
+    atomIds: [
+      'MAT.12.2.4.1',
+      'MAT.12.2.4.2'
+    ],
+    path: '/embed/calculus/derivative-slope-driver',
+    component: lazy(() => import('../modules/grade12/derivative-slope-driver/DerivativeSlopeDriverApp')),
+    status: 'showcase-ready',
+    archiveNote: '12. sınıf Türev Eğim Sürücüsü Kaptan canlı görsel onayıyla Showcase Ready. Kesen-teğet omurgası kilitlendi; türev yok alarmları ayrı modülde tutulacak.'
+  },
+  {
+    id: 'derivative-nonexistent-alarm',
+    title: 'Türev Yok Alarm İstasyonu',
+    description: 'Sivri uç ve kopuk grafikte türevin neden kurulamadığını ayrı alarm sahnelerinde yakala.',
+    grade: 12,
+    category: 'Cebir',
+    difficulty: 'Zor',
+    atomIds: [
+      'MAT.12.2.4.3',
+      'MAT.12.2.4.4'
+    ],
+    path: '/embed/calculus/derivative-nonexistent-alarm',
+    component: lazy(() => import('../modules/grade12/derivative-nonexistent-alarm/DerivativeNonexistentAlarmApp')),
+    status: 'review-needed',
+    archiveNote: '12. sınıf Review Needed üretim modülü. 12-06 içindeki sivri uç/kopuk pist yoğunluğunu ayırmak için eklendi.'
+  },
+  {
+    id: 'derivative-rule-forge',
+    title: 'Türev Kural Dökümhanesi',
+    description: 'Toplam, fark, çarpım, bölüm ve zincir kurallarını kural kartuşlu üretim bandında kilitle.',
+    grade: 12,
+    category: 'Cebir',
+    difficulty: 'Zor',
+    atomIds: [
+      'MAT.12.2.5.1',
+      'MAT.12.2.5.2',
+      'MAT.12.2.5.3',
+      'MAT.12.2.5.4',
+      'MAT.12.2.5.5'
+    ],
+    path: '/embed/calculus/derivative-rule-forge',
+    component: lazy(() => import('../modules/grade12/derivative-rule-forge/DerivativeRuleForgeApp')),
+    status: 'review-needed',
+    archiveNote: '12. sınıf Review Needed üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
+  },
+  {
+    id: 'optimization-terrain',
+    title: 'Optimizasyon Arazisi',
+    description: 'Türev işaretini, ekstremum kapısını, maksimum hacim ve minimum maliyet kararlarını arazi pistinde kilitle.',
+    grade: 12,
+    category: 'Cebir',
+    difficulty: 'Zor',
+    atomIds: [
+      'MAT.12.2.6.1',
+      'MAT.12.2.6.2',
+      'MAT.12.2.6.3',
+      'MAT.12.2.6.4',
+      'MAT.12.2.6.5'
+    ],
+    path: '/embed/calculus/optimization-terrain',
+    component: lazy(() => import('../modules/grade12/optimization-terrain/OptimizationTerrainApp')),
+    status: 'review-needed',
+    archiveNote: '12. sınıf Review Needed üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
+  },
+  {
+    id: 'circle-radar-station',
+    title: 'Çember Radar İstasyonu',
+    description: 'Kesen, kiriş, teğet, yay, çevre açı, merkez açı ve alanı tek çember radarında tarat.',
+    grade: 12,
+    category: 'Geometri',
+    difficulty: 'Zor',
+    atomIds: [
+      'MAT.12.3.1.1',
+      'MAT.12.3.1.2',
+      'MAT.12.3.1.3',
+      'MAT.12.3.1.4',
+      'MAT.12.3.2.1',
+      'MAT.12.3.2.2',
+      'MAT.12.3.2.3'
+    ],
+    path: '/embed/geometry/circle-radar-station',
+    component: lazy(() => import('../modules/grade12/circle-radar-station/CircleRadarStationApp')),
+    status: 'review-needed',
+    archiveNote: '12. sınıf Review Needed üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
+  },
+  {
+    id: 'solid-measurement-foundry',
+    title: 'Katı Cisim Ölçüm Dökümhanesi',
+    description: 'Prizma, silindir, piramit, koni ve kürede hacmi iç dolum; yüzey alanını dış zırh olarak test et.',
+    grade: 12,
+    category: 'Geometri',
+    difficulty: 'Zor',
+    atomIds: [
+      'MAT.12.4.1.1',
+      'MAT.12.4.1.2',
+      'MAT.12.4.1.3',
+      'MAT.12.4.1.4',
+      'MAT.12.4.1.5',
+      'MAT.12.4.2.1',
+      'MAT.12.4.2.2',
+      'MAT.12.4.2.3',
+      'MAT.12.4.2.4',
+      'MAT.12.4.2.5'
+    ],
+    path: '/embed/geometry/solid-measurement-foundry',
+    component: lazy(() => import('../modules/grade12/solid-measurement-foundry/SolidMeasurementFoundryApp')),
+    status: 'review-needed',
+    archiveNote: '12. sınıf Review Needed üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
+  },
+  {
+    id: 'data-verdict-lab',
+    title: 'Büyük Veri Yargı Laboratuvarı',
+    description: 'Hazır kurumsal veri setini kaynak, filtre, grafik ve güvenli sonuç cümlesiyle mühürle.',
+    grade: 12,
+    category: 'Olasılık',
+    difficulty: 'Zor',
+    atomIds: ['MAT.12.5.1.1'],
+    path: '/embed/statistics/data-verdict-lab',
+    component: lazy(() => import('../modules/grade12/data-verdict-lab/DataVerdictLabApp')),
+    status: 'review-needed',
+    archiveNote: '12. sınıf Review Needed üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
   }
 ];
 
-export const activeModules = modules.filter((module) => module.status !== 'archived');
+export const activeModules = modules.filter((module) => module.status === undefined || module.status === 'active' || module.status === 'review-needed' || module.status === 'showcase-ready');
 export const archivedModules = modules.filter((module) => module.status === 'archived');

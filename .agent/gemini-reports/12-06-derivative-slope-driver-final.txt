@@ -1,0 +1,29 @@
+# 12-06 derivative-slope-driver Gemini visual QA
+
+Model: gemini-3.1-pro-preview
+Review: final-after-panel-fix
+Screenshots:
+- .agent/browser-use-shots/12-06-derivative-slope-driver-00-start.png
+- .agent/browser-use-shots/12-06-derivative-slope-driver-25-wrong.png
+- .agent/browser-use-shots/12-06-derivative-slope-driver-50-mid.png
+- .agent/browser-use-shots/12-06-derivative-slope-driver-75-edge.png
+- .agent/browser-use-shots/12-06-derivative-slope-driver-80-gap.png
+- .agent/browser-use-shots/12-06-derivative-slope-driver-100-complete.png
+- .agent/browser-use-shots/12-06-derivative-slope-driver-viewport-1488x768.png
+
+SCORE: 100
+PASS: YES
+MUST_FIX:
+- NONE
+SHOULD_FIX:
+- NONE
+VISUAL_RUBRIC:
+- first_3_seconds: 10/10 Main interactive elements and task instructions are immediately obvious without overwhelming the user.
+- main_toy: 10/10 The neon-on-dark track stands out perfectly. Excellent use of visual hierarchy.
+- feedback: 10/10 Clear color coding for correct/wrong states. Error explanations are specific and pedagogical.
+- tech_value: 10/10 Beautiful execution of the secant-to-tangent limit process and visual proofs for non-differentiability.
+- desktop_fit: 10/10 The 1488x768 viewport test passes perfectly. Panel elements are neatly stacked without overflow.
+PEDAGOGY:
+The progression perfectly maps to MEB standards: average rate -> instantaneous rate -> sharp corners -> discontinuities. The visual proofs (e.g., showing the left/right slopes diverging at the corner) are highly effective for building intuition.
+RISK:
+None. Ready for Kaptan's review.

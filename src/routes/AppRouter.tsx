@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { modules } from '../registry/moduleRegistry';
 import Dashboard from './Dashboard';
 import EmbedLayout from './EmbedLayout';
+import ReviewWorkbench from './ReviewWorkbench';
 import { GlobalAstroBot } from '../components/ui/GlobalAstroBot';
 
 export default function AppRouter() {
@@ -11,6 +12,7 @@ export default function AppRouter() {
       <GlobalAstroBot />
       <Routes>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/review-workbench" element={<ReviewWorkbench />} />
         
         {/* Embed Routes */}
         <Route path="/embed" element={<EmbedLayout />}>

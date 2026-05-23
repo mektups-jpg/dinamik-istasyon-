@@ -325,9 +325,21 @@ function ModuleCard({ mod }: { mod: ModuleMeta }) {
           <div className="bg-[#1F2833] border border-gray-700/50 p-3 rounded-2xl">
             <Play className="w-6 h-6 text-[#00E5FF] group-hover:scale-110 transition-transform" fill="currentColor" />
           </div>
-          <span className="text-[10px] font-bold tracking-widest uppercase bg-[#00E5FF]/10 text-[#00E5FF] px-3 py-1.5 rounded-full border border-[#00E5FF]/20">
-            {mod.category}
-          </span>
+          <div className="flex flex-col items-end gap-2">
+            {mod.status === 'review-needed' && (
+              <span className="text-[9px] font-black tracking-widest uppercase bg-amber-300/10 text-amber-100 px-3 py-1.5 rounded-full border border-amber-300/24">
+                Görüş Gerekli
+              </span>
+            )}
+            {mod.status === 'showcase-ready' && (
+              <span className="text-[9px] font-black tracking-widest uppercase bg-emerald-300/10 text-emerald-100 px-3 py-1.5 rounded-full border border-emerald-300/24">
+                Vitrin Hazır
+              </span>
+            )}
+            <span className="text-[10px] font-bold tracking-widest uppercase bg-[#00E5FF]/10 text-[#00E5FF] px-3 py-1.5 rounded-full border border-[#00E5FF]/20">
+              {mod.category}
+            </span>
+          </div>
         </div>
         
         <h4 className="text-xl font-bold text-white mb-3 leading-tight">{mod.title}</h4>

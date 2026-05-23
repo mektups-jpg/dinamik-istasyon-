@@ -1,0 +1,32 @@
+# 12-04 limit-asymptote-sensor Gemini visual QA
+
+Model: gemini-3.1-pro-preview
+Screenshots:
+- .agent/browser-use-shots/12-04-limit-asymptote-sensor-00-start.png
+- .agent/browser-use-shots/12-04-limit-asymptote-sensor-25-wrong.png
+- .agent/browser-use-shots/12-04-limit-asymptote-sensor-50-mid.png
+- .agent/browser-use-shots/12-04-limit-asymptote-sensor-75-edge.png
+- .agent/browser-use-shots/12-04-limit-asymptote-sensor-100-complete.png
+- .agent/browser-use-shots/12-04-limit-asymptote-sensor-viewport-1488x768.png
+
+SCORE: 94
+PASS: YES
+MUST_FIX:
+- NONE
+
+SHOULD_FIX:
+- Ekran 5 (Tamamlanma Ekranı): Modül içi görsellik çok güçlüyken final özeti biraz fazla metin odaklı ve üst tarafta gereksiz boşluk kalmış. Kartlar biraz daha büyütülüp ortalanabilir.
+- Ekran 4 (0/0 Vinci): (x-2) çarpanlarının sadeleştiği anı vurgulamak için blokların üzerine net bir fiziksel "çizik/kesik" (strikethrough) efekti eklenebilir. Sadece parlayıp yok olmasındansa "yok etme" hissiyatı mekanik temayı güçlendirir.
+
+VISUAL_RUBRIC:
+- first_3_seconds: 9/10 Eğri üzerindeki parlayan sol/sağ sensörler ve ortadaki "Kapı" metaforu limitin "yaklaşma" eylemini anında hissettiriyor.
+- main_toy: 10/10 Dashboard hissiyatı tamamen kırılmış. Özellikle cebir makinesi ve 0/0 krater vinci matematiği harika birer fiziksel oyuncağa çevirmiş.
+- feedback: 9/10 Hata durumu (Pembe alarm, titreşim hissi) ve AstroBot'un yönlendirmesi çok net. Oyuncu neden hata yaptığını anlıyor.
+- tech_value: 10/10 0/0 belirsizliğinin mekanik bir vinç ve "krater" metaforuyla çözülmesi, standart bir formül ezberinin çok ötesinde, tam bir teknoloji gösterisi.
+- desktop_fit: 10/10 Ekran taşması yok, grid sistemi kusursuz oturmuş, scroll ihtiyacı sıfır. Kontrast güncellemeleri işe yaramış.
+
+PEDAGOGY:
+Grafik üzerinden sezgisel okumayla başlayıp, denklem üzerinde yerine koyma (makine) ve en sonunda 0/0 belirsizliğini (faktörizasyon vinci) aşma kurgusu MEB kazanımlarını mükemmel bir ardışıklıkla veriyor. Matematiksel soyutlama, somut mekanik hareketlerle çok başarılı eşleştirilmiş.
+
+RISK:
+Çok düşük. Görsellerde asimptot oynanış anı doğrudan yer almasa da (sadece özette görünüyor), mevcut 0/0 ve yaklaşım mekaniklerinin kalitesi altyapının ne kadar sağlam olduğunu kanıtlıyor. "Review Needed" statüsü için oldukça güvenli bir aday.

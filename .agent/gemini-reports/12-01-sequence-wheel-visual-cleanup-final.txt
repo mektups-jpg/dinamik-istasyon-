@@ -1,0 +1,16 @@
+**12-01 Dizi Çarkı Skeleton/Draft | 2. Tur Görsel KG Raporu**
+
+**SCORE:** 92/100
+**VERDICT:** GEÇTİ (Draft Onayı)
+
+**MUST_FIX:**
+*   **Yok.** Önceki turda belirtilen A1/A5 kırpılması ve +3 çiplerinin kapsüllere binme sorunları tamamen giderilmiş.
+
+**SHOULD_FIX:**
+*   **Mobil Hizalama:** Mobildeki en üstte yer alan "+3" çiplerinin yatay aksı, alttaki kapsül boşluklarına (gap) göre mikron düzeyinde sola kaymış görünüyor. Final tasarımda tam dikey hizada (center-to-center) olması şıklığı artırır.
+*   **Alt Panel Alanı:** Mobilde en alttaki bilgi kutusu ("Aritmetik mod açık...") çok geniş bir alan kaplıyor. İç padding değerleri düşürülerek ana oyuncağa (diziye) daha fazla "nefes alma" alanı bırakılabilir.
+
+**PASS_REASON:**
+*   **Anlaşılırlık:** Öğrenci ekranı açtığı an (ilk 3 saniye) bunun bir sayı dizisi ve artış miktarı (common difference) etkileşimi olduğunu net bir şekilde anlıyor.
+*   **Mobil Çözüm:** Kapsüllerin mobil dar ekrana sığdırılma mantığı başarılı; yazılar okunabilir, butonlar dokunmatik dostu (tap-friendly) boyutta.
+*   **Profesyonellik:** "Acemi prototip" hissinden uzak, neon/cyber-punk matematik teması skeleton aşaması için oldukça tok ve profesyonel duruyor. Boş/gri alan hatası yok.

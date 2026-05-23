@@ -7,8 +7,10 @@ interface AstroBotState {
   clearMessage: () => void;
 }
 
+let messageSequence = 0;
+
 export const useAstroBotStore = create<AstroBotState>((set) => ({
   message: null,
-  showMessage: (text, type = 'info') => set({ message: { id: Date.now(), text, type } }),
+  showMessage: (text, type = 'info') => set({ message: { id: ++messageSequence, text, type } }),
   clearMessage: () => set({ message: null }),
 }));

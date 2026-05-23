@@ -1,0 +1,21 @@
+VERDICT: PASS
+SCORE: 92/100
+MODEL: gemini-3.1-pro-preview
+MODULE: 12-02 polynomial-vault
+STATUS: Review Needed / Kaptan visual approval required
+
+MUST_FIX:
+- (bos)
+
+SHOULD_FIX:
+- 75-edge görselinde tarama sonucunda "3 kilidi görünüyor" yazıyor. 50-mid görselindeki formata uyumlu olması için "3. derece kilidi görünüyor" olarak düzeltilmeli. (Uygulandı.)
+- 100-complete ekranında alt başlıkta "Beş raf okuması tamamlandı: kimlik, derece, başkatsayı ve sabit terim." yazıyor. Metinde 4 kavram sayılmış ancak ekranda 5 kart var. "kimlik (doğrusal/karesel), derece..." şeklinde ifade edilirse bilişsel uyumsuzluk giderilir. (Uygulandı.)
+- Sol alt köşede beliren Astrobot kafası, sağ üst panelde zaten bir Astrobot varken ekranda mükerrer duruyor. Bu ortak ürün davranışı olarak Kaptan onayı turunda değerlendirilecek; modül kapanışı için bloklayıcı değil.
+
+QUALITY_READ:
+- 3 saniye netliği: Çok başarılı. Polinomun terimlerinin derecelerine göre x³, x², x ve x⁰ raflarına yerleştiği ve kasanın bu mantıkla çalıştığı anında kavranıyor.
+- Ana oyuncak/sahne oranı: Kasa tasarımı sahneyi çok iyi doldurmuş. 12. sınıf seviyesine uygun, ne çok çocuksu ne de sıkıcı bir dashboard; dijital laboratuvar/kasa hissiyatı veriyor.
+- Feedback/yanlış deneme: Mükemmel. Yanlış karesel seçimde x² ve x³ raflarının boş olduğunun pembe alarm ile vurgulanması ve hatanın nedeninin sahnede matematiksel olarak açıklanması istenen davranış.
+- Matematiksel doğruluk: Terimlerin işaretleriyle birlikte raflara yerleşmesi, x⁰ rafının sabit terimi temsil etmesi ve derece/başkatsayı mantığı MEB kazanımlarıyla örtüşüyor.
+- Desktop kiosk uygunluğu: Uyumlu. Butonlar yeterince büyük, boşluklar dengeli, scroll veya taşma problemi yok.
+- Review Needed notu: Modül görsel ve pedagojik olarak Showcase Ready seviyesine yakın; Showcase Ready etiketi Kaptan canlı görsel onayından sonra verilecek.

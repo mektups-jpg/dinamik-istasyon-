@@ -1,0 +1,17 @@
+**SCORE: 62/100**
+
+**VERDICT:** Masaüstü tasarımı görsel olarak çok profesyonel ve "premium" hissettiriyor; ancak mobil görünümdeki "kırpılan kapsül" ve "üst üste binme" sorunları altın şablon (skeleton) kriterlerine göre **hard-fail** durumunda.
+
+**MUST_FIX:**
+*   **Mobil Kırpılma:** Mobil (390x844) görünümde A1 ve A5 kapsülleri yanlardan kesilmiş. Dizi elemanlarının tamamı ekrana sığmalı (yatay scroll yerine ölçekleme veya farklı bir dizilim şart).
+*   **Mobil Bindirme:** Mobilde üstteki "+3" balonları, sayı kapsüllerinin tepesine biniyor. Bu durum okunabilirliği öldürüyor ve acemi prototip hissi yaratıyor.
+*   **Dikey Boşluk Yönetimi:** Mobilde üstte çok fazla boşluk varken, oyuncak ve kontrol paneli birbirine girmiş durumda. "Safe area" kullanımı dengelenmeli.
+
+**SHOULD_FIX:**
+*   **Sabit Fark Motoru:** Masaüstünde alt kısımdaki "Sabit fark motoru" kutusu, ana diziden kopuk duruyor. Görsel bir bağlayıcı (çizgi veya arka plan bloğu) ile bütünleştirilmeli.
+*   **İndis Okunabilirliği:** "A1, A2..." gibi küçük indis yazıları, neon parlamalar arasında biraz zayıf kalmış; kontrastı bir tık artırılabilir.
+
+**PASS_REASON:**
+*   **Anlaşılırlık:** Öğrenci ilk 3 saniyede 4-7-10-13-16 dizisiyle ve "aritmetik artış" mantığıyla oynadığını anında kavrıyor.
+*   **Görsel Kalite:** Masaüstündeki neon efektleri, derinlik algısı ve karanlık mod estetiği oldukça profesyonel.
+*   **Panel Dengesi:** Sağ panel masaüstünde ana sahneyi çalmıyor, fonksiyonel bir yardımcı olarak kenarda temiz duruyor.

@@ -13,6 +13,102 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Sonraki küçük adım:
 ```
 
+## 2026-05-16 06:45 - Global AstroBot ve 12-06 Etkileşim Rehabilitasyonu
+- Okunan bağlam: Kaptan'ın sabah geri bildirimi, `frontend-skill`, `computer-use` skill, `ui-ux-design` kuralları, `dinamik-istasyon-module-development` skill, `AstroBot`, `Grade12FullStageLab`, `derivative-slope-driver` sahne/kontrol dosyaları ve 12-09 benchmark gözlemi.
+- Yapılan iş: Global AstroBot'un otomatik kapanması kaldırıldı; balon botun sağ tarafına açılan, daha dikkat çekici ve manuel kapatılabilir kalıcı mesaja dönüştü. AstroBot mesaj id'si monotonic hale getirildi, 12-06 görev geçişinde eski mesaj temizlendi ve completion kontrastı yükseltildi. 12. sınıf sağ panelindeki robot tekrarı "AstroBot son not" formatına sadeleşti; uzun sağ-alt feedback tekrarları kısa durum çipine çekildi. `derivative-slope-driver` sahnesine native range destekli `eğim probu` eklendi; B noktası, sekant çizgisi ve teğete yaklaşma sahnede canlı değişiyor, panel butonları fallback olarak kaldı. Büyük sahne yardımcıları `DerivativeSlopePrimitives` dosyasına ayrıldı.
+- Değişen dosyalar: `src/components/ui/AstroBot.tsx`, `src/store/useAstroBotStore.ts`, `src/modules/grade12/shared/Grade12FullStageLab.tsx`, `src/modules/grade12/derivative-slope-driver/DerivativeSlopeDriverApp.tsx`, `DerivativeSlopeScene.tsx`, `DerivativeSlopePrimitives.tsx`, `DerivativeSlopeCompletion.tsx`, `docs/MODULE_DONE_CRITERIA.md`, `docs/module-specs/12-06-derivative-slope-driver.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/skills/dinamik-istasyon-module-development/SKILL.md`.
+- Test: `npm run module:check -- derivative-slope-driver` 22 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Computer Use ile Chrome desktop route'unda native `kaydırma çubuğu` görüldü, sahneyi değiştirdi, doğru test sonrası başarı mesajı geldi ve sonraki görevde AstroBot mesajı güncellendi. Playwright rehab5 paketi başlangıç/yanlış/sekant/teğet/sivri/kopuk/final/completion ekranlarını aldı; console/page error yok, desktop overflow temiz. Gemini 3.1 Pro rehab final `.agent/gemini-reports/12-06-derivative-slope-driver-rehab.txt` içinde `100/100 PASS`, `MUST_FIX` boş.
+- Sonraki küçük adım: Plan sırasına göre `12-05 continuity-bridge` rework adayını aç; Kaptan onayı gelmeden 12-06 `Showcase Ready` yapılmaz.
+
+## 2026-05-16 22:20 - 12-11 Büyük Veri Yargı Laboratuvarı Son Cila
+- Okunan bağlam: `dinamik-istasyon-module-development` skill, 12-11 spec/scorecard ve Kaptan'ın seçim-test ayrımı standardı.
+- Yapılan iş: paneldeki görev rozetinin `%64/+12` gibi cevap değerlerini test öncesi göstermesi kapatıldı; rozet `Kilit 1/2/3/4` oldu. Kaynak ve yargı seçeneklerinin önizleme dili nötrleştirildi; `ONAY/RED`, final rozet ve güvenli sonuç cümlesi yalnız `Yargıyı Test Et` sonrası açılıyor.
+- Test: Computer Use ile Chrome desktop başlangıç, sosyal kaynak önizlemesi, aynı birim önizlemesi, sebep-sonuç taslağı ve test sonrası kırmızı kaynak alarmı gözlendi. Playwright 1488x768 tam zincirinde yanlış önizleme, yanlış alarm, doğru ilk görev, medyan, IQR, trend, completion ve erken `%64`/final cümle sızıntısı kontrolü geçti. `npm run module:check -- data-verdict-lab` 20 pass / 2 expected warn; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Sonraki küçük adım: `12-09 circle-radar-station` benchmark modülü de aynı şüpheci cila kapısından geçirilecek. 12-11 Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-16 06:13 - 12-11 Büyük Veri Yargı Laboratuvarı Kapanışı
+- Okunan bağlam: `dinamik-istasyon-module-development` skill, `docs/MEB_ATOMLARI.md` istatistik hazır veri atomu, `docs/MODULES.md` veri yargı konsepti, `Grade12FullStageLab` ve Kaptan'ın "tek modül, 90+ kapı, Review Needed, Showcase Ready için göz onayı" standardı.
+- Yapılan iş: `data-verdict-lab` modülü ana uygulamaya `Review Needed` statüsüyle bağlandı. Kaynak portu, filtre kapısı, grafik çekirdeği ve güvenli sonuç mührü tek veri yargı hattında kuruldu. TUIK/OECD/WHO/Eurostat benzeri hazır veri görevleri aynı birim, medyan, IQR ve trend filtreleriyle ayrışıyor. İlk iki Gemini turunda bar/değer hizası `MUST_FIX` çıktı; `motion.rect` tabanlı bar animasyonu sabit SVG geometriye çekildi.
+- Değişen dosyalar: `src/modules/grade12/data-verdict-lab/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/12-11-data-verdict-lab.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/skills/dinamik-istasyon-module-development/SKILL.md`, `.agent/browser-use-shots/12-11-data-verdict-lab-*`, `.agent/gemini-reports/12-11-data-verdict-lab-final.txt`.
+- Test: Computer Use ile Chrome desktop başlangıç, yanlış kaynak/filtre/yargı, doğru ilk görev, reset ve completion gözlendi. Playwright ile yanlış/doğru zincir, medyan, IQR, trend, completion, 1488x768 screenshot ve console kapısı geçti; uygulama console/page error yok. Gemini 3.1 Pro final `95/100 PASS`, `MUST_FIX` boş. `npm run module:check -- data-verdict-lab` 20 pass / 2 expected warn; `npx tsc --noEmit`, `npm run build` ve final `git diff --check` geçti.
+- Sonraki küçük adım: Kaptan sabah 12. sınıf modüllerini gözle denetler; feedback gelen modüller tek tek rework edilir. Kaptan onayı olmadan `Showcase Ready` yapılmayacak.
+
+## 2026-05-16 05:44 - 12-10 Katı Cisim Ölçüm Dökümhanesi Kapanışı
+- Okunan bağlam: `dinamik-istasyon-module-development` skill, `docs/MEB_ATOMLARI.md` katı cisim atomları, `docs/MODULES.md` Katı Cisim 3D Dolum Tesisi konsepti, mevcut 3D silindir/prizma referansları, `Grade12FullStageLab` ve Kaptan'ın "3D cisimlerdeki kalite, doğru cevap başlangıçta görünmesin, Review Needed" standardı.
+- Yapılan iş: `solid-measurement-foundry` modülü ana uygulamaya `Review Needed` statüsüyle bağlandı. Prizma, silindir, piramit, koni ve küre için hacim görevleri iç nanobot dolumu; yüzey alanı görevleri dış jelatin zırh olarak ayrıştırıldı. Başlangıçta doğru cisim/formül sızdırma self-audit ile yakalandı; nötr dökümhane çekirdeği ve formülü yalnız başarıdan sonra gösteren kanıt çipi eklendi. Gemini'nin prizma yüzey formülü önerisi `A = 2Tₐ + Yₐ` olarak uygulandı.
+- Değişen dosyalar: `src/modules/grade12/solid-measurement-foundry/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/12-10-solid-measurement-foundry.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/skills/dinamik-istasyon-module-development/SKILL.md`, `.agent/browser-use-shots/12-10-solid-measurement-foundry-*`, `.agent/gemini-reports/12-10-solid-measurement-foundry-final.txt`.
+- Test: Computer Use ile Chrome desktop başlangıç, yanlış silindir + yüzey alanı alarmı ve doğru hacim gözlemi yapıldı. Playwright ile 10 görev zinciri, completion, 1488x768 screenshot ve console/WebGL kapısı geçti; WebGL pixel check `20/20`, uygulama console/page error yok. Gemini 3.1 Pro final `95/100 PASS`, `MUST_FIX` boş. `npm run module:check -- solid-measurement-foundry` 31 pass / 2 expected warn; `npx tsc --noEmit`, `npm run build` ve final `git diff --check` geçti.
+- Sonraki küçük adım: `12-11 data-verdict-lab` için aynı tek modül kalite döngüsüne başla. 12-10 Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-16 05:22 - 12-09 Çember Radar İstasyonu Kapanışı
+- Okunan bağlam: `dinamik-istasyon-module-development` skill, `docs/MEB_ATOMLARI.md` çember atomları, `docs/MODULES.md` çember radar konsepti, `Grade12FullStageLab`, 12-08 kapanış notları ve Kaptan'ın "tek modül, 90+ kapı, Review Needed" standardı.
+- Yapılan iş: `circle-radar-station` modülü ana uygulamaya `Review Needed` statüsüyle bağlandı. Kesen, kiriş, teğet, yay, çevre açı, merkez açı ve daire alanı tek büyük çember radar oyuncağı üzerinde ayrıştırıldı. Sağ panel 7 mod için kompakt üç kolonlu hale getirildi; atom rezervi öğrenci ekranında gizlenerek panel kalabalığı azaltıldı. İlk console turunda SVG `r: undefined` hatası yakalandı ve nabız animasyonu sabit yarıçap + opacity nabzına çevrildi. Gemini ilk turda düşük kontrast radar alt yazısı ve İngilizce completion etiketini `MUST_FIX` verdi; ikisi düzeltildi.
+- Değişen dosyalar: `src/modules/grade12/circle-radar-station/*`, `src/modules/grade12/shared/Grade12FullStageLab.tsx`, `src/registry/moduleRegistry.ts`, `docs/module-specs/12-09-circle-radar-station.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/skills/dinamik-istasyon-module-development/SKILL.md`, `.agent/browser-use-shots/12-09-circle-radar-station-*`, `.agent/gemini-reports/12-09-circle-radar-station-final.txt`.
+- Test: Computer Use ile Chrome desktop başlangıç, yanlış kiriş alarmı, doğru kesen/kiriş/teğet/yay/çevre açı/merkez açı/alan zinciri, completion ve `Tekrar Oyna` reset akışı gözlendi. Playwright başlangıç/yanlış/kiriş/teğet/çevre açı/alan/completion/1488x768 screenshotları ve console `0 warning / 0 error` alındı. Gemini 3.1 Pro final `95/100 PASS`, `MUST_FIX` boş. `npm run module:check -- circle-radar-station` 28 pass / 2 expected warn; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi.
+- Sonraki küçük adım: `12-10 solid-measurement-foundry` için aynı tek modül kalite döngüsüne başla. 12-09 Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-16 21:55 - 12-08 Optimizasyon Arazisi Son Cila
+- Okunan bağlam: `dinamik-istasyon-module-development` skill, 12-08 spec/scorecard ve Kaptan'ın seçim-test ayrımı standardı.
+- Yapılan iş: karar seçimi cevap sızdırmayacak şekilde sıkılaştırıldı. Seçim anında yalnız `yükseliş izi`, `iniş izi`, `düz kapı`, `kapasite izi`, `maliyet izi` önizlemeleri kalıyor; `f'(x)>0`, `f'(x)<0`, `V maksimum`, `C minimum` ve gizli kanıt metni yalnız `Araziyi Test Et` sonrası açılıyor.
+- Test: Computer Use ile Chrome desktop başlangıç, yanlış azalan önizleme, yanlış alarm ve doğru ilk karar kilidi gözlendi. Playwright 1488x768 zincirinde artan görevden sonraki `Sonraki` geçişinin ikinci göreve geçtiği doğrulandı. `npm run module:check -- optimization-terrain` 24 pass / 2 expected warn; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Sonraki küçük adım: `12-11 data-verdict-lab` veri hattı ve yargı paneli için aynı cila döngüsüne başla. 12-08 Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-16 04:50 - 12-08 Optimizasyon Arazisi Kapanışı
+- Okunan bağlam: `dinamik-istasyon-module-development` skill, `docs/MEB_ATOMLARI.md` optimizasyon atomları, `docs/module-specs/12-08-optimization-terrain.md`, `Grade12FullStageLab`, 12-07 kapanış notları ve Kaptan'ın "tek modül, 90+ kapı, Review Needed" standardı.
+- Yapılan iş: `optimization-terrain` modülü ana uygulamaya `Review Needed` statüsüyle bağlandı. Türev işareti, ekstremum ve gerçek maksimum/minimum kararları tek neon arazi pistinde görselleştirildi: artanda tırmanış oku, azalanda iniş freni, ekstremumda `f'=0` kapısı, maksimum hacimde kapasite kutusu, minimum maliyette maliyet vadisi. Gemini ilk turda pistle çakışan yönerge metnini `MUST_FIX` verdi; metin kaldırıldı. Console kapısı SVG dolum animasyonundaki `height: undefined` hatasını yakaladı; animasyon sabit geometri + opacity nabzına çevrildi.
+- Değişen dosyalar: `src/modules/grade12/optimization-terrain/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/12-08-optimization-terrain.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/skills/dinamik-istasyon-module-development/SKILL.md`, `.agent/browser-use-shots/12-08-optimization-terrain-*`, `.agent/gemini-reports/12-08-optimization-terrain-final.txt`.
+- Test: Computer Use ile Chrome desktop başlangıç, yanlış azalan karar alarmı, doğru artan/azalan/ekstremum/maksimum hacim/minimum maliyet zinciri, completion ve `Tekrar Oyna` reset akışı gözlendi. Playwright başlangıç/yanlış/artış/ekstremum/maksimum/minimum/completion/1488x768 screenshotları ve console `0 warning / 0 error` alındı. Gemini 3.1 Pro final `95/100 PASS`, `MUST_FIX` boş. `npm run module:check -- optimization-terrain` 24 pass / 2 expected warn; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Sonraki küçük adım: `12-09 circle-radar-station` için aynı tek modül kalite döngüsüne başla. 12-08 Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-16 04:15 - 12-07 Türev Kural Dökümhanesi Kapanışı
+- Okunan bağlam: `dinamik-istasyon-module-development` skill, `docs/MEB_ATOMLARI.md` türev kural atomları, `docs/module-specs/12-07-derivative-rule-forge.md`, `Grade12FullStageLab`, 12-06 kapanış notları ve Kaptan'ın seçim/geri bildirim standardı.
+- Yapılan iş: `derivative-rule-forge` modülü ana uygulamaya `Review Needed` statüsüyle bağlandı. Toplam, fark, çarpım, bölüm ve zincir kuralları tek kural döküm bandında görselleştirildi; çarpımda iki kol, bölümde pay/payda kalkanı, zincirde dış kabuk/iç çekirdek halkası sahnede ayrı çalışıyor. Self-audit sırasında başlangıçta doğru formülün fazla erken göründüğü yakalandı; başlangıç artık yalnız `üretim isteği` gösteriyor, kural formülü doğru testten sonra açılıyor. Gemini 3.1 Pro final `100/100 PASS`, `MUST_FIX` boş.
+- Değişen dosyalar: `src/modules/grade12/derivative-rule-forge/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/12-07-derivative-rule-forge.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/skills/dinamik-istasyon-module-development/SKILL.md`, `.agent/browser-use-shots/12-07-derivative-rule-forge-*`, `.agent/gemini-reports/12-07-derivative-rule-forge-final.txt`.
+- Test: Computer Use ile Chrome desktop açılış, yanlış çarpım kartuşu, doğru toplam/fark/çarpım/bölüm/zincir zinciri, completion ve `Tekrar Oyna` reset akışı gözlendi. Playwright başlangıç/yanlış/çarpım/bölüm/zincir/completion/1488x768 screenshotları ve console `0 warning / 0 error` alındı. `npm run module:check -- derivative-rule-forge` 24 pass / 2 expected warn; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Sonraki küçük adım: `12-08 optimization-terrain` için aynı tek modül kalite döngüsüne başla. 12-07 Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-16 03:51 - 12-06 Türev Eğim Sürücüsü Kapanışı
+- Okunan bağlam: `dinamik-istasyon-module-development` skill, `docs/MEB_ATOMLARI.md` türev temel atomları, `docs/module-specs/12-06-derivative-slope-driver.md`, `Grade12FullStageLab`, 12-05 kapanış notları ve Kaptan'ın "karar kontrol sonrası verilmeli" feedback'i.
+- Yapılan iş: `derivative-slope-driver` modülü ana uygulamaya `Review Needed` statüsüyle bağlandı. Teğet sürüş pisti; sekant kirişini, teğet kızağını, sivri uçtaki sol/sağ eğim kırılmasını ve kopuk pistte türev yokluğunu tek büyük ana oyuncakta gösteriyor. Computer Use akışında seçim yapınca doğru/yanlış kararının erken göründüğü davranış yakalandı; seçim artık yalnız ipucu veriyor, karar `Pisti Test Et` sonrası geliyor. İlk Gemini `85/100 PASS` ama 1488x768 sağ panel taşması `MUST_FIX` verdiği için modül kapatılmadı; panel sıkılaştırıldı, görev/aktif kanıt birleştirildi ve SVG test-id tekrarları ayrıştırıldı. Final Gemini `100/100 PASS`, `MUST_FIX` boş.
+- Değişen dosyalar: `src/modules/grade12/derivative-slope-driver/*`, `src/modules/grade12/shared/Grade12FullStageLab.tsx`, `src/registry/moduleRegistry.ts`, `docs/module-specs/12-06-derivative-slope-driver.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/skills/dinamik-istasyon-module-development/SKILL.md`, `.agent/browser-use-shots/12-06-derivative-slope-driver-*`, `.agent/gemini-reports/12-06-derivative-slope-driver-final.txt`.
+- Test: Computer Use ile Chrome desktop reset, yanlış teğet, doğru sekant, teğet, sivri uç, kopuk pist, final teğet ve completion zinciri gözlendi. Playwright başlangıç/yanlış/teğet/sivri/kopuk/completion/1488x768 screenshotları ve console `0 warning / 0 error` alındı. `npm run module:check -- derivative-slope-driver` 22 pass / 2 expected warn; `npx tsc --noEmit` ve `npm run build` geçti.
+- Sonraki küçük adım: `12-07 derivative-rule-forge` için aynı tek modül kalite döngüsüne başla; 12-06 Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-16 03:16 - 12-05 Süreklilik Köprüsü Kapanışı
+- Okunan bağlam: `dinamik-istasyon-module-development` skill, `docs/MEB_ATOMLARI.md` süreklilik atomu, `docs/module-specs/12-05-continuity-bridge.md`, `Grade12FullStageLab` ve 12-02/12-03/12-04 kalite defterleri.
+- Yapılan iş: `continuity-bridge` modülü ana uygulamaya `Review Needed` statüsüyle bağlandı. İlk Gemini 3.1 Pro turu `40/100 FAIL` verdiği için modül kapatılmadı; letterbox/detached UI hissi ve kopuk değer balonları yerine limit rayları, `f(a)` pimi ve eşitlik mührü köprü gövdesine taşındı. İkinci Gemini turu `75/100 FAIL` ile üst üste binen label ve sıçrama görevindeki yanıltıcı limit etiketini yakaladı; etiket mantığı düzeltildi. Final Gemini `95/100 PASS`, `MUST_FIX` boş.
+- Değişen dosyalar: `src/modules/grade12/continuity-bridge/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/12-05-continuity-bridge.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/skills/dinamik-istasyon-module-development/SKILL.md`, `.agent/browser-use-shots/12-05-continuity-bridge-*`, `.agent/gemini-reports/12-05-continuity-bridge-final.txt`.
+- Test: Computer Use ile Chrome desktop açılış, yanlış kopuk alarmı, doğru köprü kilidi ve eksik `f(a)` görevi gözlendi. Playwright başlangıç/yanlış/orta/sıçrama/completion/dar dizüstü screenshotları ve console `0 warning / 0 error` alındı. `npm run module:check -- continuity-bridge` 19 pass / 2 expected warn; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Sonraki küçük adım: `12-06 derivative-slope-driver` için aynı tek modül kalite döngüsüne başla; 12-05 Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-16 02:21 - 12-04 Limit Asimptot Sensörü Kapanışı
+- Okunan bağlam: `dinamik-istasyon-module-development` skill, `docs/MEB_ATOMLARI.md` limit atomları, `docs/module-specs/12-04-limit-asymptote-sensor.md`, `Grade12FullStageLab` ve 12-01/12-02/12-03 kalite defterleri.
+- Yapılan iş: `limit-asymptote-sensor` modülü ana uygulamaya `Review Needed` statüsüyle bağlandı. İlk sürüm Computer Use ve teknik kapılarda çalışsa da Gemini 3.1 Pro `35/100 FAIL` verdi; grafik/eğri ve fiziksel 0/0 eksikleri kabul edilip modül kapatılmadı. Sahne gerçek koordinat grafiği, parlayan yaklaşma eğrisi, sol-sağ sensörler, sonsuz asimptot çizgisi, yerel cebir makinesi, mekanik 0/0 krateri ve çarpan vinciyle rework edildi. `88/100` ikinci turdan sonra sonuç kontrastı ve mekanik blok derinliği cilalandı; final Gemini `94/100 PASS`, `MUST_FIX` boş.
+- Değişen dosyalar: `src/modules/grade12/limit-asymptote-sensor/*`, `src/registry/moduleRegistry.ts`, `docs/module-specs/12-04-limit-asymptote-sensor.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `.agent/browser-use-shots/12-04-limit-asymptote-sensor-*`, `.agent/gemini-reports/12-04-limit-asymptote-sensor-final.txt`.
+- Test: Computer Use ile Chrome desktop açılış, yanlış yerel hesap, doğru iki yan sensör ve reset gözlendi. Playwright başlangıç/yanlış/orta/0-0/completion/dar dizüstü screenshotları ve console `0 warning / 0 error` alındı. `npm run module:check -- limit-asymptote-sensor` 23 pass / 2 expected warn; `npx tsc --noEmit` ve `npm run build` geçti.
+- Sonraki küçük adım: `12-05 continuity-bridge` için aynı tek modül kalite döngüsüne başla; 12-04 Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-16 00:11 - 12-01 Dizi Motoru Görsel Cila
+- Okunan bağlam: `SequenceWheelScene`, önceki 12-01 self-audit notları ve Kaptan'ın genel duruş puanı isteği.
+- Yapılan iş: Sahnenin ray gibi kalması ve oyun hissinin düşük olması için dizi motoru/rotor fikri uygulandı. İlk denemede motor ortada gömülü disk gibi göründüğü için Computer Use gözlemiyle geri alındı; ikinci turda motor okunur motor kartının içine taşındı. Seçilen merceğe göre rotor `+3`, `x2` veya `n²` sembolünü taşıyor ve kilitlemede başarı durumuna geçiyor.
+- Değişen dosyalar: `src/modules/grade12/sequence-wheel/SequenceWheelScene.tsx`, `docs/module-specs/12-01-sequence-wheel.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: Computer Use ile başlangıç, aritmetik seçim ve doğru kilit state'i görsel olarak değerlendirildi. `npm run module:check -- sequence-wheel` 20 pass / 2 expected warn; `npx tsc --noEmit` geçti.
+- Sonraki küçük adım: `npm run build` ve `git diff --check` ile kapat; Kaptan onayı gelirse completion/ödül hissini güçlendir.
+
+## 2026-05-16 00:23 - 12-01 Canlı Projeksiyon Teknoloji Cila
+- Okunan bağlam: Kaptan'ın "kağıtta zor, ekranda kolay" kalite tarifi, `SequenceWheelScene` ve `sequenceWheelModel`.
+- Yapılan iş: Sahneye işlem enerjisi akışı ve canlı sonraki terim projeksiyonu eklendi. Doğru mercek seçilince kapsüller arasında hareketli enerji darbeleri akıyor ve sağda gölge kapsül bir sonraki terimi gösteriyor: `a6=19`, `a6=64`, `n=6 -> 36`. Projeksiyon hesabı model dosyasına taşındı; sahne dosyası guard sınırının altında tutuldu.
+- Değişen dosyalar: `src/modules/grade12/sequence-wheel/SequenceWheelScene.tsx`, `src/modules/grade12/sequence-wheel/sequenceWheelModel.ts`, `docs/module-specs/12-01-sequence-wheel.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: Computer Use ile aritmetik, geometrik ve fonksiyon ayrımı projeksiyonları gözlendi. `npm run module:check -- sequence-wheel` 20 pass / 2 expected warn; `npx tsc --noEmit` geçti.
+- Sonraki küçük adım: `npm run build` ve `git diff --check` ile kapat; Kaptan isterse completion ekranını ödül hissiyle güçlendir.
+
+## 2026-05-15 23:55 - 12-01 Öğrenci Akışı Cila
+- Okunan bağlam: `SequenceWheelApp`, `SequenceWheelScene`, `SequenceWheelControls`, `Grade12FullStageLab`, `docs/module-specs/12-01-sequence-wheel.md` ve mevcut 12-01 kalite notları.
+- Yapılan iş: Computer Use ile Chrome'da `sequence-wheel` bir 12. sınıf öğrencisi gibi tekrar oynandı. Boş seçim, doğru seçim, görev geçişleri, fonksiyon ayrımı ve completion izlendi. Kontrol dili `Önce Mercek Seç` / `Merceği Kilitle` olarak netleştirildi; üçüncü görevde `n²` ayrımı hayalet fonksiyon eğrisi, `n = 1..5` örnek noktaları ve dikey örnek izleriyle sahneye taşındı.
+- Değişen dosyalar: `src/modules/grade12/sequence-wheel/SequenceWheelControls.tsx`, `src/modules/grade12/sequence-wheel/SequenceWheelScene.tsx`, `docs/module-specs/12-01-sequence-wheel.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: Computer Use canlı akışında seçimsiz kontrol engeli, doğru aritmetik/geometrik görevler, fonksiyon ayrımı örnek noktaları, sol/sağ ray hareketi ve completion doğrulandı. `npm run module:check -- sequence-wheel` 20 pass / 2 expected warn; `npx tsc --noEmit` geçti.
+- Sonraki küçük adım: `npm run build` ve `git diff --check` ile kapanışı doğrula; Kaptan görsel olarak onay verirse 12-01 için ayrı kilit/completion polish turuna geç.
+
 ## 2026-05-06 17:47 - 10-05 Browser Use QA Handoff
 - Okunan bağlam: `AGENTS.md`, `.agent/skills/project-context-primer/SKILL.md`, `.agent/skills/project-visual-e2e-qa/SKILL.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULE_DONE_CRITERIA.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `docs/module-specs/10-05-sign-table-scanner.md`, Browser Use skill yönergesi ve ilgili source dosyaları.
 - Yapılan iş: Önceki sohbetten kalan durum çözüldü; tarayıcı `function-composition-ports` route'unda olsa da dokümanlara göre `11-07` `Done`, aktif açık iş `10-05 sign-table-scanner`. Browser Use IAB bu tur bağlandı. Canlı QA'da kök tutamaçlarının görsel `x=2/x=3` hedeflerine sürüklenince state'in hedefe ulaşmadığı yakalandı; kök progress hesabı genel bant rayı yerine kendi görsel hareket aralığına bağlandı ve root slider'larına `aria-valuenow` eklendi.
@@ -1205,3 +1301,222 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Gemini should-fix rötuşları: EBOB/EKOK mühür etiketi netleştirildi, kalan/sayma/çapraz tablo/koşullu/bağımlı olasılık küçük metin kontrastları iyileştirildi, cebir sözde kodu Türkçeleştirildi, `4'ten` ve `örnek uzay` dili düzeltildi.
 - Test: Toplu `npm run module:check` 7/7 geçti; `npm run build` geçti; `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
 - Doküman senkronu: `docs/DEVELOPMENT_QUEUE_10_11.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md` ve `.agent/CURRENT_TASK.md` güncellendi. Aktif blocker kalmadı.
+
+## 2026-05-13 Manual Pairing - 12-01 Altın Şablon Skeleton
+- Yapılan iş: Temiz bazdan 12. sınıf üretimi için `Grade12FullStageLab` tam sahne kabuğu eklendi. `sequence-wheel` draft route'u `/embed/algebra/sequence-wheel` olarak registry'ye bağlandı; dashboard aktif vitrininden `draft` statüsüyle ayrıldı.
+- Skeleton içerik: Dummy Dizi Çarkı sahnesi, beş sayı kapsülü, aritmetik/geometrik/fonksiyon ayrımı seçimleri, alt dock feedback alanı ve reset/check aksiyonları eklendi. Gerçek atom completion bilerek bağlanmadı.
+- QA notu: `?qa=1` embed oturumlarında login bypass açıldı; böylece görsel otomasyon doğrudan modül route'una girebiliyor.
+- Test: `npm run module:check -- sequence-wheel` 19 pass / 3 expected warn / 0 fail; `npm run build` geçti, yalnız mevcut büyük chunk uyarısı var; `git diff --check` temiz. Görsel kanıtlar `.agent/browser-use-shots/12-01-sequence-wheel-*.png`.
+- Sonraki küçük adım: Kaptan ile 12-01 gerçek öğrenme akışını belirle; dummy çarkı aritmetik fark, geometrik oran ve dizi/fonksiyon ayrımı görevlerine dönüştür.
+
+## 2026-05-13 Manual Pairing - 12-01 Computer Use Full-Bleed Fix
+- Kullanıcı feedback'i: Chrome'da modül ekranın içinde küçük kalıyor, sayfa arkası gri/boş görünüyor; bunun Computer Use ile teyit edilmesi istendi.
+- Tespit: `Grade12FullStageLab` adı full-stage olsa da sahneyi hâlâ rounded/bordered iç çerçeve, padding ve footer max-width ile kart gibi gösteriyordu. Ayrıca root kabukta full-height için dikey `flex-col` akışı açıkça kurulmamıştı.
+- Düzeltme: Shell `100dvh` full-bleed dikey kabuğa çekildi; sahne iç border/radius/padding kaldırıldı, footer/dock inceltildi ve genişlik sınırlaması kaldırıldı. `sequence-wheel` sahnesindeki çark boyutu viewport'a göre `min(82vw, 56vh, 560px)` ile dengelendi; kapsüller ve dock sıkışmadan yerleşecek şekilde ayarlandı.
+- Test: Computer Use ile Chrome üzerinde `/embed/algebra/sequence-wheel?qa=1&cu-audit=1` açıldı ve framed/küçük sahne hatasının kalktığı görüldü. `Geometrik` seçimiyle anlık feedback çalıştı. `npm run module:check -- sequence-wheel` 19 pass / 3 expected warn / 0 fail; `npx tsc --noEmit` geçti; `npm run build` geçti; `git diff --check` temiz.
+
+## 2026-05-13 Manual Pairing - 12-01 Visual Quality Cleanup
+- Kullanıcı feedback'i: Mevcut 12-01 ekranı göze hoş gelmiyor ve acemice duruyor; önceki kalite standardı gibi değil.
+- Tespit: Sahne dekoratif dişli/arka şekillerle matematiksel ilişkiyi gölgeliyordu. İlk temizlik sonrası Computer Use desktop kontrolü daha okunur bulundu; ancak dar/mobile screenshot panel bindirme, kapsül kırpılması ve kontrol alanının alt aksiyonları saklamasını yakaladı.
+- Düzeltme: `sequence-wheel` sahnesi sade "dizi rayı" kompozisyonuna çekildi: beş sayı kapsülü merkezde, ilişki çipleri aralarda, kural motoru küçük okuma alanı olarak altta. Dikdörtgen arka ışık lekesi kaldırıldı. `Grade12FullStageLab` mobilde overlay panel yerine normal alt akışa geçti; panel yüksekliği kontrol/check/feedback sığacak şekilde güncellendi.
+- QA: Computer Use ile Chrome desktop'ta Geometrik, Fonksiyon Ayrımı, sağ/sol hareket, Kontrol Et ve reset denendi. Playwright/Chrome ile `390x844` mobil screenshot alındı; son görsel `.agent/browser-use-shots/12-01-sequence-wheel-mobile-panel-fixed.png`.
+- Gemini kapalı çevrim: İlk görsel tur 62/100 verdi ve mobil A1/A5 kırpılması ile `+3` çiplerinin kapsüllere binmesini MUST_FIX saydı. Mobil x aralığı daraltıldı, ilişki çipleri yukarı alındı. İkinci tur `.agent/gemini-reports/12-01-sequence-wheel-visual-cleanup-final.txt` içinde 92/100 `GEÇTİ (Draft Onayı)`, MUST_FIX yok.
+- Durum: `12-01` hâlâ `Skeleton / Draft`; bu çalışma gerçek atom akışı değil, altın şablon kalite omurgasıdır.
+
+## 2026-05-15 Manual Pairing - 12-01 Playable Draft
+- Yapılan iş: `sequence-wheel` dummy/skeleton olmaktan çıkarılıp üç görevli oynanabilir akışa bağlandı. Görevler sırayla sabit fark `+3`, sabit oran `x2` ve `n²` kuralının yalnız doğal sayı adımlarında okunduğu dizi-fonksiyon ayrımını gösteriyor.
+- Görsel düzeltme: Ana oyuncak desktop'ta daha geniş sahne oranına çekildi, mobil kapsül sıkışması giderildi, kural göstergesi küçük çark/kadran formuna alındı. Sağ panel başlığı ve AstroBot mesajı modül durumuna göre dinamikleşti; statü `Playable Draft` oldu.
+- QA: Computer Use ile Chrome üzerinde yanlış geometrik seçim, doğru aritmetik seçim, görev geçişleri, fonksiyon ayrımı ve completion canlı kontrol edildi. Playwright/Chrome ile `1440x900`, `1488x768`, `390x844`, yanlış/doğru/fonksiyon/completion state screenshotları `.agent/browser-use-shots/12-01-sequence-wheel-playable-*` olarak kaydedildi.
+- Gemini: İlk playable turunda eksik yanlış-state ve erken completion screenshot yüzünden 82/100 uyarı geldi. Yanlış/doğru/completion kanıtları yenilendi; final v2 `.agent/gemini-reports/12-01-sequence-wheel-playable-draft-final-v2.txt` içinde 92/100 PASS, must-fix yok.
+- Test: `npm run module:check -- sequence-wheel` 20 pass / 2 expected warn / 0 fail; `npx tsc --noEmit` geçti. Modül hâlâ dashboard'da `draft`; Kaptan onayı ve polish olmadan `Done/Showcase Ready` yapılmayacak.
+
+## 2026-05-15 Manual Pairing - 12-01 AstroBot Merkezi Hat Düzeltmesi
+- Kullanıcı feedback'i: Core içindeki ortak AstroBot dosyası varken 12-01 içinde tekrar yerel robot/panel kurulmuştu.
+- Kök sebep: Yeni `Grade12FullStageLab` hızlı çıkarılırken ham `Bot` karakteri doğrudan shell içine alınmış ve `SequenceWheelApp` yanlış/doğru hamleleri ortak `useAstroBotStore` hattına göndermemişti. Bu, ortak feedback standardını atlayan bir mimari kaçaktı.
+- Düzeltme: `AstroBotPanel` ortak UI bileşeni eklendi, `Grade12FullStageLab` ham `Bot` importundan çıkarıldı. `SequenceWheelApp` mod seçimi, yanlış cevap, doğru cevap, görev geçişi, reset ve completion anlarında ortak AstroBot store'a mesaj gönderiyor.
+- Computer Use QA: Chrome üzerinde geometrik yanlış seçim ve `Kontrol Et` denendi. İlk turda merkezi AstroBot toast'ının sağ kontrol panelini kapattığı görüldü; geniş ekranlarda toast sol-alt güvenli alana taşındı. İkinci turda toast sağ paneli kapatmadan göründü.
+- Test: `npm run module:check -- sequence-wheel` 20 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+
+## 2026-05-15 Manual Pairing - 12-01 Self-Audit Polish
+- Tespit: Modül ilk açıldığında doğru `Aritmetik` mercek seçili geldiği için öğrenci düşünmeden `Kontrol Et` ile ilk görevi geçebiliyordu. Ayrıca seçilen merceğin neden doğru/yanlış olduğu sahnede yeterince fiziksel görünmüyordu.
+- Düzeltme: Başlangıç ve her yeni görevde mercek seçimi `null` başlıyor; önce mercek seçilmeden kontrol edilirse AstroBot hata veriyor ve görev geçmiyor. Ana sahneye aktif deney çipi, hareketli tarayıcı/lens ve `sabitlik izi` eklendi. Yanlış mercekte oran/fark barları dengesiz pembe görünüyor, doğru mercekte barlar hizalı ve yeşil kilitleniyor. Doğru cevap kanıtı üst çipten ayrılarak sahnede okunur hale getirildi.
+- Computer Use QA: Chrome'da taze açılışta seçili mercek olmadığı görüldü. Seçimsiz `Kontrol Et` engellendi; yanlış `Geometrik` seçim neden mesajı ve dengesiz barlar verdi; doğru `Aritmetik` seçim kilitlendi; `Sonraki` görevde seçim tekrar boş başladı.
+
+## 2026-05-16 Manual Pairing - 12-01 Production Candidate + Skill Memory
+- Kullanıcı isteği: 12-01'i production seviyesine yaklaştırırken bu modülü nasıl bu noktaya getirdiğimizi unutmayacak kalıcı bir "Dinamik İstasyon modül geliştirme yeteneği" olarak kaydet.
+- Yapılan iş: `Grade12FullStageLab` içine modüle özel completion slot'u eklendi. 12-01 için `SequenceWheelCompletion` yazıldı; genel trophy kapanışı yerine `+3`, `x2`, `n²` bakışlarını, bir sonraki terim zincirlerini ve `+120 XP` kazanımını gösteren özel başarı sahnesi bağlandı. UI etiketi `Showcase Candidate` yapıldı; dashboard statüsü `draft` kuralı korunuyor.
+- Skill hafızası: `.agent/skills/dinamik-istasyon-module-development/SKILL.md` eklendi. Skill; SSOT atom kuralı, ana oyuncak standardı, görsel hard-fail kapıları, teknoloji değeri, öğrenci feedback'i, milestone görsel QA, ortak AstroBot kullanımı ve Kaptan onayı olmadan `Showcase Ready` vermeme kurallarını içeriyor.
+- Doküman senkronu: `docs/module-specs/12-01-sequence-wheel.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md` ve `.agent/CURRENT_TASK.md` güncellendi.
+- Teknik kontrol: `npm run module:check -- sequence-wheel` 20 pass / 2 expected warn / 0 fail; `npx tsc --noEmit` temiz.
+- Kaptan karar güncellemesi: Ana kalite hedefi telefon değil bilgisayar/kiosk. Dinamik İstasyon skill ve 12-01 spec buna göre güncellendi; telefon bundan sonra yalnız nonblocking smoke, kalite kararı desktop/dizüstü üzerinden verilecek.
+
+## 2026-05-16 Manual Long Run - 12-02 Polinom Kasası Review Needed
+- Kullanıcı planı: 12. sınıfta her turda yalnız bir modül; 90+ internal/Gemini, Computer Use QA ve teknik kapılar geçmeden sıradaki modüle geçme. Aktif modül `12-02 polynomial-vault`.
+- Yapılan iş: `polynomial-vault` route'u `/embed/algebra/polynomial-vault` olarak registry'ye `review-needed` statüsüyle bağlandı. Ana uygulama kartlarına `Görüş Gerekli` rozeti eklendi.
+- Uygulama: Polinom terimleri `x³`, `x²`, `x`, `x⁰` raflarına yerleşen fiziksel kasa sahnesi, sağ kontrol panelinde mercek seçimleri, ortak AstroBot feedback'i ve konuya özel completion yazıldı. Dosyalar model/scene/controls/completion/app olarak parçalandı.
+- QA bulgusu: İlk Gemini 3.1 Pro turu `65/100 FAIL` verdi; sahne fazla 2D/panel hissindeydi. Modül kapatılmadı. Aynı modülde kasa gövdesi derinleştirildi, çekmece/raf katmanları ve hareketli tarama merceği eklendi.
+- Computer Use QA: Chrome desktop üzerinde başlangıç, yanlış karesel deneme, doğru zincir, reset ve completion canlı denendi.
+- Playwright kanıtı: `.agent/browser-use-shots/12-02-polynomial-vault-final2-00-start.png`, `25-wrong`, `50-mid`, `75-edge`, `100-complete` ve console log alındı. Console warning/error `0`.
+- Gemini final2: `.agent/gemini-reports/12-02-polynomial-vault-final2.txt` içinde `92/100 PASS`, must-fix yok. Gemini'nin `3 kilidi` ve completion metin tutarlılığı should-fixleri uygulandı; global sol-alt AstroBot ikonu Kaptan onayı turuna bırakıldı.
+- Test: `npm run module:check -- polynomial-vault` 24 pass / 2 expected warn / 0 fail; `npx tsc --noEmit` temiz; `npm run build` geçti.
+- Doküman senkronu: `docs/module-specs/12-02-polynomial-vault.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md` ve Dinamik İstasyon module development skill'i güncellendi.
+- Durum: `Review Needed`; Kaptan canlı görsel onayı olmadan `Showcase Ready` değil. Sıradaki modül ancak bu kapanış temiz kaldıysa `12-03 inequality-orbit`.
+
+## 2026-05-16 Manual Long Run - 12-03 İşaret Yörünge Radarı Review Needed
+- Kullanıcı planı: 12. sınıfta her turda yalnız bir modül; 90+ kapılar temizlenmeden sıradaki modüle geçme. Aktif modül `12-03 inequality-orbit`.
+- Yapılan iş: `inequality-orbit` route'u `/embed/algebra/inequality-orbit` olarak registry'ye `review-needed` statüsüyle bağlandı. Kök, rasyonel yasak nokta, pozitif işaret bölgeleri ve rasyonel çözüm koridoru tek yörünge/radar ana oyuncakta toplandı.
+- Computer Use QA: Chrome desktop üzerinde açılış, yanlış pozitif bölge denemesi, doğru kök/yasak/pozitif/çözüm zinciri, reset ve completion canlı denendi. Hedefler gerçek düğmelerle çalıştı; boş alana tıklama gerekmiyor.
+- Playwright kanıtı: `.agent/browser-use-shots/12-03-inequality-orbit-00-start.png`, `25-wrong`, `50-mid`, `75-edge`, `100-complete` ve console log alındı. Console warning/error `0`.
+- Gemini kapalı çevrim: İlk Gemini 3.1 Pro turu `95/100 PASS` verdi ama yasak noktanın kökten ayrışması için `MUST_FIX` döndürdü. Modül kapatılmadı; pembe yasak istasyonu, `!` rozeti ve daha yumuşak tarayıcı parlaması eklendi. İkinci tur `.agent/gemini-reports/12-03-inequality-orbit-final.txt` içinde `100/100 PASS`, `MUST_FIX` ve `SHOULD_FIX` boş.
+- Test: `npm run module:check -- inequality-orbit` 23 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` temiz. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Doküman senkronu: `docs/module-specs/12-03-inequality-orbit.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md` ve `.agent/CURRENT_TASK.md` güncellendi.
+- Durum: `Review Needed`; Kaptan canlı görsel onayı olmadan `Showcase Ready` değil. Sıradaki modül `12-04 limit-asymptote-sensor`.
+
+## 2026-05-16 Manual Pairing - 12-06 Türev Eğim Sürücüsü Son Cila
+- Kullanıcı isteği: 12-06 için üretime devam et; görsel hataları ve öğrenci deneyimini şüpheci şekilde düzelt.
+- Tespit: Eğim probunda SVG tutacağı ile native range tutacağı aynı yerde görünerek iki ayrı sürükleme hedefi hissi veriyordu. Yanlış deneme halinde sahne içi uzun feedback kartı AstroBot balonuyla çakışıyordu. Hızlı screenshotlarda AstroBot giriş gecikmesi balonu soluk yakalatabiliyordu.
+- Düzeltme: SVG prob tutacağı kaldırıldı, tek erişilebilir native `eğim probu` bırakıldı ve prob değiştikçe seçim canlı güncelleniyor. Sahne içi uzun feedback kartı kaldırıldı; geri bildirim renk/alarm, üst durum çipi, sağ panel ve kalıcı AstroBot üzerinden veriliyor. AstroBot giriş gecikmesi 0.5s'den 0.12s'ye çekildi.
+- Playwright QA: `1488x768` final-pass akışında başlangıç, yanlış teğet, doğru sekant, probla teğet, sivri uç, kopuk pist, final teğet ve completion denendi. `#root` ve document ölçüsü 1488x768, duplicate id yok, console/page error yok, completion test id göründü.
+- Durum: `Review Needed`; Kaptan canlı göz onayı olmadan `Showcase Ready` değil.
+
+## 2026-05-16 Manual Pairing - 12-05 Süreklilik Köprüsü Son Cila
+- Kullanıcı isteği: 12-06 sonrası 12-05'e devam et; görsel/etkileşim hatalarını aynı şüpheci yöntemle düzelt.
+- Tespit: Seçim yapılır yapılmaz sahne doğru/yanlış hissi verebiliyordu; karar `Köprüyü Test Et` sonrası gelmeliydi. Sahne içindeki uzun feedback kartı AstroBot balonuyla çakışıyordu. Eksik pim gibi arıza görevlerinde doğru teşhis sonrası üst çip "Köprü kilitlendi" diyerek pedagojik olarak yanlış çağrışım yapıyordu.
+- Düzeltme: `ContinuityBridgeScene` artık `status` alıyor; seçim anı sadece önizleme, başarı/alarm yalnız check sonrası oluşuyor. Sahne içi uzun feedback kartı kaldırıldı. Arıza görevlerinde başarı dili "Teşhis kilitlendi", gerçek sürekli görevlerde "Köprü kilitlendi" olarak ayrıldı. Limit ifadeleri `x->a` yerine `x→a` tipografisine çekildi.
+- Playwright QA: `1488x768` final cila akışında başlangıç, seçim-önizleme, yanlış kopuk alarmı, doğru mühür, eksik `f(a)` pimi, ayrılan raylar, yanlış yükseklikte pim, final mühür ve completion geçti. `#root` ve document ölçüsü 1488x768, duplicate id yok, console/page error yok.
+- Durum: `Review Needed`; Kaptan canlı göz onayı olmadan `Showcase Ready` değil.
+
+## 2026-05-16 Manual Pairing - 12-02 Polinom Kasası Son Cila
+- Kullanıcı isteği: 12. sınıfta cilalanmamış modüller tek tek aynı şüpheci yöntemle elden geçirilsin; seçim, görsel feedback ve öğrenci akışı kaçırılmasın.
+- Tespit: `Polinom Kasası` sahnesinde mercek seçilir seçilmez doğru/yanlış hissi ve hedef değer görünebiliyordu. Bu, öğrencinin denemeden cevabı görmesine yol açan cevap sızıntısıydı.
+- Düzeltme: `PolynomialVaultScene` artık `status` alıyor. Mercek seçimi yalnız raf önizlemesi ve "tarama" dili üretir; pembe alarm, doğru kilit, hedef değer ve başarı dili yalnız `Kasayı Kilitle` sonrası açılır. `polynomial-vault-scene` test id kontratı sahne köküne eklendi.
+- Computer Use QA: Chrome desktop üzerinde başlangıç, doğru mercek önizlemesi, yanlış mercek önizlemesi, yanlış test alarmı, doğru kilit, 5 görev zinciri ve completion canlı geçti. Yanlış alarmın seçim anında değil testten sonra geldiği doğrulandı.
+- Test: `npm run module:check -- polynomial-vault` 24 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Durum: `Review Needed`; Kaptan canlı göz onayı olmadan `Showcase Ready` değil. Sıradaki cila hedefi `12-03 inequality-orbit`.
+
+## 2026-05-16 Manual Pairing - 12-03 İşaret Yörünge Radarı Son Cila
+- Kullanıcı isteği: 12. sınıftaki cilalanmamış modüller tek tek devam etsin; her modülde seçim/test ayrımı, görsel feedback ve reset zinciri kaçırılmasın.
+- Tespit: `InequalityOrbitScene` tarayıcı seçilir seçilmez "doğru ışın" hissi, hedef değer veya pembe yanlış alarm üretebiliyordu. Bu, 12-02'de kapatılan cevap sızıntısının aynı aileden bir tekrarına dönüyordu.
+- Düzeltme: `InequalityOrbitScene` artık `status` alıyor. Tarayıcı seçimi yalnız istasyon/koridor önizlemesi verir; doğru kilit, hedef değer ve pembe alarm yalnız `Yörüngeyi Kilitle` sonrası görünür. `inequality-orbit-scene` test id kontratı gerçek sahne köküne eklendi.
+- Computer Use QA: Chrome desktop üzerinde başlangıç, yanlış `Yasak` önizlemesi, yanlış test alarmı, doğru `Kökler`, `Yasak`, `Pozitif Bölge`, `Çözüm` zinciri, completion ve `Tekrar Oyna` reset akışı canlı geçti.
+- Test: `npm run module:check -- inequality-orbit` 23 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Durum: `Review Needed`; Kaptan canlı göz onayı olmadan `Showcase Ready` değil. Sıradaki cila hedefi `12-04 limit-asymptote-sensor`.
+
+## 2026-05-16 Manual Pairing - 12-04 Limit Asimptot Sensörü Son Cila
+- Kullanıcı isteği: 12. sınıftaki cilalanmamış modüller aynı şüpheci yöntemle tek tek cilalansın.
+- Tespit: Computer Use canlı kontrolde yerel cebir makinesi seçili önizlemede `çıkış 7` cevabını kontrol öncesi gösteriyordu. Playwright zincirinde sonsuz katsayı görevinde `= 2`, grafik görevlerinde hedef değer ve 0/0 görevinde kalan yol da erken okunabiliyordu. Ayrıca iç sahne ile ortak kabuk aynı `limit-asymptote-sensor-scene` test id'sini paylaşıyordu.
+- Düzeltme: `LimitAsymptoteScene` artık `status` ile karar state'ini ayırıyor. Sensör seçimi yalnız önizleme; sonuç değeri, yanlış alarmı, `y=4/y=2`, yerel `7`, katsayı `=2` ve `x+2 -> 4` yalnız `Limiti Kilitle` sonrası açılıyor. Yerel çıkış `kilitli/işleniyor`, sonsuz katsayı oranı `= ?`, 0/0 kalan yolu `gizli yol` olarak bekliyor. İç görsel kök `limit-asymptote-sensor-scene-visual` yapılarak test id çakışması kaldırıldı.
+- QA: Computer Use ile Chrome desktop'ta yerel cebir sızıntısı yakalandı. Playwright `1488x768` üzerinde başlangıç, sensör önizleme, doğru zincir, sonsuz katsayı, 0/0 vinç, completion ve `Tekrar Oyna` reset geçti; hedef değerlerin kontrol öncesi sızmadığı görüldü.
+- Test: `npm run module:check -- limit-asymptote-sensor` 23 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Durum: `Review Needed`; Kaptan canlı göz onayı olmadan `Showcase Ready` değil. Sıradaki cila hedefi `12-07 derivative-rule-forge`.
+
+## 2026-05-16 Manual Pairing - 12-07 Türev Kural Dökümhanesi Son Cila
+- Kullanıcı isteği: 12. sınıf modüllerinde seçim/test ayrımı ve öğrenciye görünen fiziksel feedback aynı standartla cilalansın.
+- Tespit: `DerivativeRuleScene` başlangıçta formül sızıntısını kapatmıştı, ama kartuş seçilince çıkış kapsülü `fʼ + gʼ`, `fʼg + fgʼ`, `(fʼg-fgʼ)/g²` gibi formül cevabını testten önce gösteriyordu. Bu, doğru kartuşu tıklayan öğrenci için cevabı erken açıyordu.
+- Düzeltme: Kartuş önizlemeleri mekanik dile çekildi: `iki ışın`, `ters ışın`, `iki kol`, `pay/zırh`, `halka/çekirdek`. Kural kollarındaki etiketler de test öncesi `türevle · koru`, `pay bandı`, `payda zırhı`, `dış halka`, `iç çekirdek` olarak kalıyor; gerçek formül, çıktı ve kural kanıtı yalnız `Kuralı Test Et` sonrası açılıyor.
+- QA: Playwright `1488x768` üzerinde yanlış çarpım denemesi, doğru toplam/fark/çarpım/bölüm/zincir zinciri, completion ve `Tekrar Oyna` reset geçti. Computer Use Chrome desktop'ta yanlış `Çarpım Kolu` önizlemesi formül sızdırmadan görüldü, test sonrası pembe alarm ve neden mesajı çıktı.
+- Test: `npm run module:check -- derivative-rule-forge` 24 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Durum: `Review Needed`; Kaptan canlı göz onayı olmadan `Showcase Ready` değil. Sıradaki cila hedefi `12-08 optimization-terrain`.
+
+## 2026-05-16 Manual Pairing - 12-01 Dizi Çarkı Görsel Sadeleştirme
+- Kullanıcı isteği: Sayıların arkasındaki görsel çok yoğun ve karışık; daha güzel ve sade olsun.
+- Düzeltme: Üçüncü görevdeki fonksiyon eğrisi sayı kapsüllerinin arkasından çekildi. Dikey örnek izleri kaldırıldı, eğri düşük opaklıklı alttan geçen sakin bir `n=1..5 izi` rehberine dönüştürüldü.
+- Computer Use QA: Chrome'da `sequence-wheel` üçüncü göreve kadar oynandı; `Bir Fonksiyondur` seçildiğinde sayılar temiz kaldı, eğri sayıların içinden geçmedi ve sağ panel aksiyonları çalıştı.
+- Test: `npm run module:check -- sequence-wheel` 20 pass / 2 expected warn / 0 fail; `npx tsc --noEmit` geçti.
+
+## 2026-05-16 Manual Pairing - 12-01 Fonksiyon Eğrisi Kaldırma
+- Kullanıcı isteği: Sadeleştirilen eğri hâlâ güzel değil; ya daha iyi yapılmalı ya da kaldırılmalı.
+- Karar: Eğri tamamen kaldırıldı. Üçüncü görevde fonksiyon/dizi ayrımı artık arka çizgiyle değil, `1->2` ilişki çipleri, `n=...` kapsül etiketleri, `n²` motoru ve `6² -> n=6 = 36` canlı projeksiyonuyla anlatılıyor.
+- Not: Dinamik İstasyon skill hafızasına "yardımcı çizgi hâlâ gözü yoruyorsa kaldır ve temiz kanıtla anlat" kuralı eklendi.
+- Computer Use QA: Chrome'da 1. ve 2. görev geçilip 3. görevde `Bir Fonksiyondur` seçildi; sayıların arkasında eğri kalmadığı, ilişki çipleri ve projeksiyonun çalıştığı görüldü.
+- Test: `npm run module:check -- sequence-wheel`, `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+
+## 2026-05-16 Manual Pairing - 12-01 Görev Artırma
+- Kullanıcı isteği: Bitiş ekranı ve gerçek modül akışı tek örnekle kalmasın; her atom iki örnekle pekişsin, ama ekran kalabalıklaşmasın ve XP şişmesin.
+- Yapılan iş: `sequenceMissions` 3 görevden 6 göreve çıkarıldı. Aritmetik `+3/+5`, geometrik `x2/x3`, fonksiyon/dizi ayrımı `n²/n³` örnekleri sıraya eklendi. Fonksiyon projeksiyonu artık göreve göre `n²` veya `n³` hesaplıyor.
+- Completion: 6 ayrı kart yerine 3 ustalık kartı kullanıldı; her kart iki kısa kanıt zinciri gösteriyor. Başlık `6 görev, 3 bakış kilitlendi`, XP `+120` olarak kaldı.
+- Hafıza ve doküman: `docs/module-specs/12-01-sequence-wheel.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md` ve Dinamik İstasyon module development skill'i güncellendi.
+- QA bulgusu: Computer Use full-chain sırasında 4. görevde ilişki çipleri `+5` iken motor iç sembolünün hâlâ `+3` kaldığı yakalandı. `SequenceWheelScene` doğru mercekte motor sembolünü görev ilişkisinden (`+5`, `x3`, `n³`) okuyacak şekilde düzeltildi.
+- Test: `npm run module:check -- sequence-wheel` 20 pass / 2 expected warn; `npx tsc --noEmit` geçti. Computer Use ile iki yanlış deneme, 6 doğru görev zinciri, `+5/x3/n³` motor sembolleri, 6/6 completion ve `Tekrar Oyna` reseti doğrulandı. `npm run build` geçti; yalnız mevcut Vite büyük chunk uyarısı var. `git diff --check` temiz.
+
+## 2026-05-17 Manual Pairing - 12-01 Kaptan Görsel Onayı
+- Kullanıcı geri bildirimi: "Dizi çarkı modülü güzel oldu."
+- Karar: Bu cümle Kaptan canlı görsel onayı olarak kaydedildi. 12-01 artık `Showcase Candidate / Review Needed` değil, `Showcase Ready`.
+- Uygulama etiketi: embed üst etiketi `Showcase Ready`, ana dashboard kart etiketi `Vitrin Hazır`.
+- Doküman senkronu: `docs/module-specs/12-01-sequence-wheel.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md` ve `.agent/CURRENT_TASK.md` güncellendi.
+
+## 2026-05-17 Manual Pairing - 12-02 Polinom Kasası İşaretleme Sadeleştirme
+- Kullanıcı sorusu: "Polinom Kasası adlı modülde öğrenci çok fazla işaretleme mi yapıyor?"
+- Tespit: Modül her görevde 5 mercek gösterdiği için öğrenci kasadaki ana raf yerine sağ panel seçeneklerini taramaya başlıyordu. Doğrusal/karesel görevlerde x, x² ve x⁰ gibi destek rafların birlikte parlaması "hepsini mi kontrol etmeliyim?" hissi yaratıyordu. Ayrıca sahne test id'si DOM'da iki kez görünüyor ve uzun polinom etiketi dar pencerede satır kırıyordu.
+- Düzeltme: Her göreve `lensOptions` eklendi; panelde 5 mercek korunuyor, seçenek sırası sabit kalıyor, 3 odak mercek daha belirgin, diğer önemli mercekler daha sakin yardımcı seçenek olarak görünüyor. Doğrusal mercek yalnız `x`, karesel mercek yalnız `x²`, sabit mercek yalnız `x⁰`, derece/başkatsayı mercekleri yalnız en yüksek dolu rafı vurguluyor. İç sahne test id'si `polynomial-vault-scene-visual` oldu; shell'deki gerçek `polynomial-vault-scene` tek kaldı. Polinom etiketi tek satırda kalacak şekilde küçültüldü, completion grid'i dar ekranda iki kolona düşürüldü.
+- Browser QA: In-app browser'da açılışta 5 mercek görünür kaldı; görevler ilerledikçe Doğrusal/Karesel/Derece/Başkatsayı/Sabit sırası değişmedi. Görevle ilgili 3 odak mercek daha belirgin, yardımcı mercekler daha sakin göründü. Yardımcı `Başkatsayı` seçimi önizleme verdi ve testte "bu görev kimlik soruyor" hatasını doğru açıkladı. Önceki kontrolde yanlış `Karesel`, doğru `Doğrusal`, ikinci görev `Karesel`, üçüncü görev `Derece`, dördüncü görev `Başkatsayı`, beşinci görev yanlış `Başkatsayı` ve doğru `Sabit` zinciri completion'a kadar geçmişti.
+- Test: `npm run module:check -- polynomial-vault` 24 pass / 2 expected warn; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi.
+
+## 2026-05-17 Manual Pairing - 12-02 Kaptan Görsel Onayı
+- Kullanıcı geri bildirimi: "polinom kasası iyi oldu" ve ardından "polinom kasası adlı modül de hazır oldu."
+- Karar: Bu cümleler Kaptan canlı görsel onayı olarak kaydedildi. 12-02 artık `Review Needed` değil, `Showcase Ready`.
+- Uygulama etiketi: embed üst etiketi `Showcase Ready`, ana dashboard kart etiketi `Vitrin Hazır`.
+- Doküman senkronu: `docs/module-specs/12-02-polynomial-vault.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md` ve `.agent/CURRENT_TASK.md` güncellendi.
+
+## 2026-05-17 Manual Pairing - 12-03 Aralık Etiketi Okunurluğu
+- Kullanıcı geri bildirimi: Çözümdeki `(-∞, -1)`, `(-1, 3]`, `(3, ∞)` aralıklarının puntosu çok küçük ve okunması zor.
+- Düzeltme: `InequalityOrbitScene` aralık yazıları küçük tracking'li teknik metinden daha büyük, yüksek kontrastlı ve geniş rozetlere taşındı. Canlı tarayıcı ölçümünde üç aralık etiketi 16px olarak doğrulandı.
+- Browser QA: In-app browser'da final `Rasyonel çözüm koridoru` görevine kadar gidildi, `Çözüm` tarayıcısı seçildi ve üç aralık etiketi görünür/okunur olarak kontrol edildi.
+
+## 2026-05-17 Manual Pairing - 12-03 Rasyonel Kesir Gösterimi
+- Kullanıcı geri bildirimi: İşaret komutundaki `R(x)=...` rasyonel ifade slash ile görünürse öğrenciler pay/payda yapısını yanlış algılayabilir.
+- Karar: Pedagojik olarak doğru; payda yasağı anlatan modülde slash yerine normal kesir çizgisi kullanılmalı.
+- Düzeltme: `InequalityOrbitScene` rasyonel ifadeleri otomatik yatay kesir çizgili gösterime çeviriyor. Sağ panel ve AstroBot promptları slash yerine `pay` / `payda` diliyle güncellendi.
+
+## 2026-05-17 Manual Pairing - 12-03 Denklem Kök Etiketi
+- Kullanıcı geri bildirimi: İlk denklem görevinde `-1` ve `3` altında `kök kapalı` yazması matematiksel olarak yanlış/yanıltıcı; soru eşitsizlik değil.
+- Karar: Doğru. Açık/kapalı uç dili eşitsizlik çözüm aralığına aittir; denklem köklerinde nötr `kök istasyonu` dili kullanılmalı.
+- Düzeltme: `InequalityOrbitScene` nokta etiketleri artık görev tipine göre ayrılıyor. Denklemde kökler `kök istasyonu`, rasyonel denklemde payda noktası `payda yasak`; eşitsizliklerde ise `kök açık`, `kök kapalı`, `yasak açık` dili korunuyor.
+- Browser QA: İlk `P(x)=0` görevinde `kök kapalı` ve `kök açık` kalmadığı, iki kökün `kök istasyonu` olarak göründüğü canlı tarayıcıda doğrulandı.
+
+## 2026-05-17 Manual Pairing - 12-03 Eşitsizlik Komutu Tek Satır
+- Kullanıcı geri bildirimi: `(x+2)(x-1)>0` tek satır okunmalı; `>0` alta düşünce öğrenci bunu ayrı işlem gibi algılayabilir.
+- Karar: Doğru. Eşitsizlik sembolü ifadenin parçası olarak aynı satırda kalmalı; denklem kimlikleri ise küçük alt not olarak kalabilir.
+- Düzeltme: `ExpressionDisplay` artık ilişki bilgisini alıyor. `<`, `>`, `≤`, `≥` içeren komutlar tek satırda gösteriliyor; rasyonel eşitsizliklerde de kesir çizgisinin yanında ilişki korunuyor. `P(x)=0` ve `R(x)=0` alt not davranışı değişmedi.
+- Browser QA: In-app browser'da üçüncü göreve kadar ilerlenip `(x + 2)(x - 1) > 0` komutunun tek satırda kaldığı canlı görüntüyle doğrulandı.
+- Test: `npm run module:check -- inequality-orbit` 23 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi.
+
+## 2026-05-17 Manual Pairing - 12-03 İşaret Tablosu Renk Dili
+- Kullanıcı sorusu: İşaret komutunun altındaki kutu içindeki `+` ne anlama geliyor ve `+/-/+` kutuları farklı renklerde olsa öğrenci için daha anlamlı olur mu?
+- Değerlendirme: `+` toplama değil, ilgili aralıkta ifadenin pozitif olduğunu gösteriyor; ancak tek başına sembol ve aynı koyu kutu dili öğrencide belirsizlik yaratabilir.
+- Düzeltme: Aralık kutuları işaret anlamına göre ayrıldı. Pozitif bölgeler yeşil ton, negatif bölgeler amber ton alıyor; her işaret rozeti hem `+/-` sembolü hem `Pozitif/Negatif` etiketi taşıyor.
+- Browser QA: In-app browser'da üçüncü göreve kadar ilerlenip başlangıç ve `Pozitif Bölge` tarama önizlemesinde renk ayrımı gözle kontrol edildi.
+- Test: `npm run module:check -- inequality-orbit` 23 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi.
+
+## 2026-05-17 Manual Pairing - 12-03 İşaret Tablosu Dikey Hizalama
+- Kullanıcı geri bildirimi: Aralık rozeti ile `+ Pozitif` / `- Negatif` rozeti yan yana değil, alt alta ve çerçeve içinde ortalı dursa daha okunur olabilir.
+- Değerlendirme: Doğru. Bu düzen işaret tablosu okumasını iki satıra ayırıyor: önce aralık, sonra o aralığın işareti.
+- Düzeltme: Aralık kutuları `flex-col` düzenine alındı; aralık rozeti üst satıra, işaret rozeti alt satıra taşındı ve ikisi de kendi interval çerçevesinde ortalandı.
+- Browser QA: In-app browser'da ilk görev ve üçüncü eşitsizlik görevi canlı kontrol edildi; aralık ve işaret rozetleri çerçeve içinde ortalı duruyor.
+- Test: `npm run module:check -- inequality-orbit` 23 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi.
+
+## 2026-05-17 Manual Pairing - 12-03 Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "işaret yörünge radarı <vitrin hazır < şeklinde işaretlenebilir."
+- Değerlendirme: Modül Gemini final `100/100 PASS`, must-fix boş, Computer Use/Browser canlı cila kontrolleri ve teknik kapıları geçtiği için Kaptan canlı onayıyla vitrine alınması uygun.
+- Düzeltme: Registry statüsü `showcase-ready`, embed üst etiketi `Showcase Ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Completion notu ve dokümanlar `Showcase Ready` ile senkronlandı.
+
+## 2026-05-17 Manual Pairing - 12-04 Limit Notasyonu
+- Kullanıcı geri bildirimi: Limit komutunda `x -> 2` ifadesi düz satırda görünürse öğrenciler bunu `lim`den ayrı okuyabilir; `x -> 2` lim ifadesinin altında olmalı.
+- Değerlendirme: Doğru. Standart limit notasyonunda yaklaşma koşulu `lim`in alt indisidir; düz metin öğrenciye yanlış okuma alışkanlığı verebilir.
+- Düzeltme: `LimitExpressionDisplay` eklendi. `lim x->a ...` düz metni artık `lim` + altında okunur `x → a` etiketi + yanında fonksiyon gövdesi biçiminde render ediliyor. `lim` ile `f(x)` aynı üst hizaya çekildi; aralarındaki boşluk daraltıldı.
+- Ek kapı temizliği: Spec'te kayıtlı `limit-asymptote-sensor-scene-visual` test id'si `TEST_ID_CONTRACT` listesine de eklendi; module guard artık bu kanıtı literal olarak bulabiliyor.
+
+## 2026-05-17 Manual Pairing - 12-04 Grafik Okuma Kanıtı
+- Kullanıcı geri bildirimi: İlk görevde `f(x)` kuralı verilmediği için öğrencinin `x = 2` için 4 sonucunu nereden bulacağı belirsiz kalıyor.
+- Değerlendirme: Doğru. Bu görevde `f(2)` değeri aranmamalı; öğrenci grafikte `x -> 2` olurken eğrinin yaklaştığı `y = 4` çizgisini okumalı.
+- Düzeltme: İlk görev promptu `y = 4 çizgisinde birleşirse limit okunur` biçimine çekildi. Sahneye açık `y = 4 çizgisi` rozeti ve y ekseni üzerinde `4` ölçek kanıtı eklendi. `sol sensör/sağ sensör` dili de `soldan limit/sağdan limit` olarak değiştirildi; hareketli kutular kapıya yaklaşma davranışı verecek şekilde ayarlandı.
+
+## 2026-05-19 Manual Pairing - 12-05 Süreklilik Köprüsü Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "süreklilik köprüsünü de vitrin hazır durumuna getirebilirsin."
+- Değerlendirme: Modül Gemini final `95/100 PASS`, must-fix boş, Computer Use/Playwright QA ve teknik kapıları temiz. Son canlı cila turunda `lim` hizası, `f(2)` dili, AstroBot kopyası ve matematiksel anlamı olmayan sarı dekor çizgileri temizlendiği için Kaptan onayıyla vitrine alınması uygun.
+- Düzeltme: Registry statüsü `showcase-ready`, embed üst etiketi `Showcase Ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready` ile senkronlandı.
+
+## 2026-05-19 Manual Pairing - 12-04 Limit Asimptot Sensörü Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "gayet güzel oldu. limit asimptot sensörü nü de vitrin hazır durumuna getirebilirsin."
+- Değerlendirme: Modül Gemini final `94/100 PASS`, must-fix boş, seçim/test ayrımı ve cevap sızıntısı cila kapıları temiz. Son turda 0/0 sadeleştirme için AstroBot balonuna kesir çizgili denklem eklendi; sahne, sağ panel ve limit komutu kalabalıklaştırılmadı.
+- Düzeltme: Registry statüsü `showcase-ready`, embed üst etiketi `Showcase Ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Completion notu, spec, showcase readiness, scorecard, progress, current task ve module development skill hafızası `Showcase Ready` ile senkronlandı.

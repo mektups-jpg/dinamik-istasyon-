@@ -1,0 +1,29 @@
+# 12-07 derivative-rule-forge Gemini visual QA
+
+Model: gemini-3.1-pro-preview
+Review: final
+Screenshots:
+- .agent/browser-use-shots/12-07-derivative-rule-forge-00-start.png
+- .agent/browser-use-shots/12-07-derivative-rule-forge-25-wrong.png
+- .agent/browser-use-shots/12-07-derivative-rule-forge-50-mid.png
+- .agent/browser-use-shots/12-07-derivative-rule-forge-75-edge.png
+- .agent/browser-use-shots/12-07-derivative-rule-forge-80-chain.png
+- .agent/browser-use-shots/12-07-derivative-rule-forge-100-complete.png
+- .agent/browser-use-shots/12-07-derivative-rule-forge-viewport-1488x768.png
+
+SCORE: 100
+PASS: YES
+MUST_FIX:
+- NONE
+SHOULD_FIX:
+- NONE
+VISUAL_RUBRIC:
+- first_3_seconds: 10/10 Excellent dark sci-fi aesthetic, instantly engaging visual metaphor of a "rule forge".
+- main_toy: 10/10 The flowing neon lines clearly distinguish between preserved and differentiated components, turning abstract formulas into physical mechanisms.
+- feedback: 10/10 Wrong attempts provide specific, mathematical explanations (e.g., explaining why a cross arm isn't needed for a sum) rather than just "wrong".
+- tech_value: 10/10 High-quality interactive visualization that tracks state changes dynamically.
+- desktop_fit: 10/10 UI scales perfectly to 1488x768 with no clipping or awkward negative space.
+PEDAGOGY:
+The module brilliantly translates abstract derivative formulas into a visual, mechanistic mental model. By treating functions as raw materials moving along a production line, and derivative rules as "cartridges" or "shields" that split and modify these paths, students can intuitively grasp concepts like the product rule's two branches or the quotient rule's preserved denominator shield. This prevents mindless formula memorization and builds genuine conceptual understanding.
+RISK:
+None. The execution is flawless, visually appealing, and pedagogically sound.

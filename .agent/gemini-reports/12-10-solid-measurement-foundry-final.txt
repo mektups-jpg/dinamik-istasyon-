@@ -1,0 +1,20 @@
+Model: gemini-3.1-pro-preview
+Date: 2026-05-16T02:40:05.329Z
+
+MODEL: Gemini-Vision-Pro
+SCORE: 95
+PASS: YES
+
+MUST_FIX:
+- NONE
+
+SHOULD_FIX:
+- Prizma yüzey alanı formülünde (Görsel 75) "A = 2B + yan yüzler" kullanılmış. MEB müfredatında genellikle Taban Alanı ($T_a$) ve Yanal Alan ($Y_a$) terminolojisi kullanılır. Formülün "A = 2T_a + Y_a" veya tamamen Türkçe "Alan = 2 x Taban Alanı + Yanal Alan" olarak standartlaştırılması pedagojik tutarlılığı artırabilir.
+
+VISUAL_VERDICT: "Dökümhane" (Foundry) teması harika çalışmış. Hacim için "sıvı dolum" (mavi/şeffaf iç yapı) ve yüzey alanı için "zırh/jelatin" (yeşil dış kabuk) metaforları görsel olarak çok net ayrışıyor. 1488x768 çözünürlük sınırlarına mükemmel uyulmuş, ekran taşması veya sıkışıklık yok. 3D obje kesinlikle sahnenin başrolünde.
+
+PEDAGOGY_VERDICT: Öğrencinin sadece cismi değil, aynı zamanda "neyi ölçtüğünü" (hacim mi, alan mı) seçmek zorunda bırakılması, bu konudaki en büyük kavram yanılgısını (içini mi dolduruyorum, dışını mı kaplıyorum?) doğrudan çözüyor. Yanlış seçim ekranında (Görsel 25) hatanın kök nedeninin (yanlış cisim + yanlış mod) açıkça söylenmesi çok başarılı bir dönüt mekanizması.
+
+TECH_VALUE_VERDICT: 3D render alanı ile UI panelleri arasındaki haberleşme kusursuz görünüyor. State yönetimi (kullanıcının seçimlerine göre anlık 3D model ve formül güncellemeleri) başarılı. Sıkıcı bir test paneli olmak yerine etkileşimli bir simülasyon hissi veriyor.
+
+KAPANIS_KARARI: Review Needed kapısına geçebilir. (Showcase Ready olmaya çok yakın).

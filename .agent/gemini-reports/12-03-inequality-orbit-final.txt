@@ -1,0 +1,31 @@
+MODEL: gemini-3.1-pro-preview
+DATE: 2026-05-16
+MODULE: 12-03 inequality-orbit / İşaret Yörünge Radarı
+ROUTE: /embed/algebra/inequality-orbit
+EVIDENCE:
+- .agent/browser-use-shots/12-03-inequality-orbit-00-start.png
+- .agent/browser-use-shots/12-03-inequality-orbit-25-wrong.png
+- .agent/browser-use-shots/12-03-inequality-orbit-50-mid.png
+- .agent/browser-use-shots/12-03-inequality-orbit-75-edge.png
+- .agent/browser-use-shots/12-03-inequality-orbit-100-complete.png
+- .agent/browser-use-shots/12-03-inequality-orbit-console.md
+
+SCORE: 100
+VERDICT: PASS
+MUST_FIX:
+EMPTY
+SHOULD_FIX:
+EMPTY
+
+WHAT_WORKS:
+- Yasak (tanımsızlık yaratan payda) noktaları; farklı şekil, renk, (!) ikonu ve "YASAK AÇIK" etiketiyle görsel olarak mükemmel bir şekilde ayrıştırılmış.
+- Polinom eşitsizliklerden rasyonel eşitsizliklere geçiş pedagojik olarak çok yumuşak ve tutarlı.
+- Rasyonel eşitsizliklerde açık/kapalı aralık (dahil/hariç) mantığı açıkça öğretiliyor ve görsel geribildirimle destekleniyor.
+- Yanlış cevap ve yönlendirme metinleri "neden" sorusuna doyurucu matematiksel açıklamalar getiriyor.
+- Arayüz (HUD) ve tarayıcı efektleri, odaklanılması gereken matematiğin önüne geçmeden çok şık bir bilimkurgu teması yaratıyor.
+
+RATIONALE:
+İkinci revizyonla birlikte payda köklerinin (yasak noktalar) normal köklerden ayrıştırılması sorunu kusursuzca çözülmüş. Rasyonel eşitsizliklerde payda kökünün çözüm aralığına dahil edilmemesi (açık aralık) ve pay kökünün dahil edilmesi (kapalı aralık) kuralı, MEB kazanımlarına tam uyumlu ve görsel olarak çok akılda kalıcı bir şekilde işlenmiş. Merkezi etkileşim alanı geniş, metinler okunaklı ve pedagojik altyapı çok sağlam. Hiçbir sorun görünmüyor.
+
+AGENT NOTE:
+İlk Gemini turu 95/PASS olsa da MUST_FIX verdi: yasak nokta "kırmızı kilit" metniyle görsel olarak yeterince ayrışmıyordu. Modül kapatılmadı. Yasak istasyonuna pembe gövde, belirgin çerçeve ve `!` rozeti eklendi; tarayıcı parlama yoğunluğu azaltıldı. İkinci Gemini turu 100/PASS ve MUST_FIX/SHOULD_FIX boş döndü.
