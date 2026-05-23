@@ -34,7 +34,7 @@ export function DerivativeRuleCompletion({ onRestart }: DerivativeRuleCompletion
       data-testid={`${MODULE_ID}-completion`}
       initial={{ opacity: 0, scale: 0.96, y: 16 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      className="relative w-[min(92vw,1120px)] overflow-hidden rounded-[30px] border border-white/10 bg-[#030711]/86 p-5 shadow-[0_0_80px_rgba(0,229,255,0.16)] backdrop-blur-2xl sm:p-7"
+      className="relative mx-auto w-full max-w-[1040px] overflow-hidden rounded-[30px] border border-white/10 bg-[#030711]/86 p-5 shadow-[0_0_80px_rgba(0,229,255,0.16)] backdrop-blur-2xl sm:p-7"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_28%_12%,rgba(0,229,255,0.18),transparent_34%),radial-gradient(circle_at_78%_20%,rgba(179,136,255,0.14),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.055),transparent_44%)]" />
       <div className="relative grid gap-4">

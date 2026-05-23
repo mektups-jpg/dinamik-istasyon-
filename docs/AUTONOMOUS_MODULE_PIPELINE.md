@@ -12,6 +12,19 @@ Bu dokuman, Dinamik Istasyon'da 10. ve 11. sinif modullerini insan komutu beklem
 | Dis Elestirmen | Gemini 3 Flash ile ekran goruntulerini ogrenci gozuyle puanlar. | Browser Use screenshot, Gemini 3 Flash |
 | Dokumantasyon Ajani | Queue, spec, `PROGRESS.md`, `.agent/WORKLOG.md`, `MODULES.md`, `ROADMAP.md` kayitlarini senkron tutar. | Markdown dokumanlari |
 
+## Kaptan Inceleme Paneli ve 3 Hatli Calisma
+
+Yeni manuel kalite akisi `docs/KAPTAN_REVIEW_WORKFLOW.md` icinde tutulur. Ozet kural:
+
+- Tek repo ve tek SSOT korunur.
+- Kaptan beklerken `/review-workbench` uzerinden ilkokul, ortaokul veya lise modullerine puan/not birakir.
+- Ilkokul ve ortaokul sohbetleri audit-only calisir; kod, registry, spec veya kalite defteri degistirmez.
+- Lise/ana uretim sohbeti kod degistiren tek hattir.
+- Uretim hatti ayni anda yalniz bir modulu ele alir; Kaptan notlarini `Must Fix`, vitrin adayi ve polish onceligine cevirir.
+- Review Workbench'teki `Yanda ac` onizlemesi paneli kaybettirmeden modulu iframe icinde acar; Kaptan notlari localStorage'da tutulur ve JSON olarak disa aktarilir.
+
+Bu bolum, otomasyon hattini degistirmez; sadece Kaptan'in es zamanli goz notlarini guvenli uretim sirasina aktarma seklini tanimlar.
+
 ## State Machine
 
 ```mermaid

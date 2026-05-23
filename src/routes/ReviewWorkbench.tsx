@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ClipboardCopy, Download, Filter, Search } from 'lucide-react';
-import { modules, type GradeRange } from '../registry/moduleRegistry';
+import { ArrowLeft, ClipboardCopy, Download, ExternalLink, Filter, RefreshCcw, Search } from 'lucide-react';
+import { modules, type GradeRange, type ModuleMeta } from '../registry/moduleRegistry';
 import { ReviewModuleCard } from './review-workbench/ReviewModuleCard';
 import {
   STORAGE_KEY,
@@ -22,6 +22,8 @@ export default function ReviewWorkbench() {
   const [entries, setEntries] = useState<Record<string, ReviewEntry>>({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle');
+  const [previewModuleId, setPreviewModuleId] = useState<string | null>(null);
+  const [previewVersion, setPreviewVersion] = useState(0);
 
   useEffect(() => {
     try {
@@ -76,6 +78,11 @@ export default function ReviewWorkbench() {
         return priorityDelta || b.grade - a.grade || a.title.localeCompare(b.title, 'tr-TR');
       });
   }, [entries]);
+
+  const previewModule = useMemo(() => {
+    if (filteredModules.length === 0) return null;
+    return filteredModules.find((module) => module.id === previewModuleId) ?? filteredModules[0];
+  }, [filteredModules, previewModuleId]);
 
   const exportPayload = useMemo(() => {
     return JSON.stringify(
@@ -182,7 +189,7 @@ export default function ReviewWorkbench() {
           </div>
         </header>
 
-        <main className="grid flex-1 gap-5 py-5 xl:grid-cols-[minmax(0,1fr)_390px]">
+        <main className="grid flex-1 gap-5 py-5 xl:grid-cols-[minmax(420px,0.95fr)_minmax(540px,1.05fr)]">
           <section className="min-w-0">
             <div className="mb-4 flex flex-col gap-3 rounded-3xl border border-white/10 bg-black/24 p-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
@@ -205,20 +212,27 @@ export default function ReviewWorkbench() {
               </label>
             </div>
 
-            <div className="grid gap-4 2xl:grid-cols-2">
+            <div className="grid gap-4">
               {filteredModules.map((module) => (
                 <ReviewModuleCard
                   key={module.id}
                   module={module}
                   entry={entries[module.id]}
+                  isPreviewed={previewModule?.id === module.id}
                   onUpdate={(patch) => updateEntry(module.id, patch)}
                   onClear={() => clearEntry(module.id)}
+                  onPreview={() => setPreviewModuleId(module.id)}
                 />
               ))}
             </div>
           </section>
 
           <aside className="space-y-4 xl:sticky xl:top-5 xl:h-[calc(100vh-40px)] xl:overflow-y-auto">
+            <ModulePreviewPanel
+              module={previewModule}
+              version={previewVersion}
+              onRefresh={() => setPreviewVersion((current) => current + 1)}
+            />
             <ProductionQueue items={reviewedItems} />
             <JsonExportPanel
               exportPayload={exportPayload}
@@ -231,6 +245,73 @@ export default function ReviewWorkbench() {
         </main>
       </div>
     </div>
+  );
+}
+
+function ModulePreviewPanel({
+  module,
+  version,
+  onRefresh,
+}: {
+  module: ModuleMeta | null;
+  version: number;
+  onRefresh: () => void;
+}) {
+  const previewSrc = module ? withReviewQuery(module.path, version) : '';
+
+  return (
+    <section className="overflow-hidden rounded-3xl border border-[#00E5FF]/18 bg-[#06101e]/88 shadow-[0_24px_90px_rgba(0,0,0,0.35)]">
+      <div className="flex items-start justify-between gap-3 border-b border-white/10 p-4">
+        <div className="min-w-0">
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#00E5FF]">
+            Canlı modül önizleme
+          </p>
+          <h2 className="mt-1 truncate text-xl font-black text-white">{module?.title ?? 'Modül seç'}</h2>
+          {module && (
+            <p className="mt-1 text-xs font-bold text-white/46">
+              {module.grade}. sınıf · {module.category}
+            </p>
+          )}
+        </div>
+        <div className="flex shrink-0 gap-2">
+          <button
+            type="button"
+            onClick={onRefresh}
+            disabled={!module}
+            className="rounded-2xl border border-white/10 bg-white/[0.05] p-3 text-white/70 transition hover:border-[#00E5FF]/45 hover:text-[#00E5FF] disabled:opacity-40"
+            title="Önizlemeyi yenile"
+          >
+            <RefreshCcw className="h-4 w-4" />
+          </button>
+          {module && (
+            <Link
+              to={module.path}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-2xl border border-white/10 bg-white/[0.05] p-3 text-white/70 transition hover:border-[#00E5FF]/45 hover:text-[#00E5FF]"
+              title="Yeni sekmede aç"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-black/42 p-3">
+        {module ? (
+          <iframe
+            key={previewSrc}
+            src={previewSrc}
+            title={`${module.title} önizleme`}
+            className="h-[min(62vh,720px)] min-h-[520px] w-full rounded-2xl border border-white/10 bg-[#050812]"
+          />
+        ) : (
+          <div className="grid h-[520px] place-items-center rounded-2xl border border-dashed border-white/12 text-sm font-bold text-white/42">
+            Soldan bir modül seçince burada açılacak.
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -320,4 +401,9 @@ function JsonExportPanel({
       </p>
     </section>
   );
+}
+
+function withReviewQuery(path: string, version: number) {
+  const separator = path.includes('?') ? '&' : '?';
+  return `${path}${separator}review-workbench=1&v=${version}`;
 }

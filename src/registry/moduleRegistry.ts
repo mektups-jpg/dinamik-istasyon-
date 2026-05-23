@@ -1032,8 +1032,8 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/calculus/derivative-nonexistent-alarm',
     component: lazy(() => import('../modules/grade12/derivative-nonexistent-alarm/DerivativeNonexistentAlarmApp')),
-    status: 'review-needed',
-    archiveNote: '12. sınıf Review Needed üretim modülü. 12-06 içindeki sivri uç/kopuk pist yoğunluğunu ayırmak için eklendi.'
+    status: 'showcase-ready',
+    archiveNote: '12. sınıf Türev Yok Alarm İstasyonu Kaptan canlı görsel onayıyla Showcase Ready. Sahne probu doğrudan sürüklenebilir; sivri uç ve kopuk grafik alarm nedenleri ayrı kilitlendi.'
   },
   {
     id: 'derivative-rule-forge',

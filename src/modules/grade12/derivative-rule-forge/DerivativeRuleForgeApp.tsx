@@ -8,6 +8,7 @@ import { DerivativeRuleControls } from './DerivativeRuleControls';
 import { DerivativeRuleScene } from './DerivativeRuleScene';
 import {
   ATOM_IDS,
+  BuildStepId,
   forgeMissions,
   MODULE_ID,
   RuleTool,
@@ -21,6 +22,7 @@ export default function DerivativeRuleForgeApp() {
   const showMessage = useAstroBotStore((state) => state.showMessage);
   const [missionIndex, setMissionIndex] = useState(0);
   const [selectedTool, setSelectedTool] = useState<RuleTool | null>(null);
+  const [lockedSteps, setLockedSteps] = useState<BuildStepId[]>([]);
   const [solved, setSolved] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [status, setStatus] = useState<Grade12StageStatus>('info');
@@ -28,13 +30,19 @@ export default function DerivativeRuleForgeApp() {
 
   const mission = forgeMissions[missionIndex];
   const atomIds = useMemo(() => [...ATOM_IDS], []);
+  const allStepsLocked = useMemo(
+    () => mission.buildSteps.every((step) => lockedSteps.includes(step.id)),
+    [lockedSteps, mission],
+  );
   const astroBotMessage = solved
     ? 'Kural dökümü kilitlendi; sıradaki üretimde hangi parçanın korunacağını izle.'
     : selectedTool === null
       ? 'Bir kural kartuşu seç: toplam, fark, çarpım, bölüm ya da zincir.'
+      : !allStepsLocked
+        ? 'Kartuş yönü seçildi. Şimdi sahnedeki kural parçalarını kilitle; türev kuralı ancak sebep-sonuç kurulunca dökülür.'
       : status === 'error'
         ? 'Pembe alarmın yandığı üretim koluna bak; bu işlemde parça korunuyor mu, çıkarılıyor mu, içe mi giriyor?'
-        : 'Seçtiğin kartuş üretim bandında önizleme yapıyor; karar test düğmesinden sonra verilecek.';
+        : 'Parçalar kilitlendi. Test düğmesiyle dökümün gerçekten bu kurala ait olup olmadığını kontrol et.';
 
   useEffect(() => {
     if (!completed) {
@@ -44,18 +52,54 @@ export default function DerivativeRuleForgeApp() {
 
   const chooseTool = (nextTool: RuleTool) => {
     setSelectedTool(nextTool);
+    setLockedSteps([]);
     setSolved(false);
     setStatus('info');
-    setFeedback(toolCopy[nextTool].hint);
-    showMessage(toolCopy[nextTool].hint, 'info');
+    setFeedback(`${toolCopy[nextTool].hint} Şimdi sahnedeki kural parçalarını kilitle.`);
+    showMessage(`${toolCopy[nextTool].hint} Şimdi parçaları tek tek sahnede kilitle.`, 'info');
   };
 
   const resetTool = () => {
     setSelectedTool(null);
+    setLockedSteps([]);
     setSolved(false);
     setStatus('info');
     setFeedback('Kural kartuşu sıfırlandı. Home tuşu seçili kartuşu bırakır ve döküm bandını başlangıca döndürür.');
     showMessage('Kural döküm bandı sıfırlandı; önce hangi kartuşun çalışacağını seç.', 'info');
+  };
+
+  const lockStep = (stepId: BuildStepId) => {
+    const step = mission.buildSteps.find((item) => item.id === stepId);
+    if (!step) return;
+
+    if (selectedTool === null) {
+      setStatus('error');
+      setFeedback('Önce bir kural kartuşu seç; sonra sahnedeki parça kilitlerini çalıştır.');
+      showMessage('Önce kartuşu takalım, sonra kural parçalarını sahnede kilitleyelim.', 'error');
+      return;
+    }
+
+    if (solved) {
+      showMessage('Bu döküm zaten tamam; Sonraki ile yeni kurala geçebilirsin.', 'success');
+      return;
+    }
+
+    setStatus('info');
+    if (lockedSteps.includes(stepId)) {
+      setFeedback(step.note);
+      showMessage(step.note, 'info');
+      return;
+    }
+
+    const next = [...lockedSteps, stepId];
+    const remaining = mission.buildSteps.length - next.length;
+    const message = remaining === 0
+      ? `${step.note} Tüm parçalar kilitlendi; şimdi dökümü test et.`
+      : `${step.note} Kalan parça: ${remaining}.`;
+
+    setLockedSteps(next);
+    setFeedback(message);
+    showMessage(message, remaining === 0 ? 'success' : 'info');
   };
 
   const checkAnswer = () => {
@@ -72,6 +116,16 @@ export default function DerivativeRuleForgeApp() {
       setSolved(false);
       setFeedback(mission.failure[selectedTool]);
       showMessage(mission.failure[selectedTool], 'error');
+      return;
+    }
+
+    if (!allStepsLocked) {
+      setStatus('error');
+      setSolved(false);
+      setFeedback(
+        `Kural kartuşu doğru; ama sahnede kural parçalarını kilitlemeden döküm tamamlanmaz. Kilit: ${lockedSteps.length}/${mission.buildSteps.length}.`,
+      );
+      showMessage('Kartuş doğru yönde, fakat matematik henüz kurulmadı. Sahnede kalan parçaları kilitle.', 'error');
       return;
     }
 
@@ -95,6 +149,7 @@ export default function DerivativeRuleForgeApp() {
     const nextMissionItem = forgeMissions[nextIndex];
     setMissionIndex(nextIndex);
     setSelectedTool(null);
+    setLockedSteps([]);
     setSolved(false);
     setStatus('info');
     setFeedback(nextMissionItem.prompt);
@@ -104,6 +159,7 @@ export default function DerivativeRuleForgeApp() {
   const reset = () => {
     setMissionIndex(0);
     setSelectedTool(null);
+    setLockedSteps([]);
     setSolved(false);
     setCompleted(false);
     setStatus('info');
@@ -115,7 +171,7 @@ export default function DerivativeRuleForgeApp() {
     <Grade12FullStageLab
       title="Türev Kural Dökümhanesi"
       subtitle="MAT.12.2.5"
-      statusLabel="Review Needed"
+      statusLabel="Görüş Gerekli"
       eyebrow="12. sınıf kalite adayı"
       panelTitle="Kural kontrolü"
       astroBotMessage={astroBotMessage}
@@ -134,8 +190,10 @@ export default function DerivativeRuleForgeApp() {
         <DerivativeRuleScene
           mission={mission}
           tool={selectedTool}
+          lockedSteps={lockedSteps}
           solved={solved}
           status={status}
+          onLockStep={lockStep}
           onHome={resetTool}
         />
       }
@@ -147,6 +205,8 @@ export default function DerivativeRuleForgeApp() {
             missionIndex={missionIndex}
             missionCount={forgeMissions.length}
             tool={selectedTool}
+            lockedCount={lockedSteps.length}
+            buildCount={mission.buildSteps.length}
             solved={solved}
             onToolChange={chooseTool}
             onCheck={checkAnswer}

@@ -20,6 +20,7 @@ Geleneksel eğitim sistemleri (kağıt-kalem, çalışma yaprakları, ezberci fo
 Detaylı teknik dokümantasyon için:
 - [Mimari ve Altın Şablon (ARCHITECTURE.md)](./docs/ARCHITECTURE.md)
 - [Geliştirme Yol Haritası (ROADMAP.md)](./docs/ROADMAP.md)
+- [Kaptan İnceleme ve Üretim Hattı](./docs/KAPTAN_REVIEW_WORKFLOW.md)
 
 ## 🛠️ Kullanılan Teknolojiler
 - **Frontend:** React 18, Vite, TypeScript

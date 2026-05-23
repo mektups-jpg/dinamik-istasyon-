@@ -1,7 +1,7 @@
 # 12-06b Türev Yok Alarm İstasyonu
 
 ## Durum
-Review Needed üretim adayı. Ana uygulamada görünür; Kaptan canlı göz onayı gelmeden Showcase Ready sayılmaz.
+Showcase Ready. Ana uygulamada görünür; Kaptan canlı göz onayıyla vitrine alınmıştır.
 
 ## Amaç
 Türev Eğim Sürücüsü içindeki yoğun "sivri uç / kopuk pist" yükünü ayırmak. Öğrenci türevin olmadığı iki özel durumu kalabalık kesen-teğet sahnesinde değil, ayrı ve sakin bir alarm istasyonunda görür.
@@ -42,5 +42,8 @@ Ortada büyük bir alarm grafiği bulunur. İlk istasyonda V biçimli sivri uç,
 - Telefon görünümü ana hedef değildir; karar desktop/kiosk görünümünden verilir.
 
 ## Kapanış Kanıtı
-- Statü: `Review Needed / Görüş Gerekli`.
+- Statü: `Showcase Ready / Vitrin Hazır`.
 - 2026-05-22: Kaptan geri bildirimiyle Türev Eğim Sürücüsü içindeki sivri uç/kopuk pist yoğunluğu ayrı modüle taşındı. İlk kurulumda route, registry, test-id kontratı ve teknik build kapısı eklendi. Kaptan göz onayı sonrası puan ve Showcase Ready değerlendirmesi yapılacak.
+- 2026-05-23: Kaptan eksik tamamlama turunda sahne probu SVG üzerinde doğrudan sürüklenebilir hale getirildi; erken `f'(2) yok` hükmü doğru alarm kilidi sonrasına taşındı, sağ panel scroll ve completion genişliği güvene alındı, ana dosya `AlarmTracks`, `AlarmControls`, `AlarmCompletion` parçalarına ayrıldı.
+- 2026-05-23: Browser/Codex canlı QA'da sahne üstü sürükleme slider değerini `50 -> 92` değiştirdi, iki görev doğru zincirle completion'a ulaştı, console warning/error yok. `npm run module:check -- derivative-nonexistent-alarm` 18 pass / 2 warn / 0 fail, `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti.
+- 2026-05-23: Kaptan canlı görsel onayı: "tamamdır bu vitrin olsun sıradakine geçelim". Bu onayla registry, embed etiketi ve kalite defterleri `Showcase Ready / Vitrin Hazır` olarak kilitlendi.

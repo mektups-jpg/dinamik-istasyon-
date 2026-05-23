@@ -13,6 +13,13 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Sonraki küçük adım:
 ```
 
+## 2026-05-23 - Kaptan İnceleme Paneli ve 3 Hatlı Çalışma Dokümantasyonu
+- Okunan bağlam: `documentation-sync` skill, `project-context-primer` skill, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `README.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `ReviewWorkbench` ve `ReviewModuleCard`.
+- Yapılan iş: `/review-workbench` için sağ tarafta canlı önizleme kullanan yeni Kaptan çalışma düzeni dokümante edildi. Tek repo + üç sohbet hattı + tek kod yazan üretim hattı kuralı yazıldı; ilkokul ve ortaokul sohbetleri audit-only, lise/ana sohbet üretim hattı olarak ayrıldı. Yeni sohbetlere verilecek hazır promptlar kalıcı kılavuza eklendi.
+- Değişen dosyalar: `docs/KAPTAN_REVIEW_WORKFLOW.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `README.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: `npm run module:check -- derivative-nonexistent-alarm` 18 pass / 3 warn / 0 fail; `npx tsc --noEmit` geçti; `npm run build` geçti (mevcut büyük chunk uyarısı devam ediyor); `git diff --check` temiz.
+- Sonraki küçük adım: Kaptan `/review-workbench` üzerinden not bırakabilir; ana üretim hattı bu notları tek modüllük sıraya çevirip çalışacak.
+
 ## 2026-05-16 06:45 - Global AstroBot ve 12-06 Etkileşim Rehabilitasyonu
 - Okunan bağlam: Kaptan'ın sabah geri bildirimi, `frontend-skill`, `computer-use` skill, `ui-ux-design` kuralları, `dinamik-istasyon-module-development` skill, `AstroBot`, `Grade12FullStageLab`, `derivative-slope-driver` sahne/kontrol dosyaları ve 12-09 benchmark gözlemi.
 - Yapılan iş: Global AstroBot'un otomatik kapanması kaldırıldı; balon botun sağ tarafına açılan, daha dikkat çekici ve manuel kapatılabilir kalıcı mesaja dönüştü. AstroBot mesaj id'si monotonic hale getirildi, 12-06 görev geçişinde eski mesaj temizlendi ve completion kontrastı yükseltildi. 12. sınıf sağ panelindeki robot tekrarı "AstroBot son not" formatına sadeleşti; uzun sağ-alt feedback tekrarları kısa durum çipine çekildi. `derivative-slope-driver` sahnesine native range destekli `eğim probu` eklendi; B noktası, sekant çizgisi ve teğete yaklaşma sahnede canlı değişiyor, panel butonları fallback olarak kaldı. Büyük sahne yardımcıları `DerivativeSlopePrimitives` dosyasına ayrıldı.
@@ -1520,3 +1527,40 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Kullanıcı geri bildirimi: "gayet güzel oldu. limit asimptot sensörü nü de vitrin hazır durumuna getirebilirsin."
 - Değerlendirme: Modül Gemini final `94/100 PASS`, must-fix boş, seçim/test ayrımı ve cevap sızıntısı cila kapıları temiz. Son turda 0/0 sadeleştirme için AstroBot balonuna kesir çizgili denklem eklendi; sahne, sağ panel ve limit komutu kalabalıklaştırılmadı.
 - Düzeltme: Registry statüsü `showcase-ready`, embed üst etiketi `Showcase Ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Completion notu, spec, showcase readiness, scorecard, progress, current task ve module development skill hafızası `Showcase Ready` ile senkronlandı.
+## 2026-05-23 Manual Pairing - 12-06b Türev Yok Alarm İstasyonu Cila
+- Kullanıcı geri bildirimi: Eksikler tamamlansın; özellikle öğrenci gözüyle düşük kalan doğrudan etkileşim ve erken cevap hissi giderilsin.
+- Düzeltme: Sahne probu artık SVG sahnesinin üstünden doğrudan sürükleniyor; sağ alttaki range ince ayar/fallback olarak kaldı. Başlangıç sahnesindeki `f'(2) yok` hükmü `tek teğet?` / `kesintisizlik?` ön-kanıt diline çekildi ve gerçek hüküm yalnız doğru alarm kilidinden sonra açılıyor. Sağ panel kendi içinde scroll alıyor, completion kartı daha güvenli genişliğe çekildi.
+- Refactor: `DerivativeNonexistentAlarmApp.tsx` 612 satırlık monolitten `AlarmTracks.tsx`, `AlarmControls.tsx`, `AlarmCompletion.tsx` parçalarına bölündü; ana dosya 375 satıra indi.
+- QA: TDD kabul kontrolü önce kırmızı, sonra yeşil geçti. `npm run module:check -- derivative-nonexistent-alarm` 18 pass / 2 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Browser/Codex canlı QA'da sahne üstü sürükleme slider değerini `50 -> 92` değiştirdi, doğru zincir completion'a ulaştı, console warning/error yok.
+
+## 2026-05-23 Manual Pairing - 12-06b Türev Yok Alarm İstasyonu Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "tamamdır bu vitrin olsun sıradakine geçelim."
+- Değerlendirme: Modül son cila sonrası sahne üstü doğrudan sürükleme, erken cevap sızıntısı kapatma, sağ panel taşma güvenliği, completion güvenli genişliği ve Browser/Codex canlı QA kapılarını geçti. Kaptan canlı göz onayı Showcase Ready kapısını açtı.
+- Düzeltme: Registry statüsü `showcase-ready`, embed üst etiketi `Showcase Ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready` ile senkronlandı. Sıradaki tek modül `12-07 derivative-rule-forge`; bu turda yeni modül koduna başlanmadı.
+
+## 2026-05-23 Manual Pairing - 12-07 Türev Kural Dökümhanesi Çizgi Cila
+- Kullanıcı geri bildirimi: "görüntü tuhaf ... bu modülde çizgiler birbirinin üstünde gibi duruyor."
+- Kök neden: Sahnedeki tek kalın ana bant, giriş rayları ve aktif kural kollarıyla aynı koridorda tekrar çiziliyordu. Üstte ayrıca aktif seçimi vurgulayan büyük parlak çerçeve de çizgi kalabalığını artırıyordu.
+- Düzeltme: Ana bant üç ayrı ince raya ayrıldı; kartuş seçilince pasif giriş rayları gizleniyor, aktif kural kolu tek başına okunuyor. Ekstra aktif çerçeve kaldırıldı. Embed üst statüsü İngilizce `Review Needed` yerine Türkçe `Görüş Gerekli` oldu.
+- QA: Önce kaynak kabul kontrolü kırmızıydı; değişiklik sonrası kabul kontrolü geçti. `npm run module:check -- derivative-rule-forge` 24 pass / 2 warn / 0 fail ve `git diff --check` temiz. Browser/Codex canlı QA'da başlangıç, yanlış kartuş, doğru toplam, beş görev completion, yatay taşma ve console warning/error kontrolü geçti. Kaptan onayı gelmeden `Showcase Ready` yapılmadı.
+
+## 2026-05-23 Manual Pairing - 12-07 Türev Kural Dökümhanesi Altın Şablon Cila
+- Kullanıcı geri bildirimi: "tamamdır bunu uygula"; önceki değerlendirmede modülün kartuş eşleştirmeye fazla yakın kaldığı, atomun nedenini tam kurdurmadığı belirtilmişti.
+- Düzeltme: Her göreve sahne üstü `buildSteps` eklendi. Doğru kartuş seçimi artık yeterli değil; öğrenci `türevle f`, `türevle g`, `koru f/g`, `+/- köprüsü`, `pay eksi`, `g² zırh`, `dış kabuk`, `iç çekirdek` parçalarını kilitlemeden başarı alamıyor. Doğru kartuş + eksik parçada `Eksik parça alarmı` gösteriliyor; yanlış kartuş formül açmadan engelleniyor.
+- Görsel cila: Parça tezgahı sahnenin altına alındı, üretim alanı daha dengeli sıkıştırıldı, boş idle yazısı kaldırıldı. Completion kartı viewport yerine sahne genişliğine bağlandı; sağ kenar sıkışması düzeldi.
+- Refactor: Sahne altı inşa tezgahı `DerivativeRuleBuildDock.tsx` bileşenine ayrıldı; `DerivativeRuleScene.tsx` 385 satırda kaldı.
+- QA: TDD kabul kontrolü kırmızıdan yeşile geçti. Browser/Codex canlı QA'da eksik parça alarmı, 3/3 parça kilidi, yanlış kartuş, beş görev completion, completion genişliği, yatay taşma ve console warning/error kontrolü geçti. Görseller `.agent/visual-reports/12-07-build-step-lock.png` ve `.agent/visual-reports/12-07-build-completion.png`.
+- Test: `npm run module:check -- derivative-rule-forge` 24 pass / 2 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmadı.
+
+## 2026-05-23 Manual Pairing - 12-07 Çarpım Kolu Görsel Cila
+- Kullanıcı geri bildirimi: Çarpım kolundaki `köprü` ve iki yeşil kol kartuşun içinden geçiyor gibi duruyor; daha animasyonlu ve güzel olmalı.
+- Kök neden: Ürün kuralı iki statik SVG path'i kartuş dikdörtgeninin görsel alanından geçiriyor, `köprü` etiketi de çıkış kapsülüne yakın geniş rozet olarak çiziliyordu.
+- Düzeltme: Çarpım kolları `DerivativeRuleProductFlowRail` bileşenine taşındı. Eski içinden geçen path'ler kaldırıldı; üst/alt akış kartuşun çevresinden dolaşan dış raylara dönüştü ve `strokeDashoffset` pulse animasyonu aldı. `köprü` rozeti kompaktlaştırılıp çıkış kapsülünden uzaklaştırıldı.
+- QA: Browser/Codex canlı ölçümde eski statik path yok, 2 hareketli ray var, `köprü` çıkış kapsülüne binmiyor, yatay taşma `0`, console warning/error `0`. Görsel: `.agent/visual-reports/12-07-product-outer-rails.png`.
+- Test: Kaynak kabul kontrolü kırmızıdan yeşile geçti; `npm run module:check -- derivative-rule-forge` 34 pass / 2 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi.
+
+## 2026-05-23 Manual Pairing - 12-07 Kartuş Gövdesi Toplu Cila
+- Kullanıcı geri bildirimi: Çarpım dışındaki kartuşlarda da orta tasarım kötü duruyor; diğer kartuşlara basınca aynı kaliteye çekilmeli.
+- Düzeltme: Tüm kurallar ortak `RuleCartridgeCore` ve `RuleFlowRail` parçalarına taşındı. Toplam/fark, çarpım, bölüm ve zincir artık aynı portlu çekirdeği kullanıyor; eski içinden geçen statik ray kalıpları kaldırıldı. Toplam/fark etiketleri orta gövdenin arkasında kalmayacak şekilde gövde dışına alındı.
+- QA: Browser/Codex canlı kontrolde `Toplam`, `Fark`, `Çarpım`, `Bölüm`, `Zincir` kartuşlarının her biri tek tek tıklandı; ortak çekirdek, doğru sembol, yeni raylar, eski path yokluğu, yatay taşma `0` ve console warning/error `0` doğrulandı. Görseller: `.agent/visual-reports/12-07-core-sum-after-label-fix.png`, `.agent/visual-reports/12-07-core-product.png`, `.agent/visual-reports/12-07-core-quotient.png`, `.agent/visual-reports/12-07-core-chain.png`.
+- Test: Kaynak kabul kontrolü geçti; `npm run module:check -- derivative-rule-forge` 34 pass / 2 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.

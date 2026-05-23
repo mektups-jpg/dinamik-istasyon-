@@ -1,4 +1,4 @@
-import { ExternalLink, Star, Trash2 } from 'lucide-react';
+import { ExternalLink, Maximize2, Star, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { ModuleMeta } from '../../registry/moduleRegistry';
 import {
@@ -15,11 +15,20 @@ import {
 interface ReviewModuleCardProps {
   module: ModuleMeta;
   entry?: ReviewEntry;
+  isPreviewed?: boolean;
   onUpdate: (patch: Partial<ReviewEntry>) => void;
   onClear: () => void;
+  onPreview: () => void;
 }
 
-export function ReviewModuleCard({ module, entry = emptyEntry, onUpdate, onClear }: ReviewModuleCardProps) {
+export function ReviewModuleCard({
+  module,
+  entry = emptyEntry,
+  isPreviewed = false,
+  onUpdate,
+  onClear,
+  onPreview,
+}: ReviewModuleCardProps) {
   const status = module.status ?? 'active';
   const hasSignal = hasReviewSignal(entry);
 
@@ -51,21 +60,39 @@ export function ReviewModuleCard({ module, entry = emptyEntry, onUpdate, onClear
               {statusCopy[status]}
             </span>
           </div>
-          <h3 className="text-xl font-black leading-tight text-white">
-            <Link to={module.path} className="transition hover:text-[#8DF4FF]">
-              {module.title}
-            </Link>
-          </h3>
+          <button
+            type="button"
+            onClick={onPreview}
+            className="text-left text-xl font-black leading-tight text-white transition hover:text-[#8DF4FF]"
+          >
+            {module.title}
+          </button>
           <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/50">{module.description}</p>
         </div>
 
-        <Link
-          to={module.path}
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl border border-[#00E5FF]/25 bg-[#00E5FF]/10 px-4 py-3 text-sm font-black text-[#8DF4FF] transition hover:border-[#00E5FF]/55 hover:bg-[#00E5FF]/16"
-        >
-          Modülü aç
-          <ExternalLink className="h-4 w-4" />
-        </Link>
+        <div className="flex shrink-0 gap-2">
+          <button
+            type="button"
+            onClick={onPreview}
+            className={`inline-flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-black transition ${
+              isPreviewed
+                ? 'border-[#00FF88]/40 bg-[#00FF88]/14 text-emerald-100'
+                : 'border-[#00E5FF]/25 bg-[#00E5FF]/10 text-[#8DF4FF] hover:border-[#00E5FF]/55 hover:bg-[#00E5FF]/16'
+            }`}
+          >
+            Yanda aç
+            <ExternalLink className="h-4 w-4" />
+          </button>
+          <Link
+            to={module.path}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] p-3 text-white/62 transition hover:border-[#00E5FF]/45 hover:text-[#8DF4FF]"
+            title="Tam ekranda aç"
+          >
+            <Maximize2 className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">

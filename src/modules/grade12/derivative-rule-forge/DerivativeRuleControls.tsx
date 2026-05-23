@@ -8,6 +8,8 @@ interface DerivativeRuleControlsProps {
   missionIndex: number;
   missionCount: number;
   tool: RuleTool | null;
+  lockedCount: number;
+  buildCount: number;
   solved: boolean;
   onToolChange: (tool: RuleTool) => void;
   onCheck: () => void;
@@ -21,15 +23,20 @@ export function DerivativeRuleControls({
   missionIndex,
   missionCount,
   tool,
+  lockedCount,
+  buildCount,
   solved,
   onToolChange,
   onCheck,
   onNext,
 }: DerivativeRuleControlsProps) {
-  const checkLabel = tool === null ? 'Önce Kartuş Seç' : 'Kuralı Test Et';
+  const readyForTest = tool !== null && lockedCount === buildCount;
+  const checkLabel = tool === null ? 'Önce Kartuş Seç' : readyForTest ? 'Dökümü Test Et' : 'Parçaları Kilitle';
   const checkClass = tool === null
     ? 'border-white/12 bg-white/[0.055] text-white/58 hover:border-[#00E5FF]/34 hover:text-cyan-100'
-    : 'border-[#00FF88]/24 bg-[#00FF88]/12 text-emerald-100 hover:border-[#00FF88]/42';
+    : readyForTest
+      ? 'border-[#00FF88]/24 bg-[#00FF88]/12 text-emerald-100 hover:border-[#00FF88]/42'
+      : 'border-[#00E5FF]/24 bg-[#00E5FF]/12 text-cyan-100 hover:border-[#00E5FF]/42';
 
   return (
     <div className="flex h-full min-w-0 flex-col gap-2.5 overflow-hidden">
@@ -48,7 +55,7 @@ export function DerivativeRuleControls({
         <p className="mt-2 text-sm font-black text-white">{mission.title}</p>
         <p className="mt-1 text-xs font-bold leading-snug text-white/62">{mission.prompt}</p>
         <div className="mt-3 rounded-xl border border-[#00E5FF]/12 bg-black/22 px-3 py-2">
-          <p className="font-mono text-[9px] font-black uppercase tracking-[0.18em] text-white/36">aktif kanıt</p>
+          <p className="font-mono text-[9px] font-black uppercase tracking-[0.18em] text-white/36">aktif kanıt · sahne kilidi {lockedCount}/{buildCount}</p>
           <p className="mt-1 text-sm font-black leading-snug text-white/80">{solved ? mission.expression : mission.structure}</p>
         </div>
       </div>

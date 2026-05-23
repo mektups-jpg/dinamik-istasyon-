@@ -1,11 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, Home, RotateCcw, Sparkles } from 'lucide-react';
+import { type PointerEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
 import { useAtomStore } from '../../../store/useAtomStore';
 import { useAstroBotStore } from '../../../store/useAstroBotStore';
 import { useGameStore } from '../../../store/useGameStore';
 import { Grade12FullStageLab, Grade12StageStatus } from '../shared/Grade12FullStageLab';
+import { AlarmCompletion } from './AlarmCompletion';
+import { AlarmControls } from './AlarmControls';
+import { CornerTrack, GapTrack, getScanPoint, progressFromSvgPoint } from './AlarmTracks';
 import {
   alarmMissions,
   alarmTools,
@@ -27,39 +28,41 @@ export default function DerivativeNonexistentAlarmApp() {
   const [solved, setSolved] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [status, setStatus] = useState<Grade12StageStatus>('info');
-  const [feedback, setFeedback] = useState(alarmMissions[0].prompt);
+  const [feedback, setFeedback] = useState(missionAstroPrompt(alarmMissions[0].mode));
 
   const mission = alarmMissions[missionIndex];
   const hasNextMission = missionIndex < alarmMissions.length - 1;
   const atomIds = useMemo(() => [...ATOM_IDS], []);
   const astroBotMessage = solved
     ? hasNextMission
-      ? 'Alarm doğru: sıradaki grafikte bu kez kopukluk mu, sivri uç mu dikkatle ayır.'
+      ? 'Alarm kilitlendi. Sıradaki grafikte alarm türünü yeniden ayır.'
       : 'İki türev-yok durumu ayrıldı; Bitir ile kanıtı kapat.'
-    : selectedTool === null
-      ? mission.prompt
-      : status === 'error'
-        ? 'Alarm türünü karıştırdın. Grafikte kopukluk mu var, yoksa sivri uçta iki farklı eğim mi var?'
-        : alarmTools[selectedTool].hint;
+    : status === 'error'
+      ? 'Alarm türünü karıştırdın. Grafiğe tekrar bak: sivri uç mu, kopukluk mu?'
+      : selectedTool === null
+        ? mission.mode === 'corner'
+          ? 'Önce alarmı seç: iki eğim tek teğette birleşiyor mu?'
+          : 'Önce alarmı seç: grafik x=2 noktasında kesintisiz mi?'
+        : 'Tarayıcıyı oynat, sonra alarmı test et.';
 
   useEffect(() => {
     if (completed) return;
-    showMessage(mission.prompt, 'info');
-  }, [completed, mission.prompt, showMessage]);
+    showMessage(missionAstroPrompt(mission.mode), 'info');
+  }, [completed, mission.mode, showMessage]);
 
   const chooseTool = (tool: AlarmTool) => {
     setSelectedTool(tool);
     setSolved(false);
     setStatus('info');
-    setFeedback(alarmTools[tool].hint);
-    showMessage(alarmTools[tool].hint, 'info');
+    setFeedback(toolFeedback(tool));
+    showMessage(toolAstroHint(tool), 'info');
   };
 
   const updateScan = (nextProgress: number) => {
     setScanProgress(nextProgress);
     setSolved(false);
     setStatus('info');
-    setFeedback('Tarayıcıyı kritik noktaya yaklaştır: alarm gerçekten grafiğin davranışından mı çıkıyor?');
+    setFeedback('Tarayıcı sahnede ilerliyor; alarmı grafiğin davranışından oku.');
   };
 
   const checkAnswer = () => {
@@ -103,7 +106,7 @@ export default function DerivativeNonexistentAlarmApp() {
     setScanProgress(scanStartForMission(nextMissionItem.mode));
     setSolved(false);
     setStatus('info');
-    setFeedback(nextMissionItem.prompt);
+    setFeedback(missionAstroPrompt(nextMissionItem.mode));
     clearMessage();
   };
 
@@ -115,17 +118,17 @@ export default function DerivativeNonexistentAlarmApp() {
     setSolved(false);
     setCompleted(false);
     setStatus('info');
-    setFeedback(firstMission.prompt);
+    setFeedback(missionAstroPrompt(firstMission.mode));
     clearMessage();
-    showMessage('Türev yok alarmı sıfırlandı. Önce sivri uç grafiğini incele.', 'info');
+    showMessage('Türev yok alarmı sıfırlandı. Önce sivri uç noktasına bak.', 'info');
   };
 
   return (
     <Grade12FullStageLab
       title="Türev Yok Alarm İstasyonu"
       subtitle="MAT.12.2.4.3-4"
-      statusLabel="Review Needed"
-      eyebrow="12. sınıf kalite adayı"
+      statusLabel="Showcase Ready"
+      eyebrow="12. sınıf vitrin modülü"
       panelTitle="Alarm kontrolü"
       astroBotMessage={astroBotMessage}
       moduleId={MODULE_ID}
@@ -177,15 +180,48 @@ interface AlarmSceneProps {
 }
 
 function AlarmScene({ missionIndex, selectedTool, scanProgress, solved, status, onScanChange }: AlarmSceneProps) {
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const [draggingScanner, setDraggingScanner] = useState(false);
   const mission = alarmMissions[missionIndex];
   const accent = selectedTool ? alarmTools[selectedTool].accent : mission.mode === 'corner' ? '#FBBF24' : '#FF4FA3';
   const scanPoint = getScanPoint(mission.mode, scanProgress);
   const targetX = mission.mode === 'corner' ? 500 : 500;
   const isGap = mission.mode === 'gap';
+  const proofLabel = isGap ? 'kopukluk tarayıcısı' : 'teğet tarayıcısı';
+  const scannerHint = isGap ? 'Boşluğu sahnede tara' : 'Noktayı sahnede tara';
+
+  const updateScannerFromPointer = (event: PointerEvent<SVGSVGElement>) => {
+    const svg = svgRef.current;
+    const transform = svg?.getScreenCTM();
+    if (!svg || !transform) return;
+    const point = svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    const svgPoint = point.matrixTransform(transform.inverse());
+    onScanChange(progressFromSvgPoint(mission.mode, svgPoint));
+  };
+
+  const handleScannerPointerDown = (event: PointerEvent<SVGSVGElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setDraggingScanner(true);
+    updateScannerFromPointer(event);
+  };
+
+  const handleScannerPointerMove = (event: PointerEvent<SVGSVGElement>) => {
+    if (!draggingScanner) return;
+    updateScannerFromPointer(event);
+  };
+
+  const handleScannerPointerUp = (event: PointerEvent<SVGSVGElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    setDraggingScanner(false);
+  };
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center px-5 py-5 lg:px-8">
-      <div className="absolute left-1/2 top-7 z-20 flex w-[min(86%,780px)] -translate-x-1/2 items-center justify-between gap-4 rounded-full border border-white/12 bg-black/38 px-5 py-3 shadow-[0_18px_44px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+    <div className="relative flex h-full w-full items-center justify-center px-4 py-4 lg:px-7">
+      <div className="absolute left-1/2 top-5 z-20 flex w-[min(88%,820px)] -translate-x-1/2 items-center justify-between gap-4 rounded-full border border-white/12 bg-black/40 px-5 py-3 shadow-[0_18px_44px_rgba(0,0,0,0.28)] backdrop-blur-xl">
         <div className="min-w-0">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/48">aktif istasyon</p>
           <p className="truncate text-base font-black text-white">{mission.sceneTitle}</p>
@@ -194,34 +230,27 @@ function AlarmScene({ missionIndex, selectedTool, scanProgress, solved, status, 
           className="shrink-0 rounded-full border px-3 py-1.5 font-mono text-[10px] font-black uppercase tracking-[0.16em]"
           style={{ borderColor: `${accent}66`, color: accent, background: `${accent}16` }}
         >
-          {solved ? 'alarm kilitlendi' : mission.badge}
+          {solved ? 'alarm kilitlendi' : isGap ? 'süreklilik kontrolü' : 'teğet kontrolü'}
         </span>
       </div>
 
       <motion.div
         layout
-        className="relative mt-10 h-[min(72vh,620px)] w-[min(92vw,1220px)] overflow-hidden rounded-[34px] border border-[#00E5FF]/24 bg-[#020913] shadow-[0_0_80px_rgba(0,229,255,0.16),inset_0_1px_0_rgba(255,255,255,0.08)]"
+        className="relative mt-6 h-[min(76vh,660px)] w-[min(95vw,1280px)] overflow-hidden rounded-[38px] border border-[#00E5FF]/24 bg-[#020913] shadow-[0_0_96px_rgba(0,229,255,0.16),0_42px_120px_rgba(0,0,0,0.42),inset_0_1px_0_rgba(255,255,255,0.08)]"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_48%_18%,rgba(0,229,255,0.14),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.06),transparent_38%)]" />
-        <div className="pointer-events-none absolute left-1/2 top-5 z-20 flex w-[min(86%,720px)] -translate-x-1/2 items-center justify-between gap-4 rounded-[24px] border border-white/12 bg-black/50 px-5 py-3 shadow-[0_18px_44px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-          <div className="min-w-0">
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: accent }}>
-              karar kanıtı
-            </p>
-            <p className="mt-1 text-sm font-black leading-snug text-white">
-              {mission.mode === 'corner'
-                ? 'Soldan eğim ve sağdan eğim aynı çizgide birleşirse türev vardır.'
-                : 'Türevden önce grafik x=2 noktasında kesintisiz olmalıdır.'}
-            </p>
-          </div>
-          <span
-            className="shrink-0 rounded-2xl border bg-black/28 px-3 py-2 font-mono text-sm font-black"
-            style={{ borderColor: `${accent}66`, color: accent }}
-          >
-            {mission.mode === 'corner' ? 'sol ≠ sağ' : 'kopukluk'}
-          </span>
-        </div>
-        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1000 520" role="img" aria-label={mission.sceneTitle}>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_48%_16%,rgba(0,229,255,0.18),transparent_34%),radial-gradient(circle_at_48%_72%,rgba(0,255,136,0.08),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.07),transparent_38%)]" />
+        <div className="pointer-events-none absolute inset-x-10 bottom-9 h-24 rounded-full bg-[#00E5FF]/8 blur-3xl" />
+        <svg
+          ref={svgRef}
+          className={`absolute inset-0 h-full w-full touch-none ${draggingScanner ? 'cursor-grabbing' : 'cursor-crosshair'}`}
+          viewBox="0 0 1000 520"
+          role="img"
+          aria-label={mission.sceneTitle}
+          onPointerDown={handleScannerPointerDown}
+          onPointerMove={handleScannerPointerMove}
+          onPointerUp={handleScannerPointerUp}
+          onPointerCancel={handleScannerPointerUp}
+        >
           <defs>
             <filter id={`alarm-glow-${mission.id}`} x="-40%" y="-40%" width="180%" height="180%">
               <feGaussianBlur stdDeviation="6" result="blur" />
@@ -234,9 +263,13 @@ function AlarmScene({ missionIndex, selectedTool, scanProgress, solved, status, 
               <stop offset="0%" stopColor="#00E5FF" />
               <stop offset="100%" stopColor={accent} />
             </linearGradient>
+            <linearGradient id={`alarm-floor-${mission.id}`} x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0%" stopColor="rgba(0,229,255,0.20)" />
+              <stop offset="100%" stopColor="rgba(0,255,136,0.02)" />
+            </linearGradient>
           </defs>
 
-          <g opacity="0.24">
+          <g opacity="0.12">
             {Array.from({ length: 6 }, (_, index) => (
               <line key={`h-${index}`} x1="70" x2="930" y1={120 + index * 58} y2={120 + index * 58} stroke="#8CEBFF" strokeWidth="1" />
             ))}
@@ -244,11 +277,19 @@ function AlarmScene({ missionIndex, selectedTool, scanProgress, solved, status, 
               <line key={`v-${index}`} x1={110 + index * 130} x2={110 + index * 130} y1="82" y2="418" stroke="#8CEBFF" strokeWidth="1" />
             ))}
           </g>
+          <g opacity="0.32">
+            <line x1="96" x2="928" y1="400" y2="400" stroke="#B8F7FF" strokeWidth="2" />
+            <line x1="120" x2="120" y1="98" y2="414" stroke="#B8F7FF" strokeWidth="2" />
+            <text x="912" y="390" fill="#B8F7FF" fontSize="18" fontWeight="900">x</text>
+            <text x="134" y="116" fill="#B8F7FF" fontSize="18" fontWeight="900">y</text>
+          </g>
+          <ellipse cx="500" cy="400" rx="405" ry="82" fill={`url(#alarm-floor-${mission.id})`} opacity="0.54" />
+          <ellipse cx="500" cy="404" rx="360" ry="38" fill="none" stroke="#00E5FF" strokeWidth="2" opacity="0.12" />
 
           {isGap ? (
-            <GapTrack accent={accent} solved={solved} />
+            <GapTrack accent={accent} solved={solved} scanProgress={scanProgress} />
           ) : (
-            <CornerTrack accent={accent} solved={solved} />
+            <CornerTrack accent={accent} solved={solved} scanProgress={scanProgress} />
           )}
 
           <motion.line
@@ -265,35 +306,31 @@ function AlarmScene({ missionIndex, selectedTool, scanProgress, solved, status, 
 
           <motion.g
             filter={`url(#alarm-glow-${mission.id})`}
+            className={draggingScanner ? 'cursor-grabbing' : 'cursor-grab'}
             initial={false}
             animate={{ x: scanPoint.x, y: scanPoint.y }}
             transition={{ type: 'spring', stiffness: 90, damping: 20 }}
           >
+            <circle r="42" fill={accent} opacity="0.10" />
             <circle r="24" fill="#04111f" stroke={accent} strokeWidth="7" />
             <circle r="8" fill={accent} />
+            <text y="-36" textAnchor="middle" fill={accent} fontFamily="monospace" fontSize="10" fontWeight="900">
+              SÜRÜKLE
+            </text>
           </motion.g>
 
-          <motion.g initial={false} animate={{ x: scanPoint.x - 72, y: scanPoint.y - 86 }}>
-            <rect width="144" height="48" rx="18" fill="#020913" stroke={accent} strokeWidth="2" opacity="0.94" />
-            <text x="72" y="20" textAnchor="middle" fill={accent} fontFamily="monospace" fontSize="10" fontWeight="900">
-              tarayıcı
-            </text>
-            <text x="72" y="36" textAnchor="middle" fill="#FFFFFF" fontSize="15" fontWeight="900">
-              {scanLabel(mission.mode, scanProgress)}
-            </text>
-          </motion.g>
         </svg>
 
-        <div className="absolute bottom-7 left-1/2 z-20 w-[min(84%,660px)] -translate-x-1/2 rounded-[28px] border border-white/12 bg-black/58 p-4 shadow-[0_20px_54px_rgba(0,0,0,0.38)] backdrop-blur-xl">
-          <div className="flex items-center justify-between gap-4">
+        <div className="absolute bottom-7 right-8 z-20 w-[min(34%,360px)] rounded-[22px] border border-white/12 bg-black/66 p-3 shadow-[0_20px_54px_rgba(0,0,0,0.38)] backdrop-blur-xl">
+          <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em]" style={{ color: accent }}>
-                alarm tarayıcısı
+                {proofLabel}
               </p>
-              <p className="mt-1 truncate text-sm font-black text-white">{mission.sceneSummary}</p>
+              <p className="mt-1 truncate text-sm font-black text-white">{scannerHint}</p>
             </div>
             <div
-              className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border bg-black/30 font-mono text-xl font-black"
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border bg-black/30 font-mono text-lg font-black"
               style={{ borderColor: `${accent}66`, color: accent }}
             >
               {selectedTool ? alarmTools[selectedTool].short : '?'}
@@ -315,240 +352,24 @@ function AlarmScene({ missionIndex, selectedTool, scanProgress, solved, status, 
   );
 }
 
-function CornerTrack({ accent, solved }: { accent: string; solved: boolean }) {
-  return (
-    <g>
-      <path d="M 190 360 L 500 170 L 810 360" fill="none" stroke={`url(#alarm-track-sharp-corner)`} strokeWidth="18" strokeLinecap="round" opacity="0.98" />
-      <path d="M 190 360 L 500 170" fill="none" stroke="#00E5FF" strokeWidth="24" strokeLinecap="round" opacity="0.38" />
-      <path d="M 500 170 L 810 360" fill="none" stroke={accent} strokeWidth="24" strokeLinecap="round" opacity="0.30" />
-      <circle cx="500" cy="170" r="44" fill="#04111f" stroke={solved ? '#00FF88' : accent} strokeWidth="7" />
-      <text x="304" y="146" fill="#9FF5FF" fontSize="23" fontWeight="900">soldan eğim</text>
-      <text x="658" y="146" fill="#FFB3D7" fontSize="23" fontWeight="900">sağdan eğim</text>
-      <rect x="385" y="222" width="230" height="72" rx="24" fill="#020913" stroke={accent} strokeWidth="2" opacity="0.94" />
-      <text x="500" y="252" textAnchor="middle" fill="#FFFFFF" fontSize="26" fontWeight="900">f'(2) yok</text>
-      <text x="500" y="278" textAnchor="middle" fill="#A7F3D0" fontSize="15" fontWeight="800">tek teğet yönü oluşmadı</text>
-      <text x="500" y="334" textAnchor="middle" fill={accent} fontSize="18" fontWeight="900">soldan eğim ≠ sağdan eğim</text>
-      <text x="514" y="102" fill="#FFFFFF" fontSize="18" fontWeight="900">x=2</text>
-    </g>
-  );
+function missionAstroPrompt(mode: 'corner' | 'gap') {
+  return mode === 'corner'
+    ? "x=2'de sivri uç var. Sol ve sağ eğim aynı yöne mi gidiyor?"
+    : "x=2'de grafik kopuyor. Önce kesintisizlik var mı?";
 }
 
-function GapTrack({ accent, solved }: { accent: string; solved: boolean }) {
-  return (
-    <g>
-      <path d="M 160 350 C 280 332 370 262 448 228" fill="none" stroke="#00E5FF" strokeWidth="18" strokeLinecap="round" filter="url(#alarm-glow-broken-track)" />
-      <path d="M 552 292 C 650 250 740 220 850 176" fill="none" stroke={accent} strokeWidth="18" strokeLinecap="round" filter="url(#alarm-glow-broken-track)" />
-      <rect x="455" y="178" width="90" height="166" rx="28" fill="#020913" stroke={solved ? '#00FF88' : accent} strokeDasharray="10 10" strokeWidth="4" />
-      <circle cx="448" cy="228" r="16" fill="#020913" stroke="#00E5FF" strokeWidth="6" />
-      <circle cx="552" cy="292" r="16" fill="#020913" stroke={accent} strokeWidth="6" />
-      <text x="500" y="146" textAnchor="middle" fill="#FFFFFF" fontSize="28" fontWeight="900">grafik kopuk</text>
-      <rect x="376" y="354" width="248" height="68" rx="24" fill="#020913" stroke={accent} strokeWidth="2" opacity="0.94" />
-      <text x="500" y="383" textAnchor="middle" fill="#FFFFFF" fontSize="24" fontWeight="900">f'(2) yok</text>
-      <text x="500" y="408" textAnchor="middle" fill="#A7F3D0" fontSize="15" fontWeight="800">önce süreklilik gerekir</text>
-      <text x="514" y="176" fill="#FFFFFF" fontSize="18" fontWeight="900">x=2</text>
-    </g>
-  );
+function toolAstroHint(tool: AlarmTool) {
+  return tool === 'corner'
+    ? 'Sivri uçta iki yandan gelen teğet yönlerini karşılaştır.'
+    : "Kopuk grafikte x=2 çevresinde çizgi kesiliyor mu, ona bak.";
 }
 
-interface AlarmControlsProps {
-  missionIndex: number;
-  selectedTool: AlarmTool | null;
-  solved: boolean;
-  status: Grade12StageStatus;
-  onToolChange: (tool: AlarmTool) => void;
-  onCheck: () => void;
-  onNext: () => void;
-}
-
-function AlarmControls({ missionIndex, selectedTool, solved, status, onToolChange, onCheck, onNext }: AlarmControlsProps) {
-  const mission = alarmMissions[missionIndex];
-  const hasNextMission = missionIndex < alarmMissions.length - 1;
-  const checkClass = status === 'success'
-    ? 'border-[#00FF88]/34 bg-[#00FF88]/18 text-emerald-100'
-    : status === 'error'
-      ? 'border-[#FF4FA3]/30 bg-[#FF4FA3]/14 text-pink-100'
-      : 'border-white/12 bg-white/[0.07] text-white/82';
-
-  return (
-    <div className="flex h-full min-w-0 flex-col gap-2.5 overflow-hidden">
-      <div className="shrink-0 rounded-[22px] border border-white/10 bg-white/[0.06] p-3">
-        <div className="flex items-center justify-between gap-3">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.16em] text-[#00E5FF]/72">
-            görev {missionIndex + 1} / {alarmMissions.length}
-          </p>
-          <div className="flex gap-1">
-            {alarmMissions.map((item, index) => (
-              <span
-                key={item.id}
-                className={`h-1.5 w-6 rounded-full ${index <= missionIndex ? 'bg-[#00E5FF]' : 'bg-white/18'}`}
-              />
-            ))}
-          </div>
-        </div>
-        <h3 className="mt-2 text-base font-black text-white">{mission.title}</h3>
-        <p className="mt-1 text-xs font-bold leading-snug text-white/68">{mission.prompt}</p>
-      </div>
-
-      <div className="grid shrink-0 gap-2">
-        {(Object.keys(alarmTools) as AlarmTool[]).map((tool) => {
-          const item = alarmTools[tool];
-          const isActive = selectedTool === tool;
-          return (
-            <motion.button
-              key={tool}
-              type="button"
-              data-testid={`${MODULE_ID}-${tool}`}
-              whileHover={{ y: -1 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => onToolChange(tool)}
-              className={`flex min-h-16 items-center justify-between gap-3 rounded-2xl border px-4 py-2 text-left transition ${
-                isActive
-                  ? 'border-[#00E5FF]/58 bg-[#00E5FF]/16 text-cyan-50 shadow-[0_0_22px_rgba(0,229,255,0.12)]'
-                  : 'border-white/12 bg-white/[0.07] text-white/74 hover:border-[#00E5FF]/28 hover:text-cyan-100'
-              }`}
-            >
-              <span className="min-w-0">
-                <span className="block text-sm font-black text-white">{item.label}</span>
-                <span className="mt-1 block text-xs font-bold leading-snug text-white/58">{item.description}</span>
-              </span>
-              <span
-                className="grid h-8 w-9 place-items-center rounded-xl border bg-black/22 font-mono text-sm"
-                style={{ borderColor: `${item.accent}55`, color: item.accent }}
-              >
-                {item.short}
-              </span>
-            </motion.button>
-          );
-        })}
-      </div>
-
-      <div className="mt-auto grid shrink-0 gap-2">
-        <motion.button
-          type="button"
-          data-testid={`${MODULE_ID}-check`}
-          whileHover={{ y: -1 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={solved ? onNext : onCheck}
-          className={`flex min-h-12 items-center justify-center gap-2 rounded-2xl border px-4 text-sm font-black transition ${checkClass}`}
-        >
-          {solved ? (hasNextMission ? 'Sıradaki Alarm' : 'Bitir') : 'Alarmı Test Et'}
-        </motion.button>
-      </div>
-    </div>
-  );
-}
-
-function AlarmCompletion({ onRestart }: { onRestart: () => void }) {
-  return (
-    <motion.div
-      data-testid={`${MODULE_ID}-completion`}
-      initial={{ opacity: 0, scale: 0.96, y: 16 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      className="relative w-[min(92vw,980px)] overflow-hidden rounded-[30px] border border-[#00E5FF]/24 bg-[#04111f] p-6 text-white shadow-[0_0_96px_rgba(0,229,255,0.22),0_34px_80px_rgba(0,0,0,0.54)] ring-1 ring-white/8 backdrop-blur-2xl"
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_26%_18%,rgba(251,191,36,0.22),transparent_30%),radial-gradient(circle_at_78%_22%,rgba(255,79,163,0.20),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.10),transparent_44%)]" />
-      <div className="relative grid gap-5">
-        <div className="flex items-center gap-4">
-          <div className="relative grid h-16 w-16 shrink-0 place-items-center rounded-[24px] border border-[#00E5FF]/44 bg-[#00E5FF]/16 shadow-[0_0_42px_rgba(0,229,255,0.28)]">
-            <Sparkles className="absolute -right-1 -top-1 h-5 w-5 text-[#00FF88]" />
-            <AlertTriangle className="h-8 w-8 text-cyan-100" />
-          </div>
-          <div>
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#9FF5FF]">derivative alarm mastery</p>
-            <h2 className="mt-1 text-3xl font-black leading-tight text-white">Türev yok alarmı tamamlandı</h2>
-            <p className="mt-2 max-w-2xl text-sm font-bold leading-snug text-white/82">
-              Öğrenci sivri uç ile kopuk grafiği aynı kalabalık pistte değil, iki ayrı alarm davranışı olarak ayırdı.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <ProofCard title="Sivri Uç" symbol="V" note="Soldan ve sağdan eğim tek teğette birleşmedi." accent="#FBBF24" />
-          <ProofCard title="Kopuk Grafik" symbol="!" note="Fonksiyon aynı noktada kesintisiz davranmadı." accent="#FF4FA3" />
-        </div>
-
-        <div className="flex flex-col gap-3 rounded-[24px] border border-white/14 bg-black/34 p-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm font-bold leading-snug text-white/82">
-            Kesen-teğet modülü temiz kaldı; türev-yok durumları artık kendi alarm istasyonunda.
-          </p>
-          <div className="flex shrink-0 gap-2">
-            <motion.button
-              type="button"
-              whileHover={{ y: -1 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={onRestart}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-white/16 bg-white/[0.08] px-4 text-sm font-black text-white/88 transition hover:border-[#00E5FF]/44 hover:text-cyan-100"
-            >
-              <RotateCcw className="h-4 w-4" />
-              Tekrar Oyna
-            </motion.button>
-            <Link
-              to="/"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-[#00E5FF]/28 bg-[#00E5FF]/14 px-4 text-sm font-black text-cyan-100 transition hover:border-[#00E5FF]/54"
-            >
-              <Home className="h-4 w-4" />
-              Ana Merkez
-            </Link>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function ProofCard({ title, symbol, note, accent }: { title: string; symbol: string; note: string; accent: string }) {
-  return (
-    <div className="relative overflow-hidden rounded-[24px] border border-white/14 bg-white/[0.08] p-4">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/68">{title}</p>
-          <p className="mt-1 text-[15px] font-bold leading-snug text-white/86">{note}</p>
-        </div>
-        <span
-          className="grid h-[52px] w-[68px] shrink-0 place-items-center rounded-[20px] border bg-black/28 font-mono text-xl font-black text-white"
-          style={{ borderColor: `${accent}66`, boxShadow: `0 0 26px ${accent}24` }}
-        >
-          {symbol}
-        </span>
-      </div>
-    </div>
-  );
+function toolFeedback(tool: AlarmTool) {
+  return tool === 'corner'
+    ? 'Sivri uç seçildi; sol ve sağ eğim yönlerini karşılaştır.'
+    : 'Kopuk grafik seçildi; x=2 çevresindeki kesintiyi tara.';
 }
 
 function TestIdContractMarker() {
   return <span className="sr-only">{TEST_ID_CONTRACT.join(' ')}</span>;
-}
-
-function getScanPoint(mode: 'corner' | 'gap', progress: number) {
-  if (mode === 'corner') {
-    const x = 190 + progress * 620;
-    const y = x <= 500 ? 360 - (x - 190) * 0.61 : 170 + (x - 500) * 0.61;
-    return { x, y };
-  }
-
-  if (progress < 0.48) {
-    const t = progress / 0.48;
-    return {
-      x: 160 + t * 288,
-      y: 350 - t * 122,
-    };
-  }
-
-  const t = (progress - 0.52) / 0.48;
-  return {
-    x: 552 + Math.max(0, Math.min(1, t)) * 298,
-    y: 292 - Math.max(0, Math.min(1, t)) * 116,
-  };
-}
-
-function scanLabel(mode: 'corner' | 'gap', progress: number) {
-  if (mode === 'corner') {
-    if (progress < 0.42) return 'soldan eğim';
-    if (progress > 0.58) return 'sağdan eğim';
-    return 'sivri nokta';
-  }
-
-  if (progress < 0.48) return 'sol parça';
-  if (progress > 0.52) return 'sağ parça';
-  return 'kopukluk';
 }
