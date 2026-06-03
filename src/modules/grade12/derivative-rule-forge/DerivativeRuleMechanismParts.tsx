@@ -43,6 +43,8 @@ export function RuleCartridgeCore({
   solved: boolean;
   symbol: string;
 }) {
+  const symbolFontSize = symbol.length > 1 ? 28 : 38;
+
   return (
     <motion.g
       animate={{ scale: solved ? [1, 1.04, 1] : 1 }}
@@ -75,19 +77,21 @@ export function RuleCartridgeCore({
       />
       <circle cx="507" cy="180" r="42" fill="rgba(2,7,13,0.74)" stroke={active ? `${accent}88` : 'rgba(255,255,255,0.12)'} strokeWidth="2" />
       <text x="507" y="163" fill="rgba(255,255,255,0.54)" fontSize="13" fontWeight="900" textAnchor="middle">KURAL</text>
-      <text x="507" y="201" fill="#FFFFFF" fontSize="38" fontWeight="900" textAnchor="middle">{symbol}</text>
+      <text x="507" y="201" fill="#FFFFFF" fontSize={symbolFontSize} fontWeight="900" textAnchor="middle">{symbol}</text>
     </motion.g>
   );
 }
 
 export function RuleTag({ x, y, label, color, compact = false }: { x: number; y: number; label: string; color: string; compact?: boolean }) {
-  const width = compact ? 92 : 148;
+  const width = compact ? Math.max(82, label.length * 12 + 30) : Math.max(148, Math.min(210, label.length * 11 + 34));
   const height = compact ? 32 : 36;
+  const fontSize = compact ? 14 : label.length > 13 ? 14 : 16;
 
   return (
     <g transform={`translate(${x} ${y})`}>
-      <rect x={-width / 2} y={-height / 2} width={width} height={height} rx={height / 2} fill="rgba(2,7,13,0.86)" stroke={color} strokeOpacity="0.65" strokeWidth="2" />
-      <text x="0" y="6" fill="#FFFFFF" fontSize={compact ? '14' : '16'} fontWeight="900" textAnchor="middle">{label}</text>
+      <rect x={-width / 2} y={-height / 2} width={width} height={height} rx={height / 2} fill="rgba(2,7,13,0.94)" stroke="rgba(255,255,255,0.16)" strokeWidth="4" />
+      <rect x={-width / 2} y={-height / 2} width={width} height={height} rx={height / 2} fill="rgba(2,7,13,0.94)" stroke={color} strokeOpacity="0.82" strokeWidth="2" />
+      <text x="0" y="6" fill="#FFFFFF" fontSize={fontSize} fontWeight="900" textAnchor="middle" stroke="rgba(0,0,0,0.44)" strokeWidth="3" paintOrder="stroke">{label}</text>
     </g>
   );
 }

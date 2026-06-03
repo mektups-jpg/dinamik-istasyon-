@@ -2,6 +2,7 @@ import type { KeyboardEvent } from 'react';
 import { motion } from 'motion/react';
 import {
   MODULE_ID,
+  formatFunctionStep,
   formatFunctionRule,
   modeCopy,
   modeTheme,
@@ -36,7 +37,7 @@ export function SequenceWheelScene({ mission, mode, offset, solved, onNudge, onH
     index,
     x: 12 + index * 19,
   }));
-  const relations = mode ? relationLabels(mission.values, mode) : mission.values.slice(0, -1).map(() => '?');
+  const relations = mode ? relationLabels(mission.values, mode, mission.functionPower) : mission.values.slice(0, -1).map(() => '?');
   const relationMetrics = mode ? relationMetricValues(mission.values, mode) : mission.values.slice(0, -1).map(() => 1);
   const relationBars = relationMetrics.map((value) => metricBarHeight(value, relationMetrics));
   const lensStatus = solved ? 'Kural kilitlendi' : mode === null ? 'Mercek seç' : isCorrectLens ? 'Mercek sahnede deneniyor' : 'Mercek bu rayla uyuşmuyor';
@@ -158,7 +159,24 @@ export function SequenceWheelScene({ mission, mode, offset, solved, onNudge, onH
           />
           <div className="absolute inset-x-[13%] top-[calc(47%+52px)] h-[96px] rounded-[100%] bg-black/30 blur-lg" />
 
-          {nodes.slice(0, -1).map((node, index) => {
+          {mode === 'function' ? (
+            nodes.map((node) => (
+              <motion.div
+                key={`${mission.id}-${mode}-${node.index}-power-label`}
+                className="absolute top-[28%] z-30 flex h-10 min-w-[54px] -translate-x-1/2 items-center justify-center rounded-full border bg-[#030a12]/94 px-3 font-mono text-[16px] font-black text-white shadow-[0_14px_34px_rgba(0,0,0,0.34)] backdrop-blur-xl lg:top-[36%] lg:h-11 lg:min-w-[62px] lg:text-xl"
+                style={{
+                  left: `${node.x + 5.6}%`,
+                  borderColor: relationBorder,
+                  boxShadow: `0 14px 34px rgba(0,0,0,0.34), 0 0 24px ${relationGlow}`,
+                }}
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: node.index * 0.04 }}
+              >
+                {formatFunctionStep(node.index + 1, mission.functionPower)}
+              </motion.div>
+            ))
+          ) : nodes.slice(0, -1).map((node, index) => {
             const next = nodes[index + 1];
             const midX = (node.x + next.x) / 2;
             return (
@@ -309,7 +327,7 @@ export function SequenceWheelScene({ mission, mode, offset, solved, onNudge, onH
                 {isCorrectLens ? 'canlı projeksiyon' : 'projeksiyon kararsız'}
               </p>
               <p className="mt-1 text-sm font-black text-white/82">
-                {isCorrectLens ? `${projection.formula} -> ${projectionLabel} = ${projection.value}` : 'Seçilen mercek bu rayı düzgün uzatamıyor.'}
+                {isCorrectLens ? `${projection.formula} → ${projectionLabel} = ${projection.value}` : 'Seçilen mercek bu rayı düzgün uzatamıyor.'}
               </p>
             </div>
           )}

@@ -2,19 +2,27 @@ import { Check, RotateCcw, Sparkles, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
 import { MissionStep } from '../shared/Grade9LabShell';
 import { SciFiButton } from '../../../components/ui/SciFiButton';
-import { PowerPlaced, RootPlaced } from './types';
+import { InlineRootResult, InlineRootSetup } from './RadicalMath';
+import { formatPower } from './reactorModel';
+import { PowerChallenge, PowerPlaced, RootChallenge, RootPlaced } from './types';
 
 interface RadicalControlsProps {
   mission: MissionStep;
   activeIndex: number;
+  powerChallenge: PowerChallenge;
+  rootChallenge: RootChallenge;
   powerPlaced: PowerPlaced;
   rootPlaced: RootPlaced;
   onCheck: () => void;
   onReset: () => void;
 }
 
-export function RadicalControls({ mission, activeIndex, powerPlaced, rootPlaced, onCheck, onReset }: RadicalControlsProps) {
+export function RadicalControls({ mission, activeIndex, powerChallenge, rootChallenge, powerPlaced, rootPlaced, onCheck, onReset }: RadicalControlsProps) {
   const stageComplete = activeIndex === 0 ? powerPlaced.cube && powerPlaced.square : rootPlaced.square && rootPlaced.remainder;
+  const checkLabel = !stageComplete ? 'Deneyi Onayla' : activeIndex === 0 ? 'Sonraki Deneye Geç' : 'Laboratuvarı Tamamla';
+  const leftPower = formatPower(powerChallenge.base, powerChallenge.leftExponent);
+  const rightPower = formatPower(powerChallenge.base, powerChallenge.rightExponent);
+  const totalPower = formatPower(powerChallenge.base, powerChallenge.totalExponent);
 
   return (
     <aside data-testid="radical-control-panel" className="relative min-w-0 max-w-full overflow-hidden rounded-[28px] border border-white/12 bg-white/[0.075] p-3 shadow-[0_24px_70px_rgba(0,0,0,0.32)] backdrop-blur-2xl sm:p-4 xl:p-5">
@@ -24,7 +32,9 @@ export function RadicalControls({ mission, activeIndex, powerPlaced, rootPlaced,
       <div className="relative">
         <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-white/45">reaktör görevi {activeIndex + 1}/2</p>
         <h3 className="mt-1 text-xl font-black tracking-tight text-white xl:text-2xl">{mission.title}</h3>
-        <p className="mt-1 text-sm leading-relaxed text-white/62">{mission.prompt}</p>
+        <p className="mt-1 text-sm leading-relaxed text-white/62">
+          {activeIndex === 0 ? mission.prompt : <RootMissionPrompt challenge={rootChallenge} />}
+        </p>
         <StageProgress activeIndex={activeIndex} />
       </div>
 
@@ -35,13 +45,13 @@ export function RadicalControls({ mission, activeIndex, powerPlaced, rootPlaced,
         <div className="grid gap-3">
           {activeIndex === 0 ? (
             <>
-              <StatusLine label="2³ çekirdeği" active={powerPlaced.cube} />
-              <StatusLine label="2² çekirdeği" active={powerPlaced.square} />
+              <StatusLine label={`${leftPower} çekirdeği`} active={powerPlaced.cube} />
+              <StatusLine label={`${rightPower} çekirdeği`} active={powerPlaced.square} />
             </>
           ) : (
             <>
-              <StatusLine label="√36 dışarı çıktı" active={rootPlaced.square} />
-              <StatusLine label="√2 kökte kaldı" active={rootPlaced.remainder} />
+              <StatusLine label={`${rootChallenge.squareFactor} tam kare: dışarı ${rootChallenge.outsideFactor}`} active={rootPlaced.square} />
+              <StatusLine label={`${rootChallenge.remainder} kökün içinde kalır`} active={rootPlaced.remainder} />
             </>
           )}
         </div>
@@ -53,7 +63,18 @@ export function RadicalControls({ mission, activeIndex, powerPlaced, rootPlaced,
               : 'border-white/10 bg-white/[0.055] text-white/76'
           }`}
         >
-          {stageComplete ? (activeIndex === 0 ? 'Füzyon kilitlendi: 2⁵ = 32.' : 'Kristal ayrıldı: 6√2.') : instruction(activeIndex)}
+          {stageComplete ? (
+            activeIndex === 0 ? (
+              `Füzyon kilitlendi: ${totalPower} = ${powerChallenge.value}.`
+            ) : (
+              <span className="inline-flex flex-wrap items-center gap-x-1">
+                <span>Kök ayrıldı:</span>
+                <InlineRootResult challenge={rootChallenge} />
+              </span>
+            )
+          ) : (
+            instruction(activeIndex, rootChallenge)
+          )}
         </motion.div>
       </div>
 
@@ -61,12 +82,12 @@ export function RadicalControls({ mission, activeIndex, powerPlaced, rootPlaced,
         {activeIndex === 0 ? <Zap className="mb-2 h-4 w-4 text-amber-200" /> : <Sparkles className="mb-2 h-4 w-4 text-amber-200" />}
         {activeIndex === 0
           ? 'Aynı taban reaktörde ortak gövde gibi kalır; çarpma sadece üst enerji katmanlarını birleştirir.'
-          : 'Kök içindeki tam kare dışarı sayı olarak çıkar; tam kare olmayan parça kök odasında kalır.'}
+          : 'Tam kare çarpan kökten dışarı çıkar; tam kare olmayan çarpan kökün içinde kalır.'}
       </div>
 
       <div className="relative mt-4 grid gap-3">
         <SciFiButton data-testid="radical-check" onClick={onCheck} className="min-h-[48px] rounded-[18px] shadow-[0_18px_42px_rgba(52,211,153,0.16)]" icon={<Check className="h-4 w-4" />}>
-          {stageComplete ? 'Deney Kilitlendi' : 'Deneyi Onayla'}
+          {checkLabel}
         </SciFiButton>
         <SciFiButton data-testid="radical-reset" variant="secondary" onClick={onReset} className="min-h-[46px] rounded-[18px] border-white/10 bg-white/[0.055] text-white/82 hover:bg-white/[0.09]" icon={<RotateCcw className="h-4 w-4" />}>
           Sıfırla
@@ -98,7 +119,18 @@ function StageProgress({ activeIndex }: { activeIndex: number }) {
   );
 }
 
-function instruction(activeIndex: number) {
+function instruction(activeIndex: number, rootChallenge: RootChallenge) {
   if (activeIndex === 0) return 'İki çekirdeği merkezdeki yuvalara taşı.';
-  return '√36 bloğunu dış hazneye, √2 bloğunu kök haznesine ayır.';
+  return `${rootChallenge.squareFactor} parçasını dışarı, ${rootChallenge.remainder} parçasını kök içine taşı.`;
+}
+
+function RootMissionPrompt({ challenge }: { challenge: RootChallenge }) {
+  return (
+    <span className="inline-flex flex-wrap items-center gap-x-1.5">
+      <InlineRootSetup challenge={challenge} />
+      <span>
+        {challenge.squareFactor} tam karedir; dışarı {challenge.outsideFactor} olarak çıkar. {challenge.remainder} kökün içinde kalır.
+      </span>
+    </span>
+  );
 }

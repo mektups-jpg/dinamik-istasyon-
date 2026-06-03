@@ -1,7 +1,7 @@
 import { Home, Orbit, RotateCcw, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { MODULE_ID } from './inequalityOrbitModel';
+import { formatOrbitMathText, MODULE_ID } from './inequalityOrbitModel';
 
 interface InequalityOrbitCompletionProps {
   onRestart: () => void;
@@ -59,7 +59,7 @@ export function InequalityOrbitCompletion({ onRestart }: InequalityOrbitCompleti
             >
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00E5FF] to-transparent" />
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/45">{item.title}</p>
-              <p className="mt-3 font-mono text-3xl font-black leading-none text-white">{item.value}</p>
+              <p className="mt-3 font-mono text-3xl font-black leading-none text-white">{formatOrbitMathText(item.value)}</p>
               <p className="mt-3 text-xs font-bold leading-snug text-white/58">{item.detail}</p>
             </motion.div>
           ))}

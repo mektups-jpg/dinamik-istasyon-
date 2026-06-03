@@ -187,7 +187,7 @@ export const sequenceMissions: SequenceMission[] = [
   },
 ];
 
-export function relationLabels(values: number[], mode: WheelMode) {
+export function relationLabels(values: number[], mode: WheelMode, functionPower: SequenceMission['functionPower'] = 2) {
   if (mode === 'arithmetic') {
     return values.slice(0, -1).map((value, index) => formatSigned(values[index + 1] - value));
   }
@@ -196,7 +196,9 @@ export function relationLabels(values: number[], mode: WheelMode) {
     return values.slice(0, -1).map((value, index) => formatRatio(values[index + 1] / value));
   }
 
-  return values.slice(0, -1).map((_, index) => `${index + 1}->${index + 2}`);
+  return values
+    .slice(0, -1)
+    .map((_, index) => formatFunctionStep(index + 1, functionPower));
 }
 
 export function formatSigned(value: number) {
@@ -232,6 +234,10 @@ export function nextTermProjection(values: number[], mode: WheelMode, functionPo
 
 export function formatFunctionRule(power: SequenceMission['functionPower'] = 2) {
   return `n${formatFunctionPower(power)}`;
+}
+
+export function formatFunctionStep(index: number, power: SequenceMission['functionPower'] = 2) {
+  return `${index}${formatFunctionPower(power)}`;
 }
 
 function formatFunctionPower(power: SequenceMission['functionPower'] = 2) {

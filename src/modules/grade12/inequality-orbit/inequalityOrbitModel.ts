@@ -20,6 +20,14 @@ export const TEST_ID_CONTRACT = [
   'inequality-orbit-reset',
 ] as const;
 
+const mathMinus = '−';
+
+export function formatOrbitMathText(value: string) {
+  return value
+    .replace(/(^|[\s([=,])-(?=\d|∞)/g, `$1${mathMinus}`)
+    .replace(/(^|\s)-(?=\s|$)/g, `$1${mathMinus}`);
+}
+
 export type OrbitScanner = 'roots' | 'forbidden' | 'positive' | 'negative' | 'solution';
 export type PointKind = 'root' | 'forbidden';
 export type SignKind = 'positive' | 'negative';

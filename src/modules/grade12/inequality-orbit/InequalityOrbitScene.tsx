@@ -1,6 +1,7 @@
 import type { KeyboardEvent } from 'react';
 import { motion } from 'motion/react';
 import {
+  formatOrbitMathText,
   getActiveIntervals,
   getActivePoints,
   MODULE_ID,
@@ -28,7 +29,6 @@ export function InequalityOrbitScene({ mission, scanner, status, solved, onHome 
   const accent = selected?.accent ?? neutralAccent;
   const activePoints = getActivePoints(mission, scanner);
   const activeIntervals = getActiveIntervals(mission, scanner);
-  const scannerTarget = getScannerTarget(activePoints, activeIntervals);
   const statusLabel = solved
     ? 'Yörünge kilitlendi'
     : scanner === null
@@ -119,7 +119,7 @@ export function InequalityOrbitScene({ mission, scanner, status, solved, onHome 
                   style={{ borderColor: active ? `${glow}77` : 'rgba(255,255,255,0.16)' }}
                 >
                   <span className="whitespace-nowrap font-mono text-[clamp(1rem,1.35vw,1.18rem)] font-black leading-none tracking-normal text-white/92">
-                    {interval.range}
+                    {formatOrbitMathText(interval.range)}
                   </span>
                 </div>
                 <div
@@ -143,27 +143,6 @@ export function InequalityOrbitScene({ mission, scanner, status, solved, onHome 
               </motion.div>
             );
           })}
-
-          {scanner !== null && scannerTarget !== null && (
-            <motion.div
-              className="pointer-events-none absolute top-[29%] z-30 h-[40%] w-[18%] rounded-[42px] border bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.015))] shadow-[0_0_60px_rgba(0,229,255,0.20)] backdrop-blur-[1px]"
-              style={{
-                left: `${scannerTarget}%`,
-                borderColor: hasScannerError ? '#FF4FA366' : `${accent}77`,
-                boxShadow: `0 0 54px ${hasScannerError ? '#FF4FA3' : accent}28, inset 0 0 18px ${hasScannerError ? '#FF4FA3' : accent}10`,
-              }}
-              initial={false}
-              animate={{ opacity: 1, y: solved ? [0, -4, 0] : 0 }}
-              transition={{ duration: 0.7 }}
-            >
-              <div
-                className="absolute left-1/2 top-[-34px] h-[46px] w-[46px] -translate-x-1/2 rounded-[20px] border bg-black/60 shadow-[0_0_32px_rgba(0,0,0,0.35)]"
-                style={{ borderColor: `${accent}77` }}
-              />
-              <div className="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 rounded-full" style={{ background: `linear-gradient(180deg, ${accent}, transparent)` }} />
-              <div className="absolute inset-x-4 top-1/2 h-px -translate-y-1/2 bg-white/34" />
-            </motion.div>
-          )}
 
           {mission.points.map((point) => {
             const active = activePoints.some((item) => item.value === point.value && item.kind === point.kind);
@@ -198,7 +177,7 @@ export function InequalityOrbitScene({ mission, scanner, status, solved, onHome 
                       !
                     </span>
                   )}
-                  <span className="text-4xl font-black text-white lg:text-5xl">{point.value}</span>
+                  <span className="text-4xl font-black text-white lg:text-5xl">{formatOrbitMathText(point.value)}</span>
                 </div>
                 <div
                   className="mt-3 rounded-full border px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.14em]"
@@ -223,20 +202,20 @@ export function InequalityOrbitScene({ mission, scanner, status, solved, onHome 
                 </p>
                 <p className="mt-1 truncate text-base font-black text-white">
                   {solved
-                    ? `${mission.targetValue} kilidi açıldı`
+                    ? `${formatOrbitMathText(mission.targetValue)} kilidi açıldı`
                     : hasScannerError
                       ? 'Bu tarayıcı görevin istediği kilit değil'
                       : `${selected?.label ?? 'Tarayıcı'} yörüngede iz bırakıyor`}
                 </p>
                 <p className="mt-1 hidden text-xs font-bold text-white/44 lg:block">
-                  {solved ? mission.proof : hasScannerError && scanner !== null ? mission.failure[scanner] : selected?.hint}
+                  {solved ? formatOrbitMathText(mission.proof) : hasScannerError && scanner !== null ? formatOrbitMathText(mission.failure[scanner]) : selected?.hint}
                 </p>
               </div>
               <div
                 className="grid h-[78px] w-[88px] shrink-0 place-items-center rounded-[26px] border bg-black/42 font-mono text-2xl font-black text-white"
                 style={{ borderColor: hasScannerError ? '#FF4FA366' : `${accent}77`, boxShadow: `0 0 32px ${hasScannerError ? '#FF4FA3' : accent}33` }}
               >
-                {solved ? mission.resultBadge : hasScannerError ? '!' : selected?.short}
+                {solved ? formatOrbitMathText(mission.resultBadge) : hasScannerError ? '!' : formatOrbitMathText(selected?.short ?? '')}
               </div>
             </motion.div>
           )}
@@ -254,15 +233,15 @@ function ExpressionDisplay({ expression, relation }: { expression: string; relat
     if (inlineRelation) {
       return (
         <p className="mt-1 whitespace-nowrap text-[clamp(1.35rem,2.15vw,2rem)] font-black tracking-tight text-white">
-          {expression} <span className="font-mono text-[0.82em] text-white/86">{relation}</span>
+          {formatOrbitMathText(expression)} <span className="font-mono text-[0.82em] text-white/86">{formatOrbitMathText(relation)}</span>
         </p>
       );
     }
 
     return (
       <>
-        <p className="mt-1 text-2xl font-black tracking-tight text-white lg:text-3xl">{expression}</p>
-        <p className="mt-1 font-mono text-sm font-black text-white/58">{relation}</p>
+        <p className="mt-1 text-2xl font-black tracking-tight text-white lg:text-3xl">{formatOrbitMathText(expression)}</p>
+        <p className="mt-1 font-mono text-sm font-black text-white/58">{formatOrbitMathText(relation)}</p>
       </>
     );
   }
@@ -270,15 +249,15 @@ function ExpressionDisplay({ expression, relation }: { expression: string; relat
   return (
     <>
       <div className="mt-1 flex items-center justify-center gap-3 text-white">
-        {fraction.prefix && <span className="text-2xl font-black tracking-tight lg:text-3xl">{fraction.prefix}</span>}
+        {fraction.prefix && <span className="text-2xl font-black tracking-tight lg:text-3xl">{formatOrbitMathText(fraction.prefix)}</span>}
         <span className="inline-grid min-w-[150px] grid-rows-[auto_2px_auto] items-center justify-items-center rounded-2xl bg-white/[0.035] px-4 py-2 shadow-[inset_0_0_18px_rgba(0,229,255,0.08)]">
-          <span className="font-mono text-xl font-black leading-tight lg:text-2xl">{fraction.numerator}</span>
+          <span className="font-mono text-xl font-black leading-tight lg:text-2xl">{formatOrbitMathText(fraction.numerator)}</span>
           <span className="my-1 h-0.5 w-full rounded-full bg-white/82 shadow-[0_0_14px_rgba(0,229,255,0.20)]" />
-          <span className="font-mono text-xl font-black leading-tight lg:text-2xl">{fraction.denominator}</span>
+          <span className="font-mono text-xl font-black leading-tight lg:text-2xl">{formatOrbitMathText(fraction.denominator)}</span>
         </span>
-        {inlineRelation && <span className="whitespace-nowrap font-mono text-2xl font-black text-white/86 lg:text-3xl">{relation}</span>}
+        {inlineRelation && <span className="whitespace-nowrap font-mono text-2xl font-black text-white/86 lg:text-3xl">{formatOrbitMathText(relation)}</span>}
       </div>
-      {!inlineRelation && <p className="mt-1 font-mono text-sm font-black text-white/58">{relation}</p>}
+      {!inlineRelation && <p className="mt-1 font-mono text-sm font-black text-white/58">{formatOrbitMathText(relation)}</p>}
     </>
   );
 }
@@ -301,7 +280,7 @@ function getSignTone(sign: 'positive' | 'negative') {
   }
 
   return {
-    symbol: '-',
+    symbol: '−',
     label: 'Negatif',
     accent: '#FBBF24',
     ink: '#1E1200',
@@ -343,19 +322,4 @@ function getPointStateLabel(mission: OrbitMission, point: OrbitMission['points']
 
   if (point.kind === 'forbidden') return 'yasak açık';
   return point.included ? 'kök kapalı' : 'kök açık';
-}
-
-function getScannerTarget(points: ReturnType<typeof getActivePoints>, intervals: ReturnType<typeof getActiveIntervals>) {
-  if (intervals.length > 0) {
-    const first = intervals[0];
-    const last = intervals[intervals.length - 1];
-    return Math.max(Math.min((first.from + last.to) / 2 - 9, 78), 5);
-  }
-
-  if (points.length > 0) {
-    const average = points.reduce((sum, point) => sum + point.position, 0) / points.length;
-    return Math.max(Math.min(average - 9, 78), 5);
-  }
-
-  return null;
 }

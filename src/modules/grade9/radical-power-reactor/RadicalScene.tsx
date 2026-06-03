@@ -1,10 +1,14 @@
 import type { PointerEvent as ReactPointerEvent, RefObject } from 'react';
 import { motion } from 'motion/react';
-import { PowerKey, PowerPlaced, PowerPositions, ReactorPointerHandler, RootKey, RootPlaced, RootPositions } from './types';
-import { powerSlots, rootSlots } from './reactorModel';
+import { InlineRootResult, InlineRootSetup } from './RadicalMath';
+import { PowerChallenge, PowerKey, PowerPlaced, PowerPositions, ReactorPointerHandler, RootChallenge, RootKey, RootPlaced, RootPositions } from './types';
+import { formatPower, powerSlots, rootSlots } from './reactorModel';
 
 interface RadicalSceneProps {
   activeIndex: number;
+  atomLabel: string;
+  powerChallenge: PowerChallenge;
+  rootChallenge: RootChallenge;
   powerPositions: PowerPositions;
   rootPositions: RootPositions;
   powerPlaced: PowerPlaced;
@@ -18,9 +22,12 @@ interface RadicalSceneProps {
 }
 
 export function RadicalScene(props: RadicalSceneProps) {
-  const { activeIndex, powerPositions, rootPositions, powerPlaced, rootPlaced, svgRef, onPointerDown, onPointerMove, onPointerUp, onPowerSlotSelect, onRootSlotSelect } = props;
+  const { activeIndex, atomLabel, powerChallenge, rootChallenge, powerPositions, rootPositions, powerPlaced, rootPlaced, svgRef, onPointerDown, onPointerMove, onPointerUp, onPowerSlotSelect, onRootSlotSelect } = props;
   const powerComplete = powerPlaced.cube && powerPlaced.square;
   const rootComplete = rootPlaced.square && rootPlaced.remainder;
+  const leftPower = formatPower(powerChallenge.base, powerChallenge.leftExponent);
+  const rightPower = formatPower(powerChallenge.base, powerChallenge.rightExponent);
+  const totalPower = formatPower(powerChallenge.base, powerChallenge.totalExponent);
 
   return (
     <section data-testid="radical-scene" className="relative min-w-0 max-w-full overflow-hidden rounded-[32px] border border-white/12 bg-white/[0.075] p-4 shadow-[0_28px_80px_rgba(0,0,0,0.36)] backdrop-blur-2xl sm:p-5">
@@ -29,11 +36,17 @@ export function RadicalScene(props: RadicalSceneProps) {
       <div className="pointer-events-none absolute -right-24 bottom-10 h-64 w-64 rounded-full bg-amber-200/10 blur-3xl" />
       <div className="relative mb-4 grid gap-3 xl:flex xl:flex-wrap xl:items-center xl:justify-between">
         <div>
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-white/52">makro atom: MAT.9.1.1.x / MAT.9.1.2.x</p>
-          <h2 className="text-2xl font-black tracking-tight text-white">Enerji Çekirdeğini Kalibre Et</h2>
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-white/52">MEB atomları: {atomLabel}</p>
+          <h2 className="text-2xl font-black tracking-tight text-white">{activeIndex === 0 ? 'Üsleri Aynı Tabanda Birleştir' : 'Kökün İçindeki Tam Kareyi Ayır'}</h2>
         </div>
         <div className={`max-w-full justify-self-start rounded-full border px-4 py-2 font-mono text-sm font-black shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl ${powerComplete || rootComplete ? 'border-emerald-300/28 bg-emerald-200/12 text-emerald-50' : 'border-white/12 bg-white/[0.08] text-white/82'}`}>
-          {activeIndex === 0 ? (powerComplete ? '2³ x 2² = 2⁵ = 32' : 'aynı taban: 2') : (rootComplete ? '√72 = 6√2' : '72 = 36 x 2')}
+          {activeIndex === 0 ? (
+            powerComplete ? `${leftPower} · ${rightPower} = ${totalPower} = ${powerChallenge.value}` : `aynı taban: ${powerChallenge.base}`
+          ) : (
+            <span className="inline-flex items-center">
+              {rootComplete ? <InlineRootResult challenge={rootChallenge} /> : <InlineRootSetup challenge={rootChallenge} />}
+            </span>
+          )}
         </div>
       </div>
 
@@ -79,51 +92,100 @@ export function RadicalScene(props: RadicalSceneProps) {
         <rect width="720" height="500" fill="url(#reactor-v5-grid)" />
         <rect width="720" height="500" fill="url(#reactor-v5-stage-light)" />
         {activeIndex === 0 ? (
-          <PowerFusion powerPositions={powerPositions} powerPlaced={powerPlaced} onPointerDown={onPointerDown} onSlotSelect={onPowerSlotSelect} />
+          <PowerFusion powerChallenge={powerChallenge} powerPositions={powerPositions} powerPlaced={powerPlaced} onPointerDown={onPointerDown} onSlotSelect={onPowerSlotSelect} />
         ) : (
-          <RootExtractor rootPositions={rootPositions} rootPlaced={rootPlaced} onPointerDown={onPointerDown} onSlotSelect={onRootSlotSelect} />
+          <RootExtractor rootChallenge={rootChallenge} rootPositions={rootPositions} rootPlaced={rootPlaced} onPointerDown={onPointerDown} onSlotSelect={onRootSlotSelect} />
         )}
       </svg>
     </section>
   );
 }
 
-function PowerFusion({ powerPositions, powerPlaced, onPointerDown, onSlotSelect }: { powerPositions: PowerPositions; powerPlaced: PowerPlaced; onPointerDown: ReactorPointerHandler; onSlotSelect: (key: PowerKey) => void }) {
+function PowerFusion({ powerChallenge, powerPositions, powerPlaced, onPointerDown, onSlotSelect }: { powerChallenge: PowerChallenge; powerPositions: PowerPositions; powerPlaced: PowerPlaced; onPointerDown: ReactorPointerHandler; onSlotSelect: (key: PowerKey) => void }) {
   const complete = powerPlaced.cube && powerPlaced.square;
+  const leftPower = formatPower(powerChallenge.base, powerChallenge.leftExponent);
+  const rightPower = formatPower(powerChallenge.base, powerChallenge.rightExponent);
+  const totalPower = formatPower(powerChallenge.base, powerChallenge.totalExponent);
   return (
     <>
       <circle cx="360" cy="252" r="196" fill="rgba(255,255,255,0.018)" />
       <circle cx="360" cy="252" r="146" fill="rgba(16,185,129,0.035)" stroke="rgba(110,231,183,0.18)" strokeWidth="2" />
       <motion.circle data-testid="radical-reactor-target" cx="360" cy="258" r="102" fill="url(#reactor-v5-core)" stroke={complete ? '#86EFAC' : 'rgba(110,231,183,0.42)'} strokeWidth="4" strokeDasharray={complete ? undefined : '12 12'} filter="url(#reactor-v4-glow)" animate={{ opacity: complete ? [0.88, 1, 0.88] : [0.62, 0.9, 0.62] }} transition={{ duration: 1.4, repeat: Infinity }} />
       <line x1="142" y1="326" x2="578" y2="326" stroke="rgba(255,255,255,0.10)" strokeWidth="3" strokeDasharray="14 16" />
-      <SlotPoint testId="radical-power-slot-cube" x={powerSlots.cube.x} y={powerSlots.cube.y} active={powerPlaced.cube} label="üs 3" onSelect={() => onSlotSelect('cube')} />
-      <SlotPoint testId="radical-power-slot-square" x={powerSlots.square.x} y={powerSlots.square.y} active={powerPlaced.square} label="üs 2" onSelect={() => onSlotSelect('square')} />
-      <PowerToken testId="radical-power-left" x={powerPositions.cube.x} y={powerPositions.cube.y} label="2³" placed={powerPlaced.cube} onPointerDown={(event) => onPointerDown(event, { kind: 'power', key: 'cube' })} />
-      <PowerToken testId="radical-power-right" x={powerPositions.square.x} y={powerPositions.square.y} label="2²" placed={powerPlaced.square} onPointerDown={(event) => onPointerDown(event, { kind: 'power', key: 'square' })} />
+      <SlotPoint testId="radical-power-slot-cube" x={powerSlots.cube.x} y={powerSlots.cube.y} active={powerPlaced.cube} label={`üs ${powerChallenge.leftExponent}`} onSelect={() => onSlotSelect('cube')} />
+      <SlotPoint testId="radical-power-slot-square" x={powerSlots.square.x} y={powerSlots.square.y} active={powerPlaced.square} label={`üs ${powerChallenge.rightExponent}`} onSelect={() => onSlotSelect('square')} />
+      <PowerToken testId="radical-power-left" x={powerPositions.cube.x} y={powerPositions.cube.y} label={leftPower} placed={powerPlaced.cube} onPointerDown={(event) => onPointerDown(event, { kind: 'power', key: 'cube' })} />
+      <PowerToken testId="radical-power-right" x={powerPositions.square.x} y={powerPositions.square.y} label={rightPower} placed={powerPlaced.square} onPointerDown={(event) => onPointerDown(event, { kind: 'power', key: 'square' })} />
       <motion.text x="360" y="114" textAnchor="middle" fill="#FEF3C7" fontSize="21" fontWeight="900" animate={{ opacity: [0.62, 1, 0.62] }} transition={{ duration: 1.5, repeat: Infinity }}>
         Aynı taban korunur, üstler birleşir
       </motion.text>
-      <ResultReadout complete={complete} primary={complete ? '2³ x 2² = 2³⁺² = 2⁵' : '2³ x 2²'} secondary={complete ? '2⁵ = 32 enerji birimi' : 'iki çekirdeği füzyon yuvalarına taşı'} />
+      <ResultReadout
+        complete={complete}
+        primary={complete ? `${leftPower} · ${rightPower} = ${formatPower(powerChallenge.base, powerChallenge.leftExponent + powerChallenge.rightExponent)}` : `${leftPower} · ${rightPower}`}
+        secondary={complete ? `${totalPower} = ${powerChallenge.value} enerji birimi` : 'iki çekirdeği füzyon yuvalarına taşı'}
+      />
     </>
   );
 }
 
-function RootExtractor({ rootPositions, rootPlaced, onPointerDown, onSlotSelect }: { rootPositions: RootPositions; rootPlaced: RootPlaced; onPointerDown: ReactorPointerHandler; onSlotSelect: (key: RootKey) => void }) {
+function RootExtractor({ rootChallenge, rootPositions, rootPlaced, onPointerDown, onSlotSelect }: { rootChallenge: RootChallenge; rootPositions: RootPositions; rootPlaced: RootPlaced; onPointerDown: ReactorPointerHandler; onSlotSelect: (key: RootKey) => void }) {
   const complete = rootPlaced.square && rootPlaced.remainder;
   return (
     <>
-      <rect x="80" y="118" width="278" height="278" rx="44" fill="rgba(255,255,255,0.026)" stroke="rgba(255,255,255,0.08)" strokeWidth="2" />
-      <motion.path d="M128 276 L182 276 L200 198 L256 198" fill="none" stroke="#67E8F9" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" filter="url(#reactor-v4-glow)" animate={{ opacity: [0.68, 1, 0.68] }} transition={{ duration: 1.5, repeat: Infinity }} />
-      <text x="240" y="286" textAnchor="middle" fill="#ECFEFF" fontSize="54" fontWeight="900">72</text>
-      <text x="218" y="356" textAnchor="middle" fill="rgba(255,255,255,0.52)" fontSize="16" fontWeight="900">72 = 36 x 2</text>
-      <line x1="386" y1="252" x2="462" y2="180" stroke="rgba(253,230,138,0.25)" strokeWidth="3" strokeDasharray="10 10" />
-      <line x1="386" y1="252" x2="462" y2="326" stroke="rgba(196,181,253,0.24)" strokeWidth="3" strokeDasharray="10 10" />
-      <RootSlot testId="radical-root-outside" x={rootSlots.square.x} y={rootSlots.square.y} active={rootPlaced.square} label="dış hazne" hint="√36 -> 6" onSelect={() => onSlotSelect('square')} />
-      <RootSlot testId="radical-root-inside" x={rootSlots.remainder.x} y={rootSlots.remainder.y} active={rootPlaced.remainder} label="kök haznesi" hint="√2 kalır" onSelect={() => onSlotSelect('remainder')} />
-      <RootToken testId="radical-root-square" x={rootPositions.square.x} y={rootPositions.square.y} label="√36" sublabel="tam kare" placed={rootPlaced.square} tone="amber" onPointerDown={(event) => onPointerDown(event, { kind: 'root', key: 'square' })} />
-      <RootToken testId="radical-root-remainder" x={rootPositions.remainder.x} y={rootPositions.remainder.y} label="√2" sublabel="kalır" placed={rootPlaced.remainder} tone="violet" onPointerDown={(event) => onPointerDown(event, { kind: 'root', key: 'remainder' })} />
-      <ResultReadout complete={complete} primary={complete ? '√72 = √(36 x 2) = 6√2' : '√72 kristalini ayır'} secondary={complete ? 'tam kare dışarı 6 olarak çıktı' : 'tam kare dışarı, kalan parça kökün içinde'} />
+      <rect x="72" y="104" width="326" height="282" rx="40" fill="rgba(255,255,255,0.026)" stroke="rgba(255,255,255,0.08)" strokeWidth="2" />
+      <text x="235" y="138" textAnchor="middle" fill="rgba(255,255,255,0.56)" fontSize="13" fontWeight="900">başlangıç</text>
+      <SvgRadical x={150} baseline={210} radicand={String(rootChallenge.radicand)} size={50} />
+      <text x="236" y="244" textAnchor="middle" fill="#FEF3C7" fontSize="19" fontWeight="900">{rootChallenge.radicand} = {rootChallenge.squareFactor} · {rootChallenge.remainder}</text>
+      <text x="236" y="268" textAnchor="middle" fill="rgba(255,255,255,0.54)" fontSize="13" fontWeight="900">{rootChallenge.squareFactor} tam kare, {rootChallenge.remainder} kökte kalır</text>
+
+      <path d="M405 190 C430 184 436 180 458 180" fill="none" stroke="rgba(253,230,138,0.34)" strokeWidth="4" strokeLinecap="round" />
+      <path d="M405 302 C430 314 436 326 458 326" fill="none" stroke="rgba(196,181,253,0.34)" strokeWidth="4" strokeLinecap="round" />
+      <RootSlot testId="radical-root-outside" x={rootSlots.square.x} y={rootSlots.square.y} active={rootPlaced.square} label="dışarı çıkan" hint={`${rootChallenge.squareFactor} dışarı ${rootChallenge.outsideFactor}`} onSelect={() => onSlotSelect('square')} />
+      <RootSlot testId="radical-root-inside" x={rootSlots.remainder.x} y={rootSlots.remainder.y} active={rootPlaced.remainder} label="kök içinde kalan" hint={`${rootChallenge.remainder} içeride kalır`} onSelect={() => onSlotSelect('remainder')} />
+      <RootToken testId="radical-root-square" x={rootPositions.square.x} y={rootPositions.square.y} label={String(rootChallenge.squareFactor)} sublabel={`dışarı ${rootChallenge.outsideFactor}`} placed={rootPlaced.square} tone="amber" onPointerDown={(event) => onPointerDown(event, { kind: 'root', key: 'square' })} />
+      <RootToken testId="radical-root-remainder" x={rootPositions.remainder.x} y={rootPositions.remainder.y} label={String(rootChallenge.remainder)} sublabel="içeride kalır" placed={rootPlaced.remainder} tone="violet" onPointerDown={(event) => onPointerDown(event, { kind: 'root', key: 'remainder' })} />
+      <RootEquationReadout complete={complete} rootChallenge={rootChallenge} />
     </>
+  );
+}
+
+function SvgRadical({ x, baseline, radicand, size, color = '#67E8F9' }: { x: number; baseline: number; radicand: string; size: number; color?: string }) {
+  const textWidth = estimateSvgTextWidth(radicand, size);
+  const topY = baseline - size * 0.88;
+  const hookY = baseline - size * 0.36;
+  const bottomY = baseline + size * 0.12;
+  const riseX = x + size * 0.7;
+  const textStart = x + size * 0.86;
+  const barEnd = textStart + textWidth + size * 0.14;
+  return (
+    <g>
+      <path
+        d={`M${x} ${hookY} L${x + size * 0.24} ${hookY} L${x + size * 0.42} ${bottomY} L${riseX} ${topY} L${barEnd} ${topY}`}
+        fill="none"
+        stroke={color}
+        strokeWidth={Math.max(3, size * 0.14)}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        filter="url(#reactor-v4-glow)"
+      />
+      <text x={textStart + textWidth / 2} y={baseline} textAnchor="middle" fill="#ECFEFF" fontSize={size} fontWeight="900">{radicand}</text>
+    </g>
+  );
+}
+
+function svgRadicalWidth(radicand: string, size: number) {
+  return size * 0.86 + estimateSvgTextWidth(radicand, size) + size * 0.14;
+}
+
+function estimateSvgTextWidth(text: string, size: number) {
+  return Math.max(
+    size * 1.15,
+    [...text].reduce((total, char) => {
+      if (char === ' ') return total + 0.34;
+      if (char === '·') return total + 0.42;
+      if (char === '(' || char === ')') return total + 0.35;
+      return total + 0.6;
+    }, 0) * size,
   );
 }
 
@@ -179,7 +241,7 @@ function RootSlot({ testId, x, y, active, label, hint, onSelect }: { testId: str
       <rect x={x - 94} y={y - 56} width="188" height="112" rx="28" fill="transparent" />
       <rect x={x - 86} y={y - 50} width="172" height="100" rx="26" fill={active ? 'rgba(134,239,172,0.09)' : 'rgba(255,255,255,0.045)'} stroke={active ? '#86EFAC' : 'rgba(255,255,255,0.18)'} strokeWidth="4" strokeDasharray={active ? undefined : '8 9'} />
       <text x={x} y={y - 66} textAnchor="middle" fill={active ? '#DCFCE7' : 'rgba(255,255,255,0.54)'} fontSize="14" fontWeight="900">{label}</text>
-      <text x={x} y={y + 6} textAnchor="middle" fill={active ? '#86EFAC' : 'rgba(255,255,255,0.42)'} fontSize="15" fontWeight="900">{hint}</text>
+      {!active ? <text x={x} y={y + 6} textAnchor="middle" fill="rgba(255,255,255,0.42)" fontSize="15" fontWeight="900">{hint}</text> : null}
     </g>
   );
 }
@@ -190,6 +252,66 @@ function ResultReadout({ complete, primary, secondary }: { complete: boolean; pr
       <rect x="164" y="402" width="392" height="62" rx="24" fill={complete ? 'rgba(16,185,129,0.12)' : 'rgba(255,255,255,0.045)'} stroke={complete ? 'rgba(134,239,172,0.30)' : 'rgba(255,255,255,0.09)'} />
       <text x="360" y="429" textAnchor="middle" fill={complete ? '#DCFCE7' : 'rgba(255,255,255,0.78)'} fontSize="22" fontWeight="900">{primary}</text>
       <text x="360" y="450" textAnchor="middle" fill={complete ? '#86EFAC' : 'rgba(255,255,255,0.48)'} fontSize="13" fontWeight="900">{secondary}</text>
+    </g>
+  );
+}
+
+function RootEquationReadout({ complete, rootChallenge }: { complete: boolean; rootChallenge: RootChallenge }) {
+  return (
+    <g>
+      <rect x="128" y="404" width="464" height="60" rx="24" fill={complete ? 'rgba(16,185,129,0.12)' : 'rgba(255,255,255,0.045)'} stroke={complete ? 'rgba(134,239,172,0.30)' : 'rgba(255,255,255,0.09)'} />
+      <SvgRootEquation complete={complete} rootChallenge={rootChallenge} />
+      <text x="360" y="450" textAnchor="middle" fill={complete ? '#86EFAC' : 'rgba(255,255,255,0.50)'} fontSize="13" fontWeight="900">
+        {complete
+          ? `${rootChallenge.squareFactor} dışarı ${rootChallenge.outsideFactor} olur, ${rootChallenge.remainder} kökün içinde kalır`
+          : `${rootChallenge.squareFactor} parçasını dışarı, ${rootChallenge.remainder} parçasını kök içine taşı`}
+      </text>
+    </g>
+  );
+}
+
+function SvgRootEquation({ complete, rootChallenge }: { complete: boolean; rootChallenge: RootChallenge }) {
+  const size = 21;
+  const radicand = String(rootChallenge.radicand);
+  const product = `${rootChallenge.squareFactor} · ${rootChallenge.remainder}`;
+  const remainder = String(rootChallenge.remainder);
+  const rootRadicandWidth = svgRadicalWidth(radicand, size);
+  const rootProductWidth = svgRadicalWidth(product, size);
+  const rootRemainderWidth = svgRadicalWidth(remainder, size);
+  const equalGap = 30;
+  const resultGap = 42;
+  const outsideWidth = Math.max(18, String(rootChallenge.outsideFactor).length * size * 0.58);
+  const totalWidth = rootRadicandWidth + equalGap + rootProductWidth + (complete ? resultGap + outsideWidth + rootRemainderWidth : 0);
+  let cursor = 360 - totalWidth / 2;
+  const baseline = 431;
+
+  return (
+    <g fill={complete ? '#DCFCE7' : 'rgba(255,255,255,0.82)'}>
+      <SvgRadical x={cursor} baseline={baseline} radicand={radicand} size={size} color={complete ? '#86EFAC' : '#67E8F9'} />
+      {(() => {
+        cursor += rootRadicandWidth;
+        const firstEqualX = cursor + equalGap / 2;
+        cursor += equalGap;
+        const productX = cursor;
+        cursor += rootProductWidth;
+        const secondEqualX = cursor + resultGap / 2;
+        cursor += resultGap;
+        const outsideX = cursor + outsideWidth / 2;
+        cursor += outsideWidth;
+        return (
+          <>
+            <text x={firstEqualX} y={baseline - 1} textAnchor="middle" fontSize={size} fontWeight="900">=</text>
+            <SvgRadical x={productX} baseline={baseline} radicand={product} size={size} color={complete ? '#86EFAC' : '#67E8F9'} />
+            {complete ? (
+              <>
+                <text x={secondEqualX} y={baseline - 1} textAnchor="middle" fontSize={size} fontWeight="900">=</text>
+                <text x={outsideX} y={baseline} textAnchor="middle" fontSize={size} fontWeight="900">{rootChallenge.outsideFactor}</text>
+                <SvgRadical x={cursor} baseline={baseline} radicand={remainder} size={size} color="#86EFAC" />
+              </>
+            ) : null}
+          </>
+        );
+      })()}
     </g>
   );
 }

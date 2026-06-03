@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Grade12StageStatus } from '../shared/Grade12FullStageLab';
 import { BuildStepId, ForgeBuildStep, ForgeMission, MODULE_ID, RuleTool, toolCopy } from './derivativeRuleModel';
+import { bridgeStepCopy } from './derivativeRuleBridgeCopy';
 
 interface RuleConstructionBenchProps {
   mission: ForgeMission;
@@ -24,8 +25,8 @@ export function RuleConstructionBench({
   onLockStep,
 }: RuleConstructionBenchProps) {
   const muted = tool === null;
-  const progressText = solved ? 'döküm kilitli' : `${lockedCount}/${mission.buildSteps.length} parça`;
-  const selectedLabel = tool ? toolCopy[tool].label : 'Kartuş seç';
+  const progressText = solved ? 'sonuç hazır' : `${lockedCount}/${mission.buildSteps.length} adım`;
+  const selectedLabel = tool ? toolCopy[tool].label : 'Kural seç';
 
   return (
     <motion.div
@@ -42,18 +43,33 @@ export function RuleConstructionBench({
       </div>
 
       <div className="flex min-w-0 flex-1 flex-wrap gap-2">
-        {mission.buildSteps.map((step) => (
+        {mission.buildSteps.map((step) => {
+          const displayStep = getDisplayStep(step, tool);
+
+          return (
           <BuildStepButton
             key={step.id}
-            step={step}
+            step={displayStep}
             locked={lockedStepSet.has(step.id)}
             disabled={muted || solved}
             onLockStep={onLockStep}
           />
-        ))}
+          );
+        })}
       </div>
     </motion.div>
   );
+}
+
+type BuildStepDisplay = Pick<ForgeBuildStep, 'id' | 'label' | 'action' | 'accent'>;
+
+function getDisplayStep(step: ForgeBuildStep, tool: RuleTool | null): BuildStepDisplay {
+  if (!tool || step.target !== 'bridge') return step;
+
+  return {
+    ...step,
+    ...bridgeStepCopy[tool],
+  };
 }
 
 function BuildStepButton({
@@ -62,7 +78,7 @@ function BuildStepButton({
   disabled,
   onLockStep,
 }: {
-  step: ForgeBuildStep;
+  step: BuildStepDisplay;
   locked: boolean;
   disabled: boolean;
   onLockStep: (stepId: BuildStepId) => void;
@@ -84,7 +100,7 @@ function BuildStepButton({
       }}
     >
       <span className="block font-mono text-[9px] font-black uppercase tracking-[0.14em]" style={{ color: locked ? step.accent : 'rgba(255,255,255,0.45)' }}>
-        {locked ? 'kilitli' : step.label}
+        {locked ? 'tamamlandı' : step.label}
       </span>
       <span className="mt-1 block text-xs font-black leading-tight text-white">{step.action}</span>
     </motion.button>

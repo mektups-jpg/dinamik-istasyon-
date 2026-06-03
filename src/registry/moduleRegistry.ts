@@ -357,7 +357,45 @@ export const modules: ModuleMeta[] = [
       'MAT.9.1.2.2'
     ],
     path: '/embed/numbers/radical-power-reactor',
-    component: lazy(() => import('../modules/grade9/radical-power-reactor/RadicalPowerReactorApp'))
+    component: lazy(() => import('../modules/grade9/radical-power-reactor/RadicalPowerReactorApp')),
+    status: 'showcase-ready',
+    archiveNote: '9. sınıf Kök ve Üs Reaktörü Kaptan canlı onayıyla Showcase Ready. Üs ve kök kuralları sahnede net anlaşılıyor.'
+  },
+  {
+    id: 'interval-gate-station',
+    title: 'Aralık Kapıları İstasyonu',
+    description: 'Açık-kapalı uçları sayı doğrusunda sürükle; kesişim ve birleşim aralıklarını ışık kapılarıyla kur.',
+    grade: 9,
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.1.3.1',
+      'MAT.9.1.3.2',
+      'MAT.9.1.3.3',
+      'MAT.9.1.3.4'
+    ],
+    path: '/embed/numbers/interval-gate-station',
+    component: lazy(() => import('../modules/grade9/interval-gate-station/IntervalGateStationApp')),
+    status: 'showcase-ready',
+    archiveNote: '9. sınıf Aralık Kapıları İstasyonu Kaptan canlı onayıyla Showcase Ready. Açık-kapalı uç, kesişim ve birleşim tek sayı doğrusu oyuncağında net kuruluyor.'
+  },
+  {
+    id: 'real-number-law-atlas',
+    title: 'Gerçek Sayı Atlası ve İşlem Yasaları',
+    description: 'Sayı kapsüllerini küme katmanlarına yerleştir; birleşme ve dağılma yasalarını aynı atlas makinesinde kilitle.',
+    grade: 9,
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.1.4.1',
+      'MAT.9.1.4.2',
+      'MAT.9.1.5.1',
+      'MAT.9.1.5.2'
+    ],
+    path: '/embed/numbers/real-number-law-atlas',
+    component: lazy(() => import('../modules/grade9/real-number-law-atlas/RealNumberLawAtlasApp')),
+    status: 'showcase-ready',
+    archiveNote: '9. sınıf Gerçek Sayı Atlası ve İşlem Yasaları Kaptan canlı onayıyla Showcase Ready. Sekiz örnek setiyle sayı kümeleri ve işlem yasaları atlas makinesinde net kuruluyor.'
   },
   {
     id: 'function-hologram-room',
@@ -1037,8 +1075,8 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'derivative-rule-forge',
-    title: 'Türev Kural Dökümhanesi',
-    description: 'Toplam, fark, çarpım, bölüm ve zincir kurallarını kural kartuşlu üretim bandında kilitle.',
+    title: 'Dört İşlem ve Zincir Türevi',
+    description: 'Toplam, fark, çarpım, bölüm ve zincir türevlerini kural kartuşlu üretim bandında kilitle.',
     grade: 12,
     category: 'Cebir',
     difficulty: 'Zor',
@@ -1051,8 +1089,8 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/calculus/derivative-rule-forge',
     component: lazy(() => import('../modules/grade12/derivative-rule-forge/DerivativeRuleForgeApp')),
-    status: 'review-needed',
-    archiveNote: '12. sınıf Review Needed üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
+    status: 'showcase-ready',
+    archiveNote: '12. sınıf Dört İşlem ve Zincir Türevi modülü Kaptan canlı onayıyla Showcase Ready. Toplam, fark, çarpım, bölüm ve zincir kuralı sahnede adım adım kilitleniyor.'
   },
   {
     id: 'optimization-terrain',

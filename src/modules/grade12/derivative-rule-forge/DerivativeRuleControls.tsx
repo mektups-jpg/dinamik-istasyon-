@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { ArrowRight, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ForgeMission, MODULE_ID, RuleTool, toolCopy } from './derivativeRuleModel';
 
@@ -7,13 +7,13 @@ interface DerivativeRuleControlsProps {
   mission: ForgeMission;
   missionIndex: number;
   missionCount: number;
+  completedMissionIndexes: Set<number>;
   tool: RuleTool | null;
   lockedCount: number;
   buildCount: number;
   solved: boolean;
   onToolChange: (tool: RuleTool) => void;
   onCheck: () => void;
-  onNext: () => void;
 }
 
 const toolOrder: RuleTool[] = ['sum', 'difference', 'product', 'quotient', 'chain'];
@@ -22,16 +22,20 @@ export function DerivativeRuleControls({
   mission,
   missionIndex,
   missionCount,
+  completedMissionIndexes,
   tool,
   lockedCount,
   buildCount,
   solved,
   onToolChange,
   onCheck,
-  onNext,
 }: DerivativeRuleControlsProps) {
   const readyForTest = tool !== null && lockedCount === buildCount;
-  const checkLabel = tool === null ? 'Önce Kartuş Seç' : readyForTest ? 'Dökümü Test Et' : 'Parçaları Kilitle';
+  const selectedToolCopy = tool ? toolCopy[tool] : null;
+  const activeRuleTitle = selectedToolCopy?.panelTitle ?? mission.title;
+  const activeRulePrompt = selectedToolCopy?.panelPrompt ?? mission.prompt;
+  const activeRuleFormula = solved ? mission.expression : tool ? toolCopy[tool].formula : mission.structure;
+  const checkLabel = tool === null ? 'Önce Kural Seç' : readyForTest ? 'Sonucu Kontrol Et' : 'Adımları Tamamla';
   const checkClass = tool === null
     ? 'border-white/12 bg-white/[0.055] text-white/58 hover:border-[#00E5FF]/34 hover:text-cyan-100'
     : readyForTest
@@ -47,21 +51,27 @@ export function DerivativeRuleControls({
             {Array.from({ length: missionCount }, (_, index) => (
               <span
                 key={index}
-                className={`h-2 w-4 rounded-full ${index <= missionIndex ? 'bg-[#00E5FF]' : 'bg-white/12'}`}
+                className={`h-2 rounded-full transition-all ${
+                  index === missionIndex
+                    ? 'w-5 bg-[#00E5FF]'
+                    : completedMissionIndexes.has(index)
+                      ? 'w-4 bg-[#00FF88]'
+                      : 'w-4 bg-white/12'
+                }`}
               />
             ))}
           </div>
         </div>
-        <p className="mt-2 text-sm font-black text-white">{mission.title}</p>
-        <p className="mt-1 text-xs font-bold leading-snug text-white/62">{mission.prompt}</p>
+        <p className="mt-2 text-sm font-black text-white">{activeRuleTitle}</p>
+        <p className="mt-1 text-xs font-bold leading-snug text-white/62">{activeRulePrompt}</p>
         <div className="mt-3 rounded-xl border border-[#00E5FF]/12 bg-black/22 px-3 py-2">
-          <p className="font-mono text-[9px] font-black uppercase tracking-[0.18em] text-white/36">aktif kanıt · sahne kilidi {lockedCount}/{buildCount}</p>
-          <p className="mt-1 text-sm font-black leading-snug text-white/80">{solved ? mission.expression : mission.structure}</p>
+          <p className="font-mono text-[9px] font-black uppercase tracking-[0.18em] text-white/36">aktif kural · tamamlanan adım {lockedCount}/{buildCount}</p>
+          <p className="mt-1 text-sm font-black leading-snug text-white/80">{activeRuleFormula}</p>
         </div>
       </div>
 
       <div className="space-y-2">
-        <p className="hidden font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/42 lg:block">Hangi kural kartuşu?</p>
+        <p className="hidden font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/42 lg:block">Hangi türev kuralı?</p>
         <div className="grid grid-cols-2 gap-2">
           {toolOrder.map((key) => (
             <ToolButton
@@ -78,17 +88,12 @@ export function DerivativeRuleControls({
 
       <div className="grid grid-cols-1">
         {solved ? (
-          <motion.button
-            type="button"
-            data-testid={`${MODULE_ID}-check`}
-            whileHover={{ y: -1 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={onNext}
-            className="flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-[#00FF88]/24 bg-[#00FF88]/14 px-4 text-sm font-black text-emerald-100 transition hover:border-[#00FF88]/42"
-          >
-            <ArrowRight className="h-4 w-4" />
-            {missionIndex === missionCount - 1 ? 'Bitir' : 'Sonraki'}
-          </motion.button>
+          <div className="rounded-2xl border border-[#00FF88]/20 bg-[#00FF88]/10 px-4 py-3 text-center">
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.18em] text-[#00FF88]/70">
+              {completedMissionIndexes.size}/{missionCount} kural tamam
+            </p>
+            <p className="mt-1 text-sm font-black leading-tight text-emerald-100">Başka bir kural seçebilirsin.</p>
+          </div>
         ) : (
           <motion.button
             type="button"

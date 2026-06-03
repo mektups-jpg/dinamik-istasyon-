@@ -1,9 +1,11 @@
 import { useMemo, type KeyboardEvent } from 'react';
 import { motion } from 'motion/react';
 import { Grade12StageStatus } from '../shared/Grade12FullStageLab';
+import { BaseFlowRails, RuleArms } from './DerivativeRuleArms';
 import { RuleConstructionBench } from './DerivativeRuleBuildDock';
-import { RuleCartridgeCore, RuleFlowRail, RuleTag } from './DerivativeRuleMechanismParts';
+import { RuleCartridgeCore } from './DerivativeRuleMechanismParts';
 import { BuildStepId, ForgeMission, isRuleCorrect, MODULE_ID, RuleTool, toolCopy } from './derivativeRuleModel';
+import { bridgeStepCopy } from './derivativeRuleBridgeCopy';
 
 interface DerivativeRuleSceneProps {
   mission: ForgeMission;
@@ -23,18 +25,19 @@ export function DerivativeRuleScene({ mission, tool, lockedSteps, solved, status
   const toolMatches = isRuleCorrect(mission, tool);
   const checkedCorrect = status === 'success' && toolMatches;
   const accent = selected?.accent ?? neutralAccent;
+  const focusText = solved ? mission.expression : selected ? selected.focusLabel : mission.structure;
   const lockedCount = mission.buildSteps.filter((step) => lockedStepSet.has(step.id)).length;
   const statusLabel = solved
-    ? 'Kural döküldü'
+    ? 'Sonuç hazır'
     : tool === null
-      ? 'Kartuş bekliyor'
+      ? 'Kural seç'
       : checkedCorrect
-        ? 'Doğru kural çalışıyor'
+        ? 'Doğru kural'
         : status === 'error'
           ? toolMatches
-            ? 'Eksik parça alarmı'
-            : 'Yanlış kural alarmı'
-          : 'Kartuş önizlemede';
+            ? 'Eksik adım'
+            : 'Yanlış kural'
+          : 'Kural önizlemede';
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Home') {
@@ -64,7 +67,7 @@ export function DerivativeRuleScene({ mission, tool, lockedSteps, solved, status
         >
           <div className="pointer-events-none absolute left-1/2 top-[2%] z-30 flex w-[min(92%,980px)] -translate-x-1/2 items-center justify-between gap-4 rounded-full border border-white/10 bg-black/44 px-5 py-3 shadow-[0_18px_44px_rgba(0,0,0,0.24)] backdrop-blur-xl">
             <div className="min-w-0">
-              <p className="font-mono text-[9px] font-black uppercase tracking-[0.22em] text-white/42">aktif üretim</p>
+              <p className="font-mono text-[9px] font-black uppercase tracking-[0.22em] text-white/42">aktif kural</p>
               <p className="truncate text-sm font-black text-white/88">{mission.title}</p>
             </div>
             <div
@@ -83,10 +86,10 @@ export function DerivativeRuleScene({ mission, tool, lockedSteps, solved, status
 
           <div className="absolute left-1/2 top-[11%] z-20 -translate-x-1/2 rounded-[24px] border border-[#00E5FF]/20 bg-[#03111b]/92 px-5 py-2.5 text-center shadow-[0_18px_44px_rgba(0,0,0,0.28)] backdrop-blur-xl">
             <p className="font-mono text-[9px] font-black uppercase tracking-[0.2em] text-[#00E5FF]/70">
-              {solved ? 'kural formülü' : 'üretim isteği'}
+              {solved ? 'kural formülü' : 'ne bulunacak?'}
             </p>
             <p className="mt-1 text-lg font-black tracking-tight text-white lg:text-xl">
-              {solved ? mission.expression : mission.structure}
+              {focusText}
             </p>
           </div>
 
@@ -142,20 +145,21 @@ function ForgeMechanism({
   const activeTool = tool ?? 'sum';
   const glow = alarm ? '#FF4FA3' : checkedCorrect ? accent : active ? accent : '#00E5FF';
   const latestLockedStep = [...mission.buildSteps].reverse().find((step) => lockedStepSet.has(step.id));
-  const outputLabel = solved ? mission.output : tool ? `${lockedCount}/${mission.buildSteps.length} kilit` : 'çıktı ?';
-  const outputBadge = solved ? mission.badge : tool ? toolCopy[tool].label : 'Kartuş bekliyor';
+  const selectedBridgeNote = tool && latestLockedStep?.target === 'bridge' ? bridgeStepCopy[tool].note : null;
   const mechanismCopy = solved
     ? mission.mechanism
     : latestLockedStep
-      ? latestLockedStep.note
+      ? selectedBridgeNote ?? latestLockedStep.note
       : tool
       ? toolCopy[tool].hint
-      : 'Kartuş seçilince hangi parçanın türevlenip hangi parçanın korunacağı burada görünür.';
+      : 'Kural seçilince hangi fonksiyonun türevlendiği, hangisinin aynen kaldığı burada görünür.';
+  const outputLabel = solved ? mission.output : tool ? toolCopy[tool].resultShape : 'sonuç ?';
+  const outputBadge = solved ? mission.badge : tool ? toolCopy[tool].label : 'Kural seç';
 
   return (
     <div className="absolute inset-x-[5%] top-[22%] z-20 h-[47%]">
       <div className="absolute inset-0 rounded-[48px] border border-white/10 bg-[linear-gradient(180deg,rgba(2,14,24,0.98),rgba(0,0,0,0.60))] shadow-[inset_0_18px_38px_rgba(0,0,0,0.72),0_26px_80px_rgba(0,0,0,0.28)]" />
-      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1000 360" role="img" aria-label={`${mission.title} türev kural döküm bandı`}>
+      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1000 360" role="img" aria-label={`${mission.title} türev kuralı sahnesi`}>
         <defs>
           <linearGradient id={`forge-belt-${mission.id}`} x1="0" x2="1" y1="0" y2="0">
             <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.92" />
@@ -184,6 +188,7 @@ function ForgeMechanism({
         <FunctionCapsule x={210} y={254} label={mission.inputB} color="#00FF88" />
 
         <RuleArms
+          layer="rails"
           tool={activeTool}
           active={active}
           accent={accent}
@@ -198,214 +203,60 @@ function ForgeMechanism({
         <OutputCapsule x={788} y={174} label={outputLabel} color={checkedCorrect ? '#00FF88' : active ? accent : '#00E5FF'} />
         <text x="788" y="244" fill="rgba(255,255,255,0.72)" fontSize="20" fontWeight="900" textAnchor="middle">{outputBadge}</text>
 
+        <RuleArms
+          layer="labels"
+          tool={activeTool}
+          active={active}
+          accent={accent}
+          alarm={alarm}
+          mission={mission}
+          lockedStepSet={lockedStepSet}
+          revealFormula={solved}
+        />
+
       </svg>
 
       <div className="sr-only">{mission.proof}</div>
 
-      <div className="absolute left-[7%] bottom-[6%] z-30 rounded-[26px] border border-[#00E5FF]/24 bg-[#00E5FF]/10 px-4 py-3 shadow-[0_18px_46px_rgba(0,0,0,0.32)] backdrop-blur-xl">
-        <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/50">giriş kapsülleri</p>
-        <p className="mt-1 text-xl font-black text-white">{mission.inputA} · {mission.inputB}</p>
+      <div className="absolute left-[7%] bottom-[6%] z-30 max-w-[390px] rounded-[26px] border border-[#00E5FF]/24 bg-[#00E5FF]/10 px-4 py-3 shadow-[0_18px_46px_rgba(0,0,0,0.32)] backdrop-blur-xl">
+        <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/50">verilen fonksiyonlar</p>
+        <p className="mt-1 text-lg font-black leading-tight text-white">
+          {formatForgeMathLabel(mission.inputA)}, {formatForgeMathLabel(mission.inputB)}
+        </p>
       </div>
 
       <div className="absolute right-[7%] bottom-[6%] z-30 max-w-[330px] rounded-[26px] border border-[#00FF88]/18 bg-[#00FF88]/9 px-4 py-3 text-right shadow-[0_18px_46px_rgba(0,0,0,0.32)] backdrop-blur-xl">
-        <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/50">mekanik okuma</p>
+        <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/50">kuralın anlamı</p>
         <p className="mt-1 text-sm font-black leading-snug text-white/78">{mechanismCopy}</p>
       </div>
     </div>
   );
 }
 
-function BaseFlowRails({ mission, active, accent, glow }: { mission: ForgeMission; active: boolean; accent: string; glow: string }) {
-  const inputRailOpacity = active ? 0 : 0.42;
-  const outputRailOpacity = active ? 0.34 : 0.42;
-  const outputColor = active ? glow : '#00E5FF';
-
-  return (
-    <>
-      <g opacity={inputRailOpacity}>
-        <path
-          d="M298 150 C330 150 360 150 388 150"
-          fill="none"
-          stroke="#00E5FF"
-          strokeWidth="10"
-          strokeLinecap="round"
-          filter={`url(#forge-glow-${mission.id})`}
-        />
-        <path
-          d="M298 254 C334 246 360 226 388 218"
-          fill="none"
-          stroke="#00FF88"
-          strokeWidth="10"
-          strokeLinecap="round"
-          filter={`url(#forge-glow-${mission.id})`}
-        />
-        <circle cx="388" cy="150" r="5" fill="#00E5FF" />
-        <circle cx="388" cy="218" r="5" fill="#00FF88" />
-      </g>
-      <g opacity={outputRailOpacity}>
-        <motion.path
-          d="M626 180 C664 180 696 178 736 176"
-          fill="none"
-          stroke={outputColor}
-          strokeWidth="12"
-          strokeLinecap="round"
-          filter={`url(#forge-glow-${mission.id})`}
-          animate={{ opacity: active ? [0.56, 1, 0.56] : 0.78 }}
-          transition={{ duration: 2.1, repeat: active ? Infinity : 0 }}
-        />
-        <circle cx="626" cy="180" r="6" fill={accent} />
-      </g>
-    </>
-  );
-}
-
-function RuleArms({
-  tool,
-  active,
-  accent,
-  alarm,
-  mission,
-  lockedStepSet,
-  revealFormula,
-}: {
-  tool: RuleTool;
-  active: boolean;
-  accent: string;
-  alarm: boolean;
-  mission: ForgeMission;
-  lockedStepSet: Set<BuildStepId>;
-  revealFormula: boolean;
-}) {
-  const color = alarm ? '#FF4FA3' : accent;
-  const hasStep = (stepId: BuildStepId) => lockedStepSet.has(stepId);
-
-  if (!active) {
-    return null;
-  }
-
-  if (tool === 'product') {
-    const upperReady = hasStep('derive-f') && hasStep('keep-g');
-    const lowerReady = hasStep('keep-f') && hasStep('derive-g');
-    const bridgeReady = hasStep('bridge-plus');
-
-    return (
-      <g>
-        <RuleFlowRail
-          d="M302 148 C350 126 372 76 426 76 L580 76 C636 76 658 118 640 154 C654 162 664 170 672 180"
-          color={color}
-          active={upperReady}
-          missionId={mission.id}
-        />
-        <RuleFlowRail
-          d="M302 254 C350 278 374 304 426 304 L580 304 C636 304 658 242 640 206 C654 198 664 190 672 180"
-          color="#00FF88"
-          active={lowerReady}
-          missionId={mission.id}
-        />
-        <RuleTag x={506} y={90} label={revealFormula || upperReady ? 'fʼ·g' : hasStep('derive-f') ? 'fʼ · koru?' : hasStep('keep-g') ? 'türev? · g' : 'türevle · koru'} color={color} />
-        <RuleTag x={508} y={296} label={revealFormula || lowerReady ? 'f·gʼ' : hasStep('keep-f') ? 'f · türev?' : hasStep('derive-g') ? 'koru? · gʼ' : 'koru · türevle'} color="#00FF88" />
-        <RuleTag x={638} y={116} label={revealFormula || bridgeReady ? '+' : 'köprü'} color="#9FF5FF" compact />
-      </g>
-    );
-  }
-
-  if (tool === 'quotient') {
-    const firstReady = hasStep('derive-f') && hasStep('keep-g');
-    const secondReady = hasStep('keep-f') && hasStep('derive-g');
-    const payReady = firstReady && secondReady && hasStep('subtract-pay');
-    const shieldReady = hasStep('shield-g2');
-
-    return (
-      <g>
-        <RuleFlowRail
-          d="M308 140 C360 112 398 82 448 82 L572 82 C624 82 650 122 672 152"
-          color={color}
-          active={firstReady}
-          missionId={mission.id}
-        />
-        <RuleFlowRail
-          d="M316 238 C366 268 398 300 450 300 L572 300 C626 300 650 232 672 204"
-          color="#FF4FA3"
-          active={secondReady}
-          missionId={mission.id}
-          width={7}
-        />
-        <rect x="398" y="266" width="218" height="38" rx="19" fill="rgba(255,184,77,0.12)" stroke="#FFB84D" strokeOpacity={shieldReady ? 0.92 : 0.42} strokeWidth="3" />
-        <RuleTag x={510} y={82} label={revealFormula || payReady ? 'fʼg - fgʼ' : firstReady ? 'fʼg - ?' : secondReady ? '? - fgʼ' : 'pay bandı'} color={color} />
-        <RuleTag x={508} y={324} label={revealFormula || shieldReady ? 'g² kalkanı' : 'payda zırhı'} color="#FFB84D" />
-      </g>
-    );
-  }
-
-  if (tool === 'chain') {
-    const outerReady = hasStep('outer-shell');
-    const innerReady = hasStep('inner-core');
-
-    return (
-      <g>
-        <motion.circle
-          cx="506"
-          cy="180"
-          r="112"
-          fill="rgba(179,136,255,0.08)"
-          stroke={color}
-          strokeOpacity={outerReady ? 0.95 : 0.48}
-          strokeWidth="8"
-          strokeDasharray="30 16"
-          filter={`url(#forge-glow-${mission.id})`}
-          animate={{ strokeDashoffset: outerReady ? [0, -92] : 0 }}
-          transition={{ duration: 2.4, repeat: outerReady ? Infinity : 0, ease: 'linear' }}
-        />
-        <motion.circle
-          cx="506"
-          cy="180"
-          r="66"
-          fill="rgba(0,229,255,0.09)"
-          stroke="#00E5FF"
-          strokeOpacity={innerReady ? 0.95 : 0.48}
-          strokeWidth="7"
-          strokeDasharray="20 12"
-          animate={{ strokeDashoffset: innerReady ? [0, 72] : 0 }}
-          transition={{ duration: 2, repeat: innerReady ? Infinity : 0, ease: 'linear' }}
-        />
-        <RuleFlowRail d="M302 202 C356 190 390 180 428 180" color="#00E5FF" active={innerReady} missionId={mission.id} width={7} />
-        <RuleFlowRail d="M586 180 C624 180 674 176 714 174" color={color} active={outerReady && innerReady} missionId={mission.id} width={7} />
-        <RuleTag x={506} y={58} label={revealFormula || outerReady ? 'dış türev' : 'dış halka'} color={color} />
-        <RuleTag x={506} y={318} label={revealFormula || innerReady ? 'iç türev' : 'iç çekirdek'} color="#00E5FF" />
-      </g>
-    );
-  }
-
-  const firstReady = hasStep('derive-f');
-  const secondReady = hasStep('derive-g');
-  const bridgeReady = hasStep(tool === 'difference' ? 'bridge-minus' : 'bridge-plus');
-
-  return (
-    <g>
-      <RuleFlowRail d="M302 150 C348 150 382 150 428 166" color="#00E5FF" active={firstReady} missionId={mission.id} />
-      <RuleFlowRail d="M302 254 C348 246 384 220 428 194" color={tool === 'difference' ? '#FF8ABB' : '#00FF88'} active={secondReady} missionId={mission.id} />
-      <RuleFlowRail d="M586 180 C624 180 674 178 714 176" color={tool === 'difference' ? '#FF8ABB' : '#9FF5FF'} active={bridgeReady} missionId={mission.id} width={7} />
-      <RuleTag x={432} y={88} label={revealFormula || firstReady ? 'fʼ' : '1. ışın'} color="#00E5FF" />
-      <RuleTag x={434} y={292} label={revealFormula || secondReady ? (tool === 'difference' ? '-gʼ' : 'gʼ') : tool === 'difference' ? 'ters ışın' : '2. ışın'} color={tool === 'difference' ? '#FF8ABB' : '#00FF88'} />
-      <RuleTag x={638} y={136} label={revealFormula || bridgeReady ? (tool === 'difference' ? '-' : '+') : 'köprü'} color={tool === 'difference' ? '#FF8ABB' : '#9FF5FF'} compact />
-    </g>
-  );
-}
-
 function FunctionCapsule({ x, y, label, color }: { x: number; y: number; label: string; color: string }) {
+  const displayLabel = formatForgeMathLabel(label);
+  const width = Math.max(168, Math.min(230, displayLabel.length * 12 + 44));
+  const fontSize = displayLabel.length > 13 ? 18 : 22;
+
   return (
     <g transform={`translate(${x} ${y})`}>
-      <rect x="-84" y="-30" width="168" height="60" rx="24" fill="rgba(2,7,13,0.88)" stroke={color} strokeOpacity="0.62" strokeWidth="3" />
-      <text x="0" y="7" fill="#FFFFFF" fontSize="22" fontWeight="900" textAnchor="middle">{label}</text>
+      <rect x={-width / 2} y="-30" width={width} height="60" rx="24" fill="rgba(2,7,13,0.88)" stroke={color} strokeOpacity="0.62" strokeWidth="3" />
+      <text x="0" y="7" fill="#FFFFFF" fontSize={fontSize} fontWeight="900" textAnchor="middle">{displayLabel}</text>
     </g>
   );
+}
+
+function formatForgeMathLabel(label: string) {
+  return label.replace(/\s*=\s*/g, ' = ');
 }
 
 function OutputCapsule({ x, y, label, color }: { x: number; y: number; label: string; color: string }) {
+  const fontSize = label.length > 14 ? 17 : 22;
+
   return (
     <g transform={`translate(${x} ${y})`}>
       <rect x="-116" y="-38" width="232" height="76" rx="30" fill="rgba(2,7,13,0.90)" stroke={color} strokeOpacity="0.70" strokeWidth="3" />
-      <text x="0" y="8" fill="#FFFFFF" fontSize="22" fontWeight="900" textAnchor="middle">{label}</text>
+      <text x="0" y="8" fill="#FFFFFF" fontSize={fontSize} fontWeight="900" textAnchor="middle">{label}</text>
     </g>
   );
 }

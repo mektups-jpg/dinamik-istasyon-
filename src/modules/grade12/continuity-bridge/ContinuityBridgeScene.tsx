@@ -167,22 +167,23 @@ function BridgeMechanism({ mission, tool, solved, checked, accent, isCorrect }: 
 
       <div
         data-testid={`${MODULE_ID}-gap-visual`}
-        className="absolute left-1/2 top-[36%] z-30 flex h-[35%] w-[104px] -translate-x-1/2 flex-col items-center justify-center rounded-[28px] border bg-black/54 shadow-[0_24px_60px_rgba(0,0,0,0.42)] backdrop-blur-xl"
+        className="absolute left-1/2 top-[68%] z-30 flex min-h-[58px] w-[190px] -translate-x-1/2 items-center justify-center gap-3 rounded-[22px] border bg-black/62 px-3 py-2 shadow-[0_18px_44px_rgba(0,0,0,0.34)] backdrop-blur-xl"
         style={{ borderColor: gapGlow ? `${bridgeColor}88` : 'rgba(0,229,255,0.22)' }}
       >
-        <p className="font-mono text-[9px] font-black uppercase tracking-[0.16em] text-white/48">nokta</p>
-        <p className="mt-1 text-2xl font-black text-white">{mission.gateLabel}</p>
+        <div className="min-w-0 text-center">
+          <p className="font-mono text-[8px] font-black uppercase tracking-[0.14em] text-white/44">nokta</p>
+          <p className="mt-0.5 text-lg font-black leading-none text-white">{mission.gateLabel}</p>
+        </div>
         <div
-          className="mt-2 rounded-2xl border px-2.5 py-1.5 text-center"
+          className="rounded-2xl border px-2.5 py-1.5 text-center"
           style={{
             borderColor: pinExists ? (pinAligned ? '#00FF8866' : '#FBBF2466') : '#FF4FA366',
             background: pinExists ? 'rgba(0,229,255,0.08)' : 'rgba(255,79,163,0.10)',
           }}
         >
           <p className="font-mono text-[8px] font-black tracking-[0.08em] text-white/46">{functionLabel}</p>
-          <p className="text-xl font-black text-white">{mission.functionValue ?? 'boş'}</p>
+          <p className="text-lg font-black leading-none text-white">{mission.functionValue ?? 'boş'}</p>
         </div>
-        <div className="mt-2 h-10 w-1.5 rounded-full" style={{ background: `linear-gradient(180deg, ${bridgeColor}, transparent)` }} />
       </div>
 
       <div data-testid={`${MODULE_ID}-rails-readout`} className="sr-only">soldan limit {mission.leftApproach} sağdan limit {mission.rightApproach}</div>

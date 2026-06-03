@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { ArrowRight, Check } from 'lucide-react';
 import { motion } from 'motion/react';
-import { MODULE_ID, OrbitMission, OrbitScanner, scannerCopy } from './inequalityOrbitModel';
+import { formatOrbitMathText, MODULE_ID, OrbitMission, OrbitScanner, scannerCopy } from './inequalityOrbitModel';
 
 interface InequalityOrbitControlsProps {
   mission: OrbitMission;
@@ -46,7 +46,7 @@ export function InequalityOrbitControls({
           </div>
         </div>
         <p className="mt-2 text-sm font-black text-white">{mission.title}</p>
-        <p className="mt-1 text-xs font-bold leading-snug text-white/62">{mission.prompt}</p>
+        <p className="mt-1 text-xs font-bold leading-snug text-white/62">{formatOrbitMathText(mission.prompt)}</p>
       </div>
 
       <div className="space-y-2">

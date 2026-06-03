@@ -9,21 +9,21 @@ interface DerivativeRuleCompletionProps {
 
 const proofCards = [
   {
-    title: 'Lineer Kurallar',
+    title: 'Toplam ve Fark',
     symbol: '+ / -',
     note: 'Toplam ve farkta fonksiyonlar ayrı türevlenip işaret korunur.',
     accent: '#00E5FF',
   },
   {
-    title: 'İkili Kurallar',
+    title: 'Çarpım ve Bölüm',
     symbol: '× / ÷',
-    note: 'Çarpım ve bölümde korunan parça ile türevlenen parça birlikte izlenir.',
+    note: 'Çarpım ve bölümde türevlenen fonksiyon ile aynen kalan fonksiyon birlikte izlenir.',
     accent: '#00FF88',
   },
   {
-    title: 'Zincir',
-    symbol: '⛓',
-    note: 'Dış kabuk türevlenir, iç çekirdek çarpan olarak kilitlenir.',
+    title: 'Zincir Kuralı',
+    symbol: 'F∘g',
+    note: 'Bileşke fonksiyonda dış türev, iç türevle çarpılır.',
     accent: '#B388FF',
   },
 ];
@@ -46,13 +46,13 @@ export function DerivativeRuleCompletion({ onRestart }: DerivativeRuleCompletion
             </div>
             <div className="min-w-0">
               <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#00E5FF]/70">
-                derivative rule forge
+                mat.12.2.5
               </p>
               <h2 className="mt-1 text-2xl font-black leading-tight text-white sm:text-4xl">
-                Kural dökümhanesi çalışıyor
+                Türev alma kuralları tamamlandı
               </h2>
               <p className="mt-2 max-w-2xl text-sm font-bold leading-snug text-white/62 sm:text-base">
-                Öğrenci türev kurallarını liste olarak değil, hangi parçanın türevlenip hangi parçanın korunduğunu gösteren bir üretim bandı olarak tamamladı.
+                Öğrenci toplam, fark, çarpım, bölüm ve zincir kuralını hangi fonksiyonun türevlendiğini görerek tamamladı.
               </p>
             </div>
           </div>
@@ -61,7 +61,7 @@ export function DerivativeRuleCompletion({ onRestart }: DerivativeRuleCompletion
             <span className="grid h-9 w-9 place-items-center rounded-2xl bg-[#00FF88]/16 font-mono text-sm font-black text-emerald-100">XP</span>
             <div>
               <p className="font-mono text-2xl font-black leading-none text-emerald-100">+180</p>
-              <p className="mt-1 font-mono text-[9px] font-black uppercase tracking-[0.16em] text-emerald-100/48">kural ustası</p>
+              <p className="mt-1 font-mono text-[9px] font-black uppercase tracking-[0.16em] text-emerald-100/48">türev ustası</p>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@ export function DerivativeRuleCompletion({ onRestart }: DerivativeRuleCompletion
 
         <div className="flex flex-col gap-3 rounded-[24px] border border-white/10 bg-black/24 p-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm font-bold leading-snug text-white/60">
-            Döküm kanıtı hazır: toplam, fark, çarpım, bölüm ve zincir kuralları tek üretim bandında ayrıştırıldı.
+            Kural özeti hazır: toplam, fark, çarpım, bölüm ve zincir kuralları tek sahnede anlamlarıyla ayrıştırıldı.
           </p>
           <div className="flex shrink-0 gap-2">
             <motion.button
