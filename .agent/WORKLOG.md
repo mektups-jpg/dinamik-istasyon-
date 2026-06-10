@@ -13,6 +13,20 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Sonraki küçük adım:
 ```
 
+## 2026-06-11 - İlkokul 02-11 Şekil Tamamlama Atölyesi Görsel Netlik
+- Okunan bağlam: Kaptan'ın canlı `hologram-design-base-2` geri bildirimi, `CURRENT_TASK`, MEB atomları, modül spec, görev ve görsel dosyaları.
+- Yapılan iş: Mevcut 4 görevli cisim/düz şekil kapsamı korundu. `? / Eksik` boş yuvası yerine seçilecek parçanın soluk taslağı gösteriliyor; çocuk şekli görüp sağdaki adı seçiyor. Soru dili `Gölgedeki cismin adını seç.` ve `Gölgedeki düz şeklin adını seç.` olarak sadeleştirildi. Küre düz kapsül/daire gibi görünmeyecek şekilde ışık-gölge taşıyan top görseline çekildi. Robot modeline küçük anten ve ayak işaretleri eklendi. `Şekil Tasarım Üssü` adı 2. sınıf için soyut bulundu; görünen ad `Şekil Tamamlama Atölyesi` yapıldı. Simetri, örüntü ve kroki mevcut atoma geri alınmadı; `Simetri Aynası`, `Örüntü Tamir Bandı`, `Kroki Yol Bulucu` ayrı atom planı olarak kayda geçirildi.
+- Değişen dosyalar: `src/modules/grade2/hologram-design-base-2/HologramDesignVisuals.tsx`, `src/modules/grade2/hologram-design-base-2/hologramDesignBase2Tasks.ts`, `src/registry/moduleRegistry.ts`, `docs/module-specs/02-11-hologram-design-base-2.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: Browser/Codex canlı QA'da yeni gölge yuva ve küre görseli doğrulandı; yanlış kart `Bir daha bak` verdi, doğru kart görev ilerletti, 4/4 completion açıldı, `Tekrar Oyna` sonrası ilk görev değişti ve yatay taşma false. `npm run module:check -- hologram-design-base-2` 19 pass / 3 warn / 0 fail; `npx tsc --noEmit` geçti.
+- Sonraki küçük adım: Kaptan canlı görsel onayıyla statü `Showcase Ready / Vitrin Hazır` yapıldı; ardından ayrı planlanan 2. sınıf geometri atomlarından biri tek tek üretime alınabilir.
+
+## 2026-06-11 - İlkokul 02-11 Kaptan Vitrin Onayı ve Commit Hazırlığı
+- Okunan bağlam: Kaptan'ın `Vitrin Hazır` onayı ve son adlandırma sorusu.
+- Yapılan iş: `hologram-design-base-2` registry statüsü `showcase-ready` yapıldı. Görünen ad `Şekil Tamamlama Atölyesi` olarak kaydedildi; module spec, MODULES, scorecard, showcase readiness, PROGRESS ve CURRENT_TASK aynı ad ve vitrin durumuyla eşitlendi.
+- Değişen dosyalar: `src/registry/moduleRegistry.ts`, `src/modules/grade2/hologram-design-base-2/HologramDesignBase2App.tsx`, `docs/module-specs/02-11-hologram-design-base-2.md`, `docs/MODULES.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: Browser/Codex canlı kontrolde öğrenci ekranında `Şekil Tamamlama Atölyesi` göründü, eski ad görünmedi, yatay taşma false ve console error/warn 0. `npm run module:check -- hologram-design-base-2` 19 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi.
+- Sonraki küçük adım: Commit ve push yapılır.
+
 ## 2026-06-03 - İlkokul 04-11 Uzun Çarpma Kaptan Vitrin Onayı
 - Okunan bağlam: Kaptan'ın canlı `Uzun Çarpma Fabrikası` onayı, registry 04-11 kaydı, module spec, MODULES, readiness ve scorecard satırları.
 - Yapılan iş: `long-multiplication-factory-4` registry statüsü `showcase-ready` yapıldı. Spec, MODULES, showcase readiness, kalite scorecard, PROGRESS ve CURRENT_TASK kayıtları Kaptan canlı görsel onayıyla eşitlendi.
@@ -1591,8 +1605,8 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - QA: Browser/Codex canlı akışta yanlış cevap `Bir daha bak` feedback'i verdi; 5 doğru görev eksik toplanan, eksilen, çıkan ve iki işlemli eşitlik zinciriyle completion'a ulaştı. `Tekrar Oyna` 1/5'e döndü ve ilk görev değişti. Dashboard `/?grade=2` içinde 10 modül, ilkokul hattı true, lise hattı false ve yatay taşma false doğrulandı.
 - Test: `npm run module:check -- quantum-balance-2` 21 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
 
-## 2026-05-31 İlkokul - 02-11 Hologram Tasarım Üssü
-- Kapsam: MODULES.md içinde kalan 2. sınıf `Hologram Tasarım Üssü` geometri/simetri/örüntü modülü üretildi. Vitrin hazır 2. sınıf modüllerine dokunulmadı.
+## 2026-05-31 İlkokul - 02-11 Şekil Tasarım Üssü
+- Kapsam: MODULES.md içinde kalan 2. sınıf `Şekil Tasarım Üssü` geometri/simetri/örüntü modülü üretildi. Vitrin hazır 2. sınıf modüllerine dokunulmadı.
 - Uygulama: Yeni route `/embed/geometry/hologram-design-base-2`, registry statüsü `review-needed`. Atomlar yalnız SSOT `MAT.2.3.2.1`, `MAT.2.3.3.1`, `MAT.2.3.7.1`, `MAT.2.3.7.2`, `MAT.2.1.5.1`, `MAT.2.1.5.2`, `MAT.2.3.6.1`.
 - QA: Browser/Codex canlı akışta yanlış cevap `Bir daha bak` feedback'i verdi; 7 doğru görev model kurma, simetri, asimetri, sayı/şekil örüntüsü ve kroki yön zinciriyle completion'a ulaştı. `Tekrar Oyna` 1/7'ye döndü ve ilk görev değişti. Dashboard `/?grade=2` içinde 11 modül, ilkokul hattı true, lise hattı false ve yatay taşma false doğrulandı.
 - Test: `npm run module:check -- hologram-design-base-2` 24 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
@@ -1903,3 +1917,19 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Ek cila: Sağ panelde soru metni iki kez tekrar etmesin diye başlık `Doğru sayı kartına dokun.`, hedef kutusu `Terazi hedefi` ve yalnız kısa eşitlik olacak şekilde sadeleştirildi.
 - Ek cila: Kefe yüklerinde `+4` gibi sayı etiketi kaldırıldı; 12'den büyük yükler kompakt sembol dizisiyle gösteriliyor, işlem işaretiyle karışma riski azaltıldı.
 - Statü: 2026-06-10 Kaptan canlı görsel onayıyla modül `Showcase Ready / Vitrin Hazır` yapıldı.
+
+## 2026-06-10 İlkokul - 02-11 Şekil Tasarım Üssü Pedagoji ve Dil Cilası
+- Kullanıcı geri bildirimi: `hologram-design-base-2` atomu CU ile incelensin; pedagojik uygunluk, kelimeler, renk ve tasarım değerlendirilsin, uygunsa düzeltme yapılsın.
+- Değerlendirme: Kazanım kapsamı uygun; cisim/düz şekil model kurma, simetri, örüntü ve kroki hedefleri 2. sınıf için yerinde. Ancak görünen `Hologram`, `3D/2D`, `Tasarım kodu`, `kilitlendi` ve `Küp baş` gibi ifadeler çocuk için fazla teknik veya rol karıştırıcıydı. Sağ panel de uzun soru metnini tekrar ederek ekranı yoruyordu.
+- Düzeltme: Görünen ad `Şekil Tasarım Üssü` oldu. Çocuk ekranındaki teknik dil sadeleştirildi; cevap kartları doğrudan `Küp`, `Silindir`, `Küre`, `Üçgen`, `Daire`, `Kare` gibi cisim/şekil adlarına çekildi. Sağ panel uzun soruyu tekrar etmek yerine kısa `Görev` hedefini gösteriyor. Yan destek etiketi göreve göre `Model sırası`, `Ayna ipucu`, `Örüntü ipucu` veya `Yol tarifi` oluyor.
+- Ek cila: Canlı kontrolde silindir şeklinin kapsül gibi okunduğu görüldü; silindir üst elipsi ve parlak gövdesi belirgin bir SVG cisim çizimine çevrildi.
+- Ek cila: Tam oyun turunda `Sayı ışığını sürdür`, `Şekil ritmini tamamla`, `Dikey/Yatay/Çapraz ayna`, görünmeyen `Küp/Bulut kapısı` ve genel `Tasarım tamam` ifadeleri 2. sınıf için sadeleştirildi. Yeni dil: `Sıradaki sayıyı bul`, `Yıldız kartını bul`, `Dikey/Yatay/Eğik çizgi`, yalnız görünen `Ay/Güneş/Yıldız kapısı`, durum etiketi `Bak ve seç / Doğru / Bir daha bak`.
+- Ek cila: Kaptan `aracı görmüyoruz; eksiği nasıl tamamlayalım?` geri bildirimi verdi. Kök neden görsel temsildi: model görevleri yalnız parça sırası gibi görünüyordu. Robot görevine baş/gövde/ayak yuvalı belirgin robot çerçevesi, araç görevine gövde-tekerlek silüeti ve boş parça yuvası eklendi.
+- QA: Browser/Codex canlı kontrolde ilk ekranda eski teknik ifadeler görünmedi, yanlış kart kırmızı `Bir daha bak` feedback'i verdi, doğru kartlarla 7/7 completion'a ulaşıldı, console warn/error 0 ve yatay taşma false doğrulandı. `npm run module:check -- hologram-design-base-2` 24 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Statü: Modül `Review Needed / Görüş Gerekli` durumunda bırakıldı; Kaptan canlı görsel onayı olmadan `Showcase Ready` yapılmayacak.
+
+## 2026-06-10 İlkokul - 02-11 Şekil Tasarım Üssü Kapsam Sadeleştirme
+- Kullanıcı geri bildirimi: Kaptan atomun 2. sınıf öğrencisi için hâlâ çok karışık olduğunu, öğrencinin bunu nasıl anlayıp yapacağının belirsiz kaldığını söyledi.
+- Değerlendirme: Haklı bulundu. Atom aynı akışta cisim, düz şekil, simetri, eş olmayan şekil, sayı örüntüsü, şekil örüntüsü ve kroki yaptırıyordu. Bu, 2. sınıf için tek oyun fikrini dağıtıyor ve ilk 3 saniyede ne yapılacağını zayıflatıyordu.
+- Düzeltme: Aktif görev havuzu 7'den 4'e indirildi. Simetri, örüntü ve kroki görevleri bu atomdan çıkarıldı; kapsam yalnız SSOT `MAT.2.3.2.1` ve `MAT.2.3.3.1` model kurma atomlarına çekildi. İç destek paneli kaldırıldı, robot/araç sahnesi büyütüldü, eksik parça yinelenmeyecek şekilde parça dizileri tekilleştirildi ve kontrast yükseltildi.
+- QA: Browser/Codex canlı kontrolde eski `Ayna/Örüntü/Haritada/Model sırası` ifadeleri görünmedi. Yanlış kart `Bir daha bak` verdi, 4/4 doğru zincir completion'a ulaştı, console warn/error 0 ve yatay taşma false doğrulandı. `npm run module:check -- hologram-design-base-2` 19 pass / 3 warn / 0 fail. Kaptan canlı görsel onayı olmadan `Showcase Ready` yapılmayacak.

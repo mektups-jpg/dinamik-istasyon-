@@ -1,4 +1,4 @@
-import { Box, Route, Sparkles, Star } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import type { HologramDesignTask } from './hologramDesignBase2Tasks';
 
 interface ModelPartData {
@@ -7,41 +7,42 @@ interface ModelPartData {
 }
 
 const BLOCK_MISSING_INDEX: Record<string, number> = {
-  'Küp baş': 0,
-  'Silindir gövde': 1,
-  'Küre teker': 2,
+  Küp: 0,
+  Silindir: 1,
+  Küre: 2,
 };
 
-const ROUTE_TARGETS = [
-  { label: 'Ay kapısı', short: 'Ay', row: 1, col: 1 },
-  { label: 'Yıldız kapısı', short: 'Yıldız', row: 2, col: 2 },
-  { label: 'Güneş kapısı', short: 'Güneş', row: 2, col: 3 },
-];
-
-export function getHologramDisplayCode(task: HologramDesignTask) {
-  if (task.kind !== 'block-build' && task.kind !== 'shape-build') return task.code;
-  return getModelParts(task).map((part) => (part.missing ? '?' : part.label)).join(' + ');
-}
-
 export function DesignVisual({ task }: { task: HologramDesignTask }) {
-  if (task.kind === 'route-map') return <RouteMap task={task} />;
-  if (task.kind === 'mirror-axis') return <MirrorPanel color={task.color} asymmetric={false} />;
-  if (task.kind === 'asymmetric') return <MirrorPanel color={task.color} asymmetric />;
-  if (task.kind === 'number-pattern') return <NumberPattern prompt={task.prompt} color={task.color} />;
-  if (task.kind === 'shape-pattern') return <ShapePattern color={task.color} />;
   if (task.kind === 'shape-build') return <ShapeBuild task={task} />;
   return <BlockBuild task={task} />;
 }
 
 function BlockBuild({ task }: { task: HologramDesignTask }) {
   const parts = getModelParts(task);
+  const [head, body, base] = parts;
 
   return (
     <div className="grid min-h-72 place-items-center">
-      <div className="flex flex-wrap items-end justify-center gap-4 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
-        {parts.map((part, index) => (
-          <ModelPart key={`${part.label}-${index}`} part={part} color={task.color} />
-        ))}
+      <div className="relative w-full max-w-xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-5">
+        <div className="absolute inset-x-10 bottom-12 h-10 rounded-full bg-[#38BDF8]/10 blur-xl" />
+        <div className="relative mx-auto flex max-w-sm flex-col items-center">
+          <div className="mb-1 flex flex-col items-center">
+            <div className="h-5 w-1 rounded-full bg-white/24" />
+            <div className="h-3 w-3 rounded-full" style={{ background: task.color, boxShadow: `0 0 16px ${task.color}88` }} />
+          </div>
+          <RobotSlot part={head} color={task.color} className="h-28 w-36" />
+          <div className="relative my-2 flex w-full items-center justify-center">
+            <div className="mr-3 h-5 flex-1 rounded-full border border-white/12 bg-white/[0.05] shadow-[0_0_18px_rgba(255,255,255,0.08)]" />
+            <RobotSlot part={body} color={task.color} className="h-36 w-44" />
+            <div className="ml-3 h-5 flex-1 rounded-full border border-white/12 bg-white/[0.05] shadow-[0_0_18px_rgba(255,255,255,0.08)]" />
+          </div>
+          <RobotSlot part={base} color={task.color} className="h-28 w-36" />
+          <div className="mt-2 flex w-36 items-center justify-between px-4">
+            <div className="h-3 w-10 rounded-full border border-white/12 bg-white/[0.06]" />
+            <div className="h-3 w-10 rounded-full border border-white/12 bg-white/[0.06]" />
+          </div>
+        </div>
+        <p className="relative mt-4 text-center text-sm font-black text-white/76">Gölgedeki cismin adını seç.</p>
       </div>
     </div>
   );
@@ -52,92 +53,21 @@ function ShapeBuild({ task }: { task: HologramDesignTask }) {
 
   return (
     <div className="grid min-h-72 place-items-center">
-      <div className="flex flex-wrap items-center justify-center gap-4 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
-        {parts.map((part, index) => (
-          <ModelPart key={`${part.label}-${index}`} part={part} color={task.color} flat />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function MirrorPanel({ color, asymmetric }: { color: string; asymmetric: boolean }) {
-  return (
-    <div className="grid min-h-72 place-items-center">
-      <div className="relative grid h-72 w-full max-w-lg grid-cols-2 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
-        <div className="absolute left-1/2 top-5 h-[calc(100%-2.5rem)] w-1 -translate-x-1/2 rounded-full" style={{ background: color, boxShadow: `0 0 28px ${color}` }} />
-        <Wing side="left" color={color} missing={false} />
-        <Wing side="right" color={color} missing={asymmetric} />
-      </div>
-    </div>
-  );
-}
-
-function NumberPattern({ prompt, color }: { prompt: string; color: string }) {
-  const numbers = prompt.match(/\d+/g)?.slice(0, 3) ?? ['4', '7', '10'];
-
-  return (
-    <div className="flex min-h-72 flex-wrap items-center justify-center gap-4">
-      {[...numbers, '?'].map((value, index) => (
-        <div key={`${value}-${index}`} className="grid h-24 w-24 place-items-center rounded-3xl border border-white/10 bg-white/[0.06] text-4xl font-black" style={{ color: value === '?' ? color : '#FFFFFF' }}>
-          {value}
+      <div className="relative w-full max-w-xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-5">
+        <div className="absolute bottom-12 left-14 right-14 h-8 rounded-full bg-white/[0.06]" />
+        <div className="absolute left-1/2 top-10 h-24 w-40 -translate-x-1/2 rounded-t-[3rem] border border-white/12 bg-white/[0.04]" />
+        <div className="relative mx-auto flex max-w-md flex-col items-center">
+          <div className="flex flex-wrap items-center justify-center gap-3 rounded-[2rem] border border-white/10 bg-[#06131F]/78 p-4">
+            {parts.map((part, index) => (
+              <ModelPart key={`${part.label}-${index}`} part={part} color={task.color} flat />
+            ))}
+          </div>
+          <div className="mt-4 flex w-72 items-center justify-between px-8">
+            <div className="h-11 w-11 rounded-full border-4 border-white/16 bg-black/28 shadow-[0_0_18px_rgba(255,255,255,0.10)]" />
+            <div className="h-11 w-11 rounded-full border-4 border-white/16 bg-black/28 shadow-[0_0_18px_rgba(255,255,255,0.10)]" />
+          </div>
         </div>
-      ))}
-    </div>
-  );
-}
-
-function ShapePattern({ color }: { color: string }) {
-  return (
-    <div className="flex min-h-72 flex-wrap items-center justify-center gap-4">
-      {[1, 2, 3].map((count) => (
-        <StarCard key={count} count={count} color={color} />
-      ))}
-      <div className="grid h-28 w-28 place-items-center rounded-3xl border border-dashed border-white/28 bg-white/[0.04] text-5xl font-black" style={{ color }}>?</div>
-    </div>
-  );
-}
-
-function RouteMap({ task }: { task: HologramDesignTask }) {
-  const route = getRoutePlan(task);
-
-  return (
-    <div className="grid min-h-72 place-items-center">
-      <div className="grid grid-cols-4 gap-3 rounded-[2rem] border border-white/10 bg-white/[0.04] p-5">
-        {Array.from({ length: 16 }).map((_, index) => {
-          const row = Math.floor(index / 4);
-          const col = index % 4;
-          const key = `${row}-${col}`;
-          const target = ROUTE_TARGETS.find((item) => item.row === row && item.col === col);
-          const isStart = row === route.start.row && col === route.start.col;
-          const isPath = route.pathKeys.has(key);
-          const isActiveTarget = target?.label === task.answer;
-
-          return (
-            <div
-              key={index}
-              data-route-target={target?.label}
-              className={`grid h-16 w-16 place-items-center rounded-2xl border px-1 text-center text-[10px] font-black leading-tight ${
-                isPath ? 'bg-[#38BDF8]/18' : 'bg-black/20'
-              }`}
-              style={{ borderColor: isPath ? `${task.color}88` : 'rgba(255,255,255,0.10)', boxShadow: isActiveTarget ? `0 0 24px ${task.color}55` : undefined }}
-            >
-              {isStart ? (
-                <span className="flex flex-col items-center gap-1">
-                  <Route className="h-5 w-5" style={{ color: task.color }} />
-                  Başla
-                </span>
-              ) : target ? (
-                <span className={isActiveTarget ? 'text-white' : 'text-white/62'}>
-                  {isActiveTarget && <Star className="mx-auto mb-1 h-4 w-4 fill-yellow-300 text-yellow-300" />}
-                  {target.short}
-                </span>
-              ) : isPath ? (
-                <span style={{ color: task.color }}>yol</span>
-              ) : ''}
-            </div>
-          );
-        })}
+        <p className="relative mt-4 text-center text-sm font-black text-white/76">Gölgedeki düz şeklin adını seç.</p>
       </div>
     </div>
   );
@@ -160,63 +90,99 @@ function getMissingIndex(task: HologramDesignTask, labels: string[]) {
   return labels.length - 1;
 }
 
-function getRoutePlan(task: HologramDesignTask) {
-  const match = task.code.match(/(\d+) sağa, (\d+) yukarı/);
-  const right = match ? Number(match[1]) : 2;
-  const up = match ? Number(match[2]) : 1;
-  const start = { row: 3, col: 0 };
-  const path = [start];
-
-  for (let step = 1; step <= right; step += 1) path.push({ row: start.row, col: start.col + step });
-  for (let step = 1; step <= up; step += 1) path.push({ row: start.row - step, col: start.col + right });
-
-  return {
-    start,
-    pathKeys: new Set(path.map((point) => `${point.row}-${point.col}`)),
-  };
+function RobotSlot({ part, color, className }: { part?: ModelPartData; color: string; className: string }) {
+  if (!part) return null;
+  return <ModelPart part={part} color={color} className={className} />;
 }
 
-function ModelPart({ part, color, flat = false }: { part: ModelPartData; color: string; flat?: boolean }) {
+function ModelPart({ part, color, flat = false, roleLabel, className }: { part: ModelPartData; color: string; flat?: boolean; roleLabel?: string; className?: string }) {
+  const sizeClass = className ?? 'h-28 w-28';
+
   if (part.missing) {
     return (
-      <div className="grid h-28 w-28 place-items-center rounded-3xl border border-dashed border-white/28 bg-white/[0.04] text-5xl font-black" style={{ color }}>
-        ?
+      <div
+        className={`grid ${sizeClass} place-items-center rounded-3xl border border-dashed bg-[#102338] text-center`}
+        style={{ borderColor: `${color}99`, color, boxShadow: `inset 0 0 28px ${color}28, 0 0 24px ${color}22` }}
+      >
+        <div className="flex flex-col items-center justify-center gap-2">
+          {roleLabel && <p className="mb-1 text-[10px] font-black uppercase tracking-[0.14em] text-white/60">{roleLabel}</p>}
+          <div className="rounded-2xl bg-black/24 p-2 opacity-60 saturate-50">
+            <PartGlyph label={part.label} color={color} flat={flat} ghost />
+          </div>
+          <p className="text-[10px] font-black uppercase tracking-[0.12em] text-white/78">Adını seç</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-28 w-28 flex-col items-center justify-center gap-2 rounded-3xl border border-white/16 bg-white/[0.08] p-3 text-center" style={{ boxShadow: `0 0 22px ${color}22` }}>
+    <div className={`flex ${sizeClass} flex-col items-center justify-center gap-2 rounded-3xl border border-white/20 bg-white/[0.11] p-3 text-center`} style={{ boxShadow: `0 0 26px ${color}30` }}>
+      {roleLabel && <span className="text-[10px] font-black uppercase tracking-[0.14em] text-white/58">{roleLabel}</span>}
       <PartGlyph label={part.label} color={color} flat={flat} />
-      <span className="text-xs font-black uppercase tracking-[0.08em] text-white/62">{part.label}</span>
+      <span className="text-xs font-black uppercase tracking-[0.08em] text-white/82">{part.label}</span>
     </div>
   );
 }
 
-function PartGlyph({ label, color, flat }: { label: string; color: string; flat: boolean }) {
+function PartGlyph({ label, color, flat, ghost = false }: { label: string; color: string; flat: boolean; ghost?: boolean }) {
   const normalized = label.toLocaleLowerCase('tr-TR');
-  if (normalized.includes('silindir')) return <div className="h-16 w-11 rounded-full border border-white/20 bg-white/[0.08]" style={{ boxShadow: `0 0 24px ${color}44` }} />;
-  if (normalized.includes('küre') || normalized.includes('teker') || normalized.includes('daire')) return <div className="h-16 w-16 rounded-full border border-white/20 bg-white/[0.08]" style={{ boxShadow: `0 0 24px ${color}44` }} />;
+  if (normalized.includes('silindir')) return <CylinderGlyph color={color} />;
+  if (normalized.includes('küp')) return <CubeGlyph color={color} />;
+  if (normalized.includes('küre')) return <SphereGlyph color={color} ghost={ghost} />;
+  if (normalized.includes('teker') || normalized.includes('daire')) return <CircleGlyph color={color} />;
   if (normalized.includes('üçgen') || normalized.includes('prizma')) return <div className="text-6xl font-black leading-none" style={{ color }}>▲</div>;
-  if (normalized.includes('dikdörtgen')) return <div className="h-14 w-20 rounded-2xl border border-white/20 bg-white/[0.08]" style={{ boxShadow: `0 0 24px ${color}44` }} />;
-  if (normalized.includes('kare')) return <div className="h-16 w-16 rounded-2xl border border-white/20 bg-white/[0.08]" style={{ boxShadow: `0 0 24px ${color}44` }} />;
-  return flat ? <Sparkles className="h-12 w-12" style={{ color }} /> : <Box className="h-12 w-12" style={{ color }} />;
+  if (normalized.includes('dikdörtgen')) return <div className="h-14 w-20 rounded-2xl border border-white/28" style={{ background: color, boxShadow: `0 0 24px ${color}55` }} />;
+  if (normalized.includes('kare')) return <div className="h-16 w-16 rounded-2xl border border-white/28" style={{ background: color, boxShadow: `0 0 24px ${color}55` }} />;
+  return flat ? <Sparkles className="h-12 w-12" style={{ color }} /> : <CubeGlyph color={color} />;
 }
 
-function Wing({ side, color, missing }: { side: 'left' | 'right'; color: string; missing: boolean }) {
+function CubeGlyph({ color }: { color: string }) {
   return (
-    <div className={`flex items-center ${side === 'left' ? 'justify-end pr-8' : 'justify-start pl-8'}`}>
-      <div className={`h-32 w-24 rounded-[3rem] border border-white/16 ${missing ? 'opacity-25' : ''}`} style={{ background: `${color}22`, boxShadow: `0 0 28px ${color}33` }} />
+    <svg className="h-16 w-16" viewBox="0 0 72 72" aria-hidden="true" style={{ filter: `drop-shadow(0 0 18px ${color}66)` }}>
+      <path d="M36 8 58 20.5v25L36 58 14 45.5v-25L36 8Z" fill={color} opacity="0.72" />
+      <path d="M36 8 58 20.5v25L36 58 14 45.5v-25L36 8Z" fill="none" stroke="white" strokeLinejoin="round" strokeWidth="3" opacity="0.82" />
+      <path d="M14 20.5 36 33l22-12.5M36 33v25" fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" opacity="0.62" />
+      <path d="M25 17 47 29.5" stroke="white" strokeLinecap="round" strokeWidth="2.2" opacity="0.32" />
+    </svg>
+  );
+}
+
+function SphereGlyph({ color, ghost }: { color: string; ghost: boolean }) {
+  return (
+    <div
+      className="relative h-16 w-16 rounded-full border border-white/32"
+      style={{
+        background: `radial-gradient(circle at 30% 24%, rgba(255,255,255,${ghost ? 0.78 : 0.92}) 0 10%, ${color} 32%, rgba(6,16,28,0.72) 100%)`,
+        boxShadow: `inset -10px -12px 18px rgba(0,0,0,0.34), inset 8px 8px 16px rgba(255,255,255,0.18), 0 0 24px ${color}55`,
+      }}
+    >
+      <div className="absolute left-3 top-3 h-3 w-4 rounded-full bg-white/62 blur-[1px]" />
+      <div className="absolute inset-x-2 bottom-1 h-2 rounded-full bg-black/24 blur-sm" />
     </div>
   );
 }
 
-function StarCard({ count, color }: { count: number; color: string }) {
+function CircleGlyph({ color }: { color: string }) {
   return (
-    <div className="grid h-28 w-28 grid-cols-2 place-items-center rounded-3xl border border-white/10 bg-white/[0.06] p-3">
-      {Array.from({ length: count }).map((_, index) => (
-        <Star key={index} className="h-6 w-6 fill-yellow-300 text-yellow-300" style={{ filter: `drop-shadow(0 0 8px ${color})` }} />
-      ))}
-    </div>
+    <div
+      className="h-16 w-16 rounded-full border border-white/30"
+      style={{
+        background: `linear-gradient(135deg, ${color}, rgba(255,255,255,0.46))`,
+        boxShadow: `0 0 24px ${color}55`,
+      }}
+    />
+  );
+}
+
+function CylinderGlyph({ color }: { color: string }) {
+  return (
+    <svg className="h-16 w-16" viewBox="0 0 72 72" aria-hidden="true" style={{ filter: `drop-shadow(0 0 18px ${color}66)` }}>
+      <path d="M18 20v30c0 8 36 8 36 0V20" fill={color} opacity="0.72" />
+      <path d="M18 20v30c0 8 36 8 36 0V20" fill="none" stroke="white" strokeLinejoin="round" strokeWidth="3.2" opacity="0.72" />
+      <ellipse cx="36" cy="20" rx="18" ry="8" fill={color} stroke="white" strokeWidth="3.2" />
+      <ellipse cx="36" cy="20" rx="9" ry="3.6" fill="white" opacity="0.36" />
+      <path d="M18 50c0 8 36 8 36 0" fill="none" stroke="white" strokeLinecap="round" strokeWidth="3.2" />
+      <path d="M25 25v22" stroke="white" strokeLinecap="round" strokeWidth="2.4" opacity="0.44" />
+    </svg>
   );
 }

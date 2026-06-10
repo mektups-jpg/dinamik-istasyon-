@@ -790,8 +790,8 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'hologram-design-base-2',
-    title: 'Hologram Tasarım Üssü',
-    description: 'Şekil ve cisimlerden model kur, aynayı bul, örüntüyü ve kroki yolunu tamamla.',
+    title: 'Şekil Tamamlama Atölyesi',
+    description: 'Robot ve araç modelindeki gölge taslak parçanın adını seç.',
     category: 'Geometri',
     difficulty: 'Kolay',
     grade: 2,
@@ -800,14 +800,9 @@ export const modules: ModuleMeta[] = [
     atomIds: [
       'MAT.2.3.2.1',
       'MAT.2.3.3.1',
-      'MAT.2.3.7.1',
-      'MAT.2.3.7.2',
-      'MAT.2.1.5.1',
-      'MAT.2.1.5.2',
-      'MAT.2.3.6.1',
     ],
-    status: 'review-needed',
-    archiveNote: '2. sınıf Hologram Tasarım Üssü üretildi; Kaptan canlı göz onayı bekliyor.'
+    status: 'showcase-ready',
+    archiveNote: '2. sınıf Şekil Tamamlama Atölyesi 2026-06-11 Kaptan canlı görsel onayıyla Showcase Ready.'
   },
   {
     id: 'calibration-tower',

@@ -102,13 +102,25 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.2.2.6.x` (Eşitlik sembolü ve eşitliği koruma refleksleri)
   * `MAT.2.2.3.x` (Toplama çıkarmanın denge ve sağlamadaki ilişkisi)
 
-### 5. Hologram Tasarım Üssü (Geometri, Simetri & Örüntü) — Üretildi / Görüş Gerekli
-* **Konsept:** Projeksiyon ekranına yansıyan yarım bir taşıtın simetrik eksenini bulmak, eksik geometrik parçalardan tam bir araç (Sentez) yapmak ve bu araçların üzerindeki örüntüyü dizmek.
+### 5. Şekil Tamamlama Atölyesi (Geometri & Şekiller) — Vitrin Hazır
+* **Konsept:** Görünür robot/araç modeli üzerinde soluk taslak parçanın adını seçerek eksik geometrik cismi veya düz şekli tamamlamak. Bu atom çocuk gözüyle sadeleştirildi; simetri, örüntü ve kroki görevleri ayrı atomlara bırakılmalı. 2026-06-11 Kaptan canlı görsel onayıyla vitrin hazır.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.2.3.2.x` / `MAT.2.3.3.x` (Cisim ve şekil sentezi/inşası)
-  * `MAT.2.3.7.x` (Simetrik şekillerin ayna yansıması)
-  * `MAT.2.1.5.x` (Gelişmiş sayı ve şekil örüntü kuralları)
-  * `MAT.2.3.6.x` (Mesafe ve yön algısı rotasyonları)
+
+### 5A. Simetri Aynası (Simetrik Şekiller) — Planlandı
+* **Konsept:** Çocuk ortadan katlanan büyük bir şekli görür, aynadaki yarımın eşleşip eşleşmediğini seçer; asimetrik şekilleri ayrı kart olarak eler.
+* **Sağlayacağı Atom Grupları:**
+  * `MAT.2.3.7.x` (Simetrik ve asimetrik şekilleri ayırt etme)
+
+### 5B. Kroki Yol Bulucu (Mesafe ve Yön) — Planlandı
+* **Konsept:** Basit kareli krokide AstroBot'u hedefe götürmek için kısa yön/adım kartları seçilir; tek ekranda tek yol kararı verilir.
+* **Sağlayacağı Atom Grupları:**
+  * `MAT.2.3.6.x` (Kroki üzerinde adım ve yön kombinasyonunu çözme)
+
+### 5C. Örüntü Tamir Bandı (Sayı ve Şekil Örüntüsü) — Planlandı
+* **Konsept:** Bozulan sayı veya şekil dizisindeki eksik parçayı seçtirir; artış kuralı görsel ritimle gösterilir, teknik kural cümlesi kısa tutulur.
+* **Sağlayacağı Atom Grupları:**
+  * `MAT.2.1.5.x` (Sayı ve şekil örüntüsünün büyüme kuralını test etme)
 
 ### 6. Kalibrasyon Kulesi (Ölçüm Merkezleri & Zaman) — Üretildi / Görüş Gerekli
 * **Konsept:** Ana tesisin sayaçları! Dijital saat ekranlarından çeyrek veya buçuk saatleri onaylamak, sıvı reaktörünü doldurmak, uzunlukları / kütleleri cihazlarla standart birimlere tahvil etmek.

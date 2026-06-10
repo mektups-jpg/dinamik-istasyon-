@@ -6,7 +6,7 @@ import type { BotMessage } from '../../../components/ui/AstroBot';
 import { useAtomStore } from '../../../store/useAtomStore';
 import { useGameStore } from '../../../store/useGameStore';
 import { Grade2ChoiceButton, Grade2MissionFrame } from '../shared/Grade2MissionKit';
-import { DesignVisual, getHologramDisplayCode } from './HologramDesignVisuals';
+import { DesignVisual } from './HologramDesignVisuals';
 import {
   createHologramDesignBase2Tasks,
   HOLOGRAM_DESIGN_2_ATOMS,
@@ -31,7 +31,7 @@ export default function HologramDesignBase2App() {
     if (!isComplete) return;
     HOLOGRAM_DESIGN_2_ATOMS.forEach((atom) => unlockAtom(atom.id));
     unlockModule(MODULE_ID);
-    addScore(120);
+    addScore(80);
   }, [addScore, isComplete, unlockAtom, unlockModule]);
 
   const choose = (choice: string) => {
@@ -70,7 +70,7 @@ export default function HologramDesignBase2App() {
   };
 
   const botMessage: BotMessage = useMemo(() => {
-    if (isComplete) return { id: 320, text: 'Hologram üssü hazır! Model, simetri, örüntü ve rota görevlerini tamamladın.', type: 'success' };
+    if (isComplete) return { id: 320, text: 'Atölye tamam! Cisim ve düz şekil görevlerini tamamladın.', type: 'success' };
     if (feedback === 'success') return { id: taskIndex * 10 + 2, text: task.successText, type: 'success' };
     if (feedback === 'error') return { id: taskIndex * 10 + 3, text: `Bir daha bak. ${task.hint}`, type: 'error' };
     return { id: taskIndex * 10 + 1, text: task.prompt, type: 'info' };
@@ -78,8 +78,8 @@ export default function HologramDesignBase2App() {
 
   return (
     <Grade2MissionFrame
-      title="Hologram Tasarım Üssü"
-      subtitle="İlkokul 2. Sınıf / Geometri, Simetri ve Örüntü"
+      title="Şekil Tamamlama Atölyesi"
+      subtitle="İlkokul 2. Sınıf / Geometri ve Şekiller"
       icon={<Sparkles className="h-6 w-6" />}
       accent={ACCENT}
       progress={isComplete ? tasks.length : taskIndex + 1}
@@ -104,10 +104,10 @@ export default function HologramDesignBase2App() {
             >
               <div className="mb-5 text-center">
                 <p className="font-mono text-[11px] font-black uppercase tracking-[0.24em]" style={{ color: task.color }}>
-                  Tasarım ekranı
+                  Şekil ekranı
                 </p>
                 <h2 className="mt-2 text-3xl font-black md:text-5xl">{task.title}</h2>
-                <p className="mx-auto mt-2 max-w-xl text-sm font-bold leading-relaxed text-white/60 md:text-base">{task.prompt}</p>
+                <p className="mx-auto mt-2 max-w-xl text-sm font-bold leading-relaxed text-white/72 md:text-base">{task.prompt}</p>
               </div>
               <DesignScreen task={task} feedback={feedback} />
             </motion.div>
@@ -120,7 +120,7 @@ export default function HologramDesignBase2App() {
         className="rounded-3xl border border-white/10 bg-[#0C1524]/88 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.26)] md:p-5"
       >
         <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#38BDF8]/78">Seçim kartları</p>
-        <h2 className="mt-2 text-2xl font-black">Doğru tasarımı seç.</h2>
+        <h2 className="mt-2 text-2xl font-black">Doğru kartı seç.</h2>
         <div
           data-testid="hologram-design-base-2-feedback"
           className={`mt-5 rounded-3xl border p-4 ${
@@ -131,8 +131,8 @@ export default function HologramDesignBase2App() {
                 : 'border-white/10 bg-black/24'
           }`}
         >
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/44">Hedef</p>
-          <p className="mt-2 text-lg font-black leading-snug text-white">{isComplete ? 'Tasarım üssü tamam.' : task.prompt}</p>
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/44">Görev</p>
+          <p className="mt-2 text-lg font-black leading-snug text-white">{isComplete ? 'Atölye tamam.' : task.target}</p>
         </div>
         {!isComplete && (
           <div className="mt-5 grid grid-cols-1 gap-3">
@@ -156,34 +156,21 @@ export default function HologramDesignBase2App() {
 }
 
 function DesignScreen({ task, feedback }: { task: HologramDesignTask; feedback: 'idle' | 'success' | 'error' }) {
-  const displayCode = getHologramDisplayCode(task);
-
   return (
     <div className="rounded-[2rem] border border-white/10 bg-black/24 p-4 md:p-5">
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_230px]">
-        <div className="min-h-80 rounded-[2rem] border border-white/10 bg-[#06131F]/92 p-5">
-          <DesignVisual task={task} />
-        </div>
-        <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-white/[0.05] p-4">
-          <div>
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/46">Tasarım kodu</p>
-            <div className="mt-3 rounded-[1.6rem] border border-dashed p-5 text-center" style={{ borderColor: `${task.color}88`, boxShadow: `0 0 26px ${task.color}22` }}>
-              <p className="text-3xl font-black" style={{ color: task.color }}>{displayCode}</p>
-            </div>
-            <p className="mt-4 text-sm font-bold leading-relaxed text-white/58">{task.hint}</p>
-          </div>
-          <div
-            className={`mt-5 rounded-2xl border px-4 py-3 text-center text-sm font-black ${
-              feedback === 'success'
-                ? 'border-emerald-300/50 bg-emerald-300/12 text-emerald-200'
-                : feedback === 'error'
-                  ? 'border-rose-300/50 bg-rose-400/12 text-rose-100'
-                  : 'border-white/10 bg-black/24 text-white/60'
-            }`}
-          >
-            {feedback === 'success' ? 'Tasarım kilitlendi' : feedback === 'error' ? 'Tekrar dene' : 'Hologramı incele'}
-          </div>
-        </div>
+      <div className="min-h-80 rounded-[2rem] border border-white/10 bg-[#06131F]/92 p-4 md:p-5">
+        <DesignVisual task={task} />
+      </div>
+      <div
+        className={`mt-4 rounded-2xl border px-4 py-3 text-center text-sm font-black ${
+          feedback === 'success'
+            ? 'border-emerald-300/50 bg-emerald-300/12 text-emerald-200'
+            : feedback === 'error'
+              ? 'border-rose-300/50 bg-rose-400/12 text-rose-100'
+              : 'border-white/14 bg-white/[0.06] text-white/76'
+        }`}
+      >
+        {feedback === 'success' ? 'Doğru' : feedback === 'error' ? 'Bir daha bak' : task.hint}
       </div>
     </div>
   );
@@ -200,9 +187,9 @@ function CompletionCard({ onRestart }: { onRestart: () => void }) {
       <div className="grid h-20 w-20 place-items-center rounded-[28px] bg-emerald-300/16 shadow-[0_0_38px_rgba(52,211,153,0.28)]">
         <CheckCircle2 className="h-11 w-11 text-emerald-300" />
       </div>
-      <h2 className="mt-4 text-3xl font-black text-white">Tasarım üssü hazır!</h2>
+      <h2 className="mt-4 text-3xl font-black text-white">Atölye tamam!</h2>
       <p className="mt-2 max-w-md text-sm font-bold leading-relaxed text-white/62 md:text-base">
-        Model kurdun, simetriyi gördün, örüntüyü ve rotayı tamamladın.
+        Cisimleri ve düz şekilleri doğru boşluklara yerleştirdin.
       </p>
       <div className="mt-5 max-h-72 w-full space-y-2 overflow-y-auto rounded-3xl border border-white/10 bg-black/24 p-4 text-left">
         <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#38BDF8]">Kazanılan atomlar</p>
