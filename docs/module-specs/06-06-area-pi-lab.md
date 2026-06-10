@@ -4,7 +4,7 @@
 - Route: /embed/geometry/area-pi-lab
 - Band: ortaokul
 - Grade: 6
-- Status: review-needed
+- Status: showcase-ready
 
 ## Atom Kapsamı
 
@@ -37,7 +37,12 @@ Modul iki deney masasindan olusur. Ilk masada ogrenci dikdortgen, ucgen ve paral
 - Paralelkenar alan ispatinda kesilen ucgen tekrar tekrar gidip gelmez; yaklasik 3-4 saniyede sag tarafa bir kez tasinip dikdortgeni tamamlar.
 - 90 derece yay bolumu ayri bir soru gibi sunulmaz; pembe dilim, sari cevre izinin dortte biri olarak ana oyuncak icinde kisa bir gozlem etiketiyle anlatilir, sag paneli uzatmaz.
 - Birim/olcek bolumunde cm-m gibi gercek birim karisikligi verilmez; 1x ve 10x olcekle uzunluk 10 kat olunca alanin 100 kat oldugu gosterilir.
-- Bu kayit Kaptan onayi olmadigi icin vitrin hazir degildir.
+- 2026-06-10 Kaptan canli onayiyla showcase-ready olarak isaretlendi.
+
+## Showcase Kaydi
+
+- 2026-06-10: Kaptan canli onayi: "bu atomu vitrin hazır şeklinde isimlendir. sonra githup'a commit et."
+- Dashboard etiketi `Vitrin Hazır` olacak sekilde registry status showcase-ready yapildi.
 
 ## QA Plani
 

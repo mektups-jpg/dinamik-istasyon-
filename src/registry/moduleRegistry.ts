@@ -494,7 +494,9 @@ export const modules: ModuleMeta[] = [
       'MAT.6.4.6.1'
     ],
     path: '/embed/geometry/area-pi-lab',
-    component: lazy(() => import('../modules/geometry/area-pi-lab/AreaPiApp'))
+    component: lazy(() => import('../modules/geometry/area-pi-lab/AreaPiApp')),
+    status: 'showcase-ready',
+    archiveNote: '6. sınıf Geometrik Alan ve Pi Sayısı atomu Kaptan canlı onayıyla Showcase Ready.'
   },
   {
     id: 'radical-power-reactor',
