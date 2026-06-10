@@ -96,8 +96,8 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.2.2.4.x` (Çarpmanın tekrarlı toplama, bölmenin paylaştırma temeli) — `Eş Gruplar Kargo Bandı` ile üretildi.
   * `MAT.2.2.5.x` (Çarpma / Bölme muhakemesi) — `Eş Gruplar Kargo Bandı` ile üretildi.
 
-### 4. Kuantum Denge Terazisi (İşlemler Arası İlişkiler & Eşitlik) — Üretildi / Görüş Gerekli
-* **Konsept:** 1. sınıftaki terazinin gelişmiş versiyonu. İki kefeye de dört işlemi içeren matematiksel denklem (örn: sol kefe 15+3, sağ kefe 20-?) yansıtılır.
+### 4. Eksik Sayı Terazisi (İşlemler Arası İlişkiler & Eşitlik) — Vitrin Hazır
+* **Konsept:** 1. sınıftaki terazinin gelişmiş versiyonu. İki kefede eksik sayı, toplama ve çıkarma ilişkileri çocuk diliyle gösterilir.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.2.2.6.x` (Eşitlik sembolü ve eşitliği koruma refleksleri)
   * `MAT.2.2.3.x` (Toplama çıkarmanın denge ve sağlamadaki ilişkisi)

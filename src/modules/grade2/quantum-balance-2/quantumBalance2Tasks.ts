@@ -31,6 +31,10 @@ const ADDEND_CASES = [
   { total: 16, known: 9 },
   { total: 12, known: 7 },
   { total: 18, known: 11 },
+  { total: 15, known: 6 },
+  { total: 17, known: 8 },
+  { total: 14, known: 9 },
+  { total: 19, known: 12 },
 ];
 
 const UNKNOWN_START_CASES = [
@@ -38,6 +42,10 @@ const UNKNOWN_START_CASES = [
   { removed: 6, result: 8 },
   { removed: 5, result: 11 },
   { removed: 7, result: 10 },
+  { removed: 8, result: 9 },
+  { removed: 3, result: 12 },
+  { removed: 6, result: 13 },
+  { removed: 5, result: 10 },
 ];
 
 const UNKNOWN_TAKEAWAY_CASES = [
@@ -45,6 +53,10 @@ const UNKNOWN_TAKEAWAY_CASES = [
   { start: 17, result: 9 },
   { start: 14, result: 6 },
   { start: 19, result: 12 },
+  { start: 16, result: 7 },
+  { start: 18, result: 11 },
+  { start: 13, result: 5 },
+  { start: 20, result: 14 },
 ];
 
 const TWO_ADDITION_CASES = [
@@ -52,6 +64,10 @@ const TWO_ADDITION_CASES = [
   { leftA: 5, leftB: 8, rightA: 9 },
   { leftA: 9, leftB: 6, rightA: 10 },
   { leftA: 7, leftB: 5, rightA: 8 },
+  { leftA: 8, leftB: 4, rightA: 9 },
+  { leftA: 6, leftB: 7, rightA: 8 },
+  { leftA: 10, leftB: 5, rightA: 11 },
+  { leftA: 9, leftB: 4, rightA: 6 },
 ];
 
 const MIXED_EQUALITY_CASES = [
@@ -59,6 +75,10 @@ const MIXED_EQUALITY_CASES = [
   { start: 18, removed: 7, known: 6 },
   { start: 16, removed: 4, known: 7 },
   { start: 15, removed: 6, known: 3 },
+  { start: 17, removed: 8, known: 4 },
+  { start: 20, removed: 9, known: 5 },
+  { start: 13, removed: 4, known: 6 },
+  { start: 19, removed: 6, known: 7 },
 ];
 
 const COLORS = ['#22D3EE', '#A78BFA', '#34D399', '#FACC15', '#FB7185'];
@@ -79,8 +99,8 @@ export function createQuantumBalance2Tasks(seed = Math.floor(Math.random() * 100
     {
       id: `missing-addend-${addend.total}-${addend.known}`,
       kind: 'missing-addend',
-      title: 'Boş küpü ekle',
-      prompt: `${addend.total} ile ${addend.known} + ? aynı olsun. Boş küp kaç?`,
+      title: 'Eksik sayıyı bul',
+      prompt: `${addend.total} ile ${addend.known} + ? aynı olsun. Soru işareti yerine hangi sayı gelir?`,
       leftExpression: `${addend.total}`,
       rightExpression: `${addend.known} + ?`,
       leftLoad: addend.total,
@@ -91,7 +111,7 @@ export function createQuantumBalance2Tasks(seed = Math.floor(Math.random() * 100
       successText: 'Eksik toplananı buldun, terazi dengelendi.',
       atomIds: ['MAT.2.2.3.1'],
       color: COLORS[0],
-      socketLabel: 'Eksik ek',
+      socketLabel: 'Eksik sayı',
       lean: -6,
     },
     {
@@ -101,7 +121,7 @@ export function createQuantumBalance2Tasks(seed = Math.floor(Math.random() * 100
       prompt: `? - ${unknownStart.removed} sonucu ${unknownStart.result} olsun. Başta kaç vardı?`,
       leftExpression: `? - ${unknownStart.removed}`,
       rightExpression: `${unknownStart.result}`,
-      leftLoad: unknownStart.removed,
+      leftLoad: startAnswer,
       rightLoad: unknownStart.result,
       answer: startAnswer,
       choices: makeChoices(startAnswer, 3),
@@ -134,7 +154,7 @@ export function createQuantumBalance2Tasks(seed = Math.floor(Math.random() * 100
       id: `two-additions-${twoAdditions.leftA}-${twoAdditions.leftB}-${twoAdditions.rightA}`,
       kind: 'two-additions',
       title: 'İki tarafı eşitle',
-      prompt: `${twoAdditions.leftA} + ${twoAdditions.leftB} ile ${twoAdditions.rightA} + ? aynı olsun. Boş yer kaç?`,
+      prompt: `${twoAdditions.leftA} + ${twoAdditions.leftB} ile ${twoAdditions.rightA} + ? aynı olsun. Soru işareti yerine hangi sayı gelir?`,
       leftExpression: `${twoAdditions.leftA} + ${twoAdditions.leftB}`,
       rightExpression: `${twoAdditions.rightA} + ?`,
       leftLoad: twoAdditions.leftA + twoAdditions.leftB,
@@ -145,14 +165,14 @@ export function createQuantumBalance2Tasks(seed = Math.floor(Math.random() * 100
       successText: 'İki işlemli eşitliği dengede tuttun.',
       atomIds: ['MAT.2.2.6.1'],
       color: COLORS[3],
-      socketLabel: 'Denge küpü',
+      socketLabel: 'Eksik sayı',
       lean: -5,
     },
     {
       id: `mixed-equality-${mixed.start}-${mixed.removed}-${mixed.known}`,
       kind: 'mixed-equality',
       title: 'Dengeyi tamamla',
-      prompt: `${mixed.start} - ${mixed.removed} ile ? + ${mixed.known} aynı olsun. Boş yer kaç?`,
+      prompt: `${mixed.start} - ${mixed.removed} ile ? + ${mixed.known} aynı olsun. Soru işareti yerine hangi sayı gelir?`,
       leftExpression: `${mixed.start} - ${mixed.removed}`,
       rightExpression: `? + ${mixed.known}`,
       leftLoad: mixed.start - mixed.removed,
@@ -163,7 +183,7 @@ export function createQuantumBalance2Tasks(seed = Math.floor(Math.random() * 100
       successText: 'Toplama ve çıkarmayı aynı terazide dengeledin.',
       atomIds: ['MAT.2.2.6.1', 'MAT.2.2.3.1'],
       color: COLORS[4],
-      socketLabel: 'Boş kutu',
+      socketLabel: 'Eksik sayı',
       lean: -6,
     },
   ];

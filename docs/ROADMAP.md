@@ -92,7 +92,7 @@ Amaç: küçük yaş kullanıcıları için ürünün giriş deneyimini güçlen
 - [x] 1. sınıf: Renkli Paket Tablosu.
 - [ ] 2. sınıf: Lazer Kesim Odası.
 - [x] 2. sınıf: Eş Gruplar Kargo Bandı.
-- [ ] 2. sınıf: Kuantum Denge Terazisi.
+- [x] 2. sınıf: Eksik Sayı Terazisi.
 - [ ] 3. sınıf: İşlem Laboratuvarı ve Dinamik Birim Dönüştürücü.
 - [ ] 4. sınıf: Dinamik Kesir Terazisi ve Rotasyonlu Açı İletkisi.
 

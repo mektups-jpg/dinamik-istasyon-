@@ -1895,3 +1895,11 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Kullanıcı geri bildirimi: Kaptan canlı kontrolden sonra `Eş Gruplar Kargo Bandı` atomunun vitrin hazır olarak isimlendirilmesini ve emeklerin GitHub'a commit edilmesini istedi.
 - Düzeltme: `cargo-grouping-band-2` registry statüsü `showcase-ready` yapıldı. Spec, MODULES, showcase readiness, kalite scorecard, roadmap, progress ve current task kayıtları `Showcase Ready / Vitrin Hazır` ile eşitlendi.
 - QA: Önceki canlı QA kanıtları korundu: yanlış kart feedback, 5/5 completion, tekrar oynama, sayı çeşitliliği, tam çıkarma yolu canlı ipucu, console warn/error 0 ve yatay taşma false. Bu turda dashboard statüsü commit öncesi tekrar doğrulanacak.
+
+## 2026-06-10 İlkokul - 02-10 Eksik Sayı Terazisi Pedagoji Cilası
+- Kullanıcı geri bildirimi: `quantum-balance-2` atomu CU ile incelensin; pedagojik açıdan uygun mu değerlendirilsin ve gerekirse uygun düzeltme yapılsın.
+- Değerlendirme: Kazanım kapsamı uygun; eksik toplanan, eksilen, çıkan ve eşitlik hedefleri doğru. Ancak çocuk ekranındaki `Kuantum`, `kilit`, `küp`, `yuva` dili matematik hedefini gölgeleyebiliyor. Ayrıca `? - 7 = 10` gibi başlangıcı bul görevinde sol kefe yükü başlangıç sayısı yerine çıkarılan sayıya bağlıydı; bu görsel model öğrenciyi yanıltabilir.
+- Düzeltme: Çocuk görünen ad `Eksik Sayı Terazisi` oldu. Ekran dili `Terazi görevi`, `Cevap kartları`, `Soru işareti`, `Eksik sayı` gibi daha anlaşılır kalıplara çekildi. Başlangıcı bul görevinde sol kefe yükü doğru başlangıç sayısını temsil ediyor. Görev havuzları 4'ten 8 örneğe çıkarıldı.
+- Ek cila: Sağ panelde soru metni iki kez tekrar etmesin diye başlık `Doğru sayı kartına dokun.`, hedef kutusu `Terazi hedefi` ve yalnız kısa eşitlik olacak şekilde sadeleştirildi.
+- Ek cila: Kefe yüklerinde `+4` gibi sayı etiketi kaldırıldı; 12'den büyük yükler kompakt sembol dizisiyle gösteriliyor, işlem işaretiyle karışma riski azaltıldı.
+- Statü: 2026-06-10 Kaptan canlı görsel onayıyla modül `Showcase Ready / Vitrin Hazır` yapıldı.

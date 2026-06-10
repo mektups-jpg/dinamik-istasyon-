@@ -69,7 +69,7 @@ export default function QuantumBalance2App() {
   };
 
   const botMessage: BotMessage = useMemo(() => {
-    if (isComplete) return { id: 280, text: 'Denge kilidi açıldı! Eksik sayıları bulup eşitliği korudun.', type: 'success' };
+    if (isComplete) return { id: 280, text: 'Terazi dengelendi! Eksik sayıları bulup eşitliği korudun.', type: 'success' };
     if (feedback === 'success') return { id: taskIndex * 10 + 2, text: task.successText, type: 'success' };
     if (feedback === 'error') return { id: taskIndex * 10 + 3, text: `Bir daha bak. ${task.hint}`, type: 'error' };
     return { id: taskIndex * 10 + 1, text: task.prompt, type: 'info' };
@@ -77,7 +77,7 @@ export default function QuantumBalance2App() {
 
   return (
     <Grade2MissionFrame
-      title="Kuantum Denge Terazisi"
+      title="Eksik Sayı Terazisi"
       subtitle="İlkokul 2. Sınıf / Eksik Sayı ve Eşitlik"
       icon={<Scale className="h-6 w-6" />}
       accent={ACCENT}
@@ -103,7 +103,7 @@ export default function QuantumBalance2App() {
             >
               <div className="mb-5 text-center">
                 <p className="font-mono text-[11px] font-black uppercase tracking-[0.24em]" style={{ color: task.color }}>
-                  Denge kilidi
+                  Terazi görevi
                 </p>
                 <h2 className="mt-2 text-3xl font-black md:text-5xl">{task.title}</h2>
                 <p className="mx-auto mt-2 max-w-xl text-sm font-bold leading-relaxed text-white/60 md:text-base">{task.prompt}</p>
@@ -118,8 +118,8 @@ export default function QuantumBalance2App() {
         data-testid="quantum-balance-2-control-panel"
         className="rounded-3xl border border-white/10 bg-[#0C1524]/88 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.26)] md:p-5"
       >
-        <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#A78BFA]/78">Denge küpleri</p>
-        <h2 className="mt-2 text-2xl font-black">Boş yere gelecek sayıyı seç.</h2>
+        <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#A78BFA]/78">Cevap kartları</p>
+        <h2 className="mt-2 text-2xl font-black">Doğru sayı kartına dokun.</h2>
         <div
           data-testid="quantum-balance-2-feedback"
           className={`mt-5 rounded-3xl border p-4 ${
@@ -130,8 +130,8 @@ export default function QuantumBalance2App() {
                 : 'border-white/10 bg-black/24'
           }`}
         >
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/44">Hedef</p>
-          <p className="mt-2 text-lg font-black leading-snug text-white">{isComplete ? 'Terazi dengede.' : task.prompt}</p>
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/44">Terazi hedefi</p>
+          <p className="mt-2 text-2xl font-black leading-snug text-white">{isComplete ? 'Terazi dengede.' : `${task.leftExpression} = ${task.rightExpression}`}</p>
         </div>
         {!isComplete && (
           <div className="mt-5 grid grid-cols-1 gap-3">
@@ -156,7 +156,7 @@ export default function QuantumBalance2App() {
 
 function BalanceStage({ task, feedback }: { task: QuantumBalanceTask; feedback: 'idle' | 'success' | 'error' }) {
   const beamRotate = feedback === 'success' ? 0 : task.lean;
-  const statusText = feedback === 'success' ? 'Dengede!' : feedback === 'error' ? 'Denge kaçtı' : 'Boş sayıyı bul';
+  const statusText = feedback === 'success' ? 'Dengede!' : feedback === 'error' ? 'Denge kaçtı' : 'Eksik sayıyı bul';
 
   return (
     <div className="rounded-[2rem] border border-white/10 bg-black/24 p-4 md:p-5">
@@ -183,7 +183,7 @@ function BalanceStage({ task, feedback }: { task: QuantumBalanceTask; feedback: 
         </div>
         <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-white/[0.05] p-4">
           <div>
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/46">Boş yuva</p>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/46">Soru işareti</p>
             <div className="mt-3 rounded-[1.6rem] border border-dashed p-5 text-center" style={{ borderColor: `${task.color}88`, boxShadow: `0 0 26px ${task.color}22` }}>
               <p className="text-sm font-black text-white/54">{task.socketLabel}</p>
               <p className="mt-2 text-5xl font-black" style={{ color: task.color }}>?</p>
@@ -227,27 +227,22 @@ function Pan({ label, expression, load, color }: { label: string; expression: st
 }
 
 function EnergyDots({ count, color }: { count: number; color: string }) {
-  const visible = Math.min(count, 12);
+  const compact = count > 12;
 
   return (
-    <div className="mt-4 grid grid-cols-4 gap-2">
-      {Array.from({ length: visible }).map((_, index) => (
+    <div className={`mt-4 grid ${compact ? 'grid-cols-5 gap-1.5' : 'grid-cols-4 gap-2'}`}>
+      {Array.from({ length: count }).map((_, index) => (
         <motion.span
           key={index}
           initial={{ scale: 0.6, opacity: 0, y: 8 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           transition={{ delay: index * 0.02 }}
-          className="grid h-9 place-items-center rounded-2xl border border-white/16 bg-white/[0.08]"
+          className={`grid place-items-center border border-white/16 bg-white/[0.08] ${compact ? 'h-7 rounded-xl' : 'h-9 rounded-2xl'}`}
           style={{ boxShadow: `0 0 16px ${color}33` }}
         >
-          <Sparkles className="h-4 w-4" style={{ color }} />
+          <Sparkles className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} style={{ color }} />
         </motion.span>
       ))}
-      {count > visible && (
-        <span className="grid h-9 place-items-center rounded-2xl border border-white/16 bg-white/[0.08] text-xs font-black text-white/70">
-          +{count - visible}
-        </span>
-      )}
     </div>
   );
 }
@@ -263,7 +258,7 @@ function CompletionCard({ onRestart }: { onRestart: () => void }) {
       <div className="grid h-20 w-20 place-items-center rounded-[28px] bg-emerald-300/16 shadow-[0_0_38px_rgba(52,211,153,0.28)]">
         <CheckCircle2 className="h-11 w-11 text-emerald-300" />
       </div>
-      <h2 className="mt-4 text-3xl font-black text-white">Denge kilidi açıldı!</h2>
+      <h2 className="mt-4 text-3xl font-black text-white">Terazi dengelendi!</h2>
       <p className="mt-2 max-w-md text-sm font-bold leading-relaxed text-white/62 md:text-base">
         Eksik sayıları buldun, toplama ve çıkarmayı aynı terazide dengeledin.
       </p>

@@ -759,7 +759,7 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'quantum-balance-2',
-    title: 'Kuantum Denge Terazisi',
+    title: 'Eksik Sayı Terazisi',
     description: 'Eksik sayıyı bul, toplama ve çıkarmayı aynı terazide dengede tut.',
     category: 'Cebir',
     difficulty: 'Kolay',
@@ -772,8 +772,8 @@ export const modules: ModuleMeta[] = [
       'MAT.2.2.3.3',
       'MAT.2.2.6.1',
     ],
-    status: 'review-needed',
-    archiveNote: '2. sınıf Kuantum Denge Terazisi üretildi; Kaptan canlı göz onayı bekliyor.'
+    status: 'showcase-ready',
+    archiveNote: '2. sınıf Eksik Sayı Terazisi 2026-06-10 Kaptan canlı görsel onayıyla Showcase Ready.'
   },
   {
     id: 'fraction-pizza-workshop',
