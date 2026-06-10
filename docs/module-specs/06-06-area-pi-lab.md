@@ -33,6 +33,7 @@ Modul iki deney masasindan olusur. Ilk masada ogrenci dikdortgen, ucgen ve paral
 - Eski "gizemli Pi yörüngesi" dili 6. sinif icin fazla kapaliydi; gorunur sekme "Pi: Cevre / Cap" olarak sadelestirildi.
 - Pi sonucu artik sayfa acilisinda hazir verilmez; ogrenci once bir tur deneyini gorur, sonra orani secer.
 - "R (Cap)" notasyonu yerine `d` cap ve `C` cevre ayrimi yapildi.
+- Paralelkenar alan ispatinda kesilen ucgen tekrar tekrar gidip gelmez; sag tarafa bir kez tasinip dikdortgeni tamamlar.
 - Bu kayit Kaptan onayi olmadigi icin vitrin hazir degildir.
 
 ## QA Plani

@@ -183,6 +183,7 @@ export default function AreaPiApp() {
     const renderPolygonArea = () => {
         const drawW = base * scale;
         const drawH = height * scale;
+        const slant = Math.min(drawH * 0.45, drawW * 0.35, 70);
 
         return (
             <div className="flex-1 flex xl:flex-row flex-col w-full max-w-6xl gap-6 items-stretch">
@@ -191,6 +192,11 @@ export default function AreaPiApp() {
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvc3ZnPg==')] opacity-50 blur-[0.5px]"></div>
 
                     <svg width="100%" height="100%" viewBox="-200 -150 400 300" className="overflow-visible filter drop-shadow-lg">
+                        <defs>
+                            <marker id="area-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+                                <path d="M 0 0 L 8 4 L 0 8 z" fill="#a7f3d0" />
+                            </marker>
+                        </defs>
                         {/* Base ruler */}
                         <line x1={-drawW/2} y1={drawH/2 + 20} x2={drawW/2} y2={drawH/2 + 20} stroke="#64748b" strokeWidth="2" />
                         <text x={0} y={drawH/2 + 40} fill="#94a3b8" fontSize="14" textAnchor="middle" className="font-mono">Taban: {displayBase} {unitScale}</text>
@@ -247,25 +253,75 @@ export default function AreaPiApp() {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                 >
-                                    {/* Ghost of the full parallelogram */}
+                                    {/* Original parallelogram reference */}
                                     <polygon 
-                                        points={`${-drawW/2 + drawH/2},${-drawH/2} ${drawW/2 + drawH/2},${-drawH/2} ${drawW/2},${drawH/2} ${-drawW/2},${drawH/2}`}
-                                        fill="none" stroke="#64748b" strokeWidth="1" strokeDasharray="4 4" opacity="0.5" 
+                                        points={`${-drawW/2 + slant},${-drawH/2} ${drawW/2 + slant},${-drawH/2} ${drawW/2},${drawH/2} ${-drawW/2},${drawH/2}`}
+                                        fill="#10b981"
+                                        fillOpacity="0.12"
+                                        stroke="#94a3b8"
+                                        strokeWidth="2"
+                                        strokeDasharray="6 6"
+                                        opacity="0.65"
                                     />
-                                    
-                                    {/* Main body (parallelogram missing left triangle) */}
+
+                                    {/* Rectangle target after moving the cut triangle */}
+                                    <rect
+                                        x={-drawW/2 + slant}
+                                        y={-drawH/2}
+                                        width={drawW}
+                                        height={drawH}
+                                        fill="none"
+                                        stroke="#a7f3d0"
+                                        strokeWidth="2"
+                                        strokeDasharray="8 5"
+                                        opacity="0.45"
+                                    />
+
+                                    {/* Main body after the left triangle is cut */}
                                     <polygon 
-                                        points={`${-drawW/2 + drawH/2},${-drawH/2} ${drawW/2 + drawH/2},${-drawH/2} ${drawW/2},${drawH/2} ${-drawW/2 + drawH/2},${drawH/2}`}
+                                        points={`${-drawW/2 + slant},${-drawH/2} ${drawW/2 + slant},${-drawH/2} ${drawW/2},${drawH/2} ${-drawW/2 + slant},${drawH/2}`}
                                         fill="#10b981" fillOpacity="0.5" stroke="#34d399" strokeWidth="3" strokeLinejoin="round"
                                     />
-                                    {/* Cut piece moving to right */}
+
+                                    {/* Faint starting position of the cut triangle */}
+                                    <polygon
+                                        points={`${-drawW/2 + slant},${-drawH/2} ${-drawW/2 + slant},${drawH/2} ${-drawW/2},${drawH/2}`}
+                                        fill="#10b981"
+                                        fillOpacity="0.14"
+                                        stroke="#34d399"
+                                        strokeWidth="2"
+                                        strokeDasharray="5 4"
+                                        strokeLinejoin="round"
+                                    />
+
+                                    {/* Cut piece moved once to the right: same triangle completes a rectangle */}
                                     <motion.polygon
-                                        points={`${-drawW/2 + drawH/2},${-drawH/2} ${-drawW/2 + drawH/2},${drawH/2} ${-drawW/2},${drawH/2}`}
+                                        points={`${-drawW/2 + slant},${-drawH/2} ${-drawW/2 + slant},${drawH/2} ${-drawW/2},${drawH/2}`}
                                         fill="#10b981" fillOpacity="0.8" stroke="#34d399" strokeWidth="3" strokeLinejoin="round"
                                         initial={{ x: 0 }}
                                         animate={{ x: drawW }}
-                                        transition={{ duration: 1, type: "spring", bounce: 0.2, repeat: Infinity, repeatType: "reverse", repeatDelay: 1.5 }}
+                                        transition={{ duration: 1.1, type: "spring", bounce: 0.18 }}
                                     />
+
+                                    <motion.g
+                                        initial={{ opacity: 0, x: -10 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.4, duration: 0.4 }}
+                                    >
+                                        <line
+                                            x1={-drawW/2 + slant + 12}
+                                            y1={drawH/2 + 10}
+                                            x2={drawW/2 + slant - 12}
+                                            y2={drawH/2 + 10}
+                                            stroke="#a7f3d0"
+                                            strokeWidth="2"
+                                            strokeDasharray="4 4"
+                                            markerEnd="url(#area-arrow)"
+                                        />
+                                        <text x={slant} y={-drawH/2 - 14} fill="#a7f3d0" fontSize="10" textAnchor="middle" className="font-mono font-bold">
+                                            Üçgen sağa taşındı
+                                        </text>
+                                    </motion.g>
                                 </motion.g>
                             )}
                         </AnimatePresence>
