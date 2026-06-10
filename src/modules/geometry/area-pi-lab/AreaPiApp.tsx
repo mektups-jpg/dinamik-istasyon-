@@ -431,6 +431,18 @@ export default function AreaPiApp() {
         const arcEdgePath = isFullCircleArc
             ? fullCirclePath
             : `M 0 ${-visualRadius} A ${visualRadius} ${visualRadius} 0 ${isLargeArc} 1 ${arcEndX} ${arcEndY}`;
+        const angleShareText =
+            targetAngle === 90 ? 'dörtte biri' :
+            targetAngle === 180 ? 'yarısı' :
+            targetAngle === 270 ? 'dörtte üçü' :
+            targetAngle === 360 ? 'tamamı' :
+            `${targetAngle}/360 kadarı`;
+        const arcOperationLabel = targetAngle === 90
+            ? 'Pembe iz = çevre izi ÷ 4'
+            : 'Pembe iz = çevre izi × açı ÷ 360';
+        const arcOperationValue = targetAngle === 90
+            ? `${circum.toFixed(2)} ÷ 4 = ${arcLength.toFixed(2)} br`
+            : `${circum.toFixed(2)} × ${targetAngle} ÷ 360 = ${arcLength.toFixed(2)} br`;
 
         return (
             <div className="flex-1 flex xl:flex-row flex-col w-full max-w-6xl gap-6 items-stretch">
@@ -590,22 +602,17 @@ export default function AreaPiApp() {
                         {showArc && rollProgress === 1 && piUnlocked && (
                             <div className="mt-4 pt-3 border-t border-indigo-500/30">
                                 <div className="text-xs font-bold text-pink-300 mb-2 flex items-center gap-2">
-                                    <Disc className="w-3 h-3"/> {targetAngle} derecelik yay ne kadar?
+                                    <Disc className="w-3 h-3"/> Pembe dilim: çevre izinin {angleShareText}
                                 </div>
                                 <div className="space-y-2 rounded-lg border border-pink-400/30 bg-pink-950/30 p-3 text-sm text-pink-50">
                                     <p>
-                                        {targetAngle}° merkez açı, tam çemberin 360 derecesinden{' '}
-                                        <span className="font-black text-white">{targetAngle} derecelik</span>{' '}
-                                        parçayı gösterir.
+                                        Tam çember 360°. Pembe dilim {targetAngle}° olduğu için sarı çevre izinin{' '}
+                                        <span className="font-black text-white">{angleShareText}</span> kadarını gösterir.
                                     </p>
-                                    <div className="rounded-md bg-slate-950/60 px-3 py-2 font-mono text-base font-black text-white">
-                                        Yay = {circum.toFixed(2)} × {targetAngle} ÷ 360 = {arcLength.toFixed(2)} br
+                                    <div className="rounded-md bg-slate-950/60 px-3 py-2 font-mono text-sm font-black leading-relaxed text-white">
+                                        <div>{arcOperationLabel}</div>
+                                        <div>{arcOperationValue}</div>
                                     </div>
-                                    {targetAngle === 90 && (
-                                        <p className="text-pink-100/90">
-                                            90° bir çemberin dörtte biridir. Bu yüzden yay, çevrenin dörtte biri kadar olur.
-                                        </p>
-                                    )}
                                 </div>
                             </div>
                         )}

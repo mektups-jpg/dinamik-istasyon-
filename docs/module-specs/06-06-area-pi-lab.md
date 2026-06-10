@@ -34,7 +34,7 @@ Modul iki deney masasindan olusur. Ilk masada ogrenci dikdortgen, ucgen ve paral
 - Pi sonucu artik sayfa acilisinda hazir verilmez; ogrenci once bir tur deneyini gorur, sonra orani secer.
 - "R (Cap)" notasyonu yerine `d` cap ve `C` cevre ayrimi yapildi.
 - Paralelkenar alan ispatinda kesilen ucgen tekrar tekrar gidip gelmez; yaklasik 3-4 saniyede sag tarafa bir kez tasinip dikdortgeni tamamlar.
-- 90 derece yay bolumunde pembe dilim cemberin icinde kalir; sag panelde teknik formul ezberi yerine "90 derece, 360 derecelik cemberin dortte biridir" mantigi anlatilir.
+- 90 derece yay bolumu ayri bir soru gibi sunulmaz; pembe dilim, sari cevre izinin dortte biri olarak kisa bir gozlem seklinde anlatilir.
 - Birim/olcek bolumunde cm-m gibi gercek birim karisikligi verilmez; 1x ve 10x olcekle uzunluk 10 kat olunca alanin 100 kat oldugu gosterilir.
 - Bu kayit Kaptan onayi olmadigi icin vitrin hazir degildir.
 
