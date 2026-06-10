@@ -304,7 +304,7 @@ export default function AreaPiApp() {
                                         fill="#10b981" fillOpacity="0.8" stroke="#34d399" strokeWidth="3" strokeLinejoin="round"
                                         initial={{ x: 0 }}
                                         animate={{ x: drawW }}
-                                        transition={{ duration: 1.1, type: "spring", bounce: 0.18 }}
+                                        transition={{ duration: 3.4, ease: "easeInOut" }}
                                     />
 
                                     <motion.g
@@ -323,7 +323,7 @@ export default function AreaPiApp() {
                                             markerEnd="url(#area-arrow)"
                                         />
                                         <text x={slant} y={-drawH/2 - 14} fill="#a7f3d0" fontSize="10" textAnchor="middle" className="font-mono font-bold">
-                                            Üçgen sağa taşındı
+                                            Üçgen sağa taşınır
                                         </text>
                                     </motion.g>
                                 </motion.g>
