@@ -20,6 +20,7 @@ interface Grade12FullStageLabProps {
   dock: ReactNode;
   feedback: string;
   status?: Grade12StageStatus;
+  successFeedbackLabel?: string;
   completed: boolean;
   completedTitle?: string;
   completedMessage?: string;
@@ -49,6 +50,7 @@ export function Grade12FullStageLab({
   dock,
   feedback,
   status = 'idle',
+  successFeedbackLabel = 'Kanıt kilitlendi; ayrıntı sahne kartında.',
   completed,
   completedTitle = '12. SINIF TASLAK TAMAMLANDI',
   completedMessage = 'Bu ekran yalnız şablon doğrulaması içindir; gerçek atom tamamlama sonraki turda açılacak.',
@@ -153,7 +155,7 @@ export function Grade12FullStageLab({
                     {status === 'error'
                       ? 'Uyarı AstroBot’ta; sahnedeki alarmı izle.'
                       : status === 'success'
-                        ? 'Kanıt kilitlendi; ayrıntı sahne kartında.'
+                        ? successFeedbackLabel
                         : 'Oyuncağı oynat, not AstroBot’ta güncellensin.'}
                   </p>
                 </div>

@@ -19,27 +19,35 @@ export const initialParams: FunctionParams = {
 export const calibrationTargets: CalibrationTarget[] = [
   {
     label: 'f(x)=x',
+    sceneTitle: 'Referans Doğruyu Kur',
+    focus: 'Orijin ve eğim 1',
     atomId: 'MAT.9.2.1.1',
     params: { a: 1, r: 0, k: 0 },
-    hint: 'Kaynak noktasını orijine taşı, eğim kolunu 45 dereceye getir.',
+    hint: 'Mavi noktayı orijine taşı, yeşil eğim noktasını 45 dereceye getir.',
   },
   {
-    label: 'f(x)=x+2',
+    label: 'g(x)=f(x)+2',
+    sceneTitle: 'Dikey Kaydırmayı Gör',
+    focus: 'Aynı eğim, 2 birim yukarı',
     atomId: 'MAT.9.2.1.2',
     params: { a: 1, r: 0, k: 2 },
-    hint: 'Sadece kaynak noktasını yukarı taşı. Doğru paralel kalmalı.',
+    hint: 'Sadece mavi noktayı yukarı taşı. Doğru paralel kalmalı.',
   },
   {
-    label: 'f(x)=x-2+2',
+    label: 'g(x)=f(x-2)+2',
+    sceneTitle: 'Yatay Kaydırmayı Gör',
+    focus: 'Kaynak sağa taşınır',
     atomId: 'MAT.9.2.1.3',
     params: { a: 1, r: 2, k: 2 },
-    hint: 'Kaynak noktasını sağdaki hedef düğüme sürükle.',
+    hint: 'Mavi noktayı sağdaki hedefe sürükle; doğrunun eğimi değişmesin.',
   },
   {
-    label: 'f(x)=2(x-2)+2',
+    label: 'g(x)=2·f(x-2)+2',
+    sceneTitle: 'Eğim Katsayısını Artır',
+    focus: 'Eğim kolu dikleşir',
     atomId: 'MAT.9.2.1.4',
     params: { a: 2, r: 2, k: 2 },
-    hint: 'Kaynak sabit kalsın; eğim kolunu yukarı çekerek lazeri dikleştir.',
+    hint: 'Mavi nokta yerinde kalsın; yeşil eğim noktasını yukarı çekerek doğruyu dikleştir.',
   },
 ];
 
@@ -84,12 +92,14 @@ export const isTargetMatched = (current: FunctionParams, target: FunctionParams)
 );
 
 export const formulaLabel = ({ a, r, k }: FunctionParams) => {
-  const slope = formatValue(a);
-  const shift = r === 0 ? 'x' : `x${r > 0 ? '-' : '+'}${formatValue(Math.abs(r))}`;
-  const vertical = k === 0 ? '' : `${k > 0 ? '+' : '-'}${formatValue(Math.abs(k))}`;
-  return `f(x)=${slope}(${shift})${vertical}`;
+  const shift = r === 0 ? 'x' : `x ${r > 0 ? '-' : '+'} ${formatValue(Math.abs(r))}`;
+  const vertical = k === 0 ? '' : ` ${k > 0 ? '+' : '-'} ${formatValue(Math.abs(k))}`;
+
+  if (a === 1 && r === 0 && k === 0) return 'f(x)=x';
+  if (a === 1) return `g(x)=f(${shift})${vertical}`;
+  return `g(x)=${formatValue(a)}·f(${shift})${vertical}`;
 };
 
 export const calibrationDeltaLabel = (current: FunctionParams, target: FunctionParams) => (
-  `Δa ${formatValue(target.a - current.a)} · Δr ${formatValue(target.r - current.r)} · Δk ${formatValue(target.k - current.k)}`
+  `yatay fark ${formatValue(target.r - current.r)} · dikey fark ${formatValue(target.k - current.k)} · eğim farkı ${formatValue(target.a - current.a)}`
 );

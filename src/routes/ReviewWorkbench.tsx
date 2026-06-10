@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, ClipboardCopy, Download, ExternalLink, Filter, RefreshCcw, Search } from 'lucide-react';
 import { modules, type GradeRange, type ModuleMeta } from '../registry/moduleRegistry';
 import { ReviewModuleCard } from './review-workbench/ReviewModuleCard';
 import {
   STORAGE_KEY,
   bandCopy,
-  bands,
   emptyEntry,
   getBand,
   hasReviewSignal,
@@ -15,15 +14,30 @@ import {
   type ExportItem,
   type ReviewEntry,
 } from './review-workbench/reviewWorkbenchModel';
+import { parseWorkflowScope, setStoredWorkflowScope, workflowScopeCopy } from './workflowScope';
+
+const liseReviewBands: GradeRange[] = ['Lise'];
 
 export default function ReviewWorkbench() {
-  const [selectedBand, setSelectedBand] = useState<GradeRange>('Lise');
+  const location = useLocation();
+  const [selectedBand, setSelectedBand] = useState<GradeRange>(() => getInitialBandFromSearch());
   const [query, setQuery] = useState('');
   const [entries, setEntries] = useState<Record<string, ReviewEntry>>({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle');
   const [previewModuleId, setPreviewModuleId] = useState<string | null>(null);
   const [previewVersion, setPreviewVersion] = useState(0);
+
+  useEffect(() => {
+    const requestedScope = parseWorkflowScope(new URLSearchParams(location.search).get('band'));
+    if (requestedScope && requestedScope !== 'all') {
+      setSelectedBand(requestedScope);
+      setStoredWorkflowScope(requestedScope);
+    }
+    if (requestedScope === 'all') {
+      setStoredWorkflowScope('all');
+    }
+  }, [location.search]);
 
   useEffect(() => {
     try {
@@ -103,7 +117,7 @@ export default function ReviewWorkbench() {
     );
   }, [reviewedItems]);
 
-  const bandStats = bands.map((band) => {
+  const bandStats = liseReviewBands.map((band) => {
     const bandModules = modules.filter((module) => getBand(module.grade) === band);
     const reviewedCount = bandModules.filter((module) => hasReviewSignal(entries[module.id])).length;
     return { band, moduleCount: bandModules.length, reviewedCount };
@@ -164,13 +178,19 @@ export default function ReviewWorkbench() {
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/58 md:text-base">
               Sen modülleri gezerken kısa not bırak; üç audit hattı raporu ayrı toplar, tek üretim hattı sırayla düzeltir.
             </p>
+            <div className="mt-4 inline-flex rounded-full border border-[#00E5FF]/18 bg-[#00E5FF]/8 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-cyan-100/78">
+              Workflow scope: {workflowScopeCopy[selectedBand].label.replace(' hattı açık', '')}
+            </div>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 lg:w-[520px]">
             {bandStats.map((stat) => (
               <button
                 key={stat.band}
-                onClick={() => setSelectedBand(stat.band)}
+                onClick={() => {
+                  setSelectedBand(stat.band);
+                  setStoredWorkflowScope(stat.band);
+                }}
                 className={`rounded-2xl border px-4 py-3 text-left transition ${
                   selectedBand === stat.band
                     ? 'border-[#00E5FF]/60 bg-[#00E5FF]/12 shadow-[0_0_34px_rgba(0,229,255,0.10)]'
@@ -406,4 +426,10 @@ function JsonExportPanel({
 function withReviewQuery(path: string, version: number) {
   const separator = path.includes('?') ? '&' : '?';
   return `${path}${separator}review-workbench=1&v=${version}`;
+}
+
+function getInitialBandFromSearch(): GradeRange {
+  if (typeof window === 'undefined') return 'Lise';
+  const scope = parseWorkflowScope(new URLSearchParams(window.location.search).get('band'));
+  return scope && scope !== 'all' ? scope : 'Lise';
 }

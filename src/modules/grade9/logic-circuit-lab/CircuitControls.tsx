@@ -10,14 +10,15 @@ interface CircuitControlsProps {
   inputs: CircuitInputs;
   target: GateMissionTarget;
   output: boolean;
-  missionOk: boolean;
+  verdict: 'wrong' | null;
   setInput: (key: keyof CircuitInputs, value: boolean) => void;
   onCheck: () => void;
   onReset: () => void;
 }
 
 export function CircuitControls(props: CircuitControlsProps) {
-  const { mission, activeIndex, inputs, target, output, missionOk, setInput, onCheck, onReset } = props;
+  const { mission, activeIndex, inputs, target, output, verdict, setInput, onCheck, onReset } = props;
+  const hasWrongCheck = verdict === 'wrong';
 
   return (
     <aside className="min-w-0 rounded-[26px] border border-sky-300/22 bg-black/45 p-4 backdrop-blur-xl xl:p-5">
@@ -49,12 +50,12 @@ export function CircuitControls(props: CircuitControlsProps) {
         </SciFiButton>
       </div>
 
-      <div className={`mt-4 rounded-2xl border p-3 xl:p-4 ${missionOk ? 'border-emerald-300/25 bg-emerald-300/10 text-emerald-100' : 'border-amber-300/20 bg-amber-300/[0.07] text-amber-100'}`}>
+      <div className={`mt-4 rounded-2xl border p-3 xl:p-4 ${hasWrongCheck ? 'border-pink-300/25 bg-pink-300/10 text-pink-100' : 'border-amber-300/20 bg-amber-300/[0.07] text-amber-100'}`}>
         <p className="text-[10px] font-black uppercase tracking-[0.22em] opacity-70">canlı okuma</p>
         <p className="mt-1 text-lg font-black">
           A={Number(inputs.a)} · B={Number(inputs.b)} · Y={Number(output)}
         </p>
-        <p className="mt-1 text-xs leading-relaxed opacity-75">{missionOk ? 'Bu kapının kuralı hedef durumda görüldü.' : target.rule}</p>
+        <p className="mt-1 text-xs leading-relaxed opacity-75">{hasWrongCheck ? 'Bu satır hedefe uymadı; sahnedeki A/B anahtarlarını değiştir.' : target.rule}</p>
       </div>
     </aside>
   );

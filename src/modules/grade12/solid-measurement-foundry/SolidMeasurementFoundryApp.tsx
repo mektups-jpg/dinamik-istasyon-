@@ -170,5 +170,9 @@ export default function SolidMeasurementFoundryApp() {
 }
 
 function TestIdContractMarker() {
-  return <span className="sr-only">{TEST_ID_CONTRACT.join(' ')}</span>;
+  return (
+    <span aria-hidden="true" hidden>
+      {TEST_ID_CONTRACT.join(' ')}
+    </span>
+  );
 }

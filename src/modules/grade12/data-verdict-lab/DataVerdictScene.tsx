@@ -308,7 +308,7 @@ function ChartCore({
               fill={`${color}66`}
               stroke={`${color}DD`}
             />
-            <text x={x + 14} y="306" textAnchor="middle" fill="rgba(255,255,255,0.58)" fontSize="10" fontWeight="800">{row.label}</text>
+            <text x={x + 14} y="306" textAnchor="middle" fill="rgba(255,255,255,0.58)" fontSize="10" fontWeight="800">{compactChartLabel(row.label)}</text>
             {filter !== null && (
               <text x={x + 14} y={y + barHeight / 2 + 5} textAnchor="middle" fill="white" fontSize="12" fontWeight="900">{row.value}</text>
             )}
@@ -333,6 +333,10 @@ function ChartCore({
       )}
     </g>
   );
+}
+
+function compactChartLabel(label: string) {
+  return label.startsWith('Bölge ') ? label.replace('Bölge ', '') : label;
 }
 
 function VerdictSeal({

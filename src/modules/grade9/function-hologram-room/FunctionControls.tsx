@@ -19,25 +19,25 @@ export function FunctionControls(props: FunctionControlsProps) {
 
   return (
     <aside className="min-w-0 rounded-[30px] border border-cyan-300/18 bg-black/45 p-4 backdrop-blur-xl xl:p-5">
-      <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-cyan-100/55">kalibrasyon {activeIndex + 1}/4</p>
+      <p className="font-mono text-[10px] font-black uppercase tracking-[0.28em] text-cyan-100/55">görev {activeIndex + 1}/4</p>
       <h3 className="mt-1 text-xl font-black text-white xl:text-2xl">{mission.title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-cyan-50/70">{mission.prompt}</p>
 
       <div className="mt-4 grid grid-cols-3 gap-2">
-        <Metric label="a" value={formatValue(params.a)} target={formatValue(target.params.a)} />
-        <Metric label="r" value={formatValue(params.r)} target={formatValue(target.params.r)} />
-        <Metric label="k" value={formatValue(params.k)} target={formatValue(target.params.k)} />
+        <Metric label="eğim" value={formatValue(params.a)} />
+        <Metric label="yatay" value={formatValue(params.r)} />
+        <Metric label="dikey" value={formatValue(params.k)} />
       </div>
 
       <div className={`mt-4 rounded-2xl border p-3 xl:p-4 ${missionOk ? 'border-emerald-300/25 bg-emerald-300/10 text-emerald-100' : 'border-amber-300/20 bg-amber-300/[0.07] text-amber-100'}`}>
-        <p className="text-[10px] font-black uppercase tracking-[0.22em] opacity-70">hedef</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.22em] opacity-70">hedef doğru</p>
         <p className="mt-1 text-lg font-black">{target.label}</p>
-        <p className="mt-1 text-xs leading-relaxed opacity-75">{missionOk ? 'Lazer hedef çizgiyle çakıştı.' : target.hint}</p>
+        <p className="mt-1 text-xs leading-relaxed opacity-75">{missionOk ? 'Senin doğrun hedefle üst üste geldi.' : target.hint}</p>
       </div>
 
       <div className="mt-4 grid gap-3">
         <SciFiButton data-testid="function-check" onClick={onCheck} className="min-h-[50px]" icon={<Check className="h-4 w-4" />}>
-          Kalibrasyonu Onayla
+          {missionOk ? 'Sonraki Göreve Geç' : 'Kontrol Et'}
         </SciFiButton>
         <SciFiButton data-testid="function-reset" variant="secondary" onClick={onReset} className="min-h-[50px]" icon={<RotateCcw className="h-4 w-4" />}>
           Sıfırla
@@ -50,8 +50,8 @@ export function FunctionControls(props: FunctionControlsProps) {
             <Move className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-black text-white">Kaynak noktası</p>
-            <p className="mt-1 text-xs leading-relaxed text-white/58">Mavi düğümü taşı: r yatay, k dikey kaymayı gösterir.</p>
+            <p className="text-sm font-black text-white">Mavi nokta</p>
+            <p className="mt-1 text-xs leading-relaxed text-white/58">Mavi noktayı sürükle: grafik sağa-sola ve yukarı-aşağı taşınır.</p>
           </div>
         </div>
         <div className="mt-4 flex items-start gap-3">
@@ -59,8 +59,8 @@ export function FunctionControls(props: FunctionControlsProps) {
             <Orbit className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-black text-white">Eğim kolu</p>
-            <p className="mt-1 text-xs leading-relaxed text-white/58">Yeşil düğümü yukarı/aşağı çek: a katsayısı çizgiyi döndürür.</p>
+            <p className="text-sm font-black text-white">Yeşil eğim noktası</p>
+            <p className="mt-1 text-xs leading-relaxed text-white/58">Yeşil noktayı yukarı/aşağı çek: doğru daha dik veya daha yatık olur.</p>
           </div>
         </div>
       </div>
@@ -68,12 +68,11 @@ export function FunctionControls(props: FunctionControlsProps) {
   );
 }
 
-function Metric({ label, value, target }: { label: string; value: string; target: string }) {
+function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.045] px-3 py-3 text-center">
       <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/45">{label}</p>
       <p className="mt-1 font-mono text-lg font-black text-white">{value}</p>
-      <p className="mt-1 text-[10px] font-bold text-cyan-100/55">hedef {target}</p>
     </div>
   );
 }

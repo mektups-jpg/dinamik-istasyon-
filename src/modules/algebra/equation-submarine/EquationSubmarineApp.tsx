@@ -10,6 +10,8 @@ import { ModuleCompletedScreen } from '../../../components/ui/ModuleCompletedScr
 
 const ATOM_ID = 'MAT.9.2.3.1';
 const MODULE_ID = 'equation-submarine';
+const LEVEL_START_STORAGE_KEY = 'equation-submarine-last-start-equations';
+const MAX_LEVEL_GENERATION_ATTEMPTS = 8;
 
 type InteractionMode = 'intro' | 'multiply' | 'add' | 'solveX' | 'substitute' | 'completed' | 'finished';
 
@@ -130,6 +132,46 @@ const generateLevel = (stage: number): Level => {
   };
 };
 
+const buildLevelSet = (): Level[] => [
+  generateLevel(1),
+  generateLevel(2),
+  generateLevel(3)
+];
+
+const getStartSignature = (levels: Level[]) => `${levels[0]?.eq1 ?? ''}|${levels[0]?.eq2 ?? ''}`;
+
+const readLastStartSignature = () => {
+  if (typeof window === 'undefined') return null;
+  try {
+    return window.sessionStorage.getItem(LEVEL_START_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+};
+
+const rememberStartSignature = (levels: Level[]) => {
+  if (typeof window === 'undefined') return;
+  try {
+    window.sessionStorage.setItem(LEVEL_START_STORAGE_KEY, getStartSignature(levels));
+  } catch {
+    // Session storage can be unavailable in restricted browser modes; random generation still works.
+  }
+};
+
+const generateNewLevels = (avoidStartSignature: string | null = null): Level[] => {
+  let candidate = buildLevelSet();
+
+  for (
+    let attempt = 0;
+    avoidStartSignature && getStartSignature(candidate) === avoidStartSignature && attempt < MAX_LEVEL_GENERATION_ATTEMPTS;
+    attempt += 1
+  ) {
+    candidate = buildLevelSet();
+  }
+
+  return candidate;
+};
+
 export default function EquationSubmarineApp() {
   const { addScore } = useGameStore();
   const { unlockAtom, unlockModule } = useAtomStore();
@@ -137,13 +179,7 @@ export default function EquationSubmarineApp() {
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const successLockedRef = useRef(false);
 
-  const generateNewLevels = () => [
-    generateLevel(1),
-    generateLevel(2),
-    generateLevel(3)
-  ];
-
-  const [levels, setLevels] = useState<Level[]>(generateNewLevels());
+  const [levels, setLevels] = useState<Level[]>(() => generateNewLevels(readLastStartSignature()));
   const [levelIndex, setLevelIndex] = useState(0);
   const [mode, setMode] = useState<InteractionMode>('intro');
 
@@ -183,6 +219,10 @@ export default function EquationSubmarineApp() {
     setInpFinalX('');
     setInpFinalY('');
   };
+
+  useEffect(() => {
+    rememberStartSignature(levels);
+  }, [levels]);
 
   useEffect(() => clearTimers, []);
 
@@ -295,7 +335,7 @@ export default function EquationSubmarineApp() {
 
   const handleRestart = () => {
     clearTimers();
-    setLevels(generateNewLevels());
+    setLevels(generateNewLevels(getStartSignature(levels)));
     setLevelIndex(0);
     setMode('intro');
     setErrorShake(false);

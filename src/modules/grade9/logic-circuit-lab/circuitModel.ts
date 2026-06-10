@@ -8,6 +8,8 @@ export const gateTargets: GateMissionTarget[] = [
     atomId: 'MAT.9.3.2.1',
     label: 'VE kapısı',
     rule: 'VE yalnız iki giriş de 1 olduğunda çıkış verir.',
+    shortRule: 'VE: 1 ve 1 olursa çıkış 1',
+    truth: (inputs) => inputs.a && inputs.b,
   },
   {
     gate: 'or',
@@ -16,6 +18,8 @@ export const gateTargets: GateMissionTarget[] = [
     atomId: 'MAT.9.3.2.2',
     label: 'VEYA kapısı',
     rule: 'VEYA kapısının söndüğü tek durum 0-0 durumudur.',
+    shortRule: 'VEYA: yalnız 0 ve 0 olursa çıkış 0',
+    truth: (inputs) => inputs.a || inputs.b,
   },
   {
     gate: 'implies',
@@ -24,6 +28,8 @@ export const gateTargets: GateMissionTarget[] = [
     atomId: 'MAT.9.3.2.3',
     label: 'İSE kapısı',
     rule: 'İSE kapısını çökerten tek durum 1=>0 durumudur.',
+    shortRule: 'İSE: yalnız 1=>0 durumunda çıkış 0',
+    truth: (inputs) => !(inputs.a && !inputs.b),
   },
   {
     gate: 'xor',
@@ -32,6 +38,8 @@ export const gateTargets: GateMissionTarget[] = [
     atomId: 'MAT.9.3.2.4',
     label: 'YA DA kapısı',
     rule: 'YA DA sadece girişlerden biri 1 iken çıkış verir.',
+    shortRule: 'YA DA: girişler farklıysa çıkış 1',
+    truth: (inputs) => inputs.a !== inputs.b,
   },
 ];
 

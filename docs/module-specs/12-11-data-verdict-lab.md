@@ -61,6 +61,7 @@ Bu modül panel/reçete gibi durmamalı. Sahnenin başrolü büyük veri akış�
 - Console/page error: `.agent/browser-use-shots/12-11-data-verdict-lab-console.md` temiz; uygulama console/page error yok.
 - Gemini final: `.agent/gemini-reports/12-11-data-verdict-lab-final.txt`, `95/100 PASS`, `MUST_FIX` boş.
 - Teknik kapılar: `npm run module:check -- data-verdict-lab` 20 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- 2026-05-31 Browser/Codex canlı cila: ilk grafik altındaki `Bölge A/B/C/D` etiketleri sahnede sıkıştığı için grafik içi kompakt `A/B/C/D` etiketlerine çekildi; başlangıç, yanlış alarm, 4 görev zinciri, erken rozet/sonuç sızıntısı, completion, taşma ve console tekrar doğrulandı.
 
 ## Öğrenilen Üretim Notu
 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Grade9LabShell, MissionStep, useGrade9MissionProgress } from '../shared/Grade9LabShell';
+import { useAstroBotStore } from '../../../store/useAstroBotStore';
 import { CircuitControls } from './CircuitControls';
 import { CircuitScene } from './CircuitScene';
 import { CircuitInputs } from './types';
@@ -39,12 +40,15 @@ const MISSIONS: MissionStep[] = [
 export default function LogicCircuitLabApp() {
   const progress = useGrade9MissionProgress({ moduleId: MODULE_ID, missions: MISSIONS, completionAtomIds: ATOM_IDS });
   const [inputs, setInputs] = useState<CircuitInputs>({ a: false, b: false });
+  const [lastVerdict, setLastVerdict] = useState<'wrong' | null>(null);
+  const { showMessage } = useAstroBotStore();
   const activeIndex = progress.activeIndex;
   const target = gateTargets[activeIndex];
   const output = evaluateGate(target.gate, inputs);
   const missionOk = isTargetMatched(target, inputs);
 
   const resetPanel = () => {
+    setLastVerdict(null);
     setInputs({ a: false, b: false });
   };
 
@@ -54,10 +58,15 @@ export default function LogicCircuitLabApp() {
   };
 
   const setInput = (key: keyof CircuitInputs, value: boolean) => {
+    setLastVerdict(null);
     setInputs((current) => ({ ...current, [key]: value }));
+    showMessage(`${key.toUpperCase()} anahtarı ${value ? 'açıldı' : 'kapandı'}; çıkış ışığı devrede anında değişiyor.`, 'info');
   };
 
   const handleCheck = () => {
+    if (!missionOk) {
+      setLastVerdict('wrong');
+    }
     progress.submitMission({
       ok: missionOk,
       success: 'Kapı davranışı doğru okundu. Sıradaki kartuş devreye giriyor.',
@@ -68,7 +77,7 @@ export default function LogicCircuitLabApp() {
   return (
     <Grade9LabShell
       title="Akıllı Mantık Devreleri"
-      subtitle="MAT.9.3.2.x"
+      subtitle="MAT.9.3.2.1-4"
       moduleId={MODULE_ID}
       missions={MISSIONS}
       activeIndex={activeIndex}
@@ -86,7 +95,8 @@ export default function LogicCircuitLabApp() {
           inputs={inputs}
           target={target}
           output={output}
-          missionOk={missionOk}
+          verdict={lastVerdict}
+          onToggleInput={(key) => setInput(key, !inputs[key])}
         />
         <CircuitControls
           mission={progress.activeMission}
@@ -94,7 +104,7 @@ export default function LogicCircuitLabApp() {
           inputs={inputs}
           target={target}
           output={output}
-          missionOk={missionOk}
+          verdict={lastVerdict}
           setInput={setInput}
           onCheck={handleCheck}
           onReset={resetPanel}

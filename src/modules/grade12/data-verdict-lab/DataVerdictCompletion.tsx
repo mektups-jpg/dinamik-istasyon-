@@ -19,12 +19,12 @@ export function DataVerdictCompletion({ onRestart }: DataVerdictCompletionProps)
         <div>
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#00FF88]/24 bg-[#00FF88]/10 px-4 py-2 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-emerald-100">
             <Sparkles className="h-4 w-4" />
-            Review Needed
+            Görüş Gerekli
           </div>
           <h2 className="text-4xl font-black tracking-tight text-white lg:text-5xl">Büyük veri yargısı kilitlendi</h2>
           <p className="mt-4 max-w-2xl text-base font-semibold leading-relaxed text-white/68">
             Hazır kurumsal veri seti temizlendi, doğru istatistik filtresinden geçirildi ve güvenli sonuç cümlesine dönüştü.
-            Kaptan canlı göz onayı vermeden bu modül Showcase Ready sayılmayacak.
+            Kaptan canlı göz onayı vermeden bu modül Vitrin Hazır sayılmayacak.
           </p>
 
           <div className="mt-7 grid gap-3 md:grid-cols-3">

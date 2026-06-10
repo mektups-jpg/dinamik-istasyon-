@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { activeModules, archivedModules, ModuleMeta } from '../registry/moduleRegistry';
@@ -9,12 +9,39 @@ import Bot from '../components/characters/Bot';
 import { auth } from '../services/firebase';
 import { AstroBot, BotMessage } from '../components/ui/AstroBot';
 import { ProfilePanel } from '../components/ui/ProfilePanel';
+import {
+  WORKFLOW_SCOPE_EVENT,
+  getStoredWorkflowScope,
+  isGradeInWorkflowScope,
+  setStoredWorkflowScope,
+  workflowScopeCopy,
+  type WorkflowScope,
+} from './workflowScope';
 
 export default function Dashboard() {
   const { score } = useGameStore();
   const { masteredModules, masteredAtoms, displayName, role } = useAtomStore();
   const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [workflowScope, setWorkflowScope] = useState<WorkflowScope>(() => getStoredWorkflowScope());
+  const scopeIsLimited = workflowScope !== 'all';
+
+  useEffect(() => {
+    setStoredWorkflowScope('Lise');
+    const syncScope = () => setWorkflowScope(getStoredWorkflowScope());
+    window.addEventListener('storage', syncScope);
+    window.addEventListener(WORKFLOW_SCOPE_EVENT, syncScope);
+    return () => {
+      window.removeEventListener('storage', syncScope);
+      window.removeEventListener(WORKFLOW_SCOPE_EVENT, syncScope);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (selectedGrade !== null && !isGradeInWorkflowScope(selectedGrade, workflowScope)) {
+      setSelectedGrade(null);
+    }
+  }, [selectedGrade, workflowScope]);
 
   const handleLogout = async () => {
     try {
@@ -33,7 +60,9 @@ export default function Dashboard() {
   };
 
   const getBotMessage = (): BotMessage => {
-    let text = `Hoş geldin ${displayName}! Giriş yapmak istediğin laboratuvar kapısını seç.`;
+    let text = scopeIsLimited
+      ? `Hoş geldin ${displayName}! ${workflowScopeCopy[workflowScope].label}; yalnız ${workflowScopeCopy[workflowScope].range}. sınıf kapıları aktif.`
+      : `Hoş geldin ${displayName}! Giriş yapmak istediğin laboratuvar kapısını seç.`;
     let type: 'info' | 'success' | 'error' = 'info';
 
     if (selectedGrade !== null) {
@@ -133,6 +162,21 @@ export default function Dashboard() {
 
       {/* ANA İÇERİK MİMARİSİ */}
       <main className="relative z-10 max-w-7xl mx-auto px-8 pt-8 pb-32">
+        {scopeIsLimited && (
+          <section
+            data-testid="workflow-scope-banner"
+            className="mb-8 flex flex-col gap-3 rounded-3xl border border-[#00E5FF]/20 bg-[#00E5FF]/9 px-5 py-4 shadow-[0_22px_70px_rgba(0,229,255,0.08)] sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#00E5FF]">çalışma hattı</p>
+              <h2 className="mt-1 text-2xl font-black text-white">{workflowScopeCopy[workflowScope].label}</h2>
+              <p className="mt-1 text-sm font-bold text-white/58">
+                {workflowScopeCopy[workflowScope].range}. sınıf dışındaki kapılar bu sohbet için pasif.
+              </p>
+            </div>
+          </section>
+        )}
+
         <AnimatePresence mode="wait">
           {selectedGrade === null ? (
             <motion.div 
@@ -156,6 +200,7 @@ export default function Dashboard() {
                     key={grade} 
                     grade={grade} 
                     moduleCount={getModulesForGrade(grade).length}
+                    isScopeBlocked={!isGradeInWorkflowScope(grade, workflowScope)}
                     onClick={() => setSelectedGrade(grade)} 
                   />
                 ))}
@@ -260,14 +305,26 @@ function ArchiveModuleCard({ mod }: { mod: ModuleMeta }) {
 
 // --- ALT BİLEŞENLER ---
 
-function GradeDoor({ grade, moduleCount, onClick }: { grade: number, moduleCount: number, onClick: () => void }) {
-  const isLocked = moduleCount === 0;
+function GradeDoor({
+  grade,
+  moduleCount,
+  isScopeBlocked = false,
+  onClick,
+}: {
+  grade: number;
+  moduleCount: number;
+  isScopeBlocked?: boolean;
+  onClick: () => void;
+}) {
+  const isLocked = moduleCount === 0 || isScopeBlocked;
 
   return (
     <motion.button 
       whileHover={{ y: -5, boxShadow: isLocked ? 'none' : '0 10px 30px rgba(0,229,255,0.15)' }}
       whileTap={{ scale: 0.96 }}
+      disabled={isLocked}
       onClick={onClick}
+      aria-disabled={isLocked}
       className={`relative aspect-[3/4] w-full rounded-3xl flex flex-col items-center justify-between p-6 overflow-hidden border transition-colors ${
         isLocked 
           ? 'bg-[#121212]/40 border-gray-900/50 grayscale opacity-70 cursor-not-allowed hidden-or-locked' 
@@ -281,7 +338,11 @@ function GradeDoor({ grade, moduleCount, onClick }: { grade: number, moduleCount
 
       {/* Sayaç veya Kilit */}
       <div className="w-full flex justify-end relative z-10">
-        {isLocked ? (
+        {isScopeBlocked ? (
+          <div className="rounded-full border border-amber-200/10 bg-amber-200/[0.04] px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.16em] text-amber-100/42">
+            Hat dışı
+          </div>
+        ) : isLocked ? (
           <Lock className="w-5 h-5 text-gray-700" />
         ) : (
           <div className="bg-[#1F2833] border border-gray-700 text-[#00E5FF] text-[10px] font-bold px-2.5 py-1 rounded-full">

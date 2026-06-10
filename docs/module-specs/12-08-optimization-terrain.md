@@ -19,12 +19,13 @@ Türev uygulamalarını yalnız işaret tablosu veya formül ezberi olmaktan ç�
 - İkinci türev, konkavlık ve detaylı grafik çizimi bu modülün ana kapsamına alınmaz.
 
 ## Ana Oyuncak
-Ortada geniş bir neon arazi pisti bulunur. Araç pist üzerinde artan, azalan, tepe/çukur, maksimum hacim ve minimum maliyet durumlarına göre farklı noktalara gelir. Seçilen karar kartuşu sahnede fiziksel olarak görünür: artanda yeşil tırmanış okları, azalanda pembe iniş frenleri, ekstremumda sıfır eğim kapısı, maksimum hacimde açılan kapasite kutusu, minimum maliyette derinleşen maliyet vadisi.
+Ortada geniş bir neon arazi pisti bulunur. Araç pist üzerinde artan, azalan, tepe/çukur, maksimum hacim ve minimum maliyet durumlarına göre farklı noktalara gelir. Seçilen karar kartuşu sahnede fiziksel olarak görünür: artanda yeşil tırmanış okları, azalanda pembe iniş frenleri, ekstremumda sıfır eğim kapısı, maksimum hacimde eğriyi kapatmayan hacim tepesi işareti, minimum maliyette derinleşen maliyet vadisi.
+İlk üç türev işareti görevi aynı ana eğride artan parça, azalan parça, tepe ve çukur izlerini birlikte gösterir; öğrenci kararın yalnız tek yokuş değil, grafikteki bölge ve dönüş noktası okuması olduğunu sahnede görür. Kontrol panelinde `Tepe Noktası` ve `Çukur Noktası` ayrı düğmeler olarak görünür; ikisi de aynı `f'(x)=0` ailesini çalıştırıp sahnedeki iki yatay dönüş noktasını birlikte yakar.
 
 ## Görev Akışı
 1. MAT.12.2.6.1: Türev pozitifse fonksiyon artıyor; öğrenci artan bölge kartuşunu kilitler.
 2. MAT.12.2.6.2: Türev negatifse fonksiyon azalıyor; öğrenci azalan bölge kartuşunu kilitler.
-3. MAT.12.2.6.3: Türev sıfıra yaklaşınca tepe/çukur kapısı ekstremumu yakalar.
+3. MAT.12.2.6.3: Türev sıfıra yaklaşınca paneldeki Tepe Noktası ve Çukur Noktası kararları aynı ekstremum ailesini yakalar.
 4. MAT.12.2.6.4: Kısıtlı hacim probleminde kapasite tepesini maksimum hacim kararıyla kilitler.
 5. MAT.12.2.6.5: Maliyet eğrisinin en düşük vadisini minimum maliyet kararıyla kilitler.
 
@@ -37,6 +38,8 @@ Ortada geniş bir neon arazi pisti bulunur. Araç pist üzerinde artan, azalan, 
 - `optimization-terrain-increasing`
 - `optimization-terrain-decreasing`
 - `optimization-terrain-extremum`
+- `optimization-terrain-peak-point`
+- `optimization-terrain-valley-point`
 - `optimization-terrain-max-volume`
 - `optimization-terrain-min-cost`
 - `optimization-terrain-check`
@@ -45,7 +48,7 @@ Ortada geniş bir neon arazi pisti bulunur. Araç pist üzerinde artan, azalan, 
 
 ## QA Notu
 - "Artan/azalan" yalnız metin olarak kalırsa hard faildir; pist yönü ve türev işareti sahnede beraber görünmelidir.
-- Maksimum/minimum gerçek problem görevlerinde tepe/vadi yalnız soyut nokta değil, kapasite kutusu veya maliyet çukuru olarak görünmelidir.
+- Maksimum/minimum gerçek problem görevlerinde tepe/vadi yalnız soyut nokta değil, eğriyi kapatmayan hacim tepesi veya maliyet çukuru olarak görünmelidir.
 - Seçim anı doğru/yanlış kararı vermez; yalnız önizleme ve ipucu gösterir. Karar `Araziyi Test Et` sonrası verilir.
 - Telefon görünümü ana hedef değildir; karar desktop/kiosk görünümünden verilir.
 
@@ -55,7 +58,9 @@ Ortada geniş bir neon arazi pisti bulunur. Araç pist üzerinde artan, azalan, 
 - Son cila: karar seçimi cevap sızdırmayacak şekilde sıkılaştırıldı. `f'(x)>0`, `f'(x)<0`, `V maksimum`, `C minimum` ve gizli kanıt metni yalnız `Araziyi Test Et` sonrası açılıyor; seçim anında sadece `yükseliş izi`, `iniş izi`, `düz kapı`, `kapasite izi`, `maliyet izi` gibi önizleme dili görünüyor.
 - Computer Use QA: Chrome desktop üzerinde başlangıç, yanlış azalan karar önizlemesi, yanlış alarmı ve doğru ilk karar kilidi gözlendi; gri/boş alan veya aşağı kaydırma ihtiyacı görülmedi.
 - Playwright QA: 1488x768 desktop akışında yanlış deneme, doğru artan/azalan/ekstremum/maksimum hacim/minimum maliyet zinciri, completion ve reset geçti.
+- 2026-05-24 Lise sıralı cila: Embed statüsü Türkçe `Görüş Gerekli` oldu; başlangıç arazisi daha parlak neon pist, hareketli tarama izi ve okunur işaret şeridiyle güçlendirildi. Seçim sonrası alarm/kanıt kartı ekran altında kesilmeyecek şekilde yukarı alındı. Completion başlığı Türkçeleştirildi ve kart genişliği sahne içinde kalacak şekilde daraltıldı.
+- 2026-05-29 Kaptan grafik cila: İlk artan/azalan/ekstremum görevlerindeki tek yönlü pist, artan-azalan-tepe-çukur içeren ortak analiz eğrisine taşındı. İşaret şeridi `+ 0 - 0 +` düzeniyle tepe ve çukuru gösteriyor; panelde `Tepe Noktası` ve `Çukur Noktası` ayrı düğmeler olarak görünüyor, ikisi de iki yatay sıfır eğim kapısını birlikte parlatıyor. `Artan Bölge` seçilince yalnız ilgili yükselen segment renkleniyor, tüm eğri boyanmıyor. `Maks Hacim` seçilince hacim tepesi eğrinin en yüksek noktasına bağlanıyor; büyük kapasite kutusu eğriyi kapattığı için kaldırıldı. Test-id kontratı görsel/sayfa metninden gizlendi. Browser/Codex canlı QA'da başlangıç, tepe/çukur önizleme, tek segment artan önizleme, eğriyi kapatmayan hacim tepesi, doğru artan kilidi, yatay taşma `0`, console warning/error `0` ve erken test-id sızıntısı `0` doğrulandı.
 - Playwright QA: `.agent/browser-use-shots/12-08-optimization-terrain-00-start.png`, `25-wrong.png`, `50-correct-first.png`, `65-extremum.png`, `75-max-volume.png`, `85-min-cost.png`, `100-complete.png`, `viewport-1488x768.png`.
 - Console: `.agent/browser-use-shots/12-08-optimization-terrain-console.md`, `No console/page errors captured.`
 - Gemini: `.agent/gemini-reports/12-08-optimization-terrain-final.txt`, Gemini 3.1 Pro `95/100 PASS`, `MUST_FIX` yok. İlk turda ortadaki yönerge metninin pistle çakışması yakalandı ve düzeltildi.
-- Teknik kapılar: `npm run module:check -- optimization-terrain` 24 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut Vite büyük chunk uyarısını verdi.
+- Teknik kapılar: `npm run module:check -- optimization-terrain` 26 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut Vite büyük chunk uyarısını verdi.

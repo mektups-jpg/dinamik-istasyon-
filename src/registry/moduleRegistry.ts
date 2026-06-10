@@ -399,8 +399,8 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'function-hologram-room',
-    title: 'Fonksiyonel Hologram Odası',
-    description: 'f(x)=x lazerini iki kontrol düğümüyle taşı ve eğ; a, r, k parametrelerinin grafiği nasıl değiştirdiğini canlı gör.',
+    title: 'Fonksiyon Grafiği Dönüşüm Atölyesi',
+    description: 'f(x)=x doğrusunu iki kontrol noktasıyla taşı ve eğ; a, r, k değerlerinin grafiği nasıl değiştirdiğini canlı gör.',
     grade: 9,
     category: 'Cebir',
     difficulty: 'Orta',
@@ -411,7 +411,40 @@ export const modules: ModuleMeta[] = [
       'MAT.9.2.1.4'
     ],
     path: '/embed/algebra/function-hologram-room',
-    component: lazy(() => import('../modules/grade9/function-hologram-room/FunctionHologramRoomApp'))
+    component: lazy(() => import('../modules/grade9/function-hologram-room/FunctionHologramRoomApp')),
+    status: 'showcase-ready',
+    archiveNote: '9. sınıf Fonksiyon Grafiği Dönüşüm Atölyesi Kaptan canlı onayıyla Showcase Ready. Doğrusal fonksiyon grafiğinde öteleme ve eğim dönüşümleri iki kontrol noktasıyla net kuruluyor.'
+  },
+  {
+    id: 'absolute-value-mirror-room',
+    title: 'Mutlak Değer Ayna Odası',
+    description: 'Negatif kolu yukarı katla; |ax ± b| grafiğinin tepe noktasını x ekseninde yakala.',
+    grade: 9,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.2.2.1',
+      'MAT.9.2.2.2'
+    ],
+    path: '/embed/algebra/absolute-value-mirror-room',
+    component: lazy(() => import('../modules/grade9/absolute-value-mirror-room/AbsoluteValueMirrorRoomApp')),
+    status: 'showcase-ready',
+    archiveNote: '9. sınıf Mutlak Değer Ayna Odası Kaptan canlı onayıyla Showcase Ready. Negatif çıktının yukarı katlanması, tepe noktasının iç ifadenin sıfırlandığı yerde kurulması ve hedef diklik sahnede net görülüyor.'
+  },
+  {
+    id: 'inequality-safety-zone',
+    title: 'Eşitsizlik Güvenlik Alanı',
+    description: 'Günlük yaşam eşitsizliğinde sınır çizgisini sürükle; ≤ veya ≥ güvenli bölgesini sayı doğrusunda kur.',
+    grade: 9,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.2.3.2'
+    ],
+    path: '/embed/algebra/inequality-safety-zone',
+    component: lazy(() => import('../modules/grade9/inequality-safety-zone/InequalitySafetyZoneApp')),
+    status: 'showcase-ready',
+    archiveNote: '9. sınıf Eşitsizlik Güvenlik Alanı Kaptan canlı onayıyla Showcase Ready. Öğrenci günlük yaşam eşitsizliğinde sınırı ve güvenli çözüm bölgesini sayı doğrusunda net kuruyor; sayı setleri tekrar oynayışta değişiyor.'
   },
   {
     id: 'equation-submarine',
@@ -422,7 +455,24 @@ export const modules: ModuleMeta[] = [
     difficulty: 'Orta',
     atomId: 'MAT.9.2.3.1',
     path: '/embed/algebra/equation-submarine',
-    component: lazy(() => import('../modules/algebra/equation-submarine/EquationSubmarineApp'))
+    component: lazy(() => import('../modules/algebra/equation-submarine/EquationSubmarineApp')),
+    status: 'showcase-ready',
+    archiveNote: '9. sınıf Denklem Denizaltısı Kaptan canlı onayıyla Showcase Ready. Denklem sistemi adımları rastgele setlerle geliyor; aynı oturumda başlangıç denklem çifti üst üste tekrar etmiyor.'
+  },
+  {
+    id: 'algorithm-flow-line',
+    title: 'Algoritma Akış Hattı',
+    description: 'Karışık problemi işlem bloklarına ayır; akış şemasını doğru sırayla kur ve sonucu test sonrası mühürle.',
+    grade: 9,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.3.1.1'
+    ],
+    path: '/embed/algebra/algorithm-flow-line',
+    component: lazy(() => import('../modules/grade9/algorithm-flow-line/AlgorithmFlowLineApp')),
+    status: 'review-needed',
+    archiveNote: '9. sınıf yeni üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
   },
   {
     id: 'logic-circuit-lab',
@@ -441,6 +491,22 @@ export const modules: ModuleMeta[] = [
     component: lazy(() => import('../modules/grade9/logic-circuit-lab/LogicCircuitLabApp'))
   },
   {
+    id: 'quantifier-radar-hunt',
+    title: 'Niceleyici Radar Avı',
+    description: 'Her ve Bazı niceleyicilerini küme elemanları üzerinde tara; tüm kanıt mı, en az bir kanıt mı gerektiğini sahnede mühürle.',
+    grade: 9,
+    category: 'Cebir',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.3.3.1',
+      'MAT.9.3.3.2'
+    ],
+    path: '/embed/algebra/quantifier-radar-hunt',
+    component: lazy(() => import('../modules/grade9/quantifier-radar-hunt/QuantifierRadarHuntApp')),
+    status: 'review-needed',
+    archiveNote: '9. sınıf yeni üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
+  },
+  {
     id: 'triangle-tension-lab',
     title: 'Üçgen Gerilim Laboratuvarı',
     description: 'Köşeleri sürüklenebilen canlı üçgende açı-kenar ilişkisini ve iç açı toplamını keşfet.',
@@ -453,6 +519,39 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/geometry/triangle-tension-lab',
     component: lazy(() => import('../modules/grade9/triangle-tension-lab/TriangleTensionLabApp'))
+  },
+  {
+    id: 'similarity-scale-studio',
+    title: 'Benzerlik Ölçek Stüdyosu',
+    description: 'İki üçgende eş açıları ve aynı ölçekle büyüyen kenarları sahnede bağla; benzerlik kanıtını test sonrası mühürle.',
+    grade: 9,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.5.2.1',
+      'MAT.9.5.2.2'
+    ],
+    path: '/embed/geometry/similarity-scale-studio',
+    component: lazy(() => import('../modules/grade9/similarity-scale-studio/SimilarityScaleStudioApp')),
+    status: 'review-needed',
+    archiveNote: '9. sınıf yeni üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
+  },
+  {
+    id: 'right-triangle-theorem-lab',
+    title: 'Dik Üçgen Teorem Laboratuvarı',
+    description: 'Tales kesiti, Öklid yüksekliği ve Pisagor denklem köprüsünü tek dik üçgen sahnesinde test sonrası mühürle.',
+    grade: 9,
+    category: 'Geometri',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.5.3.1',
+      'MAT.9.5.3.2',
+      'MAT.9.5.3.3'
+    ],
+    path: '/embed/geometry/right-triangle-theorem-lab',
+    component: lazy(() => import('../modules/grade9/right-triangle-theorem-lab/RightTriangleTheoremLabApp')),
+    status: 'review-needed',
+    archiveNote: '9. sınıf yeni üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
   },
   {
     id: 'transformation-forensics',
@@ -479,6 +578,22 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/probability/statistics-probability-radar',
     component: lazy(() => import('../modules/grade9/statistics-probability-radar/StatisticsProbabilityRadarApp'))
+  },
+  {
+    id: 'probability-experiment-machine',
+    title: 'Olasılık Deney Makinesi',
+    description: 'Deney kayıtlarındaki gözlemsel oranı kur ve küçük örneklem oranını büyük deneme sayısına taşı.',
+    grade: 9,
+    category: 'Olasılık',
+    difficulty: 'Orta',
+    atomIds: [
+      'MAT.9.7.1.1',
+      'MAT.9.7.2.1'
+    ],
+    path: '/embed/probability/probability-experiment-machine',
+    component: lazy(() => import('../modules/grade9/probability-experiment-machine/ProbabilityExperimentMachineApp')),
+    status: 'review-needed',
+    archiveNote: '9. sınıf yeni üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
   },
   {
     id: 'parabola-shape-studio',

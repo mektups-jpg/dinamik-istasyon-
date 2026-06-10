@@ -12,4 +12,6 @@ export interface GateMissionTarget {
   atomId: string;
   label: string;
   rule: string;
+  shortRule: string;
+  truth: (inputs: CircuitInputs) => boolean;
 }

@@ -1,44 +1,47 @@
 import { useRef, useState } from 'react';
-import type { PointerEvent as ReactPointerEvent } from 'react';
+import type { KeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
 import { Grade9LabShell, MissionStep, useGrade9MissionProgress } from '../shared/Grade9LabShell';
+import { useAstroBotStore } from '../../../store/useAstroBotStore';
 import { FunctionControls } from './FunctionControls';
 import { FunctionScene } from './FunctionScene';
 import { DragTarget, FunctionParams, GraphPoint } from './types';
 import { calibrationTargets, clamp, initialParams, isTargetMatched, roundToTenth, svgToGraph } from './functionModel';
 
 const MODULE_ID = 'function-hologram-room';
+const ATOM_LABEL = 'MAT.9.2.1.1-4';
 
 const ATOM_IDS = calibrationTargets.map((target) => target.atomId);
 
 const MISSIONS: MissionStep[] = [
   {
     id: 'reference-laser',
-    title: 'Referans Lazeri Yak',
+    title: 'Referans Doğruyu Kur',
     atomId: 'MAT.9.2.1.1',
-    prompt: 'Çizgiyi f(x)=x referansına kalibre et. Kaynak orijinde, eğim 1 olmalı.',
+    prompt: 'Mavi noktayı orijine taşı, yeşil eğim noktasını 45 dereceye getir; doğru f(x)=x ile üst üste gelsin.',
   },
   {
     id: 'vertical-thrust',
-    title: 'Dikey İtki',
+    title: 'Dikey Kaydırma',
     atomId: 'MAT.9.2.1.2',
-    prompt: 'Kaynak noktasını yukarı taşı. Aynı eğimli lazer paralel biçimde +2 yükselsin.',
+    prompt: 'Mavi noktayı yukarı taşı. Doğru aynı eğimde kalsın ve 2 birim yukarı çıksın.',
   },
   {
     id: 'horizontal-slide',
-    title: 'Yatay Sürgü',
+    title: 'Yatay Kaydırma',
     atomId: 'MAT.9.2.1.3',
-    prompt: 'Kaynak noktasını sağdaki düğüme çek. r değişince grafik yatay konum değiştirir.',
+    prompt: 'Mavi noktayı sağdaki hedefe taşı. Grafik sağa kayarken eğimi değişmesin.',
   },
   {
     id: 'slope-arm',
     title: 'Eğim Kolu',
     atomId: 'MAT.9.2.1.4',
-    prompt: 'Kaynağı sabit tut, eğim kolunu yukarı çek. Lazerin dikliği a katsayısıyla artsın.',
+    prompt: 'Mavi nokta yerinde kalsın. Yeşil eğim noktasını yukarı çekerek doğruyu daha dik yap.',
   },
 ];
 
 export default function FunctionHologramRoomApp() {
   const progress = useGrade9MissionProgress({ moduleId: MODULE_ID, missions: MISSIONS, completionAtomIds: ATOM_IDS });
+  const { showMessage } = useAstroBotStore();
   const [params, setParams] = useState<FunctionParams>(initialParams);
   const [dragTarget, setDragTarget] = useState<DragTarget | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -78,21 +81,41 @@ export default function FunctionHologramRoomApp() {
   };
 
   const handlePointerUp = () => {
+    if (dragTarget === 'anchor') {
+      showMessage('Mavi nokta taşındı; grafiğin yatay ve dikey konumu değişti.', 'info');
+    }
+    if (dragTarget === 'tilt') {
+      showMessage('Yeşil eğim noktası taşındı; doğru daha yatık ya da daha dik görünüyor.', 'info');
+    }
     setDragTarget(null);
+  };
+
+  const handleHandleKeyDown = (event: KeyboardEvent<SVGElement>, nextTarget: DragTarget) => {
+    if (event.key !== 'Home') return;
+    event.preventDefault();
+
+    if (nextTarget === 'anchor') {
+      setParams((current) => ({ ...current, r: target.params.r, k: target.params.k }));
+      showMessage('Mavi nokta hedef doğrunun başlangıç noktasına hizalandı.', 'info');
+      return;
+    }
+
+    setParams((current) => ({ ...current, a: target.params.a }));
+    showMessage('Yeşil eğim noktası hedef doğrunun eğimine hizalandı.', 'info');
   };
 
   const handleCheck = () => {
     progress.submitMission({
       ok: missionOk,
-      success: 'Lazer dönüşümü doğru okundu. Bir sonraki kalibrasyon düğümü açılıyor.',
-      error: 'Lazer hedef çizgiyle çakışmadı. Kaynak noktasını veya eğim kolunu yeniden ayarla.',
+      success: 'Doğru hedef grafikle üst üste geldi. Şimdi bir sonraki dönüşümü deneyelim.',
+      error: 'Çizgi hedefle henüz üst üste değil. Mavi noktayı veya yeşil eğim noktasını yeniden ayarla.',
     });
   };
 
   return (
     <Grade9LabShell
-      title="Fonksiyonel Hologram Odası"
-      subtitle="MAT.9.2.1.x"
+      title="Fonksiyon Grafiği Dönüşüm Atölyesi"
+      subtitle={ATOM_LABEL}
       moduleId={MODULE_ID}
       missions={MISSIONS}
       activeIndex={activeIndex}
@@ -114,6 +137,7 @@ export default function FunctionHologramRoomApp() {
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
+          onHandleKeyDown={handleHandleKeyDown}
         />
         <FunctionControls
           mission={progress.activeMission}

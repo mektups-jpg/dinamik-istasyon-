@@ -15,6 +15,8 @@ export type DragTarget = 'anchor' | 'tilt';
 
 export interface CalibrationTarget {
   label: string;
+  sceneTitle: string;
+  focus: string;
   atomId: string;
   params: FunctionParams;
   hint: string;

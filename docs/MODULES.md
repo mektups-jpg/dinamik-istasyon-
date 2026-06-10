@@ -402,37 +402,101 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
 
 ## 🛰️ LİSE 9. SINIF MODÜLLERİ
 
-### 1. Kök ve Üs Reaktörü (Üslü / Köklü İfadeler)
-* **Konsept:** Öğrenci üslü ifadeleri sürüklenebilir enerji çekirdekleri gibi reaktör yuvalarına çarpıştırır; aynı taban çarpışınca üslerin toplandığını doğrudan görür. Köklü ifade katmanında `√72` içinden `√36` tam kare bloğu dışarı çıkar, `√2` kalıntısı kök içinde kalır. Modül tek bakışta iki fiziksel işlem öğretir: aynı tabanda üs birleşimi ve kökten tam kare ayırma.
-* **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.9.1.1.x` / `MAT.9.1.2.x` (Gerçek sayıların köklü ve üslü formlarını hesaplama / basitleştirme)
-* **Sonraki Makro Modüller:**
-  * `MAT.9.1.3.x` için **Aralık Kapıları İstasyonu**: açık/kapalı uçlar, kesişim ve birleşim sayı doğrusunda kapı-kalkan metaforuyla ayrılacak.
-  * `MAT.9.1.4.x` / `MAT.9.1.5.x` için **Gerçek Sayı Atlası ve İşlem Yasaları**: sayı kümeleri ve işlem özellikleri ayrı, sakin bir sınıflandırma/dağıtma deneyine taşınacak.
+### 1. Kök ve Üs Reaktörü (Showcase Ready)
+* **Konsept:** Öğrenci üslü ifadeleri sürüklenebilir enerji çekirdekleri gibi reaktör yuvalarına çarpıştırır; aynı taban çarpışınca üslerin toplandığını doğrudan görür. Köklü ifade katmanında değişen tam kare örnekleriyle kök içinden tam kare bloğu dışarı çıkarır, kalan çarpanı kök içinde bırakır. Modül tek bakışta iki fiziksel işlem öğretir: aynı tabanda üs birleşimi ve kökten tam kare ayırma.
+* **Sağladığı Atom Grupları:**
+  * `MAT.9.1.1.1` (Gerçek sayıların üslü karmaşık gösterimlerini sayısal olarak hesaplama)
+  * `MAT.9.1.1.2` (Üslü ifadeleri kendi aralarında işleme sokarak basitleştirme)
+  * `MAT.9.1.2.1` (Köklü gösterimleri sayısal değer aralığına oturtma)
+  * `MAT.9.1.2.2` (Köklü ifadeleri kendi aralarında işleme sokarak kökten kurtarma)
+* **Route:** `/embed/numbers/radical-power-reactor`
+* **Durum:** 2026-06-01 Kaptan canlı görsel onayıyla `Showcase Ready / Vitrin Hazır`.
 
-### 2. Fonksiyonel Hologram Odası (Doğrusal Fonksiyon Kalibrasyonu)
-* **Konsept:** Kartezyen ızgarada duran lazer çizgisi iki canlı düğümle kontrol edilir. Mavi kaynak düğümü sürüklenince `r` ve `k` grafiği yatay/dikey taşır; yeşil eğim kolu çekilince `a` katsayısı lazeri döndürür. Öğrenci formül paneliyle uğraşmaz; hedef hologram çizgisiyle gerçek lazeri üst üste getirerek `f(x)=a(x-r)+k` dönüşümünü görür.
+### 1B. Aralık Kapıları İstasyonu (Review Needed)
+* **Konsept:** Öğrenci sayı doğrusunda iki canlı kapıyı sürükler; kapı merkezine dokununca uç dahil/hariç moduna döner. Kapalı aralıkta sınır istasyonları bandın içinde kalır, açık aralıkta sınır yalnız kapı olarak görünür. Kesişimde iki ışığın aynı anda yandığı ortak bölge, birleşimde ise en az bir ışığın aydınlattığı toplam yol tek sonuç bandına dönüşür.
+* **Sağladığı Atom Grupları:**
+  * `MAT.9.1.3.1` (Kapalı uçlu aralığı sayı doğrusunda modelleme)
+  * `MAT.9.1.3.2` (Açık uçlu aralığı sayı doğrusunda modelleme)
+  * `MAT.9.1.3.3` (İki aralığın kesişimini kurma)
+  * `MAT.9.1.3.4` (İki aralığın birleşimini kurma)
+* **Route:** `/embed/numbers/interval-gate-station`
+* **Durum:** Yeni üretim modülü `Review Needed`; Kaptan canlı görsel onayı olmadan `Showcase Ready` yapılmayacak.
+
+### 1C. Gerçek Sayı Atlası ve İşlem Yasaları (Showcase Ready)
+* **Konsept:** Öğrenci sayı kapsüllerini doğal, tam, rasyonel, irrasyonel ve gerçek sayı katmanlarında yakar; ardından aynı atlas makinesinin yasa presinde toplamda birleşme ve çarpmanın toplama üzerine dağılması kollarını kilitler. Amaç küme adlarını ve işlem özelliklerini ayrı metin reçeteleri gibi değil, aynı sahnede ışınların hangi kapıya bağlandığını görerek kurmaktır.
+* **Sağladığı Atom Grupları:**
+  * `MAT.9.1.4.1` (Negatif sayıların doğal sayılardan ayrılıp tam sayılar içinde yer almasını modelleme)
+  * `MAT.9.1.4.2` (Rasyonel ve irrasyonel kümelerin gerçek sayılar şemsiyesini oluşturmasını diyagramda saptama)
+  * `MAT.9.1.5.1` (Toplama işleminin birleşme özelliğini harfli ifadelerde kurgulama)
+  * `MAT.9.1.5.2` (Çarpmanın toplama üzerine dağılma özelliğini cebirsel ifadelerde kurgulama)
+* **Route:** `/embed/numbers/real-number-law-atlas`
+* **Durum:** Kaptan canlı görsel onayıyla `Showcase Ready`; dashboard etiketi `Vitrin Hazır`.
+
+### 2. Fonksiyon Grafiği Dönüşüm Atölyesi (Showcase Ready)
+* **Konsept:** Kartezyen ızgarada duran doğru grafiği iki canlı noktayla kontrol edilir. Mavi nokta sürüklenince `r` ve `k` grafiği yatay/dikey taşır; yeşil eğim noktası çekilince `a` katsayısı doğruyu döndürür. Öğrenci formül paneliyle uğraşmaz; kendi doğrusunu hedef doğruyla üst üste getirerek `f(x)=a(x-r)+k` dönüşümünü görür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.9.2.1.x` ($f(x)=x$ fonksiyonu, y ekseni kaydırması, x ekseni kaydırması ve eğim (a) manipülasyonu)
-* **Ayrılan Gelecek Makro Modüller:**
-  * `MAT.9.2.2.x` için **Mutlak Değer Ayna Odası**: negatif ışının yukarı katlanması ve tepe noktası tek ayna mekaniğiyle işlenecek.
-  * `MAT.9.2.3.2` için **Eşitsizlik Güvenlik Alanı**: $y \ge f(x)$ gibi çözüm bölgeleri lazer sis/tarama alanı olarak ayrı kurulacak.
+  * `MAT.9.2.1.1` (`f(x)=x` referans fonksiyonunu grafik üzerinde çizme)
+  * `MAT.9.2.1.2` (Y ekseni kaydırmasını grafikte uygulayarak fonksiyonu dikey taşıma)
+  * `MAT.9.2.1.3` (X ekseni kaydırmasını grafikte uygulayarak fonksiyonu yatay taşıma)
+  * `MAT.9.2.1.4` (Çarpan katsayısı ile fonksiyonun eğimini grafikte esnetme)
+* **Route:** `/embed/algebra/function-hologram-room`
+* **Durum:** Kaptan canlı görsel onayıyla `Showcase Ready`; dashboard etiketi `Vitrin Hazır`.
+### 2B. Mutlak Değer Ayna Odası (Showcase Ready)
+* **Konsept:** Öğrenci koordinat sahnesindeki tepe noktasını x ekseni üzerinde sürükler; negatif kol x eksenindeki aynadan yukarı katlandığında `|x|` grafiği V şekline dönüşür. `|x - 2|` ve `|2x + 4|` görevlerinde tepe, iç ifadenin sıfırlandığı yere taşınır; kolların hedef dikliği sahne içi eğim koluyla ayarlanır.
+* **Sağladığı Atom Grupları:**
+  * `MAT.9.2.2.1` (`f(x)=|x|` grafiğini negatifleri pozitife kıvıran ayna mantığıyla çizme)
+  * `MAT.9.2.2.2` (`f(x)=|ax ± b|` biçiminde tepe noktasını tespit etme)
+* **Route:** `/embed/algebra/absolute-value-mirror-room`
+* **Durum:** 2026-06-06 Kaptan canlı görsel onayıyla `Showcase Ready`; dashboard etiketi `Vitrin Hazır`.
+
+### 2C. Eşitsizlik Güvenlik Alanı (Showcase Ready)
+* **Konsept:** Öğrenci günlük yaşamdan gelen doğrusal eşitsizliği sayı doğrusunda güvenli alan olarak kurar. Sınır çizgisi sürüklenir, `≤` için sol bölge, `≥` için sağ bölge ışıklanır; testten sonra çözüm cümlesi açılır. Amaç eşitsizlik yönünü ezber değil, "bütçeyi aşma" veya "hedefe ulaş" anlamıyla sahnede görmektir.
+* **Sağladığı Atom Grupları:**
+  * `MAT.9.2.3.2` (Doğrusal modellerle kurulan günlük yaşam eşitsizliğini çözme)
+* **Route:** `/embed/algebra/inequality-safety-zone`
+* **Durum:** 2026-06-07 Kaptan canlı görsel onayıyla `Showcase Ready`; dashboard etiketi `Vitrin Hazır`.
+
+### 3A. Algoritma Akış Hattı (Review Needed)
+* **Konsept:** Öğrenci karışık bir matematik problemini tek sonuç tahminiyle çözmez; problem kartındaki verilenleri sırayla akış şeması bloklarına böler. Bloklar sahnedeki akış bandı yuvalarına yerleşir, hat ışığı her doğru süreç adımında bir sonraki yuvaya akar. Sonuç cümlesi yalnız akış test edildikten sonra açılır.
+* **Sağladığı Atom Grupları:**
+  * `MAT.9.3.1.1` (Karışık matematik problemini ardışık akış şeması bloklarına bölme)
+* **Route:** `/embed/algebra/algorithm-flow-line`
+* **Durum:** Yeni üretim modülü `Review Needed`; Kaptan canlı görsel onayı olmadan `Showcase Ready` yapılmayacak.
 
 ### 3. Akıllı Mantık Devreleri (Logic Gates)
 * **Konsept:** Fiziksel bir elektronik devre test tezgahı. Öğrencinin tek oyuncağı A/B anahtarlarıdır; aktif kapı kartuşu göreve göre değişir. VE, VEYA, İSE ve YA DA kapıları aynı kablo düzeninde farklı çıkış üretir. Mini doğruluk tablosu sahnede yanar, İSE kapısında `1=>0` tek hata durumu özel kırmızı arıza animasyonuyla görünür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.9.3.2.x` (VE, VEYA, İSE ve YA DA mantıksal doğruluk kapıları)
-* **Ayrılan Gelecek Makro Modüller:**
-  * `MAT.9.3.1.x` için **Algoritma Akış Hattı**: problemi ardışık bloklara bölme, kablo sıralama değil süreç tasarımı olarak ele alınacak.
-  * `MAT.9.3.3.x` için **Niceleyici Radar Avı**: Her/Bazı niceleyicileri küme elemanlarını tarayan ayrı radar/arama deneyine taşınacak.
+
+### 3B. Niceleyici Radar Avı (Review Needed)
+* **Konsept:** Öğrenci `Her` ve `Bazı` niceleyicilerini metin sembolü olarak ezberlemez; küme radarında elemanları tek tek tarar. `Her` görevlerinde tüm elemanlar koşuldan geçmeden mühür açılmaz; `Bazı` görevlerinde koşulu sağlayan en az bir kanıt ışığı yeterlidir.
+* **Sağladığı Atom Grupları:**
+  * `MAT.9.3.3.1` (Evrensel niceleyici sembolünü kümeler üzerinde doğruluk sınamasına sokma)
+  * `MAT.9.3.3.2` (Varlıksal niceleyici sembolünü en az bir eleman bulma sınamasına sokma)
+* **Route:** `/embed/algebra/quantifier-radar-hunt`
+* **Durum:** Yeni üretim modülü `Review Needed`; Kaptan canlı görsel onayı olmadan `Showcase Ready` yapılmayacak.
 
 ### 4. Üçgen Gerilim Laboratuvarı (Kenar-Açı)
 * **Konsept:** Köşeleri doğrudan sürüklenebilen canlı üçgen vektörü. Öğrenci özellikle bir köşeyi çekerek açının büyümesini, karşı kenarın uzamasını ve en büyük açı ile en uzun karşı kenarın aynı anda parlamasını görür. Ardından aynı üçgenin A-B-C açı parçalarını 180° ispat rayına sürükleyerek iç açı toplamını doğrular.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.9.4.1.x` (Üçgende açı-kenar ilişkisi ve iç açı toplamı doğrulaması)
-* **Sonraki Makro Modüller:**
-  * `MAT.9.5.2.x` için **Benzerlik Ölçek Stüdyosu**: eş açılar ve orantılı kenarlar üzerinden iki üçgeni üst üste bindirme.
-  * `MAT.9.5.3.x` için **Dik Üçgen Teorem Laboratuvarı**: Tales, Öklid ve Pisagor bağlantılarını ayrı ispat deneyleriyle açma.
+
+### 4B. Benzerlik Ölçek Stüdyosu (Review Needed)
+* **Konsept:** Öğrenci iki üçgeni aynı sahnede görür; önce karşılıklı açıları eşleştirir, sonra kenar çiftlerinin ortak ölçek katsayısıyla büyüdüğünü kurar. Eşleşme parçaları ışın çizgilerine dönüşür, oran görevlerinde `k` katsayısı seçilir ve benzerlik mührü yalnız stüdyo testinden sonra açılır.
+* **Sağladığı Atom Grupları:**
+  * `MAT.9.5.2.1` (İki üçgenin benzer olması için açılarının eşit olması gerektiğini ispatlama)
+  * `MAT.9.5.2.2` (İki üçgenin benzer olması için kenarlarının tam orantılı büyümesi gerektiğini saptama)
+* **Route:** `/embed/geometry/similarity-scale-studio`
+* **Durum:** Yeni üretim modülü `Review Needed`; Kaptan canlı görsel onayı olmadan `Showcase Ready` yapılmayacak.
+
+### 4C. Dik Üçgen Teorem Laboratuvarı (Review Needed)
+* **Konsept:** Öğrenci Tales, Öklid ve Pisagor bağlarını aynı dik üçgen laboratuvarında üç ayrı kanıt deneyine dönüştürür. Paralel kesit parça-bütün oranını yakar, dik açıdan hipotenüse inen yükseklik `h² = p · k` bağına kilitlenir, harfli Pisagor görevinde dik kenar kareleri hipotenüs karesiyle denklem köprüsü kurar. Sonuç mührü yalnız testten sonra açılır.
+* **Sağladığı Atom Grupları:**
+  * `MAT.9.5.3.1` (Tales teoreminde paralel kesitlerin parça-bütün oranlarını kurma)
+  * `MAT.9.5.3.2` (Dik üçgende yükseklik bağıntısını `h² = p · k` olarak kanıtlama)
+  * `MAT.9.5.3.3` (Dik üçgen problemlerini Pisagor denklemine dönüştürme)
+* **Route:** `/embed/geometry/right-triangle-theorem-lab`
+* **Durum:** Yeni üretim modülü `Review Needed`; Kaptan canlı görsel onayı olmadan `Showcase Ready` yapılmayacak.
 
 ### 5. Yansıma ve Döndürme Adli Bilişimi (Dönüşüm)
 * **Konsept:** Tek ana oyuncak bir adli iz eşleştirme ekranı. Öğrenci önce döndürme merkezini doğrudan sahnedeki orijine sürükler, sonra açı halkasını 90° izine çevirir, son katmanda da ayna eksenini sahnedeki çizgilerden seçer. Kural, hayalet şeklin hedef iz ile çakışmasıyla sezgisel olarak görünür.
@@ -443,8 +507,14 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
 * **Konsept:** Üç sınıfın puan bulutları aynı anda görünür, fakat öğrenci sadece bir sigma tarayıcısını hareket ettirir. Tarayıcı en dar dağılım olan Sınıf B üzerinde kilitlenince “istikrar = küçük standart sapma” sezgisi oluşur. İkinci katmanda kutu-bıyık grafiğinde medyan okuyucu sürüklenir; doğru çizgiye oturduğunda medyanın veriyi iki eş yarıya böldüğü görünür.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.9.6.1.x` / `MAT.9.6.2.x` (Standart sapma, kutu-bıyık analizi ve istikrarlı grup seçimi)
-* **Sonraki Makro Modüller:**
-  * `MAT.9.7.1.x` / `MAT.9.7.2.x` için **Olasılık Deney Makinesi**: gözlemsel oran ve tümevarımsal projeksiyon, veri radarından ayrı bir çark/deney makinesi olarak yapılacak.
+
+### 6B. Olasılık Deney Makinesi (Review Needed)
+* **Konsept:** Öğrenci son deney kayıtlarını büyük bir olasılık makinesinde okur. İlk görevde 100 kayıt içindeki mavi sonuç oranını sayaç kapağıyla kurar; ikinci görevde 30 denemelik küçük örneklem oranını 200 denemelik büyük tahmin rayına taşır. Gözlemsel olasılık ile tümevarımsal projeksiyon aynı ana oyuncakta ama iki ayrı görev olarak anlaşılır.
+* **Sağladığı Atom Grupları:**
+  * `MAT.9.7.1.1` (Gerçek hayat deneylerinden gelen veriyle gözlemsel olasılık oranı kurma)
+  * `MAT.9.7.2.1` (Küçük örneklem oranını tüm evrene tümevarımsal olarak genelleme)
+* **Route:** `/embed/probability/probability-experiment-machine`
+* **Durum:** Yeni üretim modülü `Review Needed`; Kaptan canlı görsel onayı olmadan `Showcase Ready` yapılmayacak.
 
 ## 🛰️ LİSE 10. SINIF MODÜLLERİ
 

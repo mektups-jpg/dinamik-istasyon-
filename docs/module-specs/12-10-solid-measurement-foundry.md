@@ -79,3 +79,4 @@ Bu modül `Review Needed` olarak ana uygulamada görünür. Kaptan görsel onay�
 - Console/WebGL: `.agent/browser-use-shots/12-10-solid-measurement-foundry-console.md`; uygulama console/page error yok, WebGL pixel check `20/20` non-dark sample. Playwright screenshot/pixel capture kaynaklı WebGL `ReadPixels` performans uyarıları uygulama hatası olarak sayılmadı.
 - Gemini: `.agent/gemini-reports/12-10-solid-measurement-foundry-final.txt`, Gemini 3.1 Pro çağrısı `95/100 PASS`, `MUST_FIX` yok. `SHOULD_FIX` olarak verilen prizma yüzey formülü dili `A = 2Tₐ + Yₐ` şeklinde düzeltildi.
 - Teknik kapılar: `npm run module:check -- solid-measurement-foundry` 31 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve final doküman senkronu sonrası `git diff --check` geçti.
+- 2026-05-30 Browser/Codex canlı cila: completion ekranındaki iç üretim etiketi öğrenci kazanım cümlesine çevrildi; 10 görev zinciri, test-id sızıntısı, taşma ve console tekrar kontrol edildi.

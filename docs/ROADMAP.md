@@ -111,7 +111,7 @@ Amaç: küçük yaş kullanıcıları için ürünün giriş deneyimini güçlen
 ### Sprint 3.4 - Lise Omurgası
 
 - [x] 9. sınıf: Kök ve Üs Reaktörü.
-- [x] 9. sınıf: Fonksiyonel Hologram Odası.
+- [x] 9. sınıf: Fonksiyon Grafiği Dönüşüm Atölyesi.
 - [x] 9. sınıf: Akıllı Mantık Devreleri.
 - [x] 9. sınıf: Üçgen Gerilim Laboratuvarı.
 - [x] 9. sınıf: Dönüşüm Adli Bilişimi.

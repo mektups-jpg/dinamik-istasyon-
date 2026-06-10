@@ -13,6 +13,13 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Sonraki küçük adım:
 ```
 
+## 2026-05-31 04:29 - 12-10 Katı Cisim Ölçüm Dökümhanesi Canlı Audit
+- Okunan bağlam: `project-context-primer`, `AGENTS.md`, `README.md`, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `docs/KAPTAN_REVIEW_WORKFLOW.md`, `docs/MEB_ATOMLARI.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `docs/module-specs/12-10-solid-measurement-foundry.md`, Browser skill ve 12-10 kaynak dosyaları.
+- Yapılan iş: `solid-measurement-foundry` modülü tek modül olarak canlı Browser/Codex audit'ten geçirildi. Başlangıçta 3D canvas dolu, formül/test-id sızıntısı yok. Yanlış `Silindir + Alan Zırhı` seçiminde AstroBot alarmı ve sahne hata durumu çalıştı. Prizma/silindir/piramit/koni/küre hacim zinciri ve aynı cisimlerin yüzey alanı zinciri 10/10 completion'a ulaştı; formüller yalnız `Dökümhaneyi Test Et` sonrası açıldı. Kod cila gerektiren hard-fail yakalanmadı.
+- Değişen dosyalar: Kod değişmedi; yalnız `.agent/WORKLOG.md` oturum kaydı güncellendi.
+- Test: Browser/Codex görselleri `.agent/visual-reports/lise-12-10-cont-start.png`, `lise-12-10-cont-wrong.png`, `lise-12-10-cont-prism-volume.png`, `lise-12-10-cont-cone-volume.png`, `lise-12-10-cont-prism-surface.png`, `lise-12-10-cont-sphere-surface.png`, `lise-12-10-cont-completion.png`; yatay taşma `0`, console warning/error `0`. `npm run module:check -- solid-measurement-foundry` 31 pass / 2 expected warn / 0 fail; `npx tsc --noEmit` ve `npm run build` geçti.
+- Sonraki küçük adım: `12-11 data-verdict-lab` veya Kaptan'ın canlı not verdiği tek modül ile devam et. 12-10 Kaptan onayı olmadan `Showcase Ready` yapılmayacak.
+
 ## 2026-05-23 - Kaptan İnceleme Paneli ve 3 Hatlı Çalışma Dokümantasyonu
 - Okunan bağlam: `documentation-sync` skill, `project-context-primer` skill, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `README.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `ReviewWorkbench` ve `ReviewModuleCard`.
 - Yapılan iş: `/review-workbench` için sağ tarafta canlı önizleme kullanan yeni Kaptan çalışma düzeni dokümante edildi. Tek repo + üç sohbet hattı + tek kod yazan üretim hattı kuralı yazıldı; ilkokul ve ortaokul sohbetleri audit-only, lise/ana sohbet üretim hattı olarak ayrıldı. Yeni sohbetlere verilecek hazır promptlar kalıcı kılavuza eklendi.
@@ -1564,3 +1571,191 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Düzeltme: Tüm kurallar ortak `RuleCartridgeCore` ve `RuleFlowRail` parçalarına taşındı. Toplam/fark, çarpım, bölüm ve zincir artık aynı portlu çekirdeği kullanıyor; eski içinden geçen statik ray kalıpları kaldırıldı. Toplam/fark etiketleri orta gövdenin arkasında kalmayacak şekilde gövde dışına alındı.
 - QA: Browser/Codex canlı kontrolde `Toplam`, `Fark`, `Çarpım`, `Bölüm`, `Zincir` kartuşlarının her biri tek tek tıklandı; ortak çekirdek, doğru sembol, yeni raylar, eski path yokluğu, yatay taşma `0` ve console warning/error `0` doğrulandı. Görseller: `.agent/visual-reports/12-07-core-sum-after-label-fix.png`, `.agent/visual-reports/12-07-core-product.png`, `.agent/visual-reports/12-07-core-quotient.png`, `.agent/visual-reports/12-07-core-chain.png`.
 - Test: Kaynak kabul kontrolü geçti; `npm run module:check -- derivative-rule-forge` 34 pass / 2 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-23 Manual Pairing - 12-07 Etiket Katmanı Cila
+- Kullanıcı geri bildirimi: Çarpım kolundaki `köprü` etiketi ve arka rozet yazıları gömülü/arkada kalmış gibi duruyor.
+- Düzeltme: Kural kolları iki katmana ayrıldı: raylar ve mekanik şekiller arkada, okunacak `RuleTag` etiketleri kartuş/çıkıştan sonra en üstte çiziliyor. Kompakt rozetler daraltıldı; etiket arka planı opaklaştırıldı ve yazıya koyu kontur eklendi.
+- QA: Browser/Codex canlı kontrolde çarpım kartuşu tekrar açıldı; `köprü` etiketi görünür, üst katmanda ve stroke konturlu olarak doğrulandı. Yatay taşma `0`, console warning/error `0`. Görsel: `.agent/visual-reports/lise-12-07-bridge-label-fix.png`.
+
+## 2026-05-24 Manual Pairing - 12-08 Optimizasyon Arazisi Sıralı Cila
+- Kullanıcı yönü: Lise modüllerine sıradan devam edilsin. 12-07 canlı kontrol sonrası Kaptan onayı beklediği için sıradaki `12-08 optimization-terrain` canlı açıldı.
+- Düzeltme: Embed üst etiketi İngilizce `Review Needed` yerine Türkçe `Görüş Gerekli` oldu. Başlangıç arazisi daha parlak neon pist, hareketli tarama izi ve daha okunur işaret şeridiyle güçlendirildi. Seçim sonrası alarm/kanıt kartı ekran altında kesilmeyecek şekilde yukarı alındı.
+- Completion cila: `optimization terrain` başlığı `optimizasyon arazisi` yapıldı; completion kartı `980px` güvenli genişliğe çekilerek desktop/kiosk görünümünde sağdan kırpılma giderildi.
+- QA: Browser/Codex canlı kontrolde başlangıç, yanlış `Azalan Bölge`, doğru `Artan Bölge`, beş görev full-chain completion, yatay taşma `0`, console warning/error `0` doğrulandı. Görseller: `.agent/visual-reports/lise-12-08-polish-start.png`, `.agent/visual-reports/lise-12-08-polish-wrong.png`, `.agent/visual-reports/lise-12-08-polish-right.png`, `.agent/visual-reports/lise-12-08-polish-completion-fixed.png`.
+- Test: `npm run module:check -- optimization-terrain` 24 pass / 2 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmadı.
+
+## 2026-05-24 Manual Pairing - 12-07 Türev Kuralları MEB Dil Sadeleştirme
+- Kullanıcı geri bildirimi: Modül karışık; öğrenci daha iyi anlayacak şekilde tasarlansın, kavram ve terimler MEB'e uygun ve anlaşılır olsun.
+- Düzeltme: Görünen başlık `Türev Kuralları Atölyesi` oldu. Görevler MAT.12.2.5.1-5 diline çekildi; `kartuş/döküm/kilit/ışın/zırh/çekirdek/kabuk/köprü` gibi oyun jargonu öğrenciye görünen yerlerden kaldırıldı. Sahne ve sağ panel `kural seç`, `adım tamamla`, `f türevi`, `g türevi`, `aynen`, `pay`, `payda`, `dış türev`, `iç türev` kavramlarını kullanıyor.
+- Ortak bileşen notu: `Grade12FullStageLab` içine geriye uyumlu `successFeedbackLabel` eklendi; sadece 12-07'de başarı çipi `Sonuç hazır; ayrıntı sahne kartında.` metnini kullanıyor.
+- QA: Chrome/Computer Use ile canlı ekran açıldı. Playwright/Codex ile beş görev akışı, ürün/bölüm/zincir görselleri, eski terim taraması, yatay taşma ve console/page error kontrolü geçti. Görseller: `.agent/visual-reports/lise-12-07-meb-open.png`, `.agent/visual-reports/lise-12-07-meb-product-selected.png`, `.agent/visual-reports/lise-12-07-meb-quotient-selected.png`, `.agent/visual-reports/lise-12-07-meb-chain-selected.png`.
+- Test: `npm run module:check -- derivative-rule-forge` 34 pass / 2 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmadı.
+
+## 2026-05-24 Manual Pairing - 12-07 Çıkış Kapsülü Sonuç Şeması
+- Kullanıcı geri bildirimi: Sahnedeki büyük çıkış kapsülünde `0/3 adım` yerine sonucu yazmak daha anlaşılır olabilir.
+- Değerlendirme: Doğru; büyük kapsül sonuç alanı gibi okunuyor. Ancak gerçek çıktı erken sızmamalı.
+- Düzeltme: Çıkış kapsülü, kural seçilince seçilen kuralın sonuç şemasını gösteriyor: `fʼ + gʼ`, `fʼ - gʼ`, `fʼg + fgʼ`, `(fʼg - fgʼ)/g²`, `Fʼ(g) · gʼ`. Gerçek cebirsel sonuç yalnız doğru kontrol sonrası açılıyor. Adım sayacı alt tezgâhta kaldı.
+- QA: Playwright/Codex 1463x1128 kontrolde başlangıç `sonuç ?`, Toplam önizleme `fʼ + gʼ`, yanlış Çarpım önizleme `fʼg + fgʼ`, doğru kontrol sonrası `2x + 3`, yatay taşma `0`, console/page error `0` doğrulandı. Görseller: `.agent/visual-reports/lise-12-07-output-shape-start.png`, `.agent/visual-reports/lise-12-07-output-shape-sum-preview.png`, `.agent/visual-reports/lise-12-07-output-shape-product-preview.png`, `.agent/visual-reports/lise-12-07-output-shape-sum-solved.png`.
+- Test: `npm run module:check -- derivative-rule-forge` 34 pass / 2 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi.
+
+## 2026-05-30 Manual Pairing - 09-08 Aralık Kapıları İstasyonu
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan modüller çıkarılsın ve dosyadaki açık modüller üretilsin. 10-11 kuyruğu Done, 12 yeni atom eksiği yok; gerçek yeni açık havuzu 9. sınıf ayrılan makro modüllerde bulundu.
+- Uygulama: `MAT.9.1.3.1-4` için `interval-gate-station` eklendi. Ana oyuncak tek sayı doğrusu: sol/sağ kapılar sürükleniyor, kapı merkezi dahil/hariç modunu değiştiriyor. Görevler kapalı aralık, açık aralık, kesişim ve birleşim olarak tamamlanıyor.
+- Canlı QA bulgusu: İlk gerçek sürükleme denemesinde kapının merkezinden basınca yalnız dahil/hariç tıklaması çalışıyordu; merkez de `onPointerDown` alacak şekilde düzeltildi. Yanlış deneme AstroBot alarmı üretti, dört görev gerçek sürükleme + uç tipi tıklamayla completion'a ulaştı.
+- Kanıt: `.agent/visual-reports/lise-09-08-interval-start.png`, `.agent/visual-reports/lise-09-08-interval-wrong.png`, `.agent/visual-reports/lise-09-08-interval-completion.png`; Browser/Codex metrics `overflowX=false`, `overflowY=false`, console warning/error `[]`.
+- Test: `npm run module:check -- interval-gate-station` 18 pass / 3 expected warn / 0 fail; `npx tsc --noEmit` geçti. Kaptan onayı olmadan `Showcase Ready` yapılmadı; registry statüsü `Review Needed`.
+
+## 2026-05-30 Manual Pairing - 09-09 Gerçek Sayı Atlası ve İşlem Yasaları
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan modüller sırayla yapılsın. 12. sınıfta yeni atom açığı olmadığı ve 10-11 kuyruğu Done olduğu için 9. sınıf ayrılmış makro modüllerinden `MAT.9.1.4.x / MAT.9.1.5.x` seçildi.
+- Uygulama: `real-number-law-atlas` eklendi. Ana oyuncak tek atlas makinesi: sayı kümeleri görevlerinde kapı/şemsiye katmanları, işlem yasası görevlerinde birleşme ve dağılma kolları çalışıyor. Route `/embed/numbers/real-number-law-atlas`.
+- Canlı QA bulgusu: İlk turda sağ panelde hedef mühür formülü kontrol öncesi göründü; bu cevap sızıntısı kapatıldı. Son turda yanlış doğal sayı kapısı alarmı, dört görev zinciri, completion, kontrol öncesi hedef formül sızıntısı `0`, yatay taşma `0` ve console warning/error `0` doğrulandı.
+- Kanıt: `.agent/visual-reports/lise-09-09-start-fixed.png`, `.agent/visual-reports/lise-09-09-wrong-fixed.png`, `.agent/visual-reports/lise-09-09-distributive-before-check.png`, `.agent/visual-reports/lise-09-09-completion-fixed.png`.
+- Test: `npm run module:check -- real-number-law-atlas` 25 pass / 3 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. 2026-06-03 Kaptan canlı onayı sonrası registry statüsü `Showcase Ready`; dashboard etiketi `Vitrin Hazır`.
+
+## 2026-05-31 Manual Pairing - 09-10 Mutlak Değer Ayna Odası
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan modüller yapılmaya devam edilsin; tek modül kuralı korunarak `MAT.9.2.2.1 / MAT.9.2.2.2` açığı seçildi.
+- Uygulama: `absolute-value-mirror-room` eklendi. Ana oyuncak tek koordinat aynası: öğrenci negatif kolu x ekseninden yukarı katlıyor, tepe noktasını iç ifadenin sıfırlandığı yere sürüklüyor ve `|2x + 4|` için kolları iki kat dikleştiriyor. Route `/embed/algebra/absolute-value-mirror-room`.
+- Canlı QA bulgusu: İlk görsel turda ekranda uydurma `MAT.9.2.2.x` etiketi yakalandı; başlık ve sahne aktif gerçek atomlarla düzeltildi. Yanlış deneme AstroBot alarmı üretti; katlama, tepe hizalama ve eğim düğmesiyle üç görev zinciri completion'a ulaştı. Yatay taşma `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-09-10-start.png`, `.agent/visual-reports/lise-09-10-wrong.png`, `.agent/visual-reports/lise-09-10-completion.png`.
+- Test: `npm run module:check -- absolute-value-mirror-room`, `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. 2026-06-06 Kaptan canlı onayıyla registry statüsü `Showcase Ready`; dashboard etiketi `Vitrin Hazır`.
+
+## 2026-05-31 Manual Pairing - 09-11 Eşitsizlik Güvenlik Alanı
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan modüller yapılmaya devam edilsin; tek modül kuralı korunarak `MAT.9.2.3.2` açığı seçildi.
+- Uygulama: `inequality-safety-zone` eklendi. Ana oyuncak tek sayı doğrusu güvenlik tarayıcısı: öğrenci sınır işaretini hareket ettiriyor, `≤` için sol güvenli alanı ve `≥` için sağ güvenli alanı seçiyor. Route `/embed/algebra/inequality-safety-zone`.
+- Canlı QA bulgusu: İlk açılışta tembel yükleme fallback'i sayfada kaldı; reload sonrası modül normal açıldı ve konsolda hata yoktu. Sahne metnindeki yön açıklaması nötrleştirildi. Yanlış deneme AstroBot alarmı üretti; dört görev zinciri completion'a ulaştı. Kontrol öncesi hedef sonuç sızıntısı `0`, yatay taşma `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-09-11-start-after-label-fix.png`, `.agent/visual-reports/lise-09-11-wrong.png`, `.agent/visual-reports/lise-09-11-completion.png`.
+- Test: `npm run module:check -- inequality-safety-zone` 15 pass / 3 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Kaptan onayı olmadan `Showcase Ready` yapılmadı; registry statüsü `Review Needed`.
+
+## 2026-06-06 Manual Pairing - 09-11 Eşitsizlik Güvenlik Alanı Cila
+- Kullanıcı yönü: Atom CU/Browser canlı gözle incelensin; yanlışlar ve pedagojik eksikler varsa uygun olan yapılsın.
+- Değerlendirme: Ana oyuncak doğru fikri taşıyor; fakat `taslak çözüm` ifadesi resmi cevap gibi duruyor, `Kısa kural` görev metnini tekrar ediyor ve doğru testten sonra cebirden sayı doğrusuna geçiş okunamadan modül hemen sonraki göreve atlıyordu.
+- Uygulama: Sahne başlığı `Çözüm Bölgesini Kur` yapıldı; seçim etiketi `deneme seçimi`/`doğru seçim` olarak ayrıldı. Başlangıç nötrleştirildi: seçim kutusu `yön + sınır` olarak kalır, sahne başlangıçta "sınır 3" gibi resmi görünen sayı yazmaz; yön seçilmeden `x ≤ ...` veya `x ≥ ...` denemesi kurulmaz. Kısa kural `en fazla/en az` yön mantığını anlatıyor. Yön seçilince sayı `deneme sınırı`, dolu nokta ve `sınır dahil` etiketi beliriyor. Doğru testten sonra `Cebir adımı` ve `Sonuç` kartları kalıcı açılıyor; öğrenci `Sonraki Görev` ile ilerliyor. Statü `Review Needed` kaldı.
+
+## 2026-06-07 Manual Pairing - 09-11 Sayı Seti Rotasyonu
+- Kullanıcı yönü: Atom her oynandığında aynı sayılar geliyor; pedagojik olarak değerlendir ve uygun olanı yap.
+- Değerlendirme: Haklı bulgu. Sabit sayılar öğrenciyi eşitsizlik mantığını genellemek yerine `5/6` cevaplarını ezberlemeye iter. Kavram sırası aynı kalmalı ama katsayı, sabit ve hedef değerler güvenli tam sayı setleriyle değişmeli.
+- Uygulama: `inequality-safety-zone` modeline 8 sayı seti eklendi. Her oynayışta kantin, kargo, puan ve bağış görevleri aynı kavram sırasını koruyor; ancak modeller ve sınırlar değişiyor. Tekrar oynatmada aynı set üst üste seçilmiyor; QA için `missionSet=0..7` parametresi eklendi. Statü `Review Needed` kaldı.
+
+## 2026-06-07 Manual Pairing - 09-11 Sağ Panel Soru Dili
+- Kullanıcı yönü: Sağ paneldeki `Kargo Limiti` başlığı ve problem metni pedagojik olarak değerlendirilsin; bu bölüm atomun önemli karar noktası olduğu için gerekirse görsel olarak öne çıkarılsın.
+- Değerlendirme: `Kargo Limiti` başlığı öğrencinin yapacağı işi yeterince söylemiyor. Bu görevde asıl düşünme "toplam yükü aşmadan kutuya en fazla kaç kitap konabilir?" sorusudur; panelde bu metin model/kural bilgisinden daha görünür olmalı.
+- Uygulama: İkinci görev başlığı `Kutuya En Fazla Kitap` yapıldı. Problem cümlesi daha doğal yazıldı ve sağ panelde sıcak amber vurgulu ayrı `Çözmen gereken soru` kartıyla öne çıkarıldı. Model ve kısa kural destek rolünde kaldı. Statü `Review Needed` kaldı.
+
+## 2026-06-07 Manual Pairing - 09-11 Oynayışta Sayı Kilidi Düzeltmesi
+- Kullanıcı yönü: Atom her oynayışta aynı sayıları veriyor; bu öğrenmeyi olumsuz etkiliyor, değerlendir ve düzelt.
+- Değerlendirme: Haklı bulgu. URL'de kalan `missionSet=0` QA parametresi öğrenci gibi tekrar oynarken aynı sayıları kilitliyordu; bu genellemeyi zayıflatır ve cevap ezberini teşvik eder.
+- Uygulama: `missionSet=0..7` artık tek başına seti kilitlemiyor. Öğrenci deneyimi her açılış/tekrar oynayışta 8 güvenli setten farklı bir sete geçiyor. Test amaçlı bilinçli sabitleme için artık `lockMissionSet=1&missionSet=0..7` gerekiyor. Statü `Review Needed` kaldı.
+
+## 2026-06-07 Manual Pairing - 09-11 Vitrin Hazır
+- Kullanıcı yönü: Kaptan `Eşitsizlik Güvenlik Alanı` için "bu atomu vitrin hazır olarak isimlendir" onayı verdi.
+- Uygulama: Registry statüsü `showcase-ready` yapıldı; dashboard etiketi `Vitrin Hazır` olacak şekilde kalite defterleri, modül spec'i, `docs/MODULES.md`, progress ve current task kayıtları senkronlandı. Not: 9. sınıf embed kabuğunda üst statü rozeti yok; vitrin durumu dashboard kartı ve registry üzerinden okunuyor.
+- Kanıt: Önceki canlı QA zinciri, sağ panel soru kartı vurgusu ve tekrar oynayış sayı rotasyonu korunuyor. Bu turda Browser/Codex canlı dashboard etiket kontrolü ve teknik kapılar taze doğrulanacak.
+
+## 2026-06-07 Manual Pairing - 09-04 Denklem Denizaltısı Rastgelelik Kontrolü
+- Kullanıcı yönü: Kaptan `equation-submarine` atomunda her oynayışta aynı denklemler gelip gelmediğini CU/Browser ile kontrol etmemi ve pedagojik olarak uygun olanı yapmamı istedi.
+- Değerlendirme: Kod ve canlı ekran modülün zaten rastgele denklem ürettiğini gösterdi. Pedagojik risk sistematik tekrar değil, rastgelelikte çok düşük olasılıkla ilk denklem çiftinin üst üste aynı gelmesiydi; bu durum öğrencide "hep aynı soru" hissi oluşturabilir.
+- Uygulama: İlk görünen denklem çifti için session tabanlı son başlangıç imzası eklendi. Açılış veya `Tekrar Oyna` sonrası yeni set, bir önceki başlangıç denklemiyle aynıysa en fazla 8 kez yeniden üretiliyor. Rastgele çeşitlilik korunuyor, üst üste aynı başlangıç engelleniyor.
+- Canlı QA bulgusu: Browser/Codex canlı kontrolde 5 taze açılışta 5 farklı başlangıç denklem çifti görüldü; ardışık tekrar `0`. Tam üç katman çözüldü, finalde `TEKRAR OYNA` sonrası başlangıç `3x + 3y = 21 / 4x - 3y = 0` -> `4x + 3y = 23 / x - 3y = -13` olarak değişti. Console warning/error `0`, yatay taşma `0`.
+- Kanıt: `.agent/visual-reports/lise-09-equation-submarine-no-repeat-start.png`, `.agent/visual-reports/lise-09-equation-submarine-restart-no-repeat.png`.
+
+## 2026-06-07 Manual Pairing - 09-04 Denklem Denizaltısı Vitrin Hazır
+- Kullanıcı yönü: Kaptan, canlı kontrol sonrası atomun `Vitrin Hazır` olarak isimlendirilmesini istedi.
+- Uygulama: `moduleRegistry` kartı `showcase-ready` yapıldı; modül spec'i, showcase readiness, quality scorecard, progress ve worklog kayıtları Kaptan onayıyla eşitlendi.
+- Kanıt: Dashboard kartında `Vitrin Hazır` etiketi Browser/Codex ile doğrulandı; console warning/error `0`, yatay taşma `0`.
+- Doğrulama: `npm run module:check -- equation-submarine` 8 pass / 5 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi.
+
+## 2026-05-31 04:43 Manual Pairing - 12-11 Büyük Veri Yargı Laboratuvarı Canlı Denetim
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan lise modülleri tek tek yapılsın; 12. sınıf Review Needed kuyruğunda `data-verdict-lab` canlı denetime alındı.
+- Canlı QA bulgusu: Kod değişikliği gerektiren hard fail görülmedi. Başlangıçta sonuç sızıntısı yoktu; yanlış kaynak + yanlış yargı denemesi AstroBot alarmı üretti. Dört görev zincirinde sırasıyla kurum verisi, aynı birim/medyan/çeyrek bant/zaman filtresi ve kanıtlı sonuç seçimleri başarıya geçti; final ekranı `Görüş Gerekli` durumunu korudu.
+- Öğrenci gözü notu: Ana veri hattı kaynak, filtre, grafik ve yargı kapsülünü net ayırıyor; sağ panel destek rolünde kalıyor. Kanıtlı yargı fikri sahnede sebep-sonuç olarak okunuyor, ancak Kaptan göz onayı gelmeden `Showcase Ready` yapılmadı.
+- Kanıt: `.agent/visual-reports/lise-12-11-cont-start-loaded.png`, `.agent/visual-reports/lise-12-11-cont-wrong.png`, `.agent/visual-reports/lise-12-11-cont-first-right.png`, `.agent/visual-reports/lise-12-11-cont-second-right.png`, `.agent/visual-reports/lise-12-11-cont-third-right.png`, `.agent/visual-reports/lise-12-11-cont-final-right.png`, `.agent/visual-reports/lise-12-11-cont-completion.png`.
+- Test: `npm run module:check -- data-verdict-lab` 20 pass / 2 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi.
+
+## 2026-05-31 05:05 Manual Pairing - 09-12 Algoritma Akış Hattı
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan lise modülleri yapılmaya devam edilsin. 12. sınıf modülleri Kaptan onayı beklediği için 9. sınıfta ayrılmış `MAT.9.3.1.1` açık makro modülü seçildi.
+- Uygulama: `algorithm-flow-line` eklendi. Ana oyuncak tek akış bandı: öğrenci problem kartındaki karışık durumu işlem bloklarına ayırıp yuvalara sırayla yerleştiriyor; sonuç mührü test öncesi gizli kalıyor ve doğru test sonrası okunuyor. Route `/embed/algebra/algorithm-flow-line`.
+- Canlı QA bulgusu: Yanlış `böl -> topla -> mühür` sırası AstroBot alarmı üretti. Doğru takım sayısı, kalan para, ortalama ve gezi bütçesi akışları test sonrası sonuç mührü açarak 4/4 completion'a ulaştı. Kontrol öncesi sonuç sızıntısı `0`, yatay taşma `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-09-12-start.png`, `.agent/visual-reports/lise-09-12-wrong.png`, `.agent/visual-reports/lise-09-12-first-right.png`, `.agent/visual-reports/lise-09-12-fourth-right.png`, `.agent/visual-reports/lise-09-12-completion.png`.
+- Test: Kırmızı kapı `module:check -- algorithm-flow-line` 5 fail ile başladı; uygulama sonrası `module:check` 16 pass / 3 expected warn / 0 fail, `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Kaptan onayı olmadan `Showcase Ready` yapılmadı; registry statüsü `Review Needed`.
+
+## 2026-05-31 05:35 Manual Pairing - 09-13 Niceleyici Radar Avı
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan lise modülleri yapılmaya devam edilsin. 9. sınıfta ayrılmış `MAT.9.3.3.1-2` niceleyici açığı tek modül olarak seçildi.
+- Uygulama: `quantifier-radar-hunt` eklendi. Ana oyuncak tek küme radarı: öğrenci `Her` seçince tüm elemanları tarıyor, `Bazı` seçince koşulu sağlayan en az bir kanıt elemanı yakalıyor. Sonuç mührü test öncesi `???` kalıyor. Route `/embed/algebra/quantifier-radar-hunt`.
+- Canlı QA bulgusu: Yanlış `Bazı` seçimi ilk `Her` görevinde AstroBot alarmı üretti. Doğru çift sayı, asal kanıt, üçgen açı ve dörtgen avı zinciri 4/4 completion'a ulaştı. Kontrol öncesi sonuç sızıntısı `0`, yatay taşma `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-09-13-start.png`, `.agent/visual-reports/lise-09-13-wrong.png`, `.agent/visual-reports/lise-09-13-first-right.png`, `.agent/visual-reports/lise-09-13-fourth-right.png`, `.agent/visual-reports/lise-09-13-completion-settled.png`.
+- Test: Kırmızı kapı `module:check -- quantifier-radar-hunt` 5 fail ile başladı; uygulama sonrası `module:check` 17 pass / 3 expected warn / 0 fail, `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Kaptan onayı olmadan `Showcase Ready` yapılmadı; registry statüsü `Review Needed`.
+
+## 2026-05-31 06:20 Manual Pairing - 09-14 Benzerlik Ölçek Stüdyosu
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan lise modülleri yapılmaya devam edilsin. 9. sınıfta ayrılmış `MAT.9.5.2.1-2` benzerlik açığı tek modül olarak seçildi.
+- Uygulama: `similarity-scale-studio` eklendi. Ana oyuncak iki üçgenli kanıt stüdyosu: öğrenci karşılıklı açıları eşleştiriyor, sonra kenar çiftlerinin aynı `k` ölçeğiyle büyüdüğünü kuruyor. Sonuç mührü test öncesi `???` kalıyor. Route `/embed/geometry/similarity-scale-studio`.
+- Canlı QA bulgusu: İlk görsel kontrolde üçgenler biraz küçük kaldığı için sol açıklama bloğu kompaktlaştırıldı ve SVG sahnesi yakınlaştırıldı. Yanlış açı eşleşmesi AstroBot alarmı üretti. Doğru eş açı, karışık eş açı, `k=2` ve `k=1.5` oran zinciri 4/4 completion'a ulaştı. Kontrol öncesi sonuç sızıntısı `0`, yatay taşma `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-09-14-final-start.png`, `.agent/visual-reports/lise-09-14-final-wrong.png`, `.agent/visual-reports/lise-09-14-final-first-right.png`, `.agent/visual-reports/lise-09-14-final-fourth-right.png`, `.agent/visual-reports/lise-09-14-final-completion-settled.png`.
+- Test: Kırmızı kapı `module:check -- similarity-scale-studio` 5 fail ile başladı; uygulama sonrası `module:check` 17 pass / 3 expected warn / 0 fail, `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Kaptan onayı olmadan `Showcase Ready` yapılmadı; registry statüsü `Review Needed`.
+
+## 2026-05-31 Manual Pairing - 09-15 Dik Üçgen Teorem Laboratuvarı
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan lise modülleri yapılmaya devam edilsin. Tek modül kuralı korunarak `MAT.9.5.3.1-3` dik üçgen teorem açığı seçildi.
+- Uygulama: `right-triangle-theorem-lab` eklendi. Ana oyuncak tek dik üçgen laboratuvarı: öğrenci Tales paralel kesitinde parça-bütün oranını, Öklid yüksekliğinde `h² = p · k` bağını ve harfli Pisagor denklem köprüsünü kuruyor. Route `/embed/geometry/right-triangle-theorem-lab`.
+- Canlı QA bulgusu: Yanlış Tales kesiti AstroBot alarmı üretti. Doğru Tales, Öklid ve Pisagor zinciri completion'a ulaştı. Kontrol öncesi sonuç sızıntısı `0`, yatay taşma `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-09-15-start.png`, `.agent/visual-reports/lise-09-15-wrong.png`, `.agent/visual-reports/lise-09-15-tales-right.png`, `.agent/visual-reports/lise-09-15-euclid-right.png`, `.agent/visual-reports/lise-09-15-pythagoras-right.png`, `.agent/visual-reports/lise-09-15-completion-settled.png`.
+- Test: Kırmızı kapı `module:check -- right-triangle-theorem-lab` 5 fail ile başladı; uygulama sonrası `module:check` 19 pass / 3 expected warn / 0 fail, `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Kaptan onayı olmadan `Showcase Ready` yapılmadı; registry statüsü `Review Needed`.
+
+## 2026-05-31 Manual Pairing - 09-16 Olasılık Deney Makinesi
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan lise modülleri yapılmaya devam edilsin. Tek modül kuralı korunarak `MAT.9.7.1.1 / MAT.9.7.2.1` olasılık açığı seçildi.
+- Uygulama: `probability-experiment-machine` eklendi. Ana oyuncak tek deney makinesi: öğrenci son 100 deney kaydındaki mavi sonucu gözlemsel oran olarak kuruyor, sonra 30 denemelik küçük örneklem oranını 200 denemelik tahmin rayına taşıyor. Route `/embed/probability/probability-experiment-machine`.
+- Canlı QA bulgusu: Yanlış gözlemsel oran ve yanlış tümevarım tahmini AstroBot alarmı üretti. Doğru gözlemsel oran ikinci göreve geçti, doğru tümevarım tahmini completion'a ulaştı. Erken başarı sızıntısı `0`, yatay taşma `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-09-16-start.png`, `.agent/visual-reports/lise-09-16-wrong-observed.png`, `.agent/visual-reports/lise-09-16-observed-aligned.png`, `.agent/visual-reports/lise-09-16-projection-start.png`, `.agent/visual-reports/lise-09-16-wrong-projection.png`, `.agent/visual-reports/lise-09-16-projection-aligned.png`, `.agent/visual-reports/lise-09-16-completion.png`.
+- Test: `npm run module:check -- probability-experiment-machine` 19 pass / 3 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Kaptan onayı olmadan `Showcase Ready` yapılmadı; registry statüsü `Review Needed`.
+
+## 2026-05-31 Manual Pairing - 09-01 Kök ve Üs Reaktörü
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan lise modülleri yapılmaya devam edilsin. Tek modül kuralıyla eski ana modül `radical-power-reactor` kalite hattına alındı.
+- Uygulama: `MAT.9.1.1.x / MAT.9.1.2.x` joker atom dili gerçek `MAT.9.1.1.1-2 / MAT.9.1.2.1-2` atom aralığına çekildi. Yuva/hazne kilitlerinde AstroBot kısa geri bildirim veriyor; eski hata mesajı doğru eylemden sonra ekranda kalmıyor. Buton dili `Sonraki Deneye Geç` ve `Laboratuvarı Tamamla` olarak netleşti. Registry statüsü `Review Needed` yapıldı ve spec eklendi.
+- Canlı QA bulgusu: Başlangıç, boş onay AstroBot alarmı, gerçek sürükleme ile `2³`/`2²` üs yuvaları, `√36`/`√2` kök hazneleri ve completion geçti. Joker atom sızıntısı `0`, yatay taşma `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-09-01-radical-start.png`, `.agent/visual-reports/lise-09-01-radical-wrong.png`, `.agent/visual-reports/lise-09-01-radical-root-right.png`, `.agent/visual-reports/lise-09-01-radical-completion.png`.
+- Test: `npm run module:check -- radical-power-reactor` 11 pass / 4 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-01 Manual Pairing - 09-01 Kök ve Üs Reaktörü Vitrin Onayı
+- Kullanıcı yönü: Kaptan canlı değerlendirmede "bu atom gayet iyi oldu. öğrenci uygulanan kuralları net anlıyor." diyerek 09-01 için vitrin onayı verdi.
+- Uygulama: `radical-power-reactor` registry statüsü `showcase-ready` yapıldı; dashboard etiketi `Vitrin Hazır` oldu. Embed üst rozetlerine `Durum / Vitrin hazır` eklendi. Kalite defterleri ve modül spec'i Kaptan onayıyla güncellendi.
+- Test: `module:check`, `tsc`, `build`, `git diff --check` ve Browser/Codex canlı etiket kontrolü bu turda tekrar doğrulanacak.
+
+## 2026-05-31 08:32 - 09-02 Fonksiyon Grafiği Dönüşüm Atölyesi
+- Kullanıcı yönü: `docs/MODULES.md` içindeki kalan lise modüllerine tek modül kuralıyla devam edilsin. Sıradaki eski ana modül `function-hologram-room` canlı açılıp kalite hattına alındı.
+- Uygulama: `MAT.9.2.1.X` joker atom dili gerçek `MAT.9.2.1.1-4` aralığına çekildi. Sahne başlığı her dönüşüm görevine göre değişiyor; hedef değer sızıntısı yapan panel metrikleri sadeleşti. Sahne üstü kaynak düğümü ve eğim kolu sürüklenince AstroBot kısa geri bildirim veriyor; erişilebilir klavye hizalama fallback'i eklendi. Registry statüsü `Review Needed` yapıldı ve spec eklendi.
+- Canlı QA bulgusu: Başlangıç, yanlış kontrol AstroBot alarmı, gerçek sahne sürükleme duman testi, dört hedef completion, joker atom sızıntısı `0`, yatay taşma `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-09-02-function-start.png`, `.agent/visual-reports/lise-09-02-function-wrong.png`, `.agent/visual-reports/lise-09-02-function-task-1-aligned.png`, `.agent/visual-reports/lise-09-02-function-task-2-aligned.png`, `.agent/visual-reports/lise-09-02-function-task-3-aligned.png`, `.agent/visual-reports/lise-09-02-function-task-4-aligned.png`, `.agent/visual-reports/lise-09-02-function-completion.png`, `.agent/visual-reports/lise-09-02-function-real-drag.png`.
+- Test: `npm run module:check -- function-hologram-room` 18 pass / 3 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-05-31 08:32 - 12-08 Optimizasyon Arazisi Devam Kontrolü
+- Kullanıcı yönü: aktif hedefe göre önce 12. sınıf kalan `Review Needed` modülleri ele alınsın. İlk kalan aday `optimization-terrain` tek modül olarak yeniden canlı açıldı.
+- Uygulama: Kod değişikliği yapılmadı. Öğrenci gözüyle başlangıç, yanlış `Azalan Bölge` alarmı, doğru artan/azalan/tepe/maksimum hacim/minimum maliyet zinciri, `Bitir` completion ve `Tekrar Oyna` reseti kontrol edildi.
+- Canlı QA bulgusu: Açılışta hedef formül/sonuç sızıntısı yok; özel completion ekranı `Optimizasyon arazisi kilitlendi` olarak okunur; joker atom sızıntısı `0`, yatay taşma `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-12-08-cont-audit-start.png`, `.agent/visual-reports/lise-12-08-cont-audit-wrong.png`, `.agent/visual-reports/lise-12-08-cont-audit-done.png`, `.agent/visual-reports/lise-12-08-cont-audit-reset.png`.
+- Test: `npm run module:check -- optimization-terrain` 26 pass / 2 expected warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Kaptan onayı olmadan `Showcase Ready` yapılmadı; modül `Review Needed` kaldı.
+
+## 2026-06-01 Manual Pairing - 09-08 Aralık Kapıları İstasyonu Cila
+- Kullanıcı yönü: `interval-gate-station` canlı inceleme sonrası eksikler uygulansın; atom amaca hizmet etsin ama Kaptan onayı olmadan vitrin yapılmasın.
+- Uygulama: Shell/sahne atom etiketi gerçek `MAT.9.1.3.1-4` aralığına çekildi. Başlangıç aralığı geniş sonuç hissi veren `[-4, 4]` yerine nötr `[−1, 1]` oldu. Sağ destek paneli normal desktop genişlikte sahnenin altına düşerek kesilmeyi bıraktı; geniş kiosk ekranda yanda kalabiliyor. Kesişim/birleşim verilen aralık etiketleri sahne içine alındı, `ORTAK IŞIK` / `TEK KÖPRÜ` rehberi ve öğrencinin kurduğu sonuç bandı için kısa okuma çizgileri eklendi.
+- Canlı QA bulgusu: Browser/Codex canlı akışında kapalı/açık/kesişim/birleşim görevleri tamamlandı; completion ekranı geldi. Kesişim ve birleşim ekranlarında taşma `0`, uydurma `MAT.9.1.3.x` sızıntısı `0`, console warning/error `0`.
+- Kanıt: `.agent/visual-reports/lise-09-08-polish-final-start.png`, `.agent/visual-reports/lise-09-08-polish-final-intersection.png`, `.agent/visual-reports/lise-09-08-polish-final-union.png`, `.agent/visual-reports/lise-09-08-polish-final-completion.png`.
+- Test: `module:check`, `tsc`, `build`, `git diff --check` bu tur sonunda taze doğrulanacak. Statü `Review Needed`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-02 Manual Pairing - 09-08 Aralık Kapıları İstasyonu Vitrin Onayı
+- Kullanıcı yönü: Kaptan 09-08 cila turu sonrası "uygula" diyerek vitrin kararını onayladı.
+- Uygulama: `interval-gate-station` registry statüsü `showcase-ready` yapıldı; kalite defterleri, spec ve ilerleme kaydı `Showcase Ready / Vitrin Hazır` olarak güncellendi.
+- Test: `module:check`, `tsc`, `build`, `git diff --check` ve Browser/Codex canlı etiket kontrolü bu turda tekrar doğrulanacak.
+
+## 2026-06-03 Manual Pairing - 09-02 Fonksiyon Grafiği Dönüşüm Atölyesi Dil Cila
+- Kullanıcı yönü: Kaptan `function-hologram-room` atomunu CU ile kontrol edip "yak", "kalibre et" gibi ifadeleri öğrenci için daha anlaşılır hale getirmemi istedi.
+- Uygulama: Sahne ve sağ panel dili cihaz kalibrasyonu hissinden çıkarıldı; `Referans Doğruyu Kur`, `Mavi nokta`, `Yeşil eğim noktası`, `Hedef doğru`, `Kontrol Et` ve `Sonraki Göreve Geç` ifadelerine çekildi. AstroBot yanlış/doğru geri bildirimleri de aynı öğrenci dostu dile uyarlandı.
+- Canlı QA bulgusu: Browser/Codex canlı ekranda başlangıç, yanlış kontrol alarmı, Home fallback ile ilk görev hizalama, dört görev zinciri ve completion doğrulandı. Statü `Review Needed`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+- Test: `module:check`, `tsc`, `build`, `git diff --check` bu tur sonunda taze doğrulanacak.
+
+## 2026-06-03 Manual Pairing - 09-02 Öğrenci Dostu İsim
+- Kullanıcı yönü: Kaptan atom adının öğrenciler için karışık olduğunu söyledi ve daha anlaşılır bir ifade istedi.
+- Değerlendirme: Eski ad görsel tema olarak güçlü ama öğrenciye konu/eylem bilgisini geç veriyordu. `Fonksiyon Grafiği Dönüşüm Atölyesi` MEB'deki grafik dilini koruyor; öteleme ve eğim değişimini tek başlıkta daha net anlatıyor.
+- Uygulama: Canlı modül başlığı, registry/dashboard adı ve güncel kalite/spec kayıtları `Fonksiyon Grafiği Dönüşüm Atölyesi` olarak güncellendi. Route ve module id değiştirilmedi.
+
+## 2026-06-03 Manual Pairing - 09-02 Vitrin Hazır
+- Kullanıcı yönü: Kaptan `Fonksiyon Grafiği Dönüşüm Atölyesi` için "bu atomu da vitrin hazır" onayı verdi.
+- Uygulama: Registry statüsü, `docs/MODULES.md`, spec, showcase readiness, kalite defteri ve seyir kayıtları `Showcase Ready / Vitrin Hazır` olarak güncellendi.
+- Not: Route ve module id değiştirilmedi; modül hâlâ `/embed/algebra/function-hologram-room` üzerinden açılıyor.

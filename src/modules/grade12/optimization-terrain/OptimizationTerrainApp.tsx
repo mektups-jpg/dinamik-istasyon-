@@ -116,7 +116,7 @@ export default function OptimizationTerrainApp() {
     <Grade12FullStageLab
       title="Optimizasyon Arazisi"
       subtitle="MAT.12.2.6"
-      statusLabel="Review Needed"
+      statusLabel="Görüş Gerekli"
       eyebrow="12. sınıf kalite adayı"
       panelTitle="Arazi kontrolü"
       astroBotMessage={astroBotMessage}
@@ -160,5 +160,9 @@ export default function OptimizationTerrainApp() {
 }
 
 function TestIdContractMarker() {
-  return <span className="sr-only">{TEST_ID_CONTRACT.join(' ')}</span>;
+  return (
+    <span aria-hidden="true" hidden>
+      {TEST_ID_CONTRACT.join(' ')}
+    </span>
+  );
 }

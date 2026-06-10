@@ -60,7 +60,7 @@ export function SolidMeasurementCompletion({ onRestart }: SolidMeasurementComple
               <span className="text-sm font-black uppercase tracking-[0.16em]">+300 atom puanı</span>
             </div>
             <p className="text-sm font-semibold leading-relaxed text-white/68">
-              Bu tur `Review Needed` olarak kaydedilir. Kaptan canlı göz kontrolü vermeden `Showcase Ready` etiketi açılmaz.
+              On ölçüm istasyonunu kapattın; hacimde iç bölgeyi, yüzey alanında dış kabuğu saymayı ayırdın.
             </p>
           </div>
 

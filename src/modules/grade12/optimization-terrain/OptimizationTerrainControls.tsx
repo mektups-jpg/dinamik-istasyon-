@@ -14,7 +14,20 @@ interface OptimizationTerrainControlsProps {
   onNext: () => void;
 }
 
-const toolOrder: OptimizationTool[] = ['increasing', 'decreasing', 'extremum', 'max-volume', 'min-cost'];
+interface ToolChoice {
+  tool: OptimizationTool;
+  label: string;
+  testId: string;
+}
+
+const toolChoices: ToolChoice[] = [
+  { tool: 'increasing', label: toolCopy.increasing.label, testId: `${MODULE_ID}-increasing` },
+  { tool: 'decreasing', label: toolCopy.decreasing.label, testId: `${MODULE_ID}-decreasing` },
+  { tool: 'extremum', label: 'Tepe Noktası', testId: `${MODULE_ID}-peak-point` },
+  { tool: 'extremum', label: 'Çukur Noktası', testId: `${MODULE_ID}-valley-point` },
+  { tool: 'max-volume', label: toolCopy['max-volume'].label, testId: `${MODULE_ID}-max-volume` },
+  { tool: 'min-cost', label: toolCopy['min-cost'].label, testId: `${MODULE_ID}-min-cost` },
+];
 
 export function OptimizationTerrainControls({
   mission,
@@ -56,14 +69,14 @@ export function OptimizationTerrainControls({
       <div className="space-y-2">
         <p className="hidden font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/42 lg:block">Hangi arazi kararı?</p>
         <div className="grid grid-cols-2 gap-2">
-          {toolOrder.map((key) => (
+          {toolChoices.map((choice) => (
             <ToolButton
-              key={key}
-              active={tool === key}
-              tool={key}
-              onClick={() => onToolChange(key)}
+              key={choice.testId}
+              active={tool === choice.tool}
+              testId={choice.testId}
+              onClick={() => onToolChange(choice.tool)}
             >
-              {toolCopy[key].label}
+              {choice.label}
             </ToolButton>
           ))}
         </div>
@@ -100,11 +113,11 @@ export function OptimizationTerrainControls({
   );
 }
 
-function ToolButton({ tool, active, onClick, children }: { tool: OptimizationTool; active: boolean; onClick: () => void; children: ReactNode }) {
+function ToolButton({ testId, active, onClick, children }: { testId: string; active: boolean; onClick: () => void; children: ReactNode }) {
   return (
     <motion.button
       type="button"
-      data-testid={`${MODULE_ID}-${tool}`}
+      data-testid={testId}
       whileHover={{ y: -1 }}
       whileTap={{ scale: 0.97 }}
       onClick={onClick}
