@@ -9,6 +9,7 @@ import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 
 type PiChoiceId = '2' | '3.14' | '6.28';
+type UnitScale = 'base' | 'ten';
 
 type CircleFeedback = {
     kind: 'info' | 'success' | 'error';
@@ -45,7 +46,7 @@ export default function AreaPiApp() {
     const [shapeType, setShapeType] = useState<'rectangle' | 'triangle' | 'parallelogram'>('rectangle');
     const [base, setBase] = useState<number>(6);
     const [height, setHeight] = useState<number>(4);
-    const [unitScale, setUnitScale] = useState<'cm' | 'm'>('cm');
+    const [unitScale, setUnitScale] = useState<UnitScale>('base');
     
     // Circle State
     const [radius, setRadius] = useState<number>(3);
@@ -68,7 +69,7 @@ export default function AreaPiApp() {
     useEffect(() => {
         if (activeTab !== 'polygon') return;
 
-        if (unitScale === 'm') {
+        if (unitScale === 'ten') {
             unlockAtom('MAT.6.4.1.1');
         }
 
@@ -177,8 +178,11 @@ export default function AreaPiApp() {
 
     // Calculate actual dimensions for drawing
     const scale = 20; // pixels per unit
-    const displayBase = base * (unitScale === 'm' ? 10 : 1);
-    const displayHeight = height * (unitScale === 'm' ? 10 : 1);
+    const unitFactor = unitScale === 'ten' ? 10 : 1;
+    const displayBase = base * unitFactor;
+    const displayHeight = height * unitFactor;
+    const displayArea = displayBase * displayHeight;
+    const unitLabel = 'br';
     
     const renderPolygonArea = () => {
         const drawW = base * scale;
@@ -199,11 +203,11 @@ export default function AreaPiApp() {
                         </defs>
                         {/* Base ruler */}
                         <line x1={-drawW/2} y1={drawH/2 + 20} x2={drawW/2} y2={drawH/2 + 20} stroke="#64748b" strokeWidth="2" />
-                        <text x={0} y={drawH/2 + 40} fill="#94a3b8" fontSize="14" textAnchor="middle" className="font-mono">Taban: {displayBase} {unitScale}</text>
+                        <text x={0} y={drawH/2 + 40} fill="#94a3b8" fontSize="14" textAnchor="middle" className="font-mono">Taban: {displayBase} {unitLabel}</text>
                         
                         {/* Height ruler */}
                         <line x1={-drawW/2 - 20} y1={-drawH/2} x2={-drawW/2 - 20} y2={drawH/2} stroke="#64748b" strokeWidth="2" strokeDasharray="4 4" />
-                        <text x={-drawW/2 - 35} y={0} fill="#94a3b8" fontSize="14" textAnchor="middle" transform={`rotate(-90, ${-drawW/2 - 35}, 0)`} className="font-mono">Yükseklik: {displayHeight} {unitScale}</text>
+                        <text x={-drawW/2 - 35} y={0} fill="#94a3b8" fontSize="14" textAnchor="middle" transform={`rotate(-90, ${-drawW/2 - 35}, 0)`} className="font-mono">Yükseklik: {displayHeight} {unitLabel}</text>
 
                         <AnimatePresence mode="popLayout">
                             {shapeType === 'rectangle' && (
@@ -329,27 +333,33 @@ export default function AreaPiApp() {
                 </div>
 
                 {/* Right Panel */}
-                <div className="xl:w-72 w-full shrink-0 flex flex-col gap-4">
+                <div className="xl:w-96 w-full shrink-0 flex flex-col gap-4">
                     <div className="bg-slate-800/80 p-5 rounded-xl border border-slate-600 shadow-xl backdrop-blur-sm">
                         <div className="text-sm font-bold text-[#00FF88] mb-3 border-b border-slate-600 pb-2">Alan İspatı</div>
                         <div className="text-sm space-y-4">
                             {shapeType === 'rectangle' && (
                                 <>
                                     <BlockMath math={`A = a \\times h`} />
-                                    <BlockMath math={`A = ${displayBase} \\times ${displayHeight} = ${displayBase * displayHeight} \\text{ ${unitScale}}^2`} />
+                                    <div className="rounded-lg bg-slate-900/60 px-3 py-2 text-center font-mono text-sm font-bold leading-relaxed text-slate-100">
+                                        A = {displayBase} x {displayHeight} = {displayArea} {unitLabel}²
+                                    </div>
                                 </>
                             )}
                             {shapeType === 'triangle' && (
                                 <>
                                     <BlockMath math={`A = \\frac{a \\times h}{2}`} />
-                                    <BlockMath math={`A = \\frac{${displayBase} \\times ${displayHeight}}{2} = ${(displayBase * displayHeight)/2} \\text{ ${unitScale}}^2`} />
+                                    <div className="rounded-lg bg-slate-900/60 px-3 py-2 text-center font-mono text-sm font-bold leading-relaxed text-slate-100">
+                                        A = ({displayBase} x {displayHeight}) ÷ 2 = {displayArea / 2} {unitLabel}²
+                                    </div>
                                     <div className="text-xs text-slate-400 mt-1 italic text-center bg-slate-900/50 p-2 rounded">Dikdörtgenin tam yarısı!</div>
                                 </>
                             )}
                             {shapeType === 'parallelogram' && (
                                 <>
                                     <BlockMath math={`A = a \\times h`} />
-                                    <BlockMath math={`A = ${displayBase} \\times ${displayHeight} = ${displayBase * displayHeight} \\text{ ${unitScale}}^2`} />
+                                    <div className="rounded-lg bg-slate-900/60 px-3 py-2 text-center font-mono text-sm font-bold leading-relaxed text-slate-100">
+                                        A = {displayBase} x {displayHeight} = {displayArea} {unitLabel}²
+                                    </div>
                                     <div className="text-xs text-slate-400 mt-1 italic text-center bg-slate-900/50 p-2 rounded">Dikdörtgen ile aynı alan!</div>
                                 </>
                             )}
@@ -379,14 +389,14 @@ export default function AreaPiApp() {
                             </div>
                         </div>
                         <div className="flex-1 flex flex-col justify-end">
-                            <label className="text-xs text-slate-400 uppercase font-bold tracking-wider mb-2 block">Birim Dönüşümü (10x)</label>
+                            <label className="text-xs text-slate-400 uppercase font-bold tracking-wider mb-2 block">Ölçek Karşılaştırması</label>
                             <div className="flex bg-slate-700 rounded-lg p-1 w-full">
-                                <button onClick={() => setUnitScale('cm')} className={`flex-1 py-1.5 text-xs font-bold rounded ${unitScale === 'cm' ? 'bg-slate-600 text-white' : 'text-slate-400'}`}>CM</button>
-                                <button onClick={() => setUnitScale('m')} className={`flex-1 py-1.5 text-xs font-bold rounded ${unitScale === 'm' ? 'bg-slate-600 text-white' : 'text-slate-400'}`}>M (×10)</button>
+                                <button onClick={() => setUnitScale('base')} className={`flex-1 py-1.5 text-xs font-bold rounded ${unitScale === 'base' ? 'bg-slate-600 text-white' : 'text-slate-400'}`}>1x ölçü</button>
+                                <button onClick={() => setUnitScale('ten')} className={`flex-1 py-1.5 text-xs font-bold rounded ${unitScale === 'ten' ? 'bg-slate-600 text-white' : 'text-slate-400'}`}>10x ölçü</button>
                             </div>
-                            {unitScale === 'm' && (
+                            {unitScale === 'ten' && (
                                 <div className="mt-3 text-[10px] text-amber-400 leading-tight">
-                                    Uzunluk 10 kat arttı ancak alan <strong className="text-amber-300 text-xs">100 kat (10²)</strong> büyüyecek. Formül bunu ispatlar!
+                                    Taban ve yükseklik 10 kat olunca alan <strong className="text-amber-300 text-xs">100 kat (10²)</strong> olur: {base * height} br² → {displayArea} br².
                                 </div>
                             )}
                         </div>
