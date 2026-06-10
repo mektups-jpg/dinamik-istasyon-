@@ -479,8 +479,8 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'area-pi-lab',
-    title: 'Geometrik Alan ve Pi Laboratuvarı',
-    description: 'Şekil alanlarının doğuşunu bükerek ispatla ve tekerleği döndürerek Pi sabitini keşfet!',
+    title: 'Geometrik Alan ve Pi Sayısı',
+    description: 'Çokgen alan ilişkilerini gör ve tekerleği döndürerek Pi sayısını keşfet!',
     grade: 6,
     category: 'Geometri',
     difficulty: 'Orta',

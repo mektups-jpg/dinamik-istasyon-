@@ -1,4 +1,4 @@
-# 06-06 Geometrik Alan ve Pi Laboratuvari
+# 06-06 Geometrik Alan ve Pi Sayisi
 
 - Module ID: `area-pi-lab`
 - Route: /embed/geometry/area-pi-lab
@@ -31,6 +31,7 @@ Modul iki deney masasindan olusur. Ilk masada ogrenci dikdortgen, ucgen ve paral
 ## Kalite Notu
 
 - Eski "gizemli Pi yörüngesi" dili 6. sinif icin fazla kapaliydi; gorunur sekme "Pi: Cevre / Cap" olarak sadelestirildi.
+- Modul adi "Geometrik Alan ve Pi Sayisi" olarak sade tutuldu; "laboratuvar" atmosferi yerine kazanimi daha dogrudan soyleyen ad tercih edildi.
 - Pi sonucu artik sayfa acilisinda hazir verilmez; ogrenci once bir tur deneyini gorur, sonra orani secer.
 - "R (Cap)" notasyonu yerine `d` cap ve `C` cevre ayrimi yapildi.
 - Paralelkenar alan ispatinda kesilen ucgen tekrar tekrar gidip gelmez; yaklasik 3-4 saniyede sag tarafa bir kez tasinip dikdortgeni tamamlar.

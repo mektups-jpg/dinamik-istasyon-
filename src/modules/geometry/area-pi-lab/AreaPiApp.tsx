@@ -691,7 +691,7 @@ export default function AreaPiApp() {
             </div>
 
             <GameHeader 
-              title="GEOMETRİK ALAN VE Pİ LABORATUVARI" 
+              title="GEOMETRİK ALAN VE Pİ SAYISI"
               subtitle="MAT.6.4.X KAZANIMLARI" 
             />
 
