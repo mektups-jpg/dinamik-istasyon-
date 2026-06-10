@@ -25,7 +25,7 @@ const PI_CHOICES: Array<{ id: PiChoiceId; label: string; feedback: string }> = [
     {
         id: '3.14',
         label: '3,14',
-        feedback: 'Doğru. Tekerleğin bir turda aldığı yol çevredir; çevre / çap yaklaşık 3,14 eder.'
+        feedback: 'Doğru. Tekerleğin bir turda aldığı yol çevredir; çevreyi çapa bölersek yaklaşık 3,14 çıkar.'
     },
     {
         id: '6.28',
@@ -104,7 +104,7 @@ export default function AreaPiApp() {
                         title: 'İz tamamlandı',
                         text: `Sarı iz tekerleğin bir turda aldığı yolu, yani çevreyi gösterir. Çap ${radius * 2} birim; şimdi çevreyi çapa bölelim.`
                     });
-                    showMessage(`Tekerlek tam tur döndü. Çevre uzunluğu ${(2 * Math.PI * radius).toFixed(2)} birim. Çevre / çap yaklaşık kaç eder?`, "info");
+                    showMessage(`Tekerlek tam tur döndü. Çevre uzunluğu ${(2 * Math.PI * radius).toFixed(2)} birim. Çevreyi çapa böl: yaklaşık kaç çıkar?`, "info");
                 }
             };
             animationFrame = requestAnimationFrame(animate);
@@ -152,7 +152,7 @@ export default function AreaPiApp() {
             setCircleFeedback({
                 kind: 'success',
                 title: 'Pi oranı bulundu',
-                text: selectedChoice?.feedback ?? 'Çevre / çap yaklaşık 3,14 eder.'
+                text: selectedChoice?.feedback ?? 'Çevreyi çapa bölersek yaklaşık 3,14 çıkar.'
             });
             showMessage("Doğru hedef: Çevreyi çapa böldüğümüzde yaklaşık 3,14 sayısına ulaşırız.", "success");
             if (!piUnlocked) {
@@ -273,7 +273,7 @@ export default function AreaPiApp() {
                 </div>
 
                 {/* Right Panel */}
-                <div className="xl:w-96 w-full shrink-0 flex flex-col gap-4">
+                <div className="xl:w-72 w-full shrink-0 flex flex-col gap-4">
                     <div className="bg-slate-800/80 p-5 rounded-xl border border-slate-600 shadow-xl backdrop-blur-sm">
                         <div className="text-sm font-bold text-[#00FF88] mb-3 border-b border-slate-600 pb-2">Alan İspatı</div>
                         <div className="text-sm space-y-4">
@@ -422,7 +422,7 @@ export default function AreaPiApp() {
                 <div className="xl:w-96 w-full shrink-0 flex flex-col gap-4">
                     <div className="bg-slate-900/80 p-5 rounded-xl border border-indigo-500/50 backdrop-blur-md shadow-lg shadow-indigo-500/10">
                         <div className="text-sm font-bold text-indigo-300 mb-2 flex items-center gap-2 border-b border-indigo-500/30 pb-2">
-                            <Activity className="w-4 h-4"/> Pi Keşfi: Çevre / Çap
+                            <Activity className="w-4 h-4"/> Pi Keşfi: Çevreyi Çapa Böl
                         </div>
                         <div className="text-sm space-y-3 text-slate-200">
                             <div className="rounded-lg border border-indigo-400/25 bg-indigo-950/25 p-3">
@@ -441,7 +441,7 @@ export default function AreaPiApp() {
 
                             {rollProgress === 1 && (
                                 <div className="rounded-xl border border-slate-600 bg-slate-950/60 p-3">
-                                    <div className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Çevre / çap yaklaşık kaçtır?</div>
+                                    <div className="text-sm font-black leading-snug text-cyan-100">Çevreyi çapa böl: yaklaşık kaç çıkar?</div>
                                     <div className="mt-3 grid grid-cols-3 gap-2">
                                         {PI_CHOICES.map((choice) => {
                                             const isSelected = selectedPiChoice === choice.id;
@@ -484,7 +484,7 @@ export default function AreaPiApp() {
                                     <div className="bg-emerald-900/40 p-2 rounded-lg border border-emerald-500/30 mt-2">
                                         <BlockMath math={`\\pi = \\frac{C}{d} \\approx ${piRatio.toFixed(5)}`} />
                                     </div>
-                                    <div className="text-xs text-slate-300 italic text-center">Çember büyüse de çevre / çap oranı hep yaklaşık <InlineMath math="3{,}14"/> kalır.</div>
+                                    <div className="text-xs text-slate-300 italic text-center">Çember büyüse de çevreyi çapa bölünce çıkan oran hep yaklaşık <InlineMath math="3{,}14"/> kalır.</div>
                                 </>
                             )}
                         </div>
@@ -604,7 +604,7 @@ export default function AreaPiApp() {
                             <motion.div layoutId="activeTabBadge" className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full" style={{ zIndex: 0 }} />
                         )}
                         <Disc className="w-4 h-4 relative z-10" />
-                        <span className="relative z-10">Pi: Çevre / Çap</span>
+                        <span className="relative z-10">Pi: Çevreyi Çapa Böl</span>
                     </button>
                 </div>
 

@@ -24,7 +24,7 @@ Modul iki deney masasindan olusur. Ilk masada ogrenci dikdortgen, ucgen ve paral
 
 1. Ogrenci Pi sekmesine gecer.
 2. Tekerlegi bir tur yuvarlar.
-3. Cevre / cap icin 2, 3,14 ve 6,28 arasindan secim yapar.
+3. Cevreyi capa bolme sonucu icin 2, 3,14 ve 6,28 arasindan secim yapar.
 4. Yanlis secimde neden yanlis oldugu aciklanir.
 5. Dogru secimde Pi kaniti ve 90 derece yay orani gorunur.
 
