@@ -417,6 +417,20 @@ export default function AreaPiApp() {
         const rollStartX = -300;
         const currentX = rollStartX + (rollProgress * visualCircum);
         const currentRotation = rollProgress * 360;
+        const targetAngleRatio = targetAngle / 360;
+        const targetAngleRadians = targetAngle * Math.PI / 180;
+        const arcEndX = visualRadius * Math.sin(targetAngleRadians);
+        const arcEndY = -visualRadius * Math.cos(targetAngleRadians);
+        const arcLength = circum * targetAngleRatio;
+        const isLargeArc = targetAngle > 180 ? 1 : 0;
+        const isFullCircleArc = targetAngle >= 360;
+        const fullCirclePath = `M 0 ${-visualRadius} A ${visualRadius} ${visualRadius} 0 1 1 0 ${visualRadius} A ${visualRadius} ${visualRadius} 0 1 1 0 ${-visualRadius}`;
+        const sectorPath = isFullCircleArc
+            ? `${fullCirclePath} Z`
+            : `M 0 0 L 0 ${-visualRadius} A ${visualRadius} ${visualRadius} 0 ${isLargeArc} 1 ${arcEndX} ${arcEndY} Z`;
+        const arcEdgePath = isFullCircleArc
+            ? fullCirclePath
+            : `M 0 ${-visualRadius} A ${visualRadius} ${visualRadius} 0 ${isLargeArc} 1 ${arcEndX} ${arcEndY}`;
 
         return (
             <div className="flex-1 flex xl:flex-row flex-col w-full max-w-6xl gap-6 items-stretch">
@@ -461,26 +475,44 @@ export default function AreaPiApp() {
                             <line x1="0" y1="0" x2={0} y2={-visualRadius} stroke="#4f46e5" strokeWidth="2" />
                             <line x1="0" y1="0" x2={visualRadius} y2="0" stroke="#4f46e5" strokeWidth="2" />
                             <line x1="0" y1="0" x2={-visualRadius} y2="0" stroke="#4f46e5" strokeWidth="2" />
+
+                            {showArc && rollProgress === 1 && piUnlocked && (
+                                <motion.g
+                                    initial={{ opacity: 0, scale: 0.88 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.35 }}
+                                >
+                                    <path
+                                        d={sectorPath}
+                                        fill="#ec4899"
+                                        fillOpacity="0.55"
+                                        stroke="#f9a8d4"
+                                        strokeWidth="1.5"
+                                    />
+                                    <path
+                                        d={arcEdgePath}
+                                        fill="none"
+                                        stroke="#fdf2f8"
+                                        strokeWidth="3"
+                                        strokeLinecap="round"
+                                    />
+                                    <line x1="0" y1="0" x2="0" y2={-visualRadius} stroke="#fdf2f8" strokeWidth="1.5" strokeLinecap="round" />
+                                    <line x1="0" y1="0" x2={arcEndX} y2={arcEndY} stroke="#fdf2f8" strokeWidth="1.5" strokeLinecap="round" />
+                                    <text
+                                        x={visualRadius * 0.42}
+                                        y={-visualRadius * 0.33}
+                                        fill="#ffffff"
+                                        fontSize="12"
+                                        textAnchor="middle"
+                                        className="font-bold"
+                                    >
+                                        {targetAngle}°
+                                    </text>
+                                </motion.g>
+                            )}
                             
                             {/* Radius text label, stays horizontal roughly by inverse rotation if needed, but since it's rotating, we just put it on the wheel */}
                         </motion.g>
-
-                        {/* Static Arc Demo if requested */}
-                        {showArc && rollProgress === 1 && piUnlocked && (
-                            <motion.g
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                className="drop-shadow-lg"
-                                transform={`translate(${currentX}, 0)`}
-                            >
-                                {/* We draw the arc wedge */}
-                                <path 
-                                    d={`M 0 0 L 0 ${-visualRadius} A ${visualRadius} ${visualRadius} 0 ${targetAngle > 180 ? 1 : 0} 1 ${visualRadius * Math.sin(targetAngle * Math.PI / 180)} ${-visualRadius * Math.cos(targetAngle * Math.PI / 180)} Z`}
-                                    fill="#ec4899" fillOpacity="0.4"
-                                />
-                                <text x="10" y="-10" fill="#fdf2f8" fontSize="14" className="font-mono font-bold" transform="rotate(-15)">&alpha; = {targetAngle}°</text>
-                            </motion.g>
-                        )}
                     </svg>
                 </div>
 
@@ -558,11 +590,22 @@ export default function AreaPiApp() {
                         {showArc && rollProgress === 1 && piUnlocked && (
                             <div className="mt-4 pt-3 border-t border-indigo-500/30">
                                 <div className="text-xs font-bold text-pink-300 mb-2 flex items-center gap-2">
-                                    <Disc className="w-3 h-3"/> Yay Uzunluğu (<InlineMath math={`${targetAngle}^\\circ`} />)
+                                    <Disc className="w-3 h-3"/> {targetAngle} derecelik yay ne kadar?
                                 </div>
-                                <div className="bg-pink-950/30 p-2 rounded text-pink-200">
-                                    <BlockMath math={`L = 2\\pi r \\times \\frac{\\alpha}{360^\\circ}`} />
-                                    <BlockMath math={`L = ${circum.toFixed(2)} \\times \\frac{${targetAngle}}{360} = ${(circum * (targetAngle / 360)).toFixed(2)} \\text{ br}`} />
+                                <div className="space-y-2 rounded-lg border border-pink-400/30 bg-pink-950/30 p-3 text-sm text-pink-50">
+                                    <p>
+                                        {targetAngle}° merkez açı, tam çemberin 360 derecesinden{' '}
+                                        <span className="font-black text-white">{targetAngle} derecelik</span>{' '}
+                                        parçayı gösterir.
+                                    </p>
+                                    <div className="rounded-md bg-slate-950/60 px-3 py-2 font-mono text-base font-black text-white">
+                                        Yay = {circum.toFixed(2)} × {targetAngle} ÷ 360 = {arcLength.toFixed(2)} br
+                                    </div>
+                                    {targetAngle === 90 && (
+                                        <p className="text-pink-100/90">
+                                            90° bir çemberin dörtte biridir. Bu yüzden yay, çevrenin dörtte biri kadar olur.
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         )}
