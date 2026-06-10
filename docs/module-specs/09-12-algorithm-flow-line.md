@@ -1,8 +1,8 @@
-# 09-12 Algoritma Akış Hattı
+# 09-12 Problemi Adımlara Ayır
 
 ## Durum
 
-Review Needed. Kaptan canlı görsel onayı olmadan `Showcase Ready / Vitrin Hazır` yapılmayacak.
+Showcase Ready / Vitrin Hazır. 2026-06-11 Kaptan canlı görsel onayıyla vitrine alındı.
 
 ## Amaç
 

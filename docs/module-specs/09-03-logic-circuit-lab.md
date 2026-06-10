@@ -17,7 +17,7 @@ Review Needed. Kaptan canlı görsel onayı olmadan `Showcase Ready / Vitrin Haz
 
 ## Kapsam Dışı
 
-- Karışık problemleri akış şemasına bölme `09-12 Algoritma Akış Hattı` modülünde kalır.
+- Karışık problemleri akış şemasına bölme `09-12 Problemi Adımlara Ayır` modülünde kalır.
 - Her/Bazı niceleyicileri `09-13 Niceleyici Radar Avı` modülünde kalır.
 - Sembolik ispat ve uzun doğruluk tablosu alıştırmaları bu ilk vitrin adayının kapsamı değildir.
 

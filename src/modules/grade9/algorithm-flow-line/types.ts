@@ -24,6 +24,8 @@ export interface FlowBlock {
   tone: 'cyan' | 'green' | 'purple' | 'pink' | 'amber';
 }
 
+export type FlowBlockCopy = Partial<Pick<FlowBlock, 'label' | 'shortLabel' | 'detail'>>;
+
 export interface FlowMission {
   id: string;
   title: string;
@@ -36,6 +38,7 @@ export interface FlowMission {
   error: string;
   resultLabel: string;
   hint: string;
+  blockOverrides?: Partial<Record<FlowBlockId, FlowBlockCopy>>;
 }
 
 export interface FlowBuild {

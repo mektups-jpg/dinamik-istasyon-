@@ -456,12 +456,12 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
 * **Route:** `/embed/algebra/inequality-safety-zone`
 * **Durum:** 2026-06-07 Kaptan canlı görsel onayıyla `Showcase Ready`; dashboard etiketi `Vitrin Hazır`.
 
-### 3A. Algoritma Akış Hattı (Review Needed)
+### 3A. Problemi Adımlara Ayır (Showcase Ready)
 * **Konsept:** Öğrenci karışık bir matematik problemini tek sonuç tahminiyle çözmez; problem kartındaki verilenleri sırayla akış şeması bloklarına böler. Bloklar sahnedeki akış bandı yuvalarına yerleşir, hat ışığı her doğru süreç adımında bir sonraki yuvaya akar. Sonuç cümlesi yalnız akış test edildikten sonra açılır.
 * **Sağladığı Atom Grupları:**
   * `MAT.9.3.1.1` (Karışık matematik problemini ardışık akış şeması bloklarına bölme)
 * **Route:** `/embed/algebra/algorithm-flow-line`
-* **Durum:** Yeni üretim modülü `Review Needed`; Kaptan canlı görsel onayı olmadan `Showcase Ready` yapılmayacak.
+* **Durum:** 2026-06-11 Kaptan canlı görsel onayıyla `Showcase Ready`; dashboard etiketi `Vitrin Hazır`.
 
 ### 3. Akıllı Mantık Devreleri (Logic Gates)
 * **Konsept:** Fiziksel bir elektronik devre test tezgahı. Öğrencinin tek oyuncağı A/B anahtarlarıdır; aktif kapı kartuşu göreve göre değişir. VE, VEYA, İSE ve YA DA kapıları aynı kablo düzeninde farklı çıkış üretir. Mini doğruluk tablosu sahnede yanar, İSE kapısında `1=>0` tek hata durumu özel kırmızı arıza animasyonuyla görünür.

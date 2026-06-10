@@ -461,7 +461,7 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'algorithm-flow-line',
-    title: 'Algoritma Akış Hattı',
+    title: 'Problemi Adımlara Ayır',
     description: 'Karışık problemi işlem bloklarına ayır; akış şemasını doğru sırayla kur ve sonucu test sonrası mühürle.',
     grade: 9,
     category: 'Cebir',
@@ -471,8 +471,8 @@ export const modules: ModuleMeta[] = [
     ],
     path: '/embed/algebra/algorithm-flow-line',
     component: lazy(() => import('../modules/grade9/algorithm-flow-line/AlgorithmFlowLineApp')),
-    status: 'review-needed',
-    archiveNote: '9. sınıf yeni üretim modülü. Kaptan göz kontrolünden sonra Showcase Ready değerlendirilecek.'
+    status: 'showcase-ready',
+    archiveNote: '9. sınıf Problemi Adımlara Ayır Kaptan canlı onayıyla Showcase Ready. Öğrenci karışık problemi bloklara ayırıp doğru sırayla kuruyor; tekrar oynayışta sayı setleri değişiyor.'
   },
   {
     id: 'logic-circuit-lab',
