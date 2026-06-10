@@ -484,6 +484,15 @@ export const modules: ModuleMeta[] = [
     grade: 6,
     category: 'Geometri',
     difficulty: 'Orta',
+    atomIds: [
+      'MAT.6.4.1.1',
+      'MAT.6.4.2.1',
+      'MAT.6.4.2.2',
+      'MAT.6.4.3.1',
+      'MAT.6.4.4.1',
+      'MAT.6.4.5.1',
+      'MAT.6.4.6.1'
+    ],
     path: '/embed/geometry/area-pi-lab',
     component: lazy(() => import('../modules/geometry/area-pi-lab/AreaPiApp'))
   },

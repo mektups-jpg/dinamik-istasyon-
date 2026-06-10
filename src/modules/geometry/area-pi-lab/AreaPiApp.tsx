@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAstroBotStore } from '../../../store/useAstroBotStore';
 import { useAtomStore } from '../../../store/useAtomStore';
@@ -7,6 +7,32 @@ import { GameHeader } from '../../../components/ui/GameHeader';
 import { Play, RotateCcw, Ruler, Scissors, ArrowRight, Activity, Disc, SquareActivity } from 'lucide-react';
 import { BlockMath, InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
+
+type PiChoiceId = '2' | '3.14' | '6.28';
+
+type CircleFeedback = {
+    kind: 'info' | 'success' | 'error';
+    title: string;
+    text: string;
+} | null;
+
+const PI_CHOICES: Array<{ id: PiChoiceId; label: string; feedback: string }> = [
+    {
+        id: '2',
+        label: '2',
+        feedback: '2 sayısı çapın yarıçapa oranıdır. Biz çevreyi çapa bölüyoruz.'
+    },
+    {
+        id: '3.14',
+        label: '3,14',
+        feedback: 'Doğru. Tekerleğin bir turda aldığı yol çevredir; çevre / çap yaklaşık 3,14 eder.'
+    },
+    {
+        id: '6.28',
+        label: '6,28',
+        feedback: '6,28 yaklaşık 2π olur. Bu değer çevre / yarıçap oranına daha yakındır.'
+    }
+];
 
 export default function AreaPiApp() {
     const { showMessage } = useAstroBotStore();
@@ -25,16 +51,36 @@ export default function AreaPiApp() {
     const [radius, setRadius] = useState<number>(3);
     const [isRolling, setIsRolling] = useState(false);
     const [rollProgress, setRollProgress] = useState(0); // 0 to 1
-    const [targetAngle, setTargetAngle] = useState<number>(360);
+    const [targetAngle, setTargetAngle] = useState<number>(90);
     const [showArc, setShowArc] = useState(false);
+    const [piUnlocked, setPiUnlocked] = useState(false);
+    const [selectedPiChoice, setSelectedPiChoice] = useState<PiChoiceId | null>(null);
+    const [circleFeedback, setCircleFeedback] = useState<CircleFeedback>(null);
 
     useEffect(() => {
         if (activeTab === 'polygon') {
             showMessage("Çokgen laboratuvarına hoş geldin! Dikdörtgeni keserek formülün nasıl ortaya çıktığını gözlemle.", "info");
         } else {
-            showMessage("Çember yörüngesindeyiz! Tekerleği yuvarlayıp çapına bölerek Pi(π) sabiti gizemini keşfet.", "info");
+            showMessage("Çemberde Pi keşfi: Tekerleği bir tur yuvarla, aldığı yolu çapa böl ve yaklaşık oranı seç.", "info");
         }
     }, [activeTab, showMessage]);
+
+    useEffect(() => {
+        if (activeTab !== 'polygon') return;
+
+        if (unitScale === 'm') {
+            unlockAtom('MAT.6.4.1.1');
+        }
+
+        if (shapeType === 'triangle') {
+            unlockAtom('MAT.6.4.2.1');
+        }
+
+        if (shapeType === 'parallelogram') {
+            unlockAtom('MAT.6.4.2.2');
+            unlockAtom('MAT.6.4.3.1');
+        }
+    }, [activeTab, shapeType, unitScale, unlockAtom]);
 
     // Handle Circle Roll Animation
     useEffect(() => {
@@ -53,10 +99,12 @@ export default function AreaPiApp() {
                     animationFrame = requestAnimationFrame(animate);
                 } else {
                     setIsRolling(false);
-                    showMessage(`Harika! Tekerlek tam tur döndü. Çevre uzunluğu ${ (2 * Math.PI * radius).toFixed(2) } birim. Çapa bölmeyi dene!`, "success");
-                    addScore(250);
-                    unlockAtom('MAT.6.4.4.1');
-                    unlockModule('area-pi-lab');
+                    setCircleFeedback({
+                        kind: 'info',
+                        title: 'İz tamamlandı',
+                        text: `Sarı iz tekerleğin bir turda aldığı yolu, yani çevreyi gösterir. Çap ${radius * 2} birim; şimdi çevreyi çapa bölelim.`
+                    });
+                    showMessage(`Tekerlek tam tur döndü. Çevre uzunluğu ${(2 * Math.PI * radius).toFixed(2)} birim. Çevre / çap yaklaşık kaç eder?`, "info");
                 }
             };
             animationFrame = requestAnimationFrame(animate);
@@ -68,12 +116,63 @@ export default function AreaPiApp() {
         setRollProgress(0);
         setIsRolling(true);
         setShowArc(false);
-        showMessage("Tekerlek fırlatıldı! Çevresi kadar yol alacak...", "info");
+        setPiUnlocked(false);
+        setSelectedPiChoice(null);
+        setCircleFeedback(null);
+        showMessage("Tekerlek yuvarlanıyor. Bir tur tamamlanınca aldığı yol çevre olacak.", "info");
     };
 
     const handleReset = () => {
         setRollProgress(0);
         setShowArc(false);
+        setTargetAngle(90);
+        setPiUnlocked(false);
+        setSelectedPiChoice(null);
+        setCircleFeedback(null);
+    };
+
+    const handlePiChoice = (choiceId: PiChoiceId) => {
+        setSelectedPiChoice(choiceId);
+        const selectedChoice = PI_CHOICES.find((choice) => choice.id === choiceId);
+
+        if (rollProgress < 1) {
+            setCircleFeedback({
+                kind: 'info',
+                title: 'Önce deneyi tamamla',
+                text: 'Tekerlek bir tam tur yuvarlanınca çevre uzunluğunu göreceğiz.'
+            });
+            showMessage("Önce tekerleği bir tam tur yuvarlayalım; sonra oranı seçelim.", "info");
+            return;
+        }
+
+        if (choiceId === '3.14') {
+            setPiUnlocked(true);
+            setShowArc(true);
+            setTargetAngle(90);
+            setCircleFeedback({
+                kind: 'success',
+                title: 'Pi oranı bulundu',
+                text: selectedChoice?.feedback ?? 'Çevre / çap yaklaşık 3,14 eder.'
+            });
+            showMessage("Doğru hedef: Çevreyi çapa böldüğümüzde yaklaşık 3,14 sayısına ulaşırız.", "success");
+            if (!piUnlocked) {
+                addScore(250);
+                unlockAtom('MAT.6.4.4.1');
+                unlockAtom('MAT.6.4.5.1');
+                unlockAtom('MAT.6.4.6.1');
+                unlockModule('area-pi-lab');
+            }
+            return;
+        }
+
+        setPiUnlocked(false);
+        setShowArc(false);
+        setCircleFeedback({
+            kind: 'error',
+            title: 'Neden yanlış?',
+            text: selectedChoice?.feedback ?? 'Bu oran çevre / çap ilişkisini anlatmaz.'
+        });
+        showMessage(`Neden yanlış? ${selectedChoice?.feedback ?? 'Bu oran çevre / çap ilişkisini anlatmaz.'}`, "error");
     };
 
     // Calculate actual dimensions for drawing
@@ -243,6 +342,8 @@ export default function AreaPiApp() {
 
     const renderCirclePi = () => {
         const circum = 2 * Math.PI * radius;
+        const diameter = radius * 2;
+        const piRatio = circum / diameter;
         // Total track width roughly 800px.
         const cScale = 18; 
         const visualRadius = radius * cScale;
@@ -299,7 +400,7 @@ export default function AreaPiApp() {
                         </motion.g>
 
                         {/* Static Arc Demo if requested */}
-                        {showArc && rollProgress === 1 && (
+                        {showArc && rollProgress === 1 && piUnlocked && (
                             <motion.g
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -321,19 +422,74 @@ export default function AreaPiApp() {
                 <div className="xl:w-96 w-full shrink-0 flex flex-col gap-4">
                     <div className="bg-slate-900/80 p-5 rounded-xl border border-indigo-500/50 backdrop-blur-md shadow-lg shadow-indigo-500/10">
                         <div className="text-sm font-bold text-indigo-300 mb-2 flex items-center gap-2 border-b border-indigo-500/30 pb-2">
-                            <Activity className="w-4 h-4"/> Sabit Oran: Pi (π)
+                            <Activity className="w-4 h-4"/> Pi Keşfi: Çevre / Çap
                         </div>
-                        <div className="text-sm space-y-3">
-                            <div className="text-indigo-200"><InlineMath math={`R (\\text{Çap}) = ${radius * 2} \\text{ br}`} /></div>
-                            <div className="text-yellow-200"><InlineMath math={`C (\\text{Çevre}) = ${circum.toFixed(2)} \\text{ br}`} /></div>
-                            
-                            <div className="bg-emerald-900/40 p-2 rounded-lg border border-emerald-500/30 mt-2">
-                                <BlockMath math={`\\pi = \\frac{C}{R} \\approx ${(circum / (radius * 2)).toFixed(5)}`} />
+                        <div className="text-sm space-y-3 text-slate-200">
+                            <div className="rounded-lg border border-indigo-400/25 bg-indigo-950/25 p-3">
+                                <div className="text-xs uppercase tracking-[0.18em] text-indigo-200/80">Ölçü bilgisi</div>
+                                <div className="mt-2 space-y-1.5 leading-relaxed">
+                                    <p><span className="font-bold text-indigo-100">Çap (d):</span> 2 x r = {diameter} br</p>
+                                    <p><span className="font-bold text-yellow-200">Çevre izi (C):</span> {rollProgress === 1 ? `${circum.toFixed(2)} br` : 'Bir turdan sonra ölçülecek'}</p>
+                                </div>
                             </div>
-                            <div className="text-xs text-slate-400 italic text-center">Büyüklük değişse de oran asla değişmez! (<InlineMath math="\pi \approx 3.14"/>)</div>
+
+                            {rollProgress < 1 && (
+                                <div className="rounded-lg border border-yellow-400/30 bg-yellow-500/10 p-3 text-yellow-100">
+                                    Önce tekerleği bir tur yuvarla. Sarı iz oluşunca çevreyi çapa bölüp oranı seçeceksin.
+                                </div>
+                            )}
+
+                            {rollProgress === 1 && (
+                                <div className="rounded-xl border border-slate-600 bg-slate-950/60 p-3">
+                                    <div className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Çevre / çap yaklaşık kaçtır?</div>
+                                    <div className="mt-3 grid grid-cols-3 gap-2">
+                                        {PI_CHOICES.map((choice) => {
+                                            const isSelected = selectedPiChoice === choice.id;
+                                            const isCorrect = choice.id === '3.14';
+                                            const selectedStyle = isSelected
+                                                ? isCorrect
+                                                    ? 'border-emerald-300 bg-emerald-400/25 text-emerald-50 shadow-emerald-400/20'
+                                                    : 'border-rose-300 bg-rose-400/20 text-rose-50 shadow-rose-400/20'
+                                                : 'border-white/10 bg-slate-800 text-white hover:border-cyan-300/70 hover:bg-cyan-400/10';
+
+                                            return (
+                                                <button
+                                                    key={choice.id}
+                                                    onClick={() => handlePiChoice(choice.id)}
+                                                    className={`rounded-lg border px-3 py-2 text-lg font-black shadow-lg transition-all ${selectedStyle}`}
+                                                >
+                                                    {choice.label}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+
+                            {circleFeedback && (
+                                <div className={`rounded-lg border p-3 text-sm ${
+                                    circleFeedback.kind === 'success'
+                                        ? 'border-emerald-400/50 bg-emerald-500/15 text-emerald-50'
+                                        : circleFeedback.kind === 'error'
+                                            ? 'border-rose-400/50 bg-rose-500/15 text-rose-50'
+                                            : 'border-cyan-400/40 bg-cyan-500/10 text-cyan-50'
+                                }`}>
+                                    <div className="font-bold">{circleFeedback.title}</div>
+                                    <div className="mt-1 leading-relaxed">{circleFeedback.text}</div>
+                                </div>
+                            )}
+
+                            {piUnlocked && (
+                                <>
+                                    <div className="bg-emerald-900/40 p-2 rounded-lg border border-emerald-500/30 mt-2">
+                                        <BlockMath math={`\\pi = \\frac{C}{d} \\approx ${piRatio.toFixed(5)}`} />
+                                    </div>
+                                    <div className="text-xs text-slate-300 italic text-center">Çember büyüse de çevre / çap oranı hep yaklaşık <InlineMath math="3{,}14"/> kalır.</div>
+                                </>
+                            )}
                         </div>
 
-                        {showArc && rollProgress === 1 && (
+                        {showArc && rollProgress === 1 && piUnlocked && (
                             <div className="mt-4 pt-3 border-t border-indigo-500/30">
                                 <div className="text-xs font-bold text-pink-300 mb-2 flex items-center gap-2">
                                     <Disc className="w-3 h-3"/> Yay Uzunluğu (<InlineMath math={`${targetAngle}^\\circ`} />)
@@ -366,7 +522,7 @@ export default function AreaPiApp() {
                             </div>
                         </div>
                         
-                        {rollProgress === 1 && (
+                        {rollProgress === 1 && piUnlocked && (
                             <motion.div 
                                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                                 className="flex flex-col justify-center"
@@ -393,14 +549,14 @@ export default function AreaPiApp() {
                                     disabled={isRolling}
                                     className={`w-full py-3 rounded-lg flex items-center justify-center gap-2 font-bold transition-all ${isRolling ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-yellow-500 text-slate-900 hover:bg-yellow-400 shadow-lg shadow-yellow-500/20'}`}
                                 >
-                                    <Play className="w-4 h-4" /> Fırlat & Döndür
+                                    <Play className="w-4 h-4" /> Bir Tur Yuvarla
                                 </button>
                             ) : (
                                 <button 
                                     onClick={handleReset}
                                     className="w-full py-3 rounded-lg flex items-center justify-center gap-2 font-bold bg-slate-600 text-white hover:bg-slate-500 transition-all"
                                 >
-                                    <RotateCcw className="w-4 h-4" /> Başa Sar
+                                    <RotateCcw className="w-4 h-4" /> Deneyi Sıfırla
                                 </button>
                             )}
                         </div>
@@ -448,7 +604,7 @@ export default function AreaPiApp() {
                             <motion.div layoutId="activeTabBadge" className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full" style={{ zIndex: 0 }} />
                         )}
                         <Disc className="w-4 h-4 relative z-10" />
-                        <span className="relative z-10">Gizemli Pi Yörüngesi</span>
+                        <span className="relative z-10">Pi: Çevre / Çap</span>
                     </button>
                 </div>
 
