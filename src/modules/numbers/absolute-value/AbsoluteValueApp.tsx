@@ -1,368 +1,406 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, Zap, Target, Hexagon, Crosshair, Gem } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { motion } from 'motion/react';
+import { ArrowRight, CheckCircle, ChevronLeft, Home, Minus, RotateCcw, ShieldCheck, Sparkles } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AstroBot, BotMessage, BotMessageType } from '../../../components/ui/AstroBot';
 import { useAtomStore } from '../../../store/useAtomStore';
 import { useGameStore } from '../../../store/useGameStore';
-import AstroGuide, { AstroMood } from '../../../components/AstroGuide';
 
-const RANGE = 10; // -10 to +10
+type Mission = {
+  title: string;
+  prompt: string;
+  target: number;
+  answer: number;
+  atomIds: string[];
+  reason: string;
+};
 
-// Yeni Yansıma (Reflection) Mekaniğine göre seviyeler
-const LEVELS = [
-  { 
-    id: 1, 
-    desc: "Aynanın gücünü kullanalım! Hedef +6 noktasında. Lazer sıfırdan seker. Vurmak için kuleyi nereye kurmalısın?", 
-    targetPos: 6 
+const MODULE_ID = 'absolute-value';
+const ATOMS = ['MAT.7.1.1.1', 'MAT.7.1.3.1'];
+const PADS = [-8, -6, -4, -2, 0, 2, 4, 6, 8];
+const PAD_TEST_IDS: Record<number, string> = {
+  [-8]: 'absolute-pad-neg8',
+  [-6]: 'absolute-pad-neg6',
+  [-4]: 'absolute-pad-neg4',
+  [-2]: 'absolute-pad-neg2',
+  0: 'absolute-pad-pos0',
+  2: 'absolute-pad-pos2',
+  4: 'absolute-pad-pos4',
+  6: 'absolute-pad-pos6',
+  8: 'absolute-pad-pos8',
+};
+
+const MISSIONS: Mission[] = [
+  {
+    title: 'Pozitif hedefi aynala',
+    prompt: '+6 hedefini vurmak için ışığı aynanın hangi tarafından başlatmalısın?',
+    target: 6,
+    answer: -6,
+    atomIds: ['MAT.7.1.1.1'],
+    reason: '+6 sağ tarafta. Aynadan aynı uzaklıktaki karşı nokta -6 olur.',
   },
-  { 
-    id: 2, 
-    desc: "Hedef bu kez negatif bölgede (-8 noktasında). Aynaya olan uzaklığın aynı oranda yansıyacağını unutma!", 
-    targetPos: -8,
+  {
+    title: 'Negatif hedefi aynala',
+    prompt: '-4 hedefi için karşı yöndeki aynı uzaklığı seç.',
+    target: -4,
+    answer: 4,
+    atomIds: ['MAT.7.1.1.1'],
+    reason: '-4 sol tarafta. Aynı uzaklık sağ tarafta +4 ile eşleşir.',
   },
-  { 
-    id: 3, 
-    desc: "Zorlu Görev! Hedef +4 noktasında. Doğru simetri noktasını bul ve mutlak değeri kanıtla.", 
-    targetPos: 4,
-  }
+  {
+    title: 'Sıfıra yakın olanı yakala',
+    prompt: '-2 hedefi, -8 noktasına göre sıfıra daha yakındır. Aynadaki eş uzaklığı seç.',
+    target: -2,
+    answer: 2,
+    atomIds: ['MAT.7.1.3.1'],
+    reason: '-2 sıfıra 2 birim uzakta olduğu için aynadaki eş uzaklık +2 olur.',
+  },
 ];
+
+const makeMessage = (text: string, type: BotMessageType, id: number): BotMessage => ({ text, type, id });
+const toTestId = (value: number) => PAD_TEST_IDS[value];
+const pct = (value: number) => ((value + 8) / 16) * 100;
+const display = (value: number) => (value > 0 ? `+${value}` : `${value}`);
 
 export default function AbsoluteValueApp() {
   const navigate = useNavigate();
-  const { unlockAtom } = useAtomStore();
+  const { unlockAtom, unlockModule } = useAtomStore();
   const { addScore } = useGameStore();
+  const [missionIndex, setMissionIndex] = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [fired, setFired] = useState(false);
+  const [feedback, setFeedback] = useState<{ text: string; type: BotMessageType } | null>(null);
+  const [completed, setCompleted] = useState(false);
+  const [messageId, setMessageId] = useState(0);
+  const [botMessage, setBotMessage] = useState<BotMessage>(
+    makeMessage('Hedefe bak, sıfır aynasının karşı tarafındaki eş uzaklığı seç.', 'info', 0),
+  );
 
-  const [currentLevelIdx, setCurrentLevelIdx] = useState(0);
-  const level = LEVELS[currentLevelIdx];
+  const mission = MISSIONS[missionIndex];
+  const reflected = selected === null ? null : -selected;
+  const progress = completed ? 100 : Math.round((missionIndex / MISSIONS.length) * 100);
+  const distance = selected === null ? null : Math.abs(selected);
 
-  const [turretPos, setTurretPos] = useState(-3);
-  const [isFiring, setIsFiring] = useState(false);
-  const [showMeasurement, setShowMeasurement] = useState(false);
-  
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [attempts, setAttempts] = useState(0);
+  const beamStyle = useMemo(() => {
+    if (selected === null || reflected === null) {
+      return null;
+    }
 
-  const [guideConfig, setGuideConfig] = useState<{ visible: boolean; message: string; mood: AstroMood }>({
-    visible: true,
-    message: "Kaptan! Lazer sadece '0' aynasına çarpıp diğer tarafa yansıyabilir. Hedefi kırmak için kuleyi doğru hizaya kur!",
-    mood: 'idle'
-  });
+    const start = pct(selected);
+    const zero = pct(0);
+    const end = pct(reflected);
+    return {
+      first: { left: `${Math.min(start, zero)}%`, width: `${Math.abs(start - zero)}%` },
+      second: { left: `${Math.min(zero, end)}%`, width: `${Math.abs(end - zero)}%` },
+    };
+  }, [reflected, selected]);
 
-  const getPercent = (val: number) => ((val + RANGE) / (RANGE * 2)) * 100;
+  const speak = (text: string, type: BotMessageType = 'info') => {
+    setMessageId((id) => {
+      const nextId = id + 1;
+      setBotMessage(makeMessage(text, type, nextId));
+      return nextId;
+    });
+  };
 
-  const handleFire = () => {
-    if (turretPos === 0) {
-      setGuideConfig({
-        visible: true, mood: 'error', 
-        message: "Kule aynanın tam üzerinde (0)! Ateş edemezsin. Kuleyi aynadan uzaklaştır."
-      });
+  const reset = () => {
+    setMissionIndex(0);
+    setSelected(null);
+    setFired(false);
+    setFeedback(null);
+    setCompleted(false);
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0 }));
+    speak('Yeni tur hazır. Hedefin aynadaki eş uzaklığını seç.', 'info');
+  };
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Home') reset();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  const choosePad = (value: number) => {
+    if (completed) return;
+    setSelected(value);
+    setFired(false);
+    setFeedback(null);
+    speak(`${display(value)} seçildi. Şimdi ışığı sıfır aynasından yansıt.`, 'info');
+  };
+
+  const fire = () => {
+    if (completed) return;
+    if (selected === null || reflected === null) {
+      const text = 'Önce sayı doğrusundan bir başlangıç noktası seçmelisin.';
+      setFeedback({ text, type: 'error' });
+      speak(text, 'error');
       return;
     }
 
-    setIsFiring(true);
-    setShowMeasurement(false);
+    setFired(true);
 
-    // Laser hit checks
-    const reflectedPos = -turretPos;
-    const distance = Math.abs(turretPos);
-    const success = (reflectedPos === level.targetPos);
+    if (selected !== mission.answer) {
+      const text = `${display(selected)} seçilince ışık ${display(reflected)} noktasına gider. Hedef ${display(mission.target)} olduğu için ${display(mission.answer)} seçilmeliydi.`;
+      setFeedback({ text, type: 'error' });
+      speak(text, 'error');
+      return;
+    }
 
-    setTimeout(() => {
-      setShowMeasurement(true);
-      
-      if (success) {
-        setGuideConfig({ visible: false, message: '', mood: 'idle' });
-        setTimeout(() => {
-          setShowSuccess(true);
-          unlockAtom("G6.NUM.020.1"); 
-          unlockAtom("G6.NUM.020.2"); 
-          unlockAtom("G6.NUM.020.3"); 
-          addScore(100);
-        }, 1500);
+    mission.atomIds.forEach((atomId) => unlockAtom(atomId));
+    const isLast = missionIndex === MISSIONS.length - 1;
+    const text = `Doğru: ${display(selected)} ile ${display(mission.target)} sıfıra ${Math.abs(mission.target)} birim uzakta. ${mission.reason}`;
+    setFeedback({ text, type: 'success' });
+    speak(text, 'success');
+
+    window.setTimeout(() => {
+      if (isLast) {
+        ATOMS.forEach((atomId) => unlockAtom(atomId));
+        unlockModule(MODULE_ID);
+        addScore(140);
+        setCompleted(true);
+        speak('Sıfır aynası tamamlandı. Yönlü sayıları ve sıfıra uzaklığı doğru yorumladın.', 'success');
       } else {
-        setAttempts(prev => prev + 1);
-        let msg = "";
-        let mood: AstroMood = "error";
-        
-        if (attempts === 0) {
-            msg = `Karavana! Lazer ${distance} birim uzaktan geldiği için 0'dan yine ${distance} birim uzağa sekti ve ${reflectedPos}'i vurdu.`;
-        } else {
-            mood = 'hint';
-            msg = `Matematiksel Simetri! Hedef ${level.targetPos} noktasındaysa, senin lazeri tam zıttı olan ${-level.targetPos} noktasından ateşlemen gerekir.`;
-        }
-
-        setGuideConfig({ visible: true, mood, message: msg });
-        
-        setTimeout(() => {
-          setIsFiring(false);
-          setShowMeasurement(false);
-        }, 3000);
+        setMissionIndex((index) => index + 1);
+        setSelected(null);
+        setFired(false);
+        setFeedback(null);
+        speak('Yeni hedef açıldı. Karşı yöndeki aynı uzaklığı seç.', 'info');
       }
-    }, 1200); // Wait for both lasers to finish matching
-  };
-
-  const handleNext = () => {
-    if (currentLevelIdx < LEVELS.length - 1) {
-      setCurrentLevelIdx(prev => prev + 1);
-      setTurretPos(LEVELS[currentLevelIdx + 1].targetPos === 6 ? -2 : 2); // default near
-      setIsFiring(false);
-      setShowMeasurement(false);
-      setAttempts(0);
-      setGuideConfig({
-        visible: true,
-        mood: 'idle',
-        message: LEVELS[currentLevelIdx + 1].desc
-      });
-      setShowSuccess(false);
-    } else {
-      navigate('/');
-    }
-  };
-
-  const AxisTicks = () => {
-    const ticks = [];
-    for (let i = -RANGE; i <= RANGE; i++) {
-      const isZero = i === 0;
-      const pct = getPercent(i);
-      ticks.push(
-        <div key={`tick-${i}`} className="absolute top-0 bottom-0 flex flex-col items-center" style={{ left: `${pct}%`, transform: 'translateX(-50%)' }}>
-          <div className={`w-0.5 ${isZero ? 'h-8 bg-[#00E5FF] shadow-[0_0_10px_#00E5FF]' : 'h-4 bg-gray-600'} transition-all`} />
-          {!isZero && i % 2 === 0 && (
-            <span className="text-[10px] text-gray-500 mt-2 font-mono">{i}</span>
-          )}
-        </div>
-      );
-    }
-    return ticks;
+    }, 900);
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-mono flex flex-col w-full h-full relative overflow-hidden">
-      
-      {/* Background Decor */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#111_1px,transparent_1px),linear-gradient(to_bottom,#111_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
-      
-      <header className="p-6 border-b border-gray-800 bg-black/50 backdrop-blur-md flex items-center gap-4 relative z-30">
-        <button onClick={() => navigate('/')} className="p-2 hover:bg-gray-800 border border-gray-800 rounded-xl transition-colors">
-          <ArrowLeft className="w-5 h-5 text-gray-400" />
-        </button>
-        <div>
-          <h1 className="text-xl font-medium tracking-tight">Sıfıra Uzaklık Aynası</h1>
-          <p className="text-xs text-gray-500 mt-1">SİSTEM: MUTLAK_DEĞER // V2.0</p>
+    <div className="relative min-h-screen overflow-x-hidden overflow-y-auto bg-[#050510] text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(0,229,255,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(0,229,255,0.045)_1px,transparent_1px)] bg-[size:52px_52px]" />
+      <div className="pointer-events-none absolute left-0 top-0 h-96 w-96 bg-cyan-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-[420px] w-[420px] bg-violet-500/10 blur-3xl" />
+
+      <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-6 py-6">
+        <div className="flex items-center gap-4">
+          <button
+            aria-label="Ana merkeze dön"
+            onClick={() => navigate('/')}
+            className="rounded-2xl border border-white/10 bg-white/5 p-3 text-white transition hover:bg-white/10"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <div>
+            <p className="font-mono text-xs font-black uppercase tracking-[0.35em] text-cyan-200">MAT.7.1.1.1 · MAT.7.1.3.1</p>
+            <h1 className="mt-1 text-3xl font-black tracking-tight">Sıfır Aynası</h1>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="rounded-2xl border border-cyan-200/20 bg-cyan-300/10 px-4 py-3">
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.25em] text-cyan-100">İlerleme</p>
+            <p data-testid="absolute-progress" className="text-xl font-black text-cyan-100">%{progress}</p>
+          </div>
+          <button
+            data-testid="absolute-reset"
+            aria-keyshortcuts="Home"
+            onClick={reset}
+            className="flex items-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-black transition hover:bg-white/15"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Sıfırla
+          </button>
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col p-6 gap-6 relative z-20 max-w-6xl mx-auto w-full">
-        
-        {/* Mission Briefing */}
-        <div className="bg-[#111] border border-gray-800 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-6 justify-between shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-1 h-full bg-[#00E5FF]"></div>
-            <div className="flex-1">
-                <h2 className="text-[#00E5FF] text-sm uppercase tracking-widest mb-2 flex items-center gap-2">
-                    <Target className="w-4 h-4" /> GÖREV BİLGİSİ
-                </h2>
-                <p className="text-gray-300 text-sm leading-relaxed">{level.desc}</p>
+      <main className="relative z-10 mx-auto grid w-full max-w-7xl gap-5 px-6 pb-16 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <section
+          data-testid="absolute-value-stage"
+          className="rounded-[32px] border border-cyan-300/20 bg-slate-950/72 p-5 shadow-[0_30px_90px_rgba(0,229,255,0.12)] backdrop-blur-xl"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-black text-cyan-100">Ana oyuncak: sıfır aynalı sayı doğrusu</p>
+              <h2 className="mt-1 text-2xl font-black">{mission.title}</h2>
+              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-300">{mission.prompt}</p>
             </div>
-            <div className="bg-black/50 border border-gray-800 rounded-xl py-3 px-6 text-center shrink-0">
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Mevcut Hedef</p>
-                <div className="text-3xl font-light text-[#00E5FF]">{level.targetPos}</div>
+            <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-center">
+              <p className="font-mono text-xs font-black uppercase tracking-[0.3em] text-white/50">Hedef</p>
+              <p className="mt-1 text-4xl font-black text-cyan-100">{display(mission.target)}</p>
             </div>
-        </div>
+          </div>
 
-        {/* The Physics Canvas */}
-        <div className="flex-1 w-full bg-[#0A0A0A] rounded-3xl border border-gray-800 relative flex flex-col justify-center items-center p-8 shadow-[inset_0_0_100px_rgba(0,0,0,1)] overflow-hidden">
-            
-            {/* The Zero Background Line */}
-            <div className="absolute top-10 bottom-10 w-[2px] bg-[#00E5FF] opacity-10 left-[50%] z-0" />
+          <div className="mt-5 rounded-[30px] border border-white/10 bg-[#07111f] p-5">
+            <div className="relative min-h-[330px] rounded-[28px] border border-cyan-200/15 bg-slate-950/85 p-6">
+              <div className="absolute inset-x-8 top-1/2 h-1 rounded-full bg-white/15" />
+              <div className="absolute left-1/2 top-[28%] h-[48%] w-1 -translate-x-1/2 rounded-full bg-cyan-200/35 shadow-[0_0_24px_rgba(103,232,249,0.4)]" />
 
-            {/* Main Axis Line Component */}
-            <div className="relative w-full h-32 mt-12">
-                <div className="absolute top-0 w-full h-[2px] bg-gray-700" />
-                {AxisTicks()}
-
-                {/* The Zero Mirror Element (Fixed perfectly on the '0' axis) */}
-                <div className="absolute top-0 left-1/2 translate-x-[-50%] translate-y-[-50%] z-30 flex flex-col items-center">
-                    <div className="relative">
-                        <motion.div 
-                            animate={{ rotate: 360, borderColor: isFiring ? 'rgba(0,229,255,1)' : 'rgba(0,229,255,0.4)', backgroundColor: isFiring ? 'rgba(0,229,255,0.2)' : 'rgba(0,229,255,0.05)' }} 
-                            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                            className="w-12 h-16 border-2 rounded-sm flex items-center justify-center backdrop-blur-md"
-                            style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
-                        />
-                        <Hexagon className="absolute inset-0 w-full h-full text-[#00E5FF]/90 p-1" />
-                    </div>
-                    <div className="absolute top-[120%] bg-black border border-[#00E5FF] text-[#00E5FF] px-3 py-1 rounded-full text-[10px] font-bold shadow-[0_0_15px_rgba(0,229,255,0.4)] whitespace-nowrap">
-                        '0' AYNASI
-                    </div>
+              {PADS.map((value) => (
+                <div key={value} className="absolute top-[52%] -translate-x-1/2 text-center" style={{ left: `${pct(value)}%` }}>
+                  <div className={`mx-auto h-5 w-1 rounded-full ${value === 0 ? 'bg-cyan-200' : 'bg-white/25'}`} />
+                  <p className={`mt-2 font-mono text-xs font-black ${value === 0 ? 'text-cyan-100' : 'text-white/55'}`}>{display(value)}</p>
                 </div>
+              ))}
 
-                {/* Target Crystal */}
-                <motion.div 
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-[-24px] w-12 h-12 flex flex-col items-center z-10"
-                    style={{ left: `${getPercent(level.targetPos)}%`, translateX: '-50%' }}
+              <div className="absolute top-[18%] -translate-x-1/2" style={{ left: `${pct(mission.target)}%` }}>
+                <motion.div
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                  className="rounded-3xl border border-cyan-200/45 bg-cyan-300/15 px-5 py-4 text-center shadow-[0_0_30px_rgba(34,211,238,0.28)]"
                 >
-                    <div className="bg-[#111] border-2 border-[#00E5FF]/50 rounded-lg p-2 shadow-[0_0_30px_rgba(0,229,255,0.3)]">
-                        <Gem className="w-6 h-6 text-[#00E5FF]" />
-                    </div>
+                  <Sparkles className="mx-auto h-7 w-7 text-cyan-100" />
+                  <p className="mt-1 font-mono text-xs font-black uppercase tracking-[0.2em] text-cyan-100">Hedef</p>
                 </motion.div>
+              </div>
 
-                {/* The Laser Turret */}
-                <motion.div 
-                    className="absolute top-[-24px] w-12 h-12 flex flex-col items-center z-40 cursor-grab active:cursor-grabbing hover:scale-105 transition-transform"
-                    style={{ left: `${getPercent(turretPos)}%`, translateX: '-50%' }}
-                    layout
+              {selected === null ? (
+                <div className="absolute left-1/2 top-[66%] -translate-x-1/2 rounded-3xl border border-dashed border-white/20 bg-white/5 px-5 py-4 text-center text-white/65">
+                  <p className="font-mono text-xs font-black uppercase tracking-[0.2em]">Başlangıç</p>
+                  <p className="mt-1 text-sm font-bold">Bir nokta seç</p>
+                </div>
+              ) : (
+                <motion.div
+                  layout
+                  className="absolute top-[66%] -translate-x-1/2"
+                  style={{ left: `${pct(selected)}%` }}
                 >
-                    <div className={`bg-black border-2 rounded-lg p-1.5 rotate-45 mb-2 ${isFiring ? 'border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.8)]' : 'border-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.3)]'}`}>
-                        <Crosshair className={`w-5 h-5 -rotate-45 ${isFiring ? 'text-red-400' : 'text-purple-400'}`} />
-                    </div>
+                  <div className={`rounded-3xl border px-5 py-4 text-center shadow-2xl ${fired ? 'border-fuchsia-200 bg-fuchsia-400/20' : 'border-violet-200/50 bg-violet-400/15'}`}>
+                    <p className="font-mono text-xs font-black uppercase tracking-[0.2em] text-white/65">Başlangıç</p>
+                    <p className="text-3xl font-black">{display(selected)}</p>
+                  </div>
                 </motion.div>
+              )}
 
-                {/* Turret Draggable Slider */}
-                <input 
-                  type="range"
-                  min={-RANGE}
-                  max={RANGE}
-                  step={1}
-                  value={turretPos}
-                  onChange={(e) => {
-                    const val = parseInt(e.target.value);
-                    if(val !== turretPos) {
-                        setTurretPos(val);
-                        setIsFiring(false);
-                        setShowMeasurement(false);
-                    }
-                  }}
-                  disabled={isFiring || showSuccess}
-                  className="absolute top-[-10px] left-0 w-full h-10 opacity-0 cursor-pointer z-50 disabled:cursor-not-allowed"
-                />
+              {fired && beamStyle && (
+                <>
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    className="absolute top-1/2 h-3 origin-left rounded-full bg-fuchsia-300 shadow-[0_0_28px_rgba(240,171,252,0.7)]"
+                    style={beamStyle.first}
+                  />
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.18 }}
+                    className="absolute top-1/2 h-3 origin-left rounded-full bg-cyan-300 shadow-[0_0_28px_rgba(103,232,249,0.7)]"
+                    style={beamStyle.second}
+                  />
+                </>
+              )}
 
-                {/* Beam 1: Turret to Zero */}
-                <div className="absolute top-[-6px] h-3 z-20 pointer-events-none" style={{
-                    left: turretPos < 0 ? `${getPercent(turretPos)}%` : '50%',
-                    right: turretPos > 0 ? `${100 - getPercent(turretPos)}%` : '50%',
-                }}>
-                    <motion.div 
-                        initial={{ scaleX: 0, opacity: 0 }}
-                        animate={{ 
-                            scaleX: isFiring ? 1 : 0,
-                            opacity: isFiring ? 1 : 0
-                        }}
-                        transition={{ duration: 0.5, ease: "easeIn" }}
-                        style={{ transformOrigin: turretPos < 0 ? 'left' : 'right' }}
-                        className="w-full h-full bg-[#FF00FF] shadow-[0_0_30px_#FF00FF] rounded-full"
-                    />
-                </div>
-
-                {/* Beam 2: Zero to Reflected Pos (Bouncing Laser) */}
-                <div className="absolute top-[-6px] h-3 z-20 pointer-events-none" style={{
-                    left: turretPos < 0 ? '50%' : `${getPercent(-turretPos)}%`,
-                    right: turretPos > 0 ? '50%' : `${100 - getPercent(-turretPos)}%`,
-                }}>
-                    <motion.div 
-                        initial={{ scaleX: 0, opacity: 0 }}
-                        animate={{ 
-                            scaleX: isFiring ? 1 : 0,
-                            opacity: isFiring ? 1 : 0
-                        }}
-                        // Gecikmeli ateşleme! İlk lazer aynaya çarptıktan sonra (0.5s) ikinci lazer çıkar.
-                        transition={{ duration: 0.5, delay: isFiring ? 0.5 : 0, ease: "easeOut" }}
-                        // Ayna noktasından dışarıya doğru uzar
-                        style={{ transformOrigin: turretPos < 0 ? 'left' : 'right' }} 
-                        className="w-full h-full bg-[#FF00FF] shadow-[0_0_30px_#FF00FF] rounded-full"
-                    />
-                </div>
-
-                {/* Dynamic Symmetrical Measurement Tape removed from here */}
-
+              <div className="absolute left-1/2 top-[10%] -translate-x-1/2 rounded-2xl border border-cyan-200/25 bg-slate-950/90 px-5 py-3 text-center">
+                <p className="font-mono text-xs font-black uppercase tracking-[0.25em] text-cyan-100">Sıfır aynası</p>
+                <p className="text-sm font-bold text-slate-300">{selected === null ? 'Uzaklık için nokta seç' : `Uzaklık: |${selected}| = ${distance}`}</p>
+              </div>
             </div>
 
-            {/* Fire Button Controls */}
-            <div className="mt-16 z-40 bg-black/50 border border-gray-800 p-2 rounded-2xl backdrop-blur-md">
-                <button 
-                    onClick={handleFire}
-                    disabled={isFiring || showSuccess}
-                    className="px-12 py-4 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(147,51,234,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            <div className="mt-5">
+              <p className="text-center text-sm font-black uppercase tracking-[0.18em] text-cyan-100">Başlangıç noktasını seç</p>
+              <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-9">
+                {PADS.map((value) => (
+                  <button
+                    key={value}
+                    data-testid={toTestId(value)}
+                    onClick={() => choosePad(value)}
+                    className={`min-h-16 rounded-2xl border text-xl font-black transition hover:scale-[1.03] ${
+                      selected === value
+                        ? 'border-cyan-100 bg-cyan-300 text-slate-950'
+                        : 'border-white/12 bg-white/10 text-white hover:bg-white/15'
+                    }`}
+                  >
+                    {display(value)}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                data-testid="absolute-fire"
+                onClick={fire}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-cyan-300 px-6 py-4 text-lg font-black text-slate-950 transition hover:bg-white"
+              >
+                <Minus className="h-5 w-5" />
+                Işığı aynadan yansıt
+              </button>
+
+              {feedback && !completed && (
+                <div
+                  data-testid="absolute-feedback"
+                  className={`mt-4 rounded-2xl border px-4 py-3 text-sm font-bold ${
+                    feedback.type === 'error'
+                      ? 'border-rose-400/40 bg-rose-500/10 text-rose-100'
+                      : 'border-emerald-300/40 bg-emerald-400/10 text-emerald-100'
+                  }`}
                 >
-                    <Zap className="w-5 h-5 fill-current" /> ATEŞLE VE YANSIT
-                </button>
+                  {feedback.text}
+                </div>
+              )}
             </div>
+          </div>
+        </section>
 
-            {/* HUD: Static Symmetrical Proof Box */}
-            <AnimatePresence>
-                {showMeasurement && isFiring && (
-                    <motion.div 
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="absolute bottom-6 left-6 z-50 pointer-events-none"
-                    >
-                        <div className="bg-[#111]/95 border border-[#00E5FF]/30 p-5 rounded-2xl backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex flex-col gap-4 min-w-[280px]">
-                            <div className="flex items-center gap-3 border-b border-gray-800 pb-3">
-                                <div className="bg-[#00E5FF]/20 p-1.5 rounded-lg flex items-center justify-center border border-[#00E5FF]/30">
-                                    <Hexagon className="w-4 h-4 text-[#00E5FF]" />
-                                </div>
-                                <span className="text-[#00E5FF] text-xs uppercase tracking-widest font-bold">Matematİksel Kanıt</span>
-                            </div>
-                            
-                            <div className="flex flex-col gap-3 font-mono">
-                                <div className="flex items-center justify-between bg-black/50 p-2 rounded-lg border border-gray-800">
-                                    <span className="text-gray-400 text-[11px] uppercase tracking-wider">Atış Uzaklığı</span>
-                                    <span className="text-purple-400 text-lg font-bold">|{turretPos}| = {Math.abs(turretPos)}</span>
-                                </div>
-                                <div className="flex items-center justify-between bg-black/50 p-2 rounded-lg border border-gray-800">
-                                    <span className="text-gray-400 text-[11px] uppercase tracking-wider">Yansıma Uzaklığı</span>
-                                    <span className="text-[#00E5FF] text-lg font-bold">|{-turretPos}| = {Math.abs(-turretPos)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+        <aside className="flex flex-col gap-4">
+          <section className="rounded-[28px] border border-cyan-300/30 bg-cyan-950/40 p-5">
+            <p className="font-mono text-xs font-black uppercase tracking-[0.35em] text-cyan-100">Canlı durum</p>
+            <h2 className="mt-3 text-2xl font-black">{completed ? 'Ayna tamam' : 'AstroBot hazır'}</h2>
+            <p className="mt-2 text-sm leading-relaxed text-cyan-50/85">{botMessage.text}</p>
+          </section>
 
-        </div>
+          <section className="rounded-[28px] border border-white/15 bg-white/[0.07] p-5">
+            <p className="font-mono text-xs font-black uppercase tracking-[0.35em] text-cyan-100">Görev zinciri</p>
+            <div className="mt-4 space-y-3">
+              {MISSIONS.map((item, index) => (
+                <div
+                  key={item.title}
+                  className={`rounded-2xl border px-4 py-3 text-sm font-bold ${
+                    index < missionIndex || completed
+                      ? 'border-emerald-300/35 bg-emerald-400/10 text-emerald-100'
+                      : index === missionIndex
+                        ? 'border-cyan-300/35 bg-cyan-300/10 text-cyan-50'
+                        : 'border-white/10 bg-slate-950/45 text-white/55'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    {index < missionIndex || completed ? <CheckCircle className="h-5 w-5" /> : <ShieldCheck className="h-5 w-5" />}
+                    {item.title}
+                  </div>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] opacity-70">Hedef {display(item.target)}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        </aside>
       </main>
 
-      <AstroGuide 
-        visible={guideConfig.visible}
-        message={guideConfig.message}
-        mood={guideConfig.mood}
-        onClose={() => setGuideConfig(prev => ({ ...prev, visible: false }))}
-      />
+      {completed && <CompletionPanel onReplay={reset} />}
+      {!completed && <AstroBot message={botMessage} />}
+    </div>
+  );
+}
 
-      <AnimatePresence>
-        {showSuccess && (
-          <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 50 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-[#111] border border-purple-900/50 p-10 rounded-3xl max-w-lg w-full text-center relative overflow-hidden shadow-[0_0_100px_rgba(168,85,247,0.2)]"
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-purple-500/10 to-transparent pointer-events-none" />
-              <div className="bg-purple-900/30 w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 border border-purple-500/50">
-                <Target className="w-12 h-12 text-purple-400" />
-              </div>
-              <h2 className="text-3xl font-medium text-white mb-3 tracking-tight">İspat Tamamlandı!</h2>
-              <p className="text-gray-400 mb-6 leading-relaxed">
-                İşte mutlak değer kuralı tam olarak budur: <br/>
-                <span className="text-white font-semibold block mt-4 bg-white/5 p-4 rounded-xl border border-white/10">
-                  Lazer 0'a ne kadar mesafe geldiyse, tam zıttına da o kadar mesafe seker. Uzaklık ASLA değişmez.
-                </span>
-              </p>
-              
-              <button 
-                onClick={handleNext}
-                className="w-full py-4 bg-purple-500 text-white font-semibold rounded-xl hover:bg-purple-400 transition-colors shadow-[0_0_30px_rgba(168,85,247,0.4)]"
-              >
-                {currentLevelIdx < LEVELS.length - 1 ? 'SONRAKİ HEDEFE GEÇ' : 'LABORATUVARI KAPAT'}
-              </button>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
+function CompletionPanel({ onReplay }: { onReplay: () => void }) {
+  return (
+    <div className="fixed inset-0 z-20 flex items-center justify-center bg-slate-950/80 px-6 backdrop-blur-md">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-3xl rounded-[36px] border border-cyan-200/30 bg-slate-950 p-8 text-center shadow-[0_30px_100px_rgba(0,229,255,0.22)]"
+      >
+        <ShieldCheck className="mx-auto h-20 w-20 text-cyan-300" />
+        <h2 className="mt-5 text-4xl font-black">Sıfır aynası tamam</h2>
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-300">
+          Negatif ve pozitif yönleri sayı doğrusunda yorumladın; sıfıra olan uzaklığı aynada eşleştirdin.
+        </p>
+        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+          {ATOMS.map((atomId) => (
+            <div key={atomId} className="rounded-2xl border border-cyan-200/20 bg-cyan-300/10 p-4 text-left">
+              <p className="font-mono text-sm font-black text-cyan-100">{atomId}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <button data-testid="absolute-replay" onClick={onReplay} className="rounded-2xl bg-cyan-300 px-6 py-4 font-black text-slate-950 transition hover:bg-white">
+            Tekrar oyna
+          </button>
+          <Link data-testid="absolute-home" to="/" className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-6 py-4 font-black text-white transition hover:bg-white/15">
+            Ana merkeze dön <Home className="h-5 w-5" /> <ArrowRight className="h-5 w-5" />
+          </Link>
+        </div>
+      </motion.div>
     </div>
   );
 }

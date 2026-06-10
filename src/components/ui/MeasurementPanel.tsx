@@ -10,9 +10,17 @@ interface MeasurementPanelProps {
     setAngleInputValue: (val: string) => void;
     handlePlaceProtractor: () => void;
     handleVerifyAngle: () => void;
+    rayAngleKind?: string;
+    segmentAngleKind?: string;
 }
 
-export function MeasurementPanel({ visible, protractorPlaced, phase, angleInputValue, setAngleInputValue, handlePlaceProtractor, handleVerifyAngle }: MeasurementPanelProps) {
+export function MeasurementPanel({ visible, protractorPlaced, phase, angleInputValue, setAngleInputValue, handlePlaceProtractor, handleVerifyAngle, rayAngleKind = 'geniş', segmentAngleKind = 'dar' }: MeasurementPanelProps) {
+    const promptText = phase === 4
+        ? 'Seçtiğin açının ölçüsü kaç derece?'
+        : phase === 7
+            ? `Işının mavi doğruyla yaptığı ${rayAngleKind} açı kaç derece?`
+            : `Doğru parçasının mor doğruyla yaptığı ${segmentAngleKind} açı kaç derece?`;
+
     return (
         <AnimatePresence>
             {visible && (
@@ -24,22 +32,22 @@ export function MeasurementPanel({ visible, protractorPlaced, phase, angleInputV
                     <div className="relative z-10 w-full flex flex-col gap-3">
                     {!protractorPlaced ? (
                         <button onClick={handlePlaceProtractor} className="py-3 px-4 w-full bg-[#B388FF]/20 text-[#B388FF] text-xs font-bold uppercase tracking-wider rounded-xl border border-[#B388FF]/40 hover:bg-[#B388FF]/40 hover:text-white transition-colors">
-                            [+] Sanal İletkiyi Çağır
+                            İletkiyi Aç
                         </button>
                     ) : (
                         <div className="p-3 bg-black/50 rounded-xl border border-gray-800">
-                            <p className="text-[#00E5FF] font-mono text-[10px] mb-2 font-bold tracking-widest text-[#B388FF]">
-                                {phase === 4 ? '/ÖLÇÜM/Dar_Açı:' : phase === 7 ? '/ÖLÇÜM/Isin_Acisi:' : '/ÖLÇÜM/Ucgen_Acisi:'}
+                            <p className="mb-2 text-sm font-bold leading-snug text-[#D7FFF5]">
+                                {promptText}
                             </p>
                             <div className="flex gap-2 mb-3">
                                 <input type="number" value={angleInputValue} onChange={e => setAngleInputValue(e.target.value)}
                                     className="flex-1 w-full bg-[#12121A] border border-[#B388FF]/50 rounded-lg px-4 py-2 text-xl font-mono text-white focus:outline-none focus:border-[#00E5FF] focus:shadow-[0_0_10px_rgba(0,229,255,0.3)] text-center transition-all"
-                                    placeholder="0"
+                                    placeholder="derece"
                                 />
                                     <div className="flex items-center justify-center w-12 bg-[#12121A] rounded-lg border border-gray-800 text-gray-500 font-black text-xl">°</div>
                             </div>
                             <button onClick={handleVerifyAngle} className="w-full py-3 bg-[#00E5FF] hover:bg-white text-black font-black uppercase tracking-wider rounded-lg transition-colors">
-                                ONAYLA
+                                Kontrol et
                             </button>
                         </div>
                     )}

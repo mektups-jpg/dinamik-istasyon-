@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAtomStore } from '../../../store/useAtomStore';
 import { useGameStore } from '../../../store/useGameStore';
 import { useAstroBotStore } from '../../../store/useAstroBotStore';
 import { Link } from 'react-router-dom';
-import { Ruler, CheckCircle2, Zap } from 'lucide-react';
-import { BlockMath } from 'react-katex';
-import 'katex/dist/katex.min.css';
+import { AlertTriangle, CheckCircle2, Minus, Plus, Ruler, Target, Triangle } from 'lucide-react';
 import { GameHeader } from '../../../components/ui/GameHeader';
+
+const MIN_SIDE = 1;
+const MAX_SIDE = 15;
+
+type SideKey = 'A' | 'B' | 'C';
 
 const getTriangleType = (a: number, b: number, c: number) => {
     if (a + b <= c || a + c <= b || b + c <= a) return 'INVALID';
@@ -15,6 +18,83 @@ const getTriangleType = (a: number, b: number, c: number) => {
     if (a === b || a === c || b === c) return 'ISOSCELES';
     return 'SCALENE';
 };
+
+const clampSide = (value: number) => Math.min(MAX_SIDE, Math.max(MIN_SIDE, value));
+
+function LengthControl({
+  label,
+  value,
+  color,
+  onDecrease,
+  onIncrease,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  color: string;
+  onDecrease: () => void;
+  onIncrease: () => void;
+  onChange: (value: number) => void;
+}) {
+  const percent = ((value - MIN_SIDE) / (MAX_SIDE - MIN_SIDE)) * 100;
+
+  return (
+    <div className="relative z-10 rounded-2xl border border-white/10 bg-black/22 p-3">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h3 className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-gray-200">
+          <Ruler className="h-4 w-4" style={{ color }} />
+          {label}
+        </h3>
+        <span className="rounded-full border px-3 py-1 font-mono text-sm font-black" style={{ borderColor: `${color}66`, color }}>
+          {value} U
+        </span>
+      </div>
+
+      <div className="grid grid-cols-[52px_minmax(0,1fr)_52px] items-center gap-3">
+        <button
+          type="button"
+          onClick={onDecrease}
+          disabled={value <= MIN_SIDE}
+          aria-label={`${label} uzunluğunu azalt`}
+          className="grid h-12 place-items-center rounded-2xl border bg-white/[0.04] text-white transition hover:bg-white/[0.10] disabled:cursor-not-allowed disabled:opacity-35"
+          style={{ borderColor: `${color}55` }}
+        >
+          <Minus className="h-5 w-5" />
+        </button>
+
+        <div>
+          <input
+            aria-label={`${label} uzunluğu`}
+            type="range"
+            min={MIN_SIDE}
+            max={MAX_SIDE}
+            value={value}
+            onChange={(event) => onChange(Number(event.target.value))}
+            className="h-3 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-white"
+            style={{ accentColor: color }}
+          />
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/8">
+            <div
+              className="h-full rounded-full transition-all"
+              style={{ width: `${percent}%`, background: `linear-gradient(90deg, ${color}88, ${color})` }}
+            />
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={onIncrease}
+          disabled={value >= MAX_SIDE}
+          aria-label={`${label} uzunluğunu artır`}
+          className="grid h-12 place-items-center rounded-2xl border bg-white/[0.04] text-white transition hover:bg-white/[0.10] disabled:cursor-not-allowed disabled:opacity-35"
+          style={{ borderColor: `${color}55` }}
+        >
+          <Plus className="h-5 w-5" />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function PolygonCollisionApp() {
   const { unlockAtom, unlockModule } = useAtomStore();
@@ -31,11 +111,50 @@ export default function PolygonCollisionApp() {
 
   const currentType = getTriangleType(a, b, c);
   const isValid = currentType !== 'INVALID';
+  const sideControls = useMemo(
+    () => [
+      { key: 'A' as const, name: 'Kırmızı', value: a, color: '#FF3366' },
+      { key: 'B' as const, name: 'Mavi', value: b, color: '#33CCFF' },
+      { key: 'C' as const, name: 'Yeşil', value: c, color: '#00FF88' },
+    ],
+    [a, b, c]
+  );
+  const sortedSides = useMemo(
+    () => [...sideControls].sort((left, right) => left.value - right.value),
+    [sideControls]
+  );
+  const shortSides = sortedSides.slice(0, 2);
+  const longestSide = sortedSides[2];
+  const shortSum = shortSides[0].value + shortSides[1].value;
+  const closingNeed = Math.max(0, longestSide.value - shortSum + 1);
+  const isFlatLine = !isValid && shortSum === longestSide.value;
+  const statusHeadline = isValid
+    ? 'Üçgen kapanıyor'
+    : isFlatLine
+      ? 'Tam düz çizgi oldu'
+      : 'Üçgen kapanmadı';
+  const statusCopy = isValid
+    ? `${shortSides[0].key} + ${shortSides[1].key} = ${shortSum}. En uzun ${longestSide.key} = ${longestSide.value}. ${shortSum} > ${longestSide.value}, bu yüzden uçlar birleşir.`
+    : isFlatLine
+      ? `${shortSides[0].key} + ${shortSides[1].key} = ${shortSum}. Üçgen için bu toplam ${longestSide.key}'den büyük olmalı; eşit olunca şekil düzleşir.`
+      : `${shortSides[0].key} + ${shortSides[1].key} = ${shortSum}. En uzun ${longestSide.key} = ${longestSide.value}. Kapanması için en az ${closingNeed} birim daha gerekiyor.`;
+  const inequalityChecks = [
+    { label: 'A + B > C', sum: a + b, side: c, ok: a + b > c },
+    { label: 'A + C > B', sum: a + c, side: b, ok: a + c > b },
+    { label: 'B + C > A', sum: b + c, side: a, ok: b + c > a },
+  ];
+
+  const setSideValue = (side: SideKey, value: number) => {
+    const nextValue = clampSide(value);
+    if (side === 'A') setA(nextValue);
+    if (side === 'B') setB(nextValue);
+    if (side === 'C') setC(nextValue);
+  };
 
   // State calculations
   useEffect(() => {
     if (phase === 0 && isValid) {
-        showMessage("Harika! Çubuklar bağlandı. 3, 4, 8 iken neden bağlanmadı? İki kısa kenarın toplamı uzun kenardan BÜYÜK olmak zorunda! (Üçgen Eşitsizliği)", "success");
+        showMessage("Harika! İki kısa çubuğun toplamı en uzun çubuktan büyük oldu. Uçlar birleşti ve üçgen kapandı!", "success");
         setPhase(1);
         setTypesFound(prev => ({ ...prev, [currentType]: true }));
     } else if (phase === 1 && isValid) {
@@ -44,11 +163,16 @@ export default function PolygonCollisionApp() {
             return { ...prev, [currentType]: true };
         });
     }
-  }, [isValid, currentType, phase, showMessage]);
+  }, [
+    isValid,
+    currentType,
+    phase,
+    showMessage,
+  ]);
 
   useEffect(() => {
     if (phase === 0) {
-        showMessage("Çubukları (A, B, C) kaydır! İki kısa ucu kavuşturabilirsen Üçgen Eşitsizliği portalını açarız.", "info");
+        showMessage("Çubuk uzunluklarını + ve - ile değiştir. İki kısa çubuğun toplamı en uzun çubuktan büyük olursa üçgen kapanır.", "info");
     }
   }, [phase, showMessage]);
 
@@ -143,7 +267,7 @@ export default function PolygonCollisionApp() {
       </div>
 
       <GameHeader
-        title="POLİGON ÇATIŞMA TESTİ"
+        title="ÜÇGEN ÇUBUK ATÖLYESİ"
         subtitle="ÜÇGEN EŞİTSİZLİĞİ"
         rightContent={
           isValid && (
@@ -160,47 +284,40 @@ export default function PolygonCollisionApp() {
           {/* Sol Panel: Kontrol Paneli */}
           <div className="lg:col-span-1 flex flex-col gap-3 overflow-y-auto CustomScrollbar pr-2">
 
-            {/* Uzunluk Kontrolleri (Kompakt) */}
+            {/* Uzunluk Kontrolleri */}
             <div className="bg-[#12121A]/80 backdrop-blur-xl border border-gray-800 p-4 rounded-3xl shadow-2xl relative overflow-hidden flex-shrink-0 flex flex-col gap-4">
                 <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/5 to-transparent"></div>
-
-                {/* A */}
-                <div className="relative z-10">
-                    <div className="flex justify-between items-center mb-1">
-                        <h3 className="text-[10px] font-bold text-gray-300 uppercase tracking-widest flex items-center gap-2">
-                            <Ruler className="w-3.5 h-3.5 text-[#FF3366]"/> Kırmızı (A)
-                        </h3>
-                        <span className="font-mono text-[#FF3366] font-bold text-sm">{a} U</span>
+                <div className="relative z-10 rounded-2xl border border-[#00E5FF]/20 bg-[#00E5FF]/10 p-3">
+                    <div className="flex items-start gap-2">
+                        <Target className="mt-0.5 h-4 w-4 text-[#8DF4FF]" />
+                        <div>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#8DF4FF]">Hedef</p>
+                            <p className="mt-1 text-sm font-bold leading-snug text-white">
+                                İki kısa çubuğun toplamı en uzun çubuktan büyük olsun.
+                            </p>
+                        </div>
                     </div>
-                    <input type="range" min="1" max="15" value={a} onChange={(e) => setA(Number(e.target.value))} className="w-full h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-[#FF3366]" />
                 </div>
 
-                {/* B */}
-                <div className="relative z-10">
-                    <div className="flex justify-between items-center mb-1">
-                        <h3 className="text-[10px] font-bold text-gray-300 uppercase tracking-widest flex items-center gap-2">
-                            <Ruler className="w-3.5 h-3.5 text-[#33CCFF]"/> Mavi (B)
-                        </h3>
-                        <span className="font-mono text-[#33CCFF] font-bold text-sm">{b} U</span>
-                    </div>
-                    <input type="range" min="1" max="15" value={b} onChange={(e) => setB(Number(e.target.value))} className="w-full h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-[#33CCFF]" />
-                </div>
-
-                {/* C */}
-                <div className="relative z-10">
-                    <div className="flex justify-between items-center mb-1">
-                        <h3 className="text-[10px] font-bold text-gray-300 uppercase tracking-widest flex items-center gap-2">
-                            <Ruler className="w-3.5 h-3.5 text-[#00FF88]"/> Yeşil (C)
-                        </h3>
-                        <span className="font-mono text-[#00FF88] font-bold text-sm">{c} U</span>
-                    </div>
-                    <input type="range" min="1" max="15" value={c} onChange={(e) => setC(Number(e.target.value))} className="w-full h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-[#00FF88]" />
-                </div>
+                {sideControls.map((side) => (
+                    <LengthControl
+                        key={side.key}
+                        label={`${side.name} (${side.key})`}
+                        value={side.value}
+                        color={side.color}
+                        onDecrease={() => setSideValue(side.key, side.value - 1)}
+                        onIncrease={() => setSideValue(side.key, side.value + 1)}
+                        onChange={(nextValue) => setSideValue(side.key, nextValue)}
+                    />
+                ))}
             </div>
 
             {/* Görev Durumu */}
             <div className="bg-black/40 border border-[#B388FF]/20 rounded-2xl p-3 flex-shrink-0">
-                <h4 className="text-[10px] text-[#B388FF] uppercase tracking-widest font-bold mb-2 border-b border-[#B388FF]/20 pb-1.5">Varyasyon Keşfi</h4>
+                <h4 className="text-[10px] text-[#B388FF] uppercase tracking-widest font-bold mb-2 border-b border-[#B388FF]/20 pb-1.5">Keşif Görevleri</h4>
+                <p className="mb-3 text-xs leading-relaxed text-white/60">
+                    Önce üçgeni kapat. Sonra farklı uzunluklarla üç üçgen türünü yakala.
+                </p>
                 <div className="flex flex-col gap-1.5 text-xs text-gray-400 font-mono">
                     <div className={`flex justify-between ${typesFound.EQUILATERAL ? 'text-[#00FF88]' : ''}`}>
                         <span>Eşkenar</span> <span>{typesFound.EQUILATERAL ? '✓' : '—'}</span>
@@ -216,38 +333,60 @@ export default function PolygonCollisionApp() {
 
             {/* Matematik Paneli */}
             <div className="bg-black/40 border border-[#00E5FF]/20 rounded-2xl p-3 flex-shrink-0">
-                <h4 className="text-[10px] text-[#00E5FF] uppercase tracking-widest font-bold mb-2 border-b border-[#00E5FF]/20 pb-1.5">Üçgen Eşitsizliği Şartı</h4>
-                <div className="space-y-1 font-mono text-xs overflow-x-auto overflow-y-hidden KatexPanel CustomScrollbar pb-1">
-                    <div className={`rounded ${a + b > c ? 'text-[#00FF88]' : 'text-[#FF3366] bg-[#FF3366]/10 border border-[#FF3366]/30 px-1'}`}>
-                        <BlockMath math={`a + b > c \\Rightarrow ${a} + ${b} > ${c} \\Rightarrow ${a + b} > ${c}`} />
+                <h4 className="text-[10px] text-[#00E5FF] uppercase tracking-widest font-bold mb-2 border-b border-[#00E5FF]/20 pb-1.5">Kapanma Kuralı</h4>
+                <div className={`rounded-2xl border p-3 ${isValid ? 'border-[#00FF88]/30 bg-[#00FF88]/10' : 'border-[#FF3366]/30 bg-[#FF3366]/10'}`}>
+                    <div className="flex items-start gap-2">
+                        {isValid ? (
+                            <CheckCircle2 className="mt-0.5 h-4 w-4 text-[#00FF88]" />
+                        ) : (
+                            <AlertTriangle className="mt-0.5 h-4 w-4 text-[#FF6688]" />
+                        )}
+                        <div>
+                            <p className={`text-sm font-black ${isValid ? 'text-[#B8FFD8]' : 'text-[#FFB8C8]'}`}>
+                                {statusHeadline}
+                            </p>
+                            <p className="mt-1 text-xs leading-relaxed text-white/70">{statusCopy}</p>
+                        </div>
                     </div>
-                    <div className={`rounded ${a + c > b ? 'text-[#00FF88]' : 'text-[#FF3366] bg-[#FF3366]/10 border border-[#FF3366]/30 px-1'}`}>
-                        <BlockMath math={`a + c > b \\Rightarrow ${a} + ${c} > ${b} \\Rightarrow ${a + c} > ${b}`} />
-                    </div>
-                    <div className={`rounded ${b + c > a ? 'text-[#00FF88]' : 'text-[#FF3366] bg-[#FF3366]/10 border border-[#FF3366]/30 px-1'}`}>
-                        <BlockMath math={`b + c > a \\Rightarrow ${b} + ${c} > ${a} \\Rightarrow ${b + c} > ${a}`} />
-                    </div>
+                </div>
+                <div className="mt-3 space-y-2">
+                    {inequalityChecks.map((check) => (
+                        <div
+                            key={check.label}
+                            className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2 text-xs font-bold ${
+                                check.ok
+                                    ? 'border-[#00FF88]/20 bg-[#00FF88]/8 text-[#B8FFD8]'
+                                    : 'border-[#FF3366]/24 bg-[#FF3366]/8 text-[#FFB8C8]'
+                            }`}
+                        >
+                            <span>{check.label}</span>
+                            <span className="font-mono">
+                                {check.sum} &gt; {check.side} {check.ok ? '✓' : '×'}
+                            </span>
+                        </div>
+                    ))}
                 </div>
             </div>
           </div>
 
           {/* Sağ Panel: Fizik Kanvası */}
           <div className="lg:col-span-3 bg-[#0A0A0F]/90 backdrop-blur border border-gray-800 rounded-3xl relative overflow-hidden flex items-center justify-center shadow-[inset_0_0_100px_rgba(0,0,0,0.8)] min-h-[500px]">
-             <AnimatePresence>
-               {!isValid && (
-                   <motion.div
-                     initial={{ opacity: 0, y: -20, scale: 0.9 }}
-                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                     exit={{ opacity: 0, y: -20, scale: 0.9 }}
-                     className="absolute top-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-20 pointer-events-none"
-                   >
-                       <Zap className="w-8 h-8 text-[#FF3366] mb-2 drop-shadow-[0_0_10px_rgba(255,51,102,0.8)]" />
-                       <div className="bg-[#FF3366]/10 text-[#FF3366] border border-[#FF3366]/30 px-5 py-2.5 rounded-xl font-mono text-sm uppercase tracking-widest shadow-[0_0_20px_rgba(255,51,102,0.2)] backdrop-blur-md">
-                           Çatışma: Uçlar Kavuşamadı
-                       </div>
-                   </motion.div>
-               )}
-             </AnimatePresence>
+             <motion.div
+               key={statusHeadline}
+               initial={{ opacity: 0, y: -16, scale: 0.96 }}
+               animate={{ opacity: 1, y: 0, scale: 1 }}
+               className={`absolute top-6 left-1/2 z-20 w-[min(86%,620px)] -translate-x-1/2 rounded-2xl border px-5 py-3 text-center shadow-[0_18px_46px_rgba(0,0,0,0.35)] backdrop-blur-md ${
+                 isValid
+                   ? 'border-[#00FF88]/35 bg-[#05301F]/78 text-[#D8FFE8]'
+                   : 'border-[#FF3366]/35 bg-[#35101C]/82 text-[#FFD1DC]'
+               }`}
+             >
+               <div className="flex items-center justify-center gap-2">
+                 {isValid ? <Triangle className="h-4 w-4 text-[#00FF88]" /> : <AlertTriangle className="h-4 w-4 text-[#FF6688]" />}
+                 <p className="text-[11px] font-black uppercase tracking-[0.22em]">{statusHeadline}</p>
+               </div>
+               <p className="mt-1 text-sm font-bold leading-snug text-white/82">{statusCopy}</p>
+             </motion.div>
 
              <svg width="100%" height="100%" viewBox="-400 -300 800 600" className="overflow-visible absolute inset-0">
                 {/* Dağılan Yaylar (Radii Arcs) */}
@@ -361,10 +500,13 @@ export default function PolygonCollisionApp() {
              </svg>
 
              {/* Alt Bilgi Paneli */}
-             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur px-8 py-3 rounded-full border border-gray-800 flex gap-8 text-lg font-mono tracking-widest font-bold shadow-lg pointer-events-none">
-                 <span className="text-[#FF3366] drop-shadow-[0_0_5px_rgba(255,51,102,0.5)]">A={a}</span>
-                 <span className="text-[#33CCFF] drop-shadow-[0_0_5px_rgba(51,204,255,0.5)]">B={b}</span>
-                 <span className="text-[#00FF88] drop-shadow-[0_0_5px_rgba(0,255,136,0.5)]">C={c}</span>
+             <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-wrap items-center justify-center gap-3 rounded-2xl border border-gray-800 bg-black/68 px-5 py-3 text-sm font-black shadow-lg backdrop-blur pointer-events-none">
+                 <span className="font-mono text-[#FF3366] drop-shadow-[0_0_5px_rgba(255,51,102,0.5)]">A={a}</span>
+                 <span className="font-mono text-[#33CCFF] drop-shadow-[0_0_5px_rgba(51,204,255,0.5)]">B={b}</span>
+                 <span className="font-mono text-[#00FF88] drop-shadow-[0_0_5px_rgba(0,255,136,0.5)]">C={c}</span>
+                 <span className="h-5 w-px bg-white/15" />
+                 <span className="text-white/72">Kısa toplam: {shortSum}</span>
+                 <span className="text-white/72">En uzun: {longestSide.value}</span>
              </div>
           </div>
         </div>

@@ -55,33 +55,39 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'neon-route',
-    title: 'Neon Rota Terminali',
+    title: 'Konum Belirleme Terminali',
     description: 'Uzay ızgarasında doğru parçaları çizerek hedeflere lazer bağla ve konum tespit sistemini tamir et.',
     category: 'Geometri',
     difficulty: 'Kolay',
     grade: 5,
     path: '/embed/geometry/neon-route',
-    component: lazy(() => import('../modules/geometry/neon-route/NeonRouteApp'))
+    atomIds: ['MAT.5.3.1.2', 'MAT.5.3.2.1'],
+    component: lazy(() => import('../modules/geometry/neon-route/NeonRouteApp')),
+    status: 'showcase-ready'
   },
   {
     id: 'magnitude-core',
-    title: 'Devasa Nicelik Çekirdeği',
+    title: 'Sayıları Bölüklere Ayırma',
     description: '9 haneli dev sayılar ve sadece 0-1 arasında var olabilen olasılık evreni vizyon simülatörü.',
     category: 'Sayılar',
     difficulty: 'Orta',
     grade: 5,
     path: '/embed/numbers/magnitude-core',
-    component: lazy(() => import('../modules/numbers/magnitude-core/MagnitudeCoreApp'))
+    atomIds: ['MAT.5.1.1.1', 'MAT.5.1.1.2', 'MAT.5.1.1.3', 'MAT.5.6.1.1'],
+    component: lazy(() => import('../modules/numbers/magnitude-core/MagnitudeCoreApp')),
+    status: 'showcase-ready'
   },
   {
     id: 'equation-lab',
-    title: 'Algoritmik Denklem Laboratuvarı',
+    title: 'Denklem Terazisi',
     description: 'Terazide eşitliği sağla ve işlem önceliği (parantez, çarpma, bölme) kalkanlarını kırarak hedefe ulaş.',
     category: 'Cebir',
     difficulty: 'Orta',
     grade: 5,
     path: '/embed/algebra/equation-lab',
-    component: lazy(() => import('../modules/algebra/equation-lab/EquationLabApp'))
+    atomIds: ['MAT.5.2.1.1', 'MAT.5.2.1.2', 'MAT.5.2.2.1', 'MAT.5.2.2.2'],
+    component: lazy(() => import('../modules/algebra/equation-lab/EquationLabApp')),
+    status: 'showcase-ready'
   },
   {
     id: 'fraction-synchronizer',
@@ -91,7 +97,10 @@ export const modules: ModuleMeta[] = [
     difficulty: 'Orta',
     grade: 5,
     path: '/embed/numbers/fraction-synchronizer',
-    component: lazy(() => import('../modules/numbers/fraction-synchronizer/FractionSynchronizerApp'))
+    atomIds: ['MAT.5.1.3.2', 'MAT.5.1.4.1'],
+    component: lazy(() => import('../modules/numbers/fraction-synchronizer/FractionSynchronizerApp')),
+    status: 'showcase-ready',
+    archiveNote: '5. sınıf Kesir Tankları modülü Kaptan canlı onayıyla Showcase Ready.'
   },
   {
     id: 'trig-pendulum',
@@ -108,42 +117,54 @@ export const modules: ModuleMeta[] = [
   {
     id: 'algebraic-dimensions',
     title: 'Cebirsel Boyut Odası',
-    description: 'Bir değişkenin (x) nasıl 1D çizgi, 2D alan ve 3D hacim oluşturduğunu simüle et.',
+    description: 'Aynı tabanlı üslü ifadeleri boyut makinesinde çarpıp bölerek üslerin nasıl toplandığını ve çıkarıldığını keşfet.',
     category: 'Cebir',
     difficulty: 'Zor',
     grade: 8,
-    path: '/embed/algebra/dimensions',
-    component: lazy(() => import('../modules/algebra/dimensions/AlgebraicDimensionsApp'))
+    path: '/embed/algebra/algebraic-dimensions',
+    atomIds: ['MAT.8.1.1.2', 'MAT.8.1.1.3'],
+    component: lazy(() => import('../modules/algebra/algebraic-dimensions/AlgebraicDimensionsApp')),
+    status: 'review-needed',
+    archiveNote: '8. sınıf ortaokul üretim modülü. Kaptan canlı kontrolünden sonra Showcase Ready değerlendirilecek.'
   },
   {
     id: 'absolute-value',
-    title: 'Sıfıra Uzaklık Aynası: Mutlak Değer',
-    description: 'Sıfır noktasındaki aynaya lazerler göndererek negatif uzaklık efsanesini çürüt.',
+    title: 'Sıfır Aynası',
+    description: 'Negatif ve pozitif yönlü sayıları sayı doğrusunda eş uzaklık aynasıyla yorumla.',
     category: 'Sayılar',
     difficulty: 'Orta',
-    grade: 6,
+    grade: 7,
     path: '/embed/numbers/absolute-value',
-    component: lazy(() => import('../modules/numbers/absolute-value/AbsoluteValueApp'))
+    atomIds: ['MAT.7.1.1.1', 'MAT.7.1.3.1'],
+    component: lazy(() => import('../modules/numbers/absolute-value/AbsoluteValueApp')),
+    status: 'review-needed',
+    archiveNote: '7. sınıf ortaokul üretim modülü. Kaptan canlı kontrolünden sonra Showcase Ready değerlendirilecek.'
   },
   {
-    id: 'coord-terminal',
-    title: 'Holografik Lazer Ağı: Analitik Geometri',
-    description: 'X ve Y lazer sürgülerini kullanarak uzaydaki hedeflerin koordinatlarını tespit et.',
+    id: 'coordinate-terminal',
+    title: 'Koordinat Radar Ağı',
+    description: 'X ve Y eksenlerinde hedef noktaları okuyup koordinat düzlemine yerleştir.',
     category: 'Geometri',
     difficulty: 'Orta',
     grade: 8,
     path: '/embed/geometry/coordinate-terminal',
-    component: lazy(() => import('../modules/geometry/coordinate-terminal/CoordinateTerminalApp'))
+    atomIds: ['MAT.8.2.1.1'],
+    component: lazy(() => import('../modules/geometry/coordinate-terminal/CoordinateTerminalApp')),
+    status: 'review-needed',
+    archiveNote: '8. sınıf ortaokul üretim modülü. Kaptan canlı kontrolünden sonra Showcase Ready değerlendirilecek.'
   },
   {
     id: 'gear-ratio',
-    title: 'Kinetik Oran Laboratuvarı',
-    description: 'Dişli çarkları kullanarak ters orantı matematiğini canlı simülasyon üzerinden test edin.',
+    title: 'Oran Dişli Atölyesi',
+    description: 'Dişli oranlarını büyütüp küçülterek oran, orantı ve doğru orantıyı çapraz çarpım kanıtıyla kur.',
     category: 'Cebir',
     difficulty: 'Orta',
     grade: 7,
     path: '/embed/algebra/gear-ratio',
-    component: lazy(() => import('../modules/algebra/gear-ratio/GearRatioApp'))
+    atomIds: ['MAT.7.1.5.1', 'MAT.7.1.5.2', 'MAT.7.1.5.3', 'MAT.7.1.6.1', 'MAT.7.1.7.1'],
+    component: lazy(() => import('../modules/algebra/gear-ratio/GearRatioApp')),
+    status: 'review-needed',
+    archiveNote: '7. sınıf ortaokul üretim modülü. Kaptan canlı kontrolünden sonra Showcase Ready değerlendirilecek.'
   },
   {
     id: 'number-line',
@@ -239,13 +260,16 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'vector-design-panel',
-    title: 'Vektörel Tasarım Paneli',
-    description: 'Doğru, ışın ve parçalarıyla uzayı böl. Lazerlerin kesiştiği yerde sanal iletkiyle komşu ve ters açıları tespit et!',
+    title: 'Doğru-Işın Çizim Paneli',
+    description: 'Doğru, ışın ve doğru parçası çiz; kesişen doğrularda ters açıları seçip sanal iletkiyle ölç.',
     category: 'Geometri',
     difficulty: 'Orta',
     grade: 5,
     path: '/embed/geometry/vector-design-panel',
-    component: lazy(() => import('../modules/geometry/vector-design-panel/VectorDesignApp'))
+    atomIds: ['MAT.5.3.1.1', 'MAT.5.3.1.2', 'MAT.5.3.1.3', 'MAT.5.3.3.1', 'MAT.5.3.4.1'],
+    component: lazy(() => import('../modules/geometry/vector-design-panel/VectorDesignApp')),
+    status: 'showcase-ready',
+    archiveNote: '5. sınıf Doğru-Işın Çizim Paneli Kaptan canlı onayıyla Showcase Ready.'
   },
   {
     id: 'triangular-prism-3d',
@@ -277,6 +301,7 @@ export const modules: ModuleMeta[] = [
     difficulty: 'Kolay',
     grade: 7,
     path: '/embed/algebra/identity-blocks',
+    atomId: 'MAT.7.2.1.1',
     component: lazy(() => import('../modules/algebra/identity-blocks/IdentityApp'))
   },
   {
@@ -315,23 +340,142 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'polygon-collision-test',
-    title: 'Poligon Çatışma Testi',
-    description: 'Üçgen oluşturmak için çubukların uzunluklarıyla oyna ve Üçgen Eşitsizliğini keşfet!',
+    title: 'Üçgen Çubuk Atölyesi',
+    description: 'Üç çubuğun uzunluğunu değiştirerek hangi durumlarda üçgen kurulabildiğini keşfet.',
     category: 'Geometri',
     difficulty: 'Orta',
     grade: 5,
     path: '/embed/geometry/polygon-collision-test',
+    atomId: 'MAT.5.3.7.1',
+    status: 'showcase-ready',
+    archiveNote: '5. sınıf Üçgen Çubuk Atölyesi Kaptan canlı onayıyla Showcase Ready.',
     component: lazy(() => import('../modules/geometry/polygon-collision-test/PolygonCollisionApp'))
   },
   {
+    id: 'unit-square-area-factory',
+    title: 'Birim Kare Alan Fabrikası',
+    description: 'Dikdörtgen zemini 1x1 birim karelerle kaplayarak alanın uzun x kısa olduğunu keşfet.',
+    category: 'Geometri',
+    difficulty: 'Kolay',
+    grade: 5,
+    path: '/embed/geometry/unit-square-area-factory',
+    atomId: 'MAT.5.4.2.1',
+    status: 'showcase-ready',
+    archiveNote: '5. sınıf Birim Kare Alan Fabrikası Kaptan canlı onayıyla Showcase Ready.',
+    component: lazy(() => import('../modules/geometry/unit-square-area-factory/UnitSquareAreaFactoryApp'))
+  },
+  {
+    id: 'fence-field',
+    title: 'Çevre-Alan Bahçesi',
+    description: 'Dikdörtgen bahçe planlarında aynı çevreyle alanın, aynı alanla çevrenin nasıl değiştiğini keşfet.',
+    category: 'Geometri',
+    difficulty: 'Orta',
+    grade: 5,
+    path: '/embed/geometry/fence-field',
+    atomIds: ['MAT.5.4.3.1', 'MAT.5.4.3.2'],
+    status: 'showcase-ready',
+    archiveNote: '5. sınıf Çevre-Alan Bahçesi Kaptan canlı onayıyla Showcase Ready.',
+    component: lazy(() => import('../modules/geometry/fence-field/PerimeterAreaGardenApp'))
+  },
+  {
+    id: 'garden-carpet-planner',
+    title: 'Bahçe ve Halı Atölyesi',
+    description: 'Günlük çit, halı ve toprak problemlerinde çevre ile alanı ayırarak doğru sonucu seç.',
+    category: 'Geometri',
+    difficulty: 'Kolay',
+    grade: 5,
+    path: '/embed/geometry/garden-carpet-planner',
+    atomIds: ['MAT.5.4.4.1', 'MAT.5.4.4.2'],
+    status: 'showcase-ready',
+    archiveNote: '5. sınıf Bahçe ve Halı Atölyesi Kaptan canlı onayıyla Showcase Ready.',
+    component: lazy(() => import('../modules/geometry/garden-carpet-planner/GardenCarpetPlannerApp'))
+  },
+  {
+    id: 'divisibility-workshop',
+    title: 'Bölünebilme Atölyesi',
+    description: 'Hedef sayılarda çarpanları ve 2, 3, 5, 6, 9, 10 bölünebilme kurallarını tek odaklı seçim panosunda ayır.',
+    grade: 6,
+    category: 'Sayılar',
+    difficulty: 'Kolay',
+    atomIds: [
+      'MAT.6.1.1.1',
+      'MAT.6.1.2.1',
+      'MAT.6.1.2.2',
+      'MAT.6.1.2.3',
+      'MAT.6.1.2.4',
+      'MAT.6.1.2.5',
+      'MAT.6.1.2.6',
+      'MAT.6.1.2.7'
+    ],
+    path: '/embed/numbers/divisibility-workshop',
+    component: lazy(() => import('../modules/numbers/divisibility-workshop/DivisibilityWorkshopApp')),
+    status: 'showcase-ready',
+    archiveNote: '6. sınıf Bölünebilme Atölyesi Kaptan canlı onayıyla Showcase Ready.'
+  },
+  {
+    id: 'prime-numbers-workshop',
+    title: 'Asal Sayılar Atölyesi',
+    description: 'Asal sayıları ayır ve asal olmayan sayıları en küçük asal çarpanlarına kadar parçala.',
+    grade: 6,
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    atomIds: ['MAT.6.1.3.1', 'MAT.6.1.3.2'],
+    path: '/embed/numbers/prime-numbers-workshop',
+    component: lazy(() => import('../modules/numbers/prime-numbers-workshop/PrimeNumbersWorkshopApp')),
+    status: 'showcase-ready',
+    archiveNote: '6. sınıf Asal Sayılar Atölyesi Kaptan canlı onayıyla Showcase Ready.'
+  },
+  {
+    id: 'lcm-workshop',
+    title: 'EKOK Ritim Atölyesi',
+    description: 'Tekrarlayan zil, ışık ve nöbet ritimlerinde ilk ortak zamanı EKOK ile bul.',
+    grade: 6,
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    atomIds: ['MAT.6.1.1.2', 'MAT.6.1.4.1'],
+    path: '/embed/numbers/lcm-workshop',
+    component: lazy(() => import('../modules/numbers/lcm-workshop/LcmWorkshopApp')),
+    status: 'showcase-ready',
+    archiveNote: '6. sınıf EKOK odaklı ortaokul üretim modülü Kaptan canlı onayıyla Showcase Ready.'
+  },
+  {
+    id: 'gcd-workshop',
+    title: 'EBOB Parça Atölyesi',
+    description: 'Çubuk, raf ve paketleri artmadan en büyük eş parçalara EBOB ile ayır.',
+    grade: 6,
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    atomIds: ['MAT.6.1.4.2'],
+    path: '/embed/numbers/gcd-workshop',
+    component: lazy(() => import('../modules/numbers/gcd-workshop/GcdWorkshopApp')),
+    status: 'showcase-ready',
+    archiveNote: '6. sınıf EBOB odaklı ortaokul üretim modülü Kaptan canlı onayıyla Showcase Ready.'
+  },
+  {
+    id: 'gcd-lcm-workshop',
+    title: 'EBOB-EKOK Atölyesi',
+    description: 'Eski birleşik EBOB/EKOK akışı. Yeni üretim hattında EKOK Ritim ve EBOB Parça atomlarına ayrıldı.',
+    grade: 6,
+    category: 'Sayılar',
+    difficulty: 'Orta',
+    atomIds: ['MAT.6.1.1.2', 'MAT.6.1.4.1', 'MAT.6.1.4.2'],
+    path: '/embed/numbers/gcd-lcm-workshop',
+    component: lazy(() => import('../modules/numbers/gcd-lcm-workshop/GcdLcmWorkshopApp')),
+    status: 'archived',
+    archiveNote: '6. sınıf birleşik EBOB/EKOK atomu ayrıldı; eski route EKOK Ritim Atölyesi yönlendirmesiyle korunur.'
+  },
+  {
     id: 'optic-laser-lab',
-    title: 'Optik Lazer Labirenti',
-    description: 'Paralel doğruları kesen bir lazer atarak Z, U, M kurallarını test et.',
+    title: 'Paralel Doğrularda Açılar',
+    description: 'Paralel iki doğruyu kesen bir doğruyla oluşan açı çiftlerini Z, U, yöndeş ve ters açı kurallarıyla eşleştir.',
     grade: 6,
     category: 'Geometri',
     difficulty: 'Orta',
+    atomIds: ['MAT.6.3.1.1', 'MAT.6.3.1.2', 'MAT.6.3.1.3', 'MAT.6.3.2.1'],
     path: '/embed/geometry/optic-laser-lab',
-    component: lazy(() => import('../modules/geometry/optic-laser-lab/OpticLaserApp'))
+    component: lazy(() => import('../modules/geometry/optic-laser-lab/OpticLaserApp')),
+    status: 'showcase-ready',
+    archiveNote: '6. sınıf Paralel Doğrularda Açılar atomu Kaptan canlı onayıyla Showcase Ready.'
   },
   {
     id: 'area-pi-lab',

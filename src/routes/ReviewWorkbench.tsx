@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, ClipboardCopy, Download, ExternalLink, Filter, RefreshCcw, Search } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, ClipboardCopy, Download, ExternalLink, Filter, RefreshCcw, Search, X } from 'lucide-react';
 import { modules, type GradeRange, type ModuleMeta } from '../registry/moduleRegistry';
 import { ReviewModuleCard } from './review-workbench/ReviewModuleCard';
+import { parseWorkflowBand, useWorkflowScope, workflowScopeToQueryValue } from './workflowScope';
 import {
   STORAGE_KEY,
   bandCopy,
@@ -17,13 +18,25 @@ import {
 } from './review-workbench/reviewWorkbenchModel';
 
 export default function ReviewWorkbench() {
-  const [selectedBand, setSelectedBand] = useState<GradeRange>('Lise');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { setScope } = useWorkflowScope();
+  const initialBand = parseWorkflowBand(searchParams.get('band'));
+  const [selectedBand, setSelectedBand] = useState<GradeRange>(initialBand && initialBand !== 'all' ? initialBand : 'Lise');
   const [query, setQuery] = useState('');
   const [entries, setEntries] = useState<Record<string, ReviewEntry>>({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [copyState, setCopyState] = useState<'idle' | 'copied'>('idle');
   const [previewModuleId, setPreviewModuleId] = useState<string | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
+
+  useEffect(() => {
+    const bandParam = parseWorkflowBand(searchParams.get('band'));
+    if (bandParam && bandParam !== 'all') {
+      setSelectedBand(bandParam);
+      setScope(bandParam);
+    }
+  }, [searchParams, setScope]);
 
   useEffect(() => {
     try {
@@ -80,8 +93,8 @@ export default function ReviewWorkbench() {
   }, [entries]);
 
   const previewModule = useMemo(() => {
-    if (filteredModules.length === 0) return null;
-    return filteredModules.find((module) => module.id === previewModuleId) ?? filteredModules[0];
+    if (!previewModuleId) return null;
+    return filteredModules.find((module) => module.id === previewModuleId) ?? null;
   }, [filteredModules, previewModuleId]);
 
   const exportPayload = useMemo(() => {
@@ -89,6 +102,7 @@ export default function ReviewWorkbench() {
       {
         exportedAt: new Date().toISOString(),
         workflow: '3 audit hattı + 1 tek üretim hattı',
+        workflowScope: selectedBand,
         productionPriority: [
           'Kaptan Must Fix',
           'Vitrin Adayı',
@@ -124,6 +138,18 @@ export default function ReviewWorkbench() {
     setEntries((current) => {
       const next = { ...current };
       delete next[moduleId];
+      return next;
+    });
+  };
+
+  const selectBand = (band: GradeRange) => {
+    setSelectedBand(band);
+    setScope(band);
+    setIsPreviewOpen(false);
+    setPreviewModuleId(null);
+    setSearchParams((current) => {
+      const next = new URLSearchParams(current);
+      next.set('band', workflowScopeToQueryValue(band));
       return next;
     });
   };
@@ -170,7 +196,7 @@ export default function ReviewWorkbench() {
             {bandStats.map((stat) => (
               <button
                 key={stat.band}
-                onClick={() => setSelectedBand(stat.band)}
+                onClick={() => selectBand(stat.band)}
                 className={`rounded-2xl border px-4 py-3 text-left transition ${
                   selectedBand === stat.band
                     ? 'border-[#00E5FF]/60 bg-[#00E5FF]/12 shadow-[0_0_34px_rgba(0,229,255,0.10)]'
@@ -189,7 +215,17 @@ export default function ReviewWorkbench() {
           </div>
         </header>
 
-        <main className="grid flex-1 gap-5 py-5 xl:grid-cols-[minmax(420px,0.95fr)_minmax(540px,1.05fr)]">
+        <section
+          data-testid="workflow-scope-banner"
+          className="mt-5 rounded-3xl border border-[#00E5FF]/24 bg-[#00E5FF]/8 px-5 py-4 shadow-[0_0_42px_rgba(0,229,255,0.08)]"
+        >
+          <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#00E5FF]">
+            Workflow Scope
+          </p>
+          <p className="mt-1 text-sm font-black text-white">{selectedBand} hattı açık</p>
+        </section>
+
+        <main className="flex-1 py-5">
           <section className="min-w-0">
             <div className="mb-4 flex flex-col gap-3 rounded-3xl border border-white/10 bg-black/24 p-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
@@ -212,27 +248,25 @@ export default function ReviewWorkbench() {
               </label>
             </div>
 
-            <div className="grid gap-4">
+            <div className="grid gap-4 xl:grid-cols-2">
               {filteredModules.map((module) => (
                 <ReviewModuleCard
                   key={module.id}
                   module={module}
                   entry={entries[module.id]}
-                  isPreviewed={previewModule?.id === module.id}
+                  isPreviewed={isPreviewOpen && previewModule?.id === module.id}
                   onUpdate={(patch) => updateEntry(module.id, patch)}
                   onClear={() => clearEntry(module.id)}
-                  onPreview={() => setPreviewModuleId(module.id)}
+                  onPreview={() => {
+                    setPreviewModuleId(module.id);
+                    setIsPreviewOpen(true);
+                  }}
                 />
               ))}
             </div>
           </section>
 
-          <aside className="space-y-4 xl:sticky xl:top-5 xl:h-[calc(100vh-40px)] xl:overflow-y-auto">
-            <ModulePreviewPanel
-              module={previewModule}
-              version={previewVersion}
-              onRefresh={() => setPreviewVersion((current) => current + 1)}
-            />
+          <aside className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
             <ProductionQueue items={reviewedItems} />
             <JsonExportPanel
               exportPayload={exportPayload}
@@ -244,6 +278,15 @@ export default function ReviewWorkbench() {
           </aside>
         </main>
       </div>
+
+      {isPreviewOpen && (
+        <ModulePreviewPanel
+          module={previewModule}
+          version={previewVersion}
+          onRefresh={() => setPreviewVersion((current) => current + 1)}
+          onClose={() => setIsPreviewOpen(false)}
+        />
+      )}
     </div>
   );
 }
@@ -252,15 +295,21 @@ function ModulePreviewPanel({
   module,
   version,
   onRefresh,
+  onClose,
 }: {
   module: ModuleMeta | null;
   version: number;
   onRefresh: () => void;
+  onClose: () => void;
 }) {
   const previewSrc = module ? withReviewQuery(module.path, version) : '';
 
   return (
-    <section className="overflow-hidden rounded-3xl border border-[#00E5FF]/18 bg-[#06101e]/88 shadow-[0_24px_90px_rgba(0,0,0,0.35)]">
+    <div className="fixed inset-0 z-50 bg-black/70 p-4 backdrop-blur-md md:p-6" onClick={onClose}>
+      <section
+        className="mx-auto flex h-full w-full max-w-6xl flex-col overflow-hidden rounded-3xl border border-[#00E5FF]/28 bg-[#06101e] shadow-[0_24px_120px_rgba(0,0,0,0.55)]"
+        onClick={(event) => event.stopPropagation()}
+      >
       <div className="flex items-start justify-between gap-3 border-b border-white/10 p-4">
         <div className="min-w-0">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#00E5FF]">
@@ -283,6 +332,14 @@ function ModulePreviewPanel({
           >
             <RefreshCcw className="h-4 w-4" />
           </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-2xl border border-white/10 bg-white/[0.05] p-3 text-white/70 transition hover:border-rose-300/45 hover:text-rose-100"
+            title="Önizlemeyi kapat"
+          >
+            <X className="h-4 w-4" />
+          </button>
           {module && (
             <Link
               to={module.path}
@@ -297,13 +354,13 @@ function ModulePreviewPanel({
         </div>
       </div>
 
-      <div className="bg-black/42 p-3">
+      <div className="flex-1 bg-black/42 p-3">
         {module ? (
           <iframe
             key={previewSrc}
             src={previewSrc}
             title={`${module.title} önizleme`}
-            className="h-[min(62vh,720px)] min-h-[520px] w-full rounded-2xl border border-white/10 bg-[#050812]"
+            className="h-full min-h-[520px] w-full rounded-2xl border border-white/10 bg-[#050812]"
           />
         ) : (
           <div className="grid h-[520px] place-items-center rounded-2xl border border-dashed border-white/12 text-sm font-bold text-white/42">
@@ -312,6 +369,7 @@ function ModulePreviewPanel({
         )}
       </div>
     </section>
+    </div>
   );
 }
 

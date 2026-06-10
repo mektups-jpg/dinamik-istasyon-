@@ -181,7 +181,7 @@ export default function NeonRouteApp() {
           </Link>
           <div>
             <h1 className="text-2xl font-black text-white tracking-tighter flex items-center gap-2">
-              <Map className="w-6 h-6 text-[#00E5FF]" /> NEON ROTA <span className="text-[#00E5FF]">TERMINALI</span>
+              <Map className="w-6 h-6 text-[#00E5FF]" /> KONUM BELİRLEME <span className="text-[#00E5FF]">TERMİNALİ</span>
             </h1>
             <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Nokta Koordinatı & Doğru Parçası</p>
           </div>
@@ -193,22 +193,31 @@ export default function NeonRouteApp() {
         {/* Sol Panel: Grid Alanı (Coordinate Graph) */}
         <div className="lg:col-span-8 bg-[#12121A] border border-gray-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden flex items-center justify-center min-h-[600px] select-none">
           
-          <div className="relative w-full max-w-[500px] aspect-square rounded-xl border-2 border-gray-800/80 bg-[#0B0C10]">
+          <div className="relative w-full max-w-[500px] aspect-square rounded-xl border-2 border-[#2D4054] bg-[#101A24] shadow-[inset_0_0_32px_rgba(0,229,255,0.08)]">
               {/* Grid Lines */}
-              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 z-0">
-                  <defs>
-                      <pattern id="grid" width={`${100 / GRID_SIZE}%`} height={`${100 / GRID_SIZE}%`} patternUnits="userSpaceOnUse">
-                          <path d={`M ${500/GRID_SIZE} 0 L 0 0 0 ${500/GRID_SIZE}`} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
-                      </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#grid)" />
+              <svg
+                  viewBox={`0 0 ${GRID_SIZE} ${GRID_SIZE}`}
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="absolute inset-0 z-0 h-full w-full"
+              >
+                  {Array.from({ length: GRID_SIZE + 1 }).map((_, i) => {
+                      const gridStroke = 'rgba(0,229,255,0.18)';
+                      const gridStrokeWidth = 0.026;
+
+                      return (
+                          <React.Fragment key={i}>
+                              <line x1={i} y1={0} x2={i} y2={GRID_SIZE} stroke={gridStroke} strokeWidth={gridStrokeWidth} />
+                              <line x1={0} y1={i} x2={GRID_SIZE} y2={i} stroke={gridStroke} strokeWidth={gridStrokeWidth} />
+                          </React.Fragment>
+                      );
+                  })}
               </svg>
 
               {/* Grid Axis Labels (Optional: adding coordinate text helpers) */}
-              <div className="absolute -left-6 bottom-0 top-0 flex flex-col-reverse justify-between text-[10px] text-gray-600 font-mono py-2">
+              <div className="absolute -left-6 bottom-0 top-0 flex flex-col-reverse justify-between text-[10px] text-gray-400 font-mono py-2">
                   {Array.from({length: GRID_SIZE + 1}).map((_, i) => <span key={i}>{i}</span>)}
               </div>
-              <div className="absolute -bottom-6 left-0 right-0 flex justify-between text-[10px] text-gray-600 font-mono px-2">
+              <div className="absolute -bottom-6 left-0 right-0 flex justify-between text-[10px] text-gray-400 font-mono px-2">
                   {Array.from({length: GRID_SIZE + 1}).map((_, i) => <span key={i}>{i}</span>)}
               </div>
 
@@ -308,12 +317,12 @@ export default function NeonRouteApp() {
             {/* Miktar */}
             <div>
               <span className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-3">2. Birim (Kare)</span>
-              <div className="flex gap-2">
-                {[1, 2, 3, 4, 5, 6].map(num => (
+              <div className="grid grid-cols-5 gap-2">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
                   <button
                     key={num}
                     onClick={() => setSelectedUnits(num)}
-                    className={`flex-1 py-3 rounded-xl font-bold font-mono transition-all ${selectedUnits === num ? 'bg-[#B388FF] text-black shadow-[0_0_15px_rgba(179,136,255,0.5)]' : 'bg-gray-900 border border-gray-800 text-gray-400 hover:bg-gray-800'}`}
+                    className={`py-3 rounded-xl font-bold font-mono transition-all ${selectedUnits === num ? 'bg-[#B388FF] text-black shadow-[0_0_15px_rgba(179,136,255,0.5)]' : 'bg-gray-900 border border-gray-800 text-gray-400 hover:bg-gray-800'}`}
                   >
                     {num}
                   </button>

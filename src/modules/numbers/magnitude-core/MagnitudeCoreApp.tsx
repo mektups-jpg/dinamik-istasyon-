@@ -22,7 +22,7 @@ export default function MagnitudeCoreApp() {
     }
   }, [macroMastered, microMastered, unlockModule]);
   const [botMessage, setBotMessage] = useState<BotMessage>({
-    text: "Devasa Nicelik Çekirdeği'ne hoş geldin. Büyük sayıları rahat okuyabilmek için, rakamları sağdan sola doğru 3'erli gruplara ayırman gerekiyor. Biraz odaklanırsak bunu rahatça çözebiliriz.",
+    text: "Sayıları Bölüklere Ayırma görevine hoş geldin. Büyük sayıları rahat okuyabilmek için, rakamları sağdan sola doğru 3'erli gruplara ayırman gerekiyor. Biraz odaklanırsak bunu rahatça çözebiliriz.",
     type: 'info',
     id: 0
   });
@@ -43,13 +43,15 @@ export default function MagnitudeCoreApp() {
 
   const handleMacroWin = () => {
     setMacroMastered(true);
-    unlockAtom('G5.NUM.010.1');
+    unlockAtom('MAT.5.1.1.1');
+    unlockAtom('MAT.5.1.1.2');
+    unlockAtom('MAT.5.1.1.3');
     showBotMessage("Tüm aşamalar tamamlandı. Milyonlarca basamağı hatasız bir şekilde çözümledin. Görünüşe göre dev sayılar senden biraz korkmaya başladı.", "success");
   };
 
   const handleMicroWin = () => {
     setMicroMastered(true);
-    unlockAtom('G5.PROB.010.1');
+    unlockAtom('MAT.5.6.1.1');
     showBotMessage("Sistem çözüldü. İmkansız ile kesin olayları başarıyla ayırdın. Artık piyangoyu kazanma ihtimalini de kendin hesaplayabilirsin.", "success");
   };
 
@@ -69,7 +71,7 @@ export default function MagnitudeCoreApp() {
           </Link>
           <div>
             <h1 className="text-2xl font-black tracking-tighter flex items-center gap-3">
-              DEVASA NİCELİK <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E5FF] to-[#B388FF]">ÇEKİRDEĞİ</span>
+              SAYILARI <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E5FF] to-[#B388FF]">BÖLÜKLERE AYIRMA</span>
             </h1>
             <p className="text-xs font-bold text-gray-500 tracking-[0.2em] min-h-[16px] mt-1">
               {(mode === 'macro' && macroMastered) ? '✅ KAZANIM: MAT.5.1.1 (MİLYONLAR)' : 
@@ -250,7 +252,7 @@ function MacroSimulator({ onWin, showBotMessage }: { onWin: () => void, showBotM
       className="w-full max-w-5xl flex flex-col items-center"
     >
       <div className="text-center mb-6">
-        <h2 className="text-3xl font-black text-white mb-4">Sayı Lazer Ayrıştırıcısı</h2>
+        <h2 className="text-3xl font-black text-white mb-4">Sayıları Bölüklere Ayırma</h2>
         <p className="text-gray-400 max-w-lg mx-auto">
           Rakamların arasına tıklayarak lazerleri yerleştir. Sağdan 3'erli gruplar oluşturacak şekilde blokları parçalamalısın.
         </p>
@@ -302,7 +304,7 @@ function MacroSimulator({ onWin, showBotMessage }: { onWin: () => void, showBotM
           ) : (
             <motion.div 
                initial={{ gap: "0rem" }}
-               animate={{ gap: "2rem", md: { gap: "3rem" } } as any}
+               animate={{ gap: "2rem" }}
                transition={{ type: "spring", stiffness: 100, damping: 20 }}
                className="flex"
             >
@@ -340,7 +342,7 @@ function MacroSimulator({ onWin, showBotMessage }: { onWin: () => void, showBotM
             onClick={handleNext}
             className="bg-[#12121A] text-white border border-[#00E5FF] px-8 py-4 rounded-xl font-bold flex items-center gap-3 transition-all hover:bg-[#00E5FF]/10 shadow-[0_0_20px_rgba(0,229,255,0.2)]"
           >
-            {successCount + 1 >= 4 ? 'Kazanımı Al ve Tamamla' : 'Sonraki Sinyale Geç'}
+            {successCount + 1 >= 4 ? 'Kazanımı Al ve Tamamla' : 'Sıradaki Sayıya Geçelim'}
           </button>
         )}
       </div>

@@ -19,10 +19,11 @@ export default function VectorDesignApp() {
   const { showMessage } = useAstroBotStore();
 
   type Phase = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+  type Tool = 'NONE' | 'LINE' | 'RAY' | 'SEGMENT';
   const [phase, setPhase] = useState<Phase>(0);
   const [level, setLevel] = useState<1 | 2 | 3>(1);
 
-  const [activeTool, setActiveTool] = useState<'LINE' | 'RAY' | 'SEGMENT'>('RAY');
+  const [activeTool, setActiveTool] = useState<Tool>('NONE');
   const [selectedNodes, setSelectedNodes] = useState<string[]>([]);
   const [line1Drawn, setLine1Drawn] = useState(false);
   const [line2Drawn, setLine2Drawn] = useState(false);
@@ -30,18 +31,19 @@ export default function VectorDesignApp() {
   const [segmentDrawn, setSegmentDrawn] = useState(false);
 
   const [selectedAngles, setSelectedAngles] = useState<number[]>([]);
+  const [angleMeasureKind, setAngleMeasureKind] = useState<'ACUTE' | 'OBTUSE'>('ACUTE');
   const [protractorPlaced, setProtractorPlaced] = useState(false);
   const [angleInputValue, setAngleInputValue] = useState('');
   const [showVictory, setShowVictory] = useState(false);
 
-  const setBotMsg = (msg: { id: number, text: string, type: 'info' | 'success' | 'error' | 'warning' }) => {
-    showMessage(msg.text, msg.type as any);
+  const setBotMsg = (msg: { id: number, text: string, type: 'info' | 'success' | 'error' }) => {
+    showMessage(msg.text, msg.type);
   };
 
   useEffect(() => {
     setBotMsg({
       id: Date.now(),
-      text: "Komutanım, CAD paneline hoş geldin. Önce panelden 'DOĞRU' (İki ucu sonsuz) aracını seçerek işe başlayalım.",
+      text: "Önce 'Doğru' aracına bas. Sonra ekrandaki iki mavi noktaya sırayla dokunacağız.",
       type: 'info'
     });
   }, []);
@@ -130,7 +132,7 @@ export default function VectorDesignApp() {
     const sy2 = cy + Math.sin(a2) * segDistL2;
 
     // Law of cosines to find angle in the triangle if we want... or just let them compute an arbitrary angle.
-    // Actually just have them measure any acute angle. Let's ask for the angle of Segment relative to the horizontal or something.
+    // Let them measure a focused acute angle with the protractor.
     // "bunda da interaktif bişey yok iletkiyi kullanalım"
     // Just a placeholder angle measured between segment and L2.
     // V1 = (cx - sx2, cy - sy2), V2 = (sx1 - sx2, sy1 - sy2)
@@ -210,27 +212,126 @@ export default function VectorDesignApp() {
   useEffect(() => {
     if (level === 1 && activeTool === 'LINE' && phase === 0) {
        setPhase(1);
-       setBotMsg({ id: Date.now(), text: "Harika! Şimdi mavi (Cyan) renkteki uzay noktalarına tıklayarak ilk DOĞRU'yu inşa et.", type: 'success' });
+       setBotMsg({ id: Date.now(), text: "Harika. Şimdi iki mavi noktaya sırayla dokun; çizgi iki yöne doğru uzayacak.", type: 'success' });
     }
     if (level === 2 && activeTool === 'RAY' && phase === 5) {
        setPhase(6);
-       setBotMsg({ id: Date.now(), text: "Işın devrede. Önce BAŞLANGIÇ noktasına (turuncu), sonra yön hedefine tıkla ki ışın uzaya uzansın.", type: 'info' });
+       setBotMsg({ id: Date.now(), text: "Işın hazır. Önce turuncu başlangıç noktasına, sonra beyaz yön noktasına dokun.", type: 'info' });
        setSelectedNodes([]);
     }
     if (level === 3 && activeTool === 'SEGMENT' && phase === 8) {
        setPhase(9);
-       setBotMsg({ id: Date.now(), text: "Parça devrede. İki istasyon arasını ölçülebilir kapalı bir boru hattıyla (yeşil) birleştir.", type: 'info' });
+       setBotMsg({ id: Date.now(), text: "Doğru parçası hazır. İki yeşil uç noktayı birleştir; parça sadece iki uç arasında kalır.", type: 'info' });
        setSelectedNodes([]);
     }
   }, [level, activeTool, phase]);
+
+  const getExpectedTool = (): Exclude<Tool, 'NONE'> | null => {
+    if (level === 1 && (phase === 0 || phase === 1 || phase === 2)) return 'LINE';
+    if (level === 2 && (phase === 5 || phase === 6)) return 'RAY';
+    if (level === 3 && (phase === 8 || phase === 9)) return 'SEGMENT';
+    return null;
+  };
+
+  const toolDisplayNames: Record<Exclude<Tool, 'NONE'>, string> = {
+    LINE: 'Doğru',
+    RAY: 'Işın',
+    SEGMENT: 'Doğru parçası'
+  };
+
+  const getAngleKind = (angle: number) => {
+    if (angle === 90) return 'dik';
+    return angle < 90 ? 'dar' : 'geniş';
+  };
+
+  const rayAngleKind = dynamicShapes ? getAngleKind(dynamicShapes.rayAngleText) : 'geniş';
+  const rayAngleTitle = rayAngleKind === 'geniş' ? 'Geniş açıyı ölç' : rayAngleKind === 'dar' ? 'Dar açıyı ölç' : 'Dik açıyı ölç';
+  const segmentAngleKind = dynamicShapes ? getAngleKind(dynamicShapes.segmentAngleText) : 'dar';
+  const segmentAngleTitle = segmentAngleKind === 'geniş' ? 'Son geniş açıyı ölç' : segmentAngleKind === 'dar' ? 'Son dar açıyı ölç' : 'Son dik açıyı ölç';
+  const rayProtractorGuide = dynamicShapes ? (() => {
+    const dx = dynamicShapes.ray.dx - dynamicShapes.ray.sx;
+    const dy = dynamicShapes.ray.dy - dynamicShapes.ray.sy;
+    const length = Math.hypot(dx, dy) || 1;
+    const ux = dx / length;
+    const uy = dy / length;
+
+    return {
+      x1: dynamicShapes.cx,
+      y1: dynamicShapes.cy,
+      x2: dynamicShapes.cx + ux * 255,
+      y2: dynamicShapes.cy + uy * 255,
+      dotX: dynamicShapes.cx + ux * 238,
+      dotY: dynamicShapes.cy + uy * 238,
+      labelX: Math.min(700, Math.max(100, dynamicShapes.cx + ux * 290)),
+      labelY: Math.min(545, Math.max(150, dynamicShapes.cy + uy * 290)),
+      zoomAngle: dynamicShapes.rayAngleText,
+      zoomX: Math.min(560, Math.max(170, dynamicShapes.cx + 120)),
+      zoomY: Math.min(525, Math.max(140, dynamicShapes.cy + 190))
+    };
+  })() : null;
+
+  const handleToolSelect = (tool: Exclude<Tool, 'NONE'>) => {
+    const expectedTool = getExpectedTool();
+
+    if (!expectedTool) {
+      setBotMsg({ id: Date.now(), text: "Şimdi çizim aracı değil, ekrandaki açı/ölçüm görevini tamamlıyoruz.", type: 'info' });
+      return;
+    }
+
+    if (tool !== expectedTool) {
+      setBotMsg({
+        id: Date.now(),
+        text: `Bu araç biraz sonra gelecek. Şimdi ${toolDisplayNames[expectedTool]} aracını seçmelisin.`,
+        type: 'error'
+      });
+      return;
+    }
+
+    setActiveTool(tool);
+  };
+
+  const currentGuide = (() => {
+    switch (phase) {
+      case 0:
+        return { step: '1 / 10', title: 'Doğru aracını seç', detail: 'Soldaki mavi Doğru kartına bas. Doğru iki yöne uzar.' };
+      case 1:
+        return { step: '2 / 10', title: 'İki mavi noktaya dokun', detail: 'Birinci ve ikinci mavi noktayı seçince ilk doğru çizilecek.' };
+      case 2:
+        return { step: '3 / 10', title: 'İki mor noktaya dokun', detail: 'İkinci doğruyu çiz; iki doğru kesişince açı alanları açılacak.' };
+      case 3:
+        return { step: '4 / 10', title: 'Ters açı çiftini seç', detail: 'Yan yana değil, karşı karşıya duran iki açı alanına dokun.' };
+      case 4:
+        return { step: '5 / 10', title: 'Seçtiğin açıyı ölç', detail: 'İletkiyi aç, seçtiğin ters açıyı derece olarak oku ve kutuya yaz.' };
+      case 5:
+        return { step: '6 / 10', title: 'Işın aracını seç', detail: 'Işın bir noktadan başlar ve tek yöne uzar.' };
+      case 6:
+        return { step: '7 / 10', title: 'Başlangıç ve yönü seç', detail: 'Önce turuncu başlangıç noktasına, sonra beyaz yön noktasına dokun.' };
+      case 7:
+        return { step: '8 / 10', title: rayAngleTitle, detail: `İletkiyle ışının mavi doğruyla yaptığı ${rayAngleKind} açıyı bul.` };
+      case 8:
+        return { step: '9 / 10', title: 'Doğru parçası aracını seç', detail: 'Doğru parçası iki uç nokta arasında kalır.' };
+      case 9:
+        return { step: '10 / 10', title: 'İki yeşil ucu birleştir', detail: 'Yeşil noktalar arasında ölçülebilir bir doğru parçası çiz.' };
+      case 10:
+        return { step: 'Son ölçüm', title: segmentAngleTitle, detail: `Doğru parçasının mor doğruyla yaptığı ${segmentAngleKind} açıyı derece olarak yaz.` };
+      default:
+        return { step: 'Görev', title: 'Sıradaki adım', detail: 'Ekrandaki parlayan hedefi takip et.' };
+    }
+  })();
 
   const handleNodeClick = (id: string, target: number, nLevel: number, nType: string) => {
     if (nLevel !== level) return;
     
     if (level === 1) {
         if (phase !== 1 && phase !== 2) return;
-        if (phase === 1 && target !== 1) return;
-        if (phase === 2 && target !== 2) return;
+        if (phase === 1 && target !== 1) {
+          setBotMsg({ id: Date.now(), text: "Önce mavi noktaları seçiyoruz. Mor noktalar bir sonraki adımda gelecek.", type: 'info' });
+          return;
+        }
+        if (phase === 2 && target !== 2) {
+          setBotMsg({ id: Date.now(), text: "Şimdi mor noktaları seçiyoruz; mavi doğru zaten çizildi.", type: 'info' });
+          return;
+        }
         
         if (activeTool !== 'LINE') {
           setBotMsg({ id: Date.now(), text: "Mühendisim! Bu aşamada noktaları birleştirmek için 'DOĞRU' aracını seçmelisin.", type: 'error' });
@@ -250,12 +351,12 @@ export default function VectorDesignApp() {
             setLine1Drawn(true);
             setSelectedNodes([]);
             setPhase(2);
-            setBotMsg({ id: Date.now(), text: "Doğru çizimi tamamlandı! (MAT.5.3.1.1). Şimdi mor lazer için diğer iki düğümü bağla.", type: 'success' });
+            setBotMsg({ id: Date.now(), text: "İlk doğru çizildi. Şimdi iki mor noktaya dokunup ikinci doğruyu çiz.", type: 'success' });
           } else if (phase === 2) {
             setLine2Drawn(true);
             setSelectedNodes([]);
             setPhase(3);
-            setBotMsg({ id: Date.now(), text: "DİKKAT KESİŞİM! 4 farklı açı alanı yarattık. Birbirine bakmayan 'TERS AÇI' çiftini (sivri olan o dar iki bölgeyi) bul ve tıkla.", type: 'info' });
+            setBotMsg({ id: Date.now(), text: "İki doğru kesişti. Şimdi karşı karşıya duran iki ters açıyı seç.", type: 'info' });
           }
         }
     } else if (level === 2) {
@@ -279,7 +380,7 @@ export default function VectorDesignApp() {
             setRayDrawn(true);
             setSelectedNodes([]);
             setPhase(7); // Changed to 7 so it stays at level 2 waiting for measurement
-            setBotMsg({ id: Date.now(), text: "Işın devrede! Lütfen İletkiyi kullanarak bu ışının ilk doğruyla (mavi) yaptığı iç açıyı ölç.", type: 'success' });
+            setBotMsg({ id: Date.now(), text: `Işın çizildi. Şimdi iletkiyle ışının mavi doğruyla yaptığı ${rayAngleKind} açıyı ölç.`, type: 'success' });
         }
     } else if (level === 3) {
         if (phase !== 9) return; // changed phase check
@@ -297,7 +398,7 @@ export default function VectorDesignApp() {
             setSegmentDrawn(true);
             setSelectedNodes([]);
             setPhase(10); // changed from phase 9 directly triggering victory, now it triggers protractor
-            setBotMsg({ id: Date.now(), text: "Doğru parçası başarıyla bağlandı! Artık bir üçgenimiz var. İletki ile bu doğru parçasının mor doğruyla yaptığı iç açıyı ölç.", type: 'success' });
+            setBotMsg({ id: Date.now(), text: `Doğru parçası başarıyla bağlandı. İletkiyle bu doğru parçasının mor doğruyla yaptığı ${segmentAngleKind} açıyı ölç.`, type: 'success' });
         }
     }
   };
@@ -315,15 +416,16 @@ export default function VectorDesignApp() {
     
     setSelectedAngles(newAngles);
 
-    if (newAngles.length === 2) {
+        if (newAngles.length === 2) {
         const has1And2 = newAngles.includes(1) && newAngles.includes(2);
         const has3And4 = newAngles.includes(3) && newAngles.includes(4);
 
         if (has1And2 || has3And4) {
-            setBotMsg({ id: Date.now(), text: "Ters Açılar Tespit Edildi! Birbirine zıt bakan TERS AÇILAR her zaman eşittir (MAT.5.3.4.1).", type: 'success' });
+            setAngleMeasureKind(has1And2 ? 'ACUTE' : 'OBTUSE');
+            setBotMsg({ id: Date.now(), text: "Doğru seçim. Karşı karşıya duran ters açılar birbirine eşittir. Şimdi seçtiğin açıyı ölç.", type: 'success' });
             setTimeout(() => setPhase(4), 4500); // Protractor ekranına geç
         } else {
-            setBotMsg({ id: Date.now(), text: "Sistem Alarmı! Bu açılar yan yana (KOMŞU). Sen zıt yönlü olan TERS açıları bulmalısın! Seçimi sıfırlıyorum.", type: 'error' });
+            setBotMsg({ id: Date.now(), text: "Bu iki açı yan yana, yani komşu. Ters açı için karşı karşıya duran iki alanı seçmelisin.", type: 'error' });
             setTimeout(() => setSelectedAngles([]), 2000);
         }
     }
@@ -354,10 +456,23 @@ export default function VectorDesignApp() {
   };
 
   const handlePlaceProtractor = () => {
-      setPPos({ x: 400, y: 300 });
-      setPRot(0);
+      if (dynamicShapes) {
+        if (phase === 10) {
+          setPPos({ x: dynamicShapes.segment.x2, y: dynamicShapes.segment.y2 });
+          setPRot(dynamicShapes.p9Rot);
+        } else if (phase === 7) {
+          setPPos({ x: dynamicShapes.cx, y: dynamicShapes.cy });
+          setPRot(dynamicShapes.p6Rot);
+        } else {
+          setPPos({ x: dynamicShapes.cx, y: dynamicShapes.cy });
+          setPRot(dynamicShapes.p4Rot);
+        }
+      } else {
+        setPPos({ x: 400, y: 300 });
+        setPRot(0);
+      }
       setProtractorPlaced(true);
-      setBotMsg({ id: Date.now(), text: "Sanal İletki kilitlendi! Merkezinden tutarak taşıyabilir, 0° çizgisinden tutarak döndürebilirsin.", type: 'info' });
+      setBotMsg({ id: Date.now(), text: "İletki açı köşesine yerleşti. Gerekirse ortasından taşıyabilir, sağdaki tutacakla döndürebilirsin.", type: 'info' });
   };
 
   const handleAngleError = (targetStr: string, inputStr: string, baseMsg: string) => {
@@ -379,16 +494,16 @@ export default function VectorDesignApp() {
     if (!dynamicShapes) return;
 
     if (phase === 4) {
-      const target = dynamicShapes.targetAngle.toString();
+      const target = (angleMeasureKind === 'OBTUSE' ? 180 - dynamicShapes.targetAngle : dynamicShapes.targetAngle).toString();
       if (angleInputValue.trim() === target) {
-        setBotMsg({ id: Date.now(), text: `Tam İsabet! Açı ${target}°. Bu da demek ki Ters açısı da ${target}°. Şimdi 'IŞIN' (Ray) aracını seçerek enerji merkezinden uzaya yönelecek bir enerji gönderelim.`, type: 'success' });
+        setBotMsg({ id: Date.now(), text: `Tam isabet. Açı ${target}°. Ters açı da aynı ölçüdedir. Şimdi Işın aracını seç.`, type: 'success' });
         setTimeout(() => {
           setProtractorPlaced(false);
           setAngleInputValue('');
           setLevel(2);
           setPhase(5);
           setSelectedNodes([]);
-          setActiveTool('RAY');
+          setActiveTool('NONE');
         }, 3500);
       } else {
         handleAngleError(target, angleInputValue.trim(), `Hatalı Okuma!`);
@@ -396,14 +511,14 @@ export default function VectorDesignApp() {
     } else if (phase === 7) {
       const target = dynamicShapes.rayAngleText.toString();
       if (angleInputValue.trim() === target) {
-        setBotMsg({ id: Date.now(), text: `Harika! ${target}° doğru. Işının oluşturduğu açıyı yakaladık! Şimdi 'PARÇA' aracını seçip segment çizeceğiz.`, type: 'success' });
+        setBotMsg({ id: Date.now(), text: `Harika, ${target}° doğru. Şimdi Doğru parçası aracını seçip iki uç arasında çizim yapacağız.`, type: 'success' });
         setTimeout(() => {
           setProtractorPlaced(false);
           setAngleInputValue('');
           setLevel(3);
           setPhase(8);
           setSelectedNodes([]);
-          setActiveTool('SEGMENT');
+          setActiveTool('NONE');
         }, 3500);
       } else {
         handleAngleError(target, angleInputValue.trim(), `Hatalı Okuma!`);
@@ -416,10 +531,10 @@ export default function VectorDesignApp() {
             setProtractorPlaced(false);
             setAngleInputValue('');
             unlockAtom('MAT.5.3.1.1');
-            unlockAtom('MAT.5.3.1.b');
-            unlockAtom('MAT.5.3.1.c');
+            unlockAtom('MAT.5.3.1.2');
+            unlockAtom('MAT.5.3.1.3');
+            unlockAtom('MAT.5.3.3.1');
             unlockAtom('MAT.5.3.4.1');
-            unlockAtom('MAT.5.3.4.2'); 
             unlockModule('vector-design-panel');
             addScore(1500);
             setShowVictory(true);
@@ -439,9 +554,9 @@ export default function VectorDesignApp() {
           </Link>
           <div>
             <h1 className="text-xl md:text-2xl font-black text-white tracking-tighter flex items-center gap-2">
-              <Spline className="w-6 h-6 text-[#00E5FF]" /> VEKTÖREL <span className="text-[#00E5FF]">CAD PANELİ</span>
+              <Spline className="w-6 h-6 text-[#00E5FF]" /> DOĞRU-IŞIN <span className="text-[#00E5FF]">ÇİZİMİ</span>
             </h1>
-            <p className="text-xs md:text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Işın, Doğru, Açı Fiziği</p>
+            <p className="text-xs md:text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Doğru, ışın, doğru parçası ve açı ölçme</p>
           </div>
         </div>
       </header>
@@ -451,9 +566,9 @@ export default function VectorDesignApp() {
         {/* Sol Menü: Araçlar & Terminal */}
         <div className="w-full lg:w-72 flex flex-col gap-4">
           <div className="bg-[#12121A]/80 backdrop-blur-xl border border-gray-800 rounded-3xl p-6 shadow-2xl flex flex-col gap-4">
-             <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-2">Çizim Araçları</h3>
+             <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-2">Çizim araçları</h3>
              
-             <button onClick={() => setActiveTool('LINE')}
+             <button onClick={() => handleToolSelect('LINE')}
                 className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${ activeTool === 'LINE' ? 'bg-[#00E5FF]/10 border-[#00E5FF] text-[#00E5FF]' : 'bg-[#05050A] border-gray-800 text-gray-400 hover:border-gray-600' }`}
              >
                 <div className="w-8 h-8 flex items-center justify-center rounded bg-black/50">
@@ -462,10 +577,10 @@ export default function VectorDesignApp() {
                       <div className="absolute -right-1 -top-1 border-t border-r border-current w-2 h-2 rotate-45"></div>
                    </div>
                 </div>
-                <div className="text-left"><span className="block font-bold">Doğru</span><span className="block text-[10px] opacity-70">İki Ucu Sonsuz</span></div>
+                <div className="text-left"><span className="block font-bold">Doğru</span><span className="block text-[10px] opacity-70">İki yöne uzar</span></div>
              </button>
 
-             <button onClick={() => setActiveTool('RAY')}
+             <button onClick={() => handleToolSelect('RAY')}
                 className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${ activeTool === 'RAY' ? 'bg-[#B388FF]/10 border-[#B388FF] text-[#B388FF]' : 'bg-[#05050A] border-gray-800 text-gray-400 hover:border-gray-600' }`}
              >
                 <div className="w-8 h-8 flex items-center justify-center rounded bg-black/50">
@@ -474,10 +589,10 @@ export default function VectorDesignApp() {
                        <div className="absolute -right-1 -top-1 border-t border-r border-current w-2 h-2 rotate-45"></div>
                    </div>
                 </div>
-                <div className="text-left"><span className="block font-bold">Işın</span><span className="block text-[10px] opacity-70">Tek Ucu Sonsuz</span></div>
+                <div className="text-left"><span className="block font-bold">Işın</span><span className="block text-[10px] opacity-70">Bir noktadan başlar</span></div>
              </button>
 
-             <button onClick={() => setActiveTool('SEGMENT')}
+             <button onClick={() => handleToolSelect('SEGMENT')}
                 className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${ activeTool === 'SEGMENT' ? 'bg-[#00FF88]/10 border-[#00FF88] text-[#00FF88]' : 'bg-[#05050A] border-gray-800 text-gray-400 hover:border-gray-600' }`}
              >
                 <div className="w-8 h-8 flex items-center justify-center rounded bg-black/50">
@@ -486,7 +601,7 @@ export default function VectorDesignApp() {
                        <div className="absolute -right-1 -top-[3px] w-1.5 h-1.5 bg-current rounded-full"></div>
                    </div>
                 </div>
-                <div className="text-left"><span className="block font-bold">Parça</span><span className="block text-[10px] opacity-70">İki Ucu Kapalı</span></div>
+                <div className="text-left"><span className="block font-bold">Doğru parçası</span><span className="block text-[10px] opacity-70">İki uç arasında kalır</span></div>
              </button>
           </div>
 
@@ -498,6 +613,8 @@ export default function VectorDesignApp() {
             setAngleInputValue={setAngleInputValue}
             handlePlaceProtractor={handlePlaceProtractor}
             handleVerifyAngle={handleVerifyAngle}
+            rayAngleKind={rayAngleKind}
+            segmentAngleKind={segmentAngleKind}
           />
         </div>
 
@@ -506,6 +623,20 @@ export default function VectorDesignApp() {
             {/* Grid */}
             <div className="absolute inset-0 opacity-15 pointer-events-none" style={{ backgroundImage: 'linear-gradient(#00E5FF 1px, transparent 1px), linear-gradient(90deg, #00E5FF 1px, transparent 1px)', backgroundSize: '40px 40px' }}/>
             <div className="absolute inset-0 bg-gradient-to-t from-[#05050A] to-transparent pointer-events-none"/>
+            <div className="absolute left-4 right-4 top-4 z-20 rounded-2xl border border-[#00E5FF]/30 bg-[#06131D]/90 px-4 py-3 shadow-[0_0_30px_rgba(0,229,255,0.12)] backdrop-blur-xl">
+              <div className="flex flex-col gap-2">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#00E5FF]/40 bg-[#00E5FF]/10 text-[#00E5FF]">
+                    <Target className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#8DEFFF]">{currentGuide.step}</p>
+                    <p className="text-base font-black text-white">{currentGuide.title}</p>
+                  </div>
+                </div>
+                <p className="text-sm font-semibold leading-snug text-white/78">{currentGuide.detail}</p>
+              </div>
+            </div>
 
             <div className="relative w-full h-full max-w-[800px] max-h-[600px] flex items-center justify-center">
                 <svg ref={svgRef} viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet" className="w-full h-full overflow-visible"
@@ -532,6 +663,25 @@ export default function VectorDesignApp() {
                           );
                        })}
                     </AnimatePresence>
+
+                    {phase === 3 && dynamicShapes && angleRegions.map((region, index) => {
+                        const [origin, , farPoint] = region.points.split(' ').map((point) => {
+                            const [x, y] = point.split(',').map(Number);
+                            return { x, y };
+                        });
+                        const labelX = Math.min(760, Math.max(40, origin.x + (farPoint.x - origin.x) * 0.18));
+                        const labelY = Math.min(540, Math.max(145, origin.y + (farPoint.y - origin.y) * 0.18));
+                        const isSelected = selectedAngles.includes(region.id);
+
+                        return (
+                          <g key={`angle-label-${region.id}`} transform={`translate(${labelX}, ${labelY})`} className="cursor-pointer pointer-events-auto" onClick={() => handleAngleClick(region.id, region.type)}>
+                            <circle r="20" fill={isSelected ? region.color : '#05050A'} stroke={region.color} strokeWidth="2" opacity={isSelected ? 0.95 : 0.86} />
+                            <text x="0" y="5" textAnchor="middle" fill={isSelected ? '#05050A' : region.color} fontSize="16" fontWeight="900">
+                              {String.fromCharCode(65 + index)}
+                            </text>
+                          </g>
+                        );
+                    })}
 
                     <AnimatePresence>
                        {protractorPlaced && dynamicShapes && (
@@ -615,9 +765,16 @@ export default function VectorDesignApp() {
                         if (level === 2) isTarget = phase === 6;
                         if (level === 3) isTarget = phase === 9;
 
+                        const nodeLabel = (() => {
+                            if (!isTarget) return '';
+                            if (level === 1) return phase === 1 ? 'mavi nokta' : 'mor nokta';
+                            if (level === 2) return node.type === 'RAY_START' ? 'başlangıç' : 'yön';
+                            return 'uç nokta';
+                        })();
+
                         return (
                             <g key={node.id} transform={`translate(${node.x}, ${node.y})`} onClick={() => handleNodeClick(node.id, node.target, node.level, node.type)}>
-                                <circle r="24" fill="transparent" className={`cursor-pointer ${isTarget ? 'pointer-events-auto' : 'pointer-events-none'}`} />
+                                <circle r="28" fill="transparent" className="cursor-pointer pointer-events-auto" />
                                 <motion.circle 
                                     r={6} 
                                     fill={color}
@@ -631,11 +788,78 @@ export default function VectorDesignApp() {
                                 {isSelected && (
                                     <motion.circle r="14" fill="none" stroke="#FFFFFF" strokeWidth="2" initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} />
                                 )}
+                                {nodeLabel && (
+                                  <g transform="translate(0, -34)" className="pointer-events-none">
+                                    <rect x="-42" y="-14" width="84" height="22" rx="11" fill="#05050A" stroke={color} strokeWidth="1.5" opacity="0.9" />
+                                    <text x="0" y="1" textAnchor="middle" fill={color} fontSize="10" fontWeight="900">
+                                      {nodeLabel}
+                                    </text>
+                                  </g>
+                                )}
                             </g>
                         )
                     })}
 
                     <Protractor placed={protractorPlaced} pPos={pPos} pRot={pRot} setActiveDrag={setActiveDrag} />
+
+                    {phase === 7 && protractorPlaced && rayProtractorGuide && (
+                      <motion.g
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.35 }}
+                        className="pointer-events-none"
+                      >
+                        <line
+                          x1={rayProtractorGuide.x1}
+                          y1={rayProtractorGuide.y1}
+                          x2={rayProtractorGuide.x2}
+                          y2={rayProtractorGuide.y2}
+                          stroke="#FFF7D6"
+                          strokeWidth="12"
+                          strokeLinecap="round"
+                          opacity="0.9"
+                        />
+                        <line
+                          x1={rayProtractorGuide.x1}
+                          y1={rayProtractorGuide.y1}
+                          x2={rayProtractorGuide.x2}
+                          y2={rayProtractorGuide.y2}
+                          stroke="#FF9F1C"
+                          strokeWidth="6"
+                          strokeLinecap="round"
+                          style={{ filter: 'drop-shadow(0 0 12px rgba(255,159,28,1))' }}
+                        />
+                        <circle
+                          cx={rayProtractorGuide.dotX}
+                          cy={rayProtractorGuide.dotY}
+                          r="14"
+                          fill="#05050A"
+                          stroke="#FFF7D6"
+                          strokeWidth="4"
+                        />
+                        <circle
+                          cx={rayProtractorGuide.dotX}
+                          cy={rayProtractorGuide.dotY}
+                          r="7"
+                          fill="#FF9F1C"
+                          style={{ filter: 'drop-shadow(0 0 10px rgba(255,159,28,1))' }}
+                        />
+                        <g transform={`translate(${rayProtractorGuide.labelX}, ${rayProtractorGuide.labelY})`}>
+                          <rect x="-64" y="-18" width="128" height="36" rx="18" fill="#05050A" stroke="#FFB74D" strokeWidth="2" opacity="0.94" />
+                          <text x="0" y="-2" textAnchor="middle" fill="#FFEDD5" fontSize="10" fontWeight="900" letterSpacing="2">
+                            TURUNCU
+                          </text>
+                          <text x="0" y="12" textAnchor="middle" fill="#FF9F1C" fontSize="11" fontWeight="900">
+                            IŞIN ÇİZGİSİ
+                          </text>
+                        </g>
+                        <AngleReadingZoom
+                          angle={rayProtractorGuide.zoomAngle}
+                          x={rayProtractorGuide.zoomX}
+                          y={rayProtractorGuide.zoomY}
+                        />
+                      </motion.g>
+                    )}
                 </svg>
 
             </div>
@@ -654,27 +878,27 @@ export default function VectorDesignApp() {
                </div>
                
                <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">
-                 FİZİK <span className="text-[#00FF88]">ÇÖZÜLDÜ!</span>
+                 ÇİZİM <span className="text-[#00FF88]">TAMAMLANDI!</span>
                </h2>
                <p className="text-gray-400 text-lg mb-10 max-w-lg mx-auto">
-                  Ters ve Komşu açılara ait derin kuralları uygulamalı ispat ettin! İki lazer kesiştiğinde oluşan karşılıklı açıların mükemmel simetrisi seninle.
+                  Doğru, ışın ve doğru parçası çizdin; kesişen doğrularda ters açıları seçip iletkiyle ölçtün.
                </p>
 
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 text-left">
                   <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="bg-black/50 border border-gray-800 p-5 rounded-2xl">
                      <div className="flex items-center gap-2 mb-2">
                         <div className="w-2 h-2 rounded-full bg-[#00E5FF] animate-pulse"></div>
-                        <span className="font-mono text-[#00E5FF] font-bold text-xs uppercase tracking-wider">MAT.5.3.1.1</span>
+                        <span className="font-mono text-[#00E5FF] font-bold text-xs uppercase tracking-wider">MAT.5.3.1.1 / 1.2 / 1.3</span>
                      </div>
-                     <p className="text-white text-sm">Uzayda Doğru çizimleri ve kesişimleri anlaşıldı.</p>
+                     <p className="text-white text-sm">Doğru, ışın ve doğru parçası çizimleri tamamlandı.</p>
                   </motion.div>
 
                   <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }} className="bg-black/50 border border-gray-800 p-5 rounded-2xl">
                      <div className="flex items-center gap-2 mb-2">
                         <div className="w-2 h-2 rounded-full bg-[#B388FF] animate-pulse"></div>
-                        <span className="font-mono text-[#B388FF] font-bold text-xs uppercase tracking-wider">MAT.5.3.4.1</span>
+                        <span className="font-mono text-[#B388FF] font-bold text-xs uppercase tracking-wider">MAT.5.3.3.1 · MAT.5.3.4.1</span>
                      </div>
-                     <p className="text-white text-sm">Kesici iki doğrunun oluşturduğu ters (eşit) açılar keşfedildi.</p>
+                     <p className="text-white text-sm">İletkiyle açı ölçümü ve ters açı ilişkisi keşfedildi.</p>
                   </motion.div>
                </div>
 
@@ -688,5 +912,42 @@ export default function VectorDesignApp() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function AngleReadingZoom({ angle, x, y }: { angle: number; x: number; y: number }) {
+  const start = Math.floor(angle / 5) * 5;
+  const marks = Array.from({ length: 6 }, (_, index) => start + index);
+  const pointerX = -90 + (angle - start) * 36;
+
+  return (
+    <g transform={`translate(${x}, ${y})`} className="pointer-events-none">
+      <rect x="-122" y="-58" width="244" height="112" rx="20" fill="#05050A" stroke="#FFB74D" strokeWidth="2.5" opacity="0.96" />
+      <rect x="-108" y="-42" width="216" height="74" rx="15" fill="#111827" stroke="#FFF7D6" strokeWidth="1.5" opacity="0.86" />
+      <text x="0" y="-25" textAnchor="middle" fill="#FFEDD5" fontSize="10" fontWeight="900" letterSpacing="2">
+        YAKIN OKUMA
+      </text>
+      <text x="0" y="-10" textAnchor="middle" fill="#FED7AA" fontSize="9" fontWeight="800">
+        1° çizgilerini say
+      </text>
+      <line x1="-90" y1="18" x2="90" y2="18" stroke="#FFF7D6" strokeWidth="4" strokeLinecap="round" />
+      {marks.map((mark, index) => {
+        const markX = -90 + index * 36;
+        const isEdge = index === 0 || index === marks.length - 1;
+
+        return (
+          <g key={mark}>
+            <line x1={markX} y1={isEdge ? "-2" : "5"} x2={markX} y2="30" stroke={isEdge ? "#FFF7D6" : "#FED7AA"} strokeWidth={isEdge ? "4" : "2.5"} strokeLinecap="round" />
+            {isEdge && (
+              <text x={markX} y="45" textAnchor="middle" fill="#FFF7D6" fontSize="13" fontWeight="900">
+                {mark}°
+              </text>
+            )}
+          </g>
+        );
+      })}
+      <line x1={pointerX} y1="-4" x2={pointerX} y2="32" stroke="#FF9F1C" strokeWidth="5" strokeLinecap="round" style={{ filter: 'drop-shadow(0 0 8px rgba(255,159,28,1))' }} />
+      <path d={`M ${pointerX - 9} -7 L ${pointerX + 9} -7 L ${pointerX} 5 Z`} fill="#FF9F1C" />
+    </g>
   );
 }

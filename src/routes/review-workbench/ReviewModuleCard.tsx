@@ -1,4 +1,5 @@
-import { ExternalLink, Maximize2, Star, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronDown, ClipboardList, ExternalLink, Maximize2, Star, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { ModuleMeta } from '../../registry/moduleRegistry';
 import {
@@ -31,6 +32,7 @@ export function ReviewModuleCard({
 }: ReviewModuleCardProps) {
   const status = module.status ?? 'active';
   const hasSignal = hasReviewSignal(entry);
+  const [isAuditOpen, setIsAuditOpen] = useState(false);
 
   const toggleTag = (tag: IssueTag) => {
     const nextTags = entry.tags.includes(tag)
@@ -70,7 +72,22 @@ export function ReviewModuleCard({
           <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/50">{module.description}</p>
         </div>
 
-        <div className="flex shrink-0 gap-2">
+        <div className="flex shrink-0 flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setIsAuditOpen((current) => !current)}
+            className={`inline-flex items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-black transition ${
+              isAuditOpen
+                ? 'border-white/24 bg-white/10 text-white'
+                : hasSignal
+                  ? 'border-emerald-300/30 bg-emerald-300/10 text-emerald-100'
+                  : 'border-white/10 bg-white/[0.05] text-white/62 hover:border-white/24 hover:text-white'
+            }`}
+          >
+            <ClipboardList className="h-4 w-4" />
+            Not paneli
+            <ChevronDown className={`h-4 w-4 transition ${isAuditOpen ? 'rotate-180' : ''}`} />
+          </button>
           <button
             type="button"
             onClick={onPreview}
@@ -95,6 +112,21 @@ export function ReviewModuleCard({
         </div>
       </div>
 
+      {hasSignal && !isAuditOpen && (
+        <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-white/10 bg-black/18 px-3 py-2 text-xs font-bold text-white/52">
+          <span className="text-white/38">Not özeti:</span>
+          {entry.rating > 0 && <span className="rounded-full border border-[#00E5FF]/20 bg-[#00E5FF]/10 px-2.5 py-1 text-[#8DF4FF]">{entry.rating}/5</span>}
+          {entry.priority !== 'none' && <span className={`rounded-full border px-2.5 py-1 ${priorityCopy[entry.priority].tone}`}>{priorityCopy[entry.priority].label}</span>}
+          {entry.tags.map((tag) => (
+            <span key={tag} className="rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-white/56">
+              {tag}
+            </span>
+          ))}
+          {entry.note && <span className="min-w-0 flex-1 truncate text-white/50">{entry.note}</span>}
+        </div>
+      )}
+
+      {isAuditOpen && (
       <div className="mt-5 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
         <div className="rounded-2xl border border-white/10 bg-black/18 p-3">
           <p className="mb-3 font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/42">
@@ -183,6 +215,7 @@ export function ReviewModuleCard({
           </div>
         </div>
       </div>
+      )}
     </article>
   );
 }

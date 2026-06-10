@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Crosshair, Target, CheckCircle2, RotateCw, Sparkles, ChevronRight } from 'lucide-react';
 import { GameHeader } from '../../../components/ui/GameHeader';
+import { ModuleCompletedScreen } from '../../../components/ui/ModuleCompletedScreen';
 import { cn } from '../../../lib/utils';
 import { useAstroBotStore } from '../../../store/useAstroBotStore';
 import { useAtomStore } from '../../../store/useAtomStore';
@@ -79,11 +80,14 @@ const MISSIONS = [
   }
 ];
 
+const OPTIC_LASER_ATOMS = ['MAT.6.3.1.1', 'MAT.6.3.1.2', 'MAT.6.3.1.3', 'MAT.6.3.2.1'];
+
 export default function OpticLaserApp() {
     const [laserAngle, setLaserAngle] = useState(60);
     const [selectedAngles, setSelectedAngles] = useState<number[]>([]);
     const [missionIndex, setMissionIndex] = useState(0);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [showCompletion, setShowCompletion] = useState(false);
     
     // SVG and Coordinates configuration
     const width = 800;
@@ -121,6 +125,16 @@ export default function OpticLaserApp() {
     const { unlockModule, unlockAtom } = useAtomStore();
     const { addScore } = useGameStore();
 
+    const restart = () => {
+        setLaserAngle(60);
+        setSelectedAngles([]);
+        setMissionIndex(0);
+        setShowSuccess(false);
+        setShowCompletion(false);
+        showMessage(MISSIONS[0].description, 'info');
+        window.requestAnimationFrame(() => window.scrollTo({ top: 0 }));
+    };
+
     // Auto validate when 2 selected
     useEffect(() => {
         if (selectedAngles.length === 2 && !showSuccess) {
@@ -132,7 +146,7 @@ export default function OpticLaserApp() {
                
                if (missionIndex === MISSIONS.length - 1) {
                    unlockModule('optic-laser-lab');
-                   unlockAtom('MAT.6.3.1.1');
+                   OPTIC_LASER_ATOMS.forEach((atomId) => unlockAtom(atomId));
                    addScore(1500);
                } else {
                    addScore(250);
@@ -145,7 +159,8 @@ export default function OpticLaserApp() {
                       setShowSuccess(false);
                       showMessage(MISSIONS[missionIndex + 1].description, 'info');
                    } else {
-                      showMessage("Tüm paneller devrede! Optik Lazer Labirenti ana merkeze bağlandı. Başardın Kaptan!", 'success');
+                      showMessage("Tüm paneller devrede! Paralel Doğrularda Açılar ana merkeze bağlandı. Başardın Kaptan!", 'success');
+                      setShowCompletion(true);
                    }
                }, 2500);
            } else {
@@ -159,7 +174,7 @@ export default function OpticLaserApp() {
                }, 2000);
            }
         }
-    }, [selectedAngles, missionIndex, showSuccess, showMessage, unlockModule]);
+    }, [selectedAngles, missionIndex, showSuccess, showMessage, unlockModule, unlockAtom, addScore]);
 
     useEffect(() => {
         showMessage(MISSIONS[0].description, 'info');
@@ -171,11 +186,24 @@ export default function OpticLaserApp() {
     // y = 750 -> x = pivotX + (750 - 300)/m
     const bottomLaserPoint = { x: pivotX + (750 - pivotY) / m, y: 750 };
 
+    if (showCompletion) {
+        return (
+            <div className="min-h-screen bg-[#05050A] p-5 text-white">
+                <ModuleCompletedScreen
+                    title="Paralel Doğrularda Açılar Tamam"
+                    message="İç ters, yöndeş, karşı durumlu ve dış ters açı çiftlerini paralel doğrular üzerinde doğru eşleştirdin."
+                    scoreEarned={1500}
+                    onRestart={restart}
+                />
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-[#05050A] text-white relative selection:bg-[#B388FF]/30 flex flex-col font-sans overflow-hidden">
-            <GameHeader 
-                title="Optik Lazer Labirenti" 
-                subtitle="FİBER ONARIM GEOMETRİSİ" 
+            <GameHeader
+                title="Paralel Doğrularda Açılar"
+                subtitle="PARALEL DOĞRU • KESEN"
             />
 
             <div className="flex-1 flex flex-col lg:flex-row p-6 gap-6 min-h-0 container mx-auto max-w-7xl">

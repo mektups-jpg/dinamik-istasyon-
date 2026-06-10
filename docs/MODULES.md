@@ -226,7 +226,7 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
 
 ## 🚀 ORTAOKUL 5. SINIF MODÜLLERİ
 
-### 1. Devasa Nicelik Çekirdeği (Milyonlar ve Olasılık Dizilimi)
+### 1. Sayıları Bölüklere Ayırma (Milyonlar ve Olasılık Dizilimi)
 * **Konsept:** Sayıların yüz milyonlara kadar ufuk çizgisi gibi uzadığı gelişmiş bir büyüklük simülatörü. Öğrenci 9 haneli rakamları bloklayarak okumakla kalmaz, aynı ekranın mikro (0 ile 1 arası) bölümüne geçerek Olasılık değerlerinin (İmkansız=0, Kesin=1) aslında bu makro-mikro sayı ekseninde nereye düştüğünü görselleştirerek test eder.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.5.1.1.x` (7, 8 ve 9 basamaklı (Milyonlar) sayıların sembolik ve parçalı okunması)
@@ -270,12 +270,31 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
 
 ## 🚀 ORTAOKUL 6. SINIF MODÜLLERİ
 
-### 1. Kuantum Filtre İstasyonu (Asal Sayılar, Çarpanlar ve Algoritmalar)
-* **Konsept:** Sayıların fabrikaya girmeden önce lazer filtrelerden (Bölünebilme Kuralları) geçtiği güvenlik tarayıcısı. Öğrenci çift sayılar, sonu 0/5 olanlar veya rakam toplamı 3'ün katı olanları filtreleyerek eler. Tüm filtrelerden kurtulan "kırılamaz" sayılar (Asal Sayılar) Eratosten Kalburu havuzuna düşer. Asal olmayanlar ise "Çarpan Ağacı Lazerinde" parçalanıp EBOB (parçalara ayırma) veya EKOK (alarm/nöbet senkronizasyonu) kalkanlarına yönlendirilir.
+### 1. Bölünebilme Atölyesi (Çarpanlar ve Bölünebilme Kuralları)
+* **Konsept:** Öğrenci büyük hedef sayıyı ve seçenek panosunu görür. Önce hedef sayının çarpanlarını eksiksiz seçer, sonra son rakam ve rakam toplamı ipuçlarıyla 2, 3, 5, 6, 9 ve 10'a bölünebilme kararlarını verir.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.6.1.1.x` (Çarpanları ve katları eksiksiz listeleme/örüntüleme)
-  * `MAT.6.1.2.x` (2, 3, 5, 6, 9 ve 10 ile bölünebilme lazer kuralları)
-  * `MAT.6.1.3.x` / `MAT.6.1.4.x` (Asal sayılar, Eratosten kalburu, asal çarpanlar, EKOK/EBOB algoritmaları)
+  * `MAT.6.1.1.1` (Çarpanları eksiksiz listeleme)
+  * `MAT.6.1.2.x` (2, 3, 5, 6, 9 ve 10 ile bölünebilme kuralları)
+* **Durum:** Eski birleşik `/embed/numbers/quantum-filter-station` atomu üç parçaya ayrıldı. Aktif route: `/embed/numbers/divisibility-workshop`. 2026-06-07 Kaptan canlı onayıyla `Showcase Ready`.
+
+### 1b. Asal Sayılar Atölyesi (Asal Sayılar ve Asal Çarpanlar)
+* **Konsept:** Öğrenci asal sayıları "yalnız 1 ve kendisi" kuralıyla ayırır; daha geniş aralıkta kalbur mantığıyla bileşik sayıları eler; ardından değişen hedef sayıyı en küçük asal çarpanlarına kadar parçalar.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.6.1.3.x` (Asal sayılar, Eratosten kalburu, asal çarpanlar)
+* **Durum:** Aktif route: `/embed/numbers/prime-numbers-workshop`. 2026-06-07 Kaptan canlı onayıyla `Showcase Ready`.
+
+### 1c. EKOK Ritim Atölyesi (Ortak Kat Problemleri)
+* **Konsept:** Öğrenci tekrarlayan zil, ışık, nöbet, servis ve sensör ritimlerinde ilk ortak zamanı bulur. Geniş sayı havuzu ve yakın tekrar azaltma ile her görevde "ortak bölen değil, ilk ortak kat" fikri pekiştirilir.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.6.1.1.2` (Katları örüntüleme)
+  * `MAT.6.1.4.1` (EKOK ile ritmik karşılaşma problemleri)
+* **Durum:** Aktif route: `/embed/numbers/lcm-workshop`. 2026-06-07 Kaptan canlı onayıyla `Showcase Ready`.
+
+### 1d. EBOB Parça Atölyesi (Ortak Bölen Problemleri)
+* **Konsept:** Öğrenci çubuk, raf, kurdele, paket ve eş grup problemlerinde artmadan en büyük eş parçayı bulur. Geniş sayı havuzu ve yakın tekrar azaltma ile her görevde "ortak kat değil, en büyük ortak bölen" fikri pekiştirilir.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.6.1.4.2` (EBOB ile eş parça/paylaştırma problemleri)
+* **Durum:** Aktif route: `/embed/numbers/gcd-workshop`. 2026-06-07 Kaptan canlı onayıyla `Showcase Ready`. Eski `/embed/numbers/gcd-lcm-workshop` route'u öğrenciyi boş bırakmamak için EKOK Ritim Atölyesi'ne yönlendirilir.
 
 ### 2. Format Dönüştürücü Çekirdek (Ondalık, Kesir, Yüzde Entegrasyonu)
 * **Konsept:** Karmaşık verilerin tek tipe dönüştürüldüğü simyacı makinesi. Bir tanktaki maddeye 1/2, %50 veya 0.50 yazıldığında, tüm gösterge panelleri (Kesir blokları, Ondalık basamak tablosu, Yüzde barı) aynı anda sekronize olarak eşdeğer seviyeye gelir. Kesir bölmesi yapmak isteyen öğrenci, makinedeki 2. Kesir Bloğunu ters çevirir ve (Tersine Çarpan) şalterini kaldırır.
@@ -291,11 +310,11 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.6.2.2.x` (İlerleyen örüntüleri 'n' değişkenli makine formülüne dökmek)
   * `MAT.6.2.3.x` (Cebirsel ifade parçaları: Katsayı, Sabit, Terim ve Benzer terimleri toplama/çıkarma)
 
-### 4. Optik Lazer Labirenti (Paralel Doğrular ve Açı Bağlantıları)
-* **Konsept:** Uzay üssünün (Z, U, M) fiber optik hatlarını tamir etme arayüzü. Öğrenci paralel iki çizgiyi kesen bir lazer atar. Sistem anında köşelerde açılar oluşturur. Yöndeş, İç Ters ve Dış Ters açıları, renkli enerji kalkanlarıyla eşleştirerek kilitleri açar. Kapalı dörtgenlerin köşegen motorlarını çalıştırıp şekilleri Paralelkenar veya Yamuk olarak sabitleyerek eksik açı derecelerini (180/360) kilitlerine girer.
+### 4. Paralel Doğrularda Açılar (Paralel Doğrular ve Açı Bağlantıları)
+* **Konsept:** Öğrenci paralel iki doğruyu kesen bir doğruyla oluşan açı çiftlerini büyük sahnede seçer. İç ters, dış ters, yöndeş ve U kuralı eşleşmeleri lazer görseliyle oyunlaştırılır; modül adı MEB kazanımındaki paralel doğru-kesen-açı odağını doğrudan taşır.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.6.3.1.x` / `MAT.6.3.2.x` (İç/Dış ters açılar, yöndeş açı ile Z/U/M labirent kuralı)
-  * `MAT.6.3.3.x` / `MAT.6.3.4.x` (Köşegenden şekil -Kare/Yamuk- teşhisi, iç açılar toplamından eksik X açısını bulma)
+* **Durum:** Aktif route: `/embed/geometry/optic-laser-lab`. 2026-06-10 Kaptan canlı onayıyla `Showcase Ready`.
 
 ### 5. Geometrik Alan ve Pi (π) Laboratuvarı
 * **Konsept:** Fizikçi animasyon masası. Dikdörtgen bir blok, köşegen sürgüsüyle "kat" diye ikiye ayrılır ve Üçgen'in yarım alan $(a*h)/2$ formüllediği ispatlanır. Veya üstten yana itilir ve Paralelkenar olur. Sonra masada fırlatılan bir tekerlek tam 1 tur döner. Tekerleğin bıraktığı mürekkep izi çapın etrafına sarılır ve daima "3,14"te kaldığı izlenip Pi(π) sabiti ateşlenir. Devamında çemberin çevresi hesaplanır.

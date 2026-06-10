@@ -73,13 +73,16 @@ Amaç: 73 modül büyürken her modülün farklı iskelete savrulmasını engell
 
 5. sınıf tamamlandığı için doğal devam noktası 6. sınıf.
 
-- [ ] Kuantum Filtre İstasyonu: çarpanlar, katlar, bölünebilme, asal sayılar, EBOB/EKOK.
+- [x] Bölünebilme Atölyesi: çarpanlar ve bölünebilme kuralları. Route üretildi; 2026-06-07 Kaptan canlı onayıyla `Showcase Ready`.
+- [x] Asal Sayılar Atölyesi: asal sayılar ve asal çarpan zinciri. Route üretildi; 2026-06-07 Kaptan canlı onayıyla `Showcase Ready`.
+- [x] EKOK Ritim Atölyesi: ortak kat ve ilk ortak zaman problemleri. Birleşik EBOB/EKOK atomundan ayrıldı; Kaptan görsel onayı beklediği için `Review Needed`.
+- [x] EBOB Parça Atölyesi: ortak bölen ve en büyük eş parça problemleri. Birleşik EBOB/EKOK atomundan ayrıldı; Kaptan görsel onayı beklediği için `Review Needed`.
 - [ ] Format Dönüştürücü Çekirdek: kesir, ondalık, yüzde dönüşümü.
 - [ ] Cebirsel Reaktör: değişken, denklem dengesi, benzer terimler.
 - [ ] Büyük Veri Hızlandırıcısı: ortalama, açıklık, deneysel olasılık, yanıltıcı grafik.
-- [ ] Mevcut Optik Lazer ve Area/Pi modüllerini template + iframe kurallarına göre yeniden denetle.
+- [ ] Mevcut Paralel Doğrularda Açılar ve Area/Pi modüllerini template + iframe kurallarına göre yeniden denetle.
 
-İlk önerilen modül: **Kuantum Filtre İstasyonu**. Hem 6. sınıfın ilk büyük ekseni hem de çok sayıda atomu tek modülde kapatıyor.
+İlk 6. sınıf sayı ekseni artık tek birleşik modül yerine dört kısa atomla ilerler: **Bölünebilme Atölyesi**, **Asal Sayılar Atölyesi**, **EKOK Ritim Atölyesi** ve **EBOB Parça Atölyesi**.
 
 ### Sprint 3.2 - İlkokul Temel Fazı
 

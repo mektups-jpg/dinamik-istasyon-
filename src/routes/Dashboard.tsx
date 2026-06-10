@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { activeModules, archivedModules, ModuleMeta } from '../registry/moduleRegistry';
@@ -9,12 +9,26 @@ import Bot from '../components/characters/Bot';
 import { auth } from '../services/firebase';
 import { AstroBot, BotMessage } from '../components/ui/AstroBot';
 import { ProfilePanel } from '../components/ui/ProfilePanel';
+import {
+  getWorkflowScopeDescription,
+  getWorkflowScopeLabel,
+  isGradeInScope,
+  useWorkflowScope,
+} from './workflowScope';
 
 export default function Dashboard() {
   const { score } = useGameStore();
   const { masteredModules, masteredAtoms, displayName, role } = useAtomStore();
+  const { scope, setScope } = useWorkflowScope();
   const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const isScoped = scope !== 'all';
+
+  useEffect(() => {
+    if (selectedGrade !== null && !isGradeInScope(selectedGrade, scope)) {
+      setSelectedGrade(null);
+    }
+  }, [scope, selectedGrade]);
 
   const handleLogout = async () => {
     try {
@@ -30,6 +44,11 @@ export default function Dashboard() {
 
   const getArchivedModulesForGrade = (grade: number): ModuleMeta[] => {
     return archivedModules.filter(m => m.grade === grade);
+  };
+
+  const openGrade = (grade: number) => {
+    if (!isGradeInScope(grade, scope)) return;
+    setSelectedGrade(grade);
   };
 
   const getBotMessage = (): BotMessage => {
@@ -143,6 +162,34 @@ export default function Dashboard() {
               transition={{ duration: 0.4 }}
             >
               <div className="text-center mb-16">
+                <div
+                  data-testid="dashboard-workflow-scope"
+                  className={`mx-auto mb-6 flex max-w-3xl flex-col items-center justify-between gap-3 rounded-3xl border px-5 py-4 text-left sm:flex-row ${
+                    isScoped
+                      ? 'border-[#00E5FF]/28 bg-[#00E5FF]/8 shadow-[0_0_42px_rgba(0,229,255,0.08)]'
+                      : 'border-white/10 bg-white/[0.04]'
+                  }`}
+                >
+                  <div>
+                    <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#00E5FF]">
+                      Çalışma hattı
+                    </p>
+                    <p className="mt-1 text-sm font-black text-white">
+                      {isScoped ? `${getWorkflowScopeLabel(scope)} hattı açık` : 'Tüm sınıflar açık'}
+                    </p>
+                    <p className="mt-1 text-xs font-bold text-gray-400">{getWorkflowScopeDescription(scope)}</p>
+                  </div>
+                  {isScoped && (
+                    <button
+                      type="button"
+                      data-testid="show-all-grades"
+                      onClick={() => setScope('all')}
+                      className="rounded-2xl border border-white/12 bg-white/10 px-4 py-3 text-sm font-black text-white transition hover:border-[#00E5FF]/45 hover:text-[#00E5FF]"
+                    >
+                      Tüm sınıfları göster
+                    </button>
+                  )}
+                </div>
                 <h2 className="text-4xl md:text-5xl font-black text-white mb-4">Görev <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E5FF] to-[#B388FF]">Sektörünü</span> Seç</h2>
                 <p className="text-gray-400 text-lg max-w-2xl mx-auto">
                   Aşağıdaki cam kapılardan birine tıklayarak MEB standartlarındaki interaktif laboratuvarlara giriş yap.
@@ -156,7 +203,9 @@ export default function Dashboard() {
                     key={grade} 
                     grade={grade} 
                     moduleCount={getModulesForGrade(grade).length}
-                    onClick={() => setSelectedGrade(grade)} 
+                    isScopeDisabled={!isGradeInScope(grade, scope)}
+                    scopeLabel={getWorkflowScopeLabel(scope)}
+                    onClick={() => openGrade(grade)}
                   />
                 ))}
               </div>
@@ -260,28 +309,44 @@ function ArchiveModuleCard({ mod }: { mod: ModuleMeta }) {
 
 // --- ALT BİLEŞENLER ---
 
-function GradeDoor({ grade, moduleCount, onClick }: { grade: number, moduleCount: number, onClick: () => void }) {
+function GradeDoor({
+  grade,
+  moduleCount,
+  isScopeDisabled,
+  scopeLabel,
+  onClick,
+}: {
+  grade: number;
+  moduleCount: number;
+  isScopeDisabled: boolean;
+  scopeLabel: string;
+  onClick: () => void;
+}) {
   const isLocked = moduleCount === 0;
+  const isDisabled = isLocked || isScopeDisabled;
 
   return (
     <motion.button 
-      whileHover={{ y: -5, boxShadow: isLocked ? 'none' : '0 10px 30px rgba(0,229,255,0.15)' }}
-      whileTap={{ scale: 0.96 }}
+      whileHover={isDisabled ? undefined : { y: -5, boxShadow: '0 10px 30px rgba(0,229,255,0.15)' }}
+      whileTap={isDisabled ? undefined : { scale: 0.96 }}
       onClick={onClick}
+      disabled={isDisabled}
+      data-testid={`grade-door-${grade}`}
+      aria-label={isScopeDisabled ? `${grade}. sınıf ${scopeLabel} hattı dışında` : `${grade}. sınıf kapısı`}
       className={`relative aspect-[3/4] w-full rounded-3xl flex flex-col items-center justify-between p-6 overflow-hidden border transition-colors ${
-        isLocked 
+        isDisabled
           ? 'bg-[#121212]/40 border-gray-900/50 grayscale opacity-70 cursor-not-allowed hidden-or-locked' 
           : 'bg-[#121212]/80 backdrop-blur-xl border-gray-800 hover:border-[#00E5FF]/40 cursor-pointer'
       }`}
     >
       {/* Parlama Efekti */}
-      {!isLocked && (
+      {!isDisabled && (
         <div className="absolute -inset-2 bg-gradient-to-t from-[#00E5FF]/20 to-transparent opacity-0 hover:opacity-100 blur-xl transition-opacity duration-500"></div>
       )}
 
       {/* Sayaç veya Kilit */}
       <div className="w-full flex justify-end relative z-10">
-        {isLocked ? (
+        {isDisabled ? (
           <Lock className="w-5 h-5 text-gray-700" />
         ) : (
           <div className="bg-[#1F2833] border border-gray-700 text-[#00E5FF] text-[10px] font-bold px-2.5 py-1 rounded-full">
@@ -291,17 +356,19 @@ function GradeDoor({ grade, moduleCount, onClick }: { grade: number, moduleCount
       </div>
 
       {/* Sınıf Numarası */}
-      <div className={`text-7xl font-black tracking-tighter relative z-10 ${isLocked ? 'text-gray-800' : 'text-white'}`}>
+      <div className={`text-7xl font-black tracking-tighter relative z-10 ${isDisabled ? 'text-gray-800' : 'text-white'}`}>
         {grade}
       </div>
 
       {/* Etiket */}
       <div className="w-full text-center relative z-10">
-        <p className={`text-xs font-bold uppercase tracking-widest ${isLocked ? 'text-gray-700' : 'text-gray-400'}`}>Sınıf</p>
+        <p className={`text-xs font-bold uppercase tracking-widest ${isDisabled ? 'text-gray-700' : 'text-gray-400'}`}>
+          {isScopeDisabled ? 'Hat dışı' : 'Sınıf'}
+        </p>
       </div>
 
       {/* Alt Vurgu Çizgisi */}
-      {!isLocked && (
+      {!isDisabled && (
         <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00E5FF]/50 to-transparent"></div>
       )}
     </motion.button>
@@ -326,6 +393,11 @@ function ModuleCard({ mod }: { mod: ModuleMeta }) {
             <Play className="w-6 h-6 text-[#00E5FF] group-hover:scale-110 transition-transform" fill="currentColor" />
           </div>
           <div className="flex flex-col items-end gap-2">
+            {mod.status === 'active' && (
+              <span className="text-[9px] font-black tracking-widest uppercase bg-cyan-300/10 text-cyan-100 px-3 py-1.5 rounded-full border border-cyan-300/24">
+                Aktif
+              </span>
+            )}
             {mod.status === 'review-needed' && (
               <span className="text-[9px] font-black tracking-widest uppercase bg-amber-300/10 text-amber-100 px-3 py-1.5 rounded-full border border-amber-300/24">
                 Görüş Gerekli
