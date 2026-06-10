@@ -4,7 +4,7 @@ export type Domain = 'NUM' | 'GEO' | 'ALG' | 'DAT' | 'CAL' | 'TRG';
 export interface MicroAtom {
   /** Örn: "G1.NUM.001.1" */
   id: string;
-  /** Örn: "İleriye doğru 1'er ritmik sayar" */
+  /** Örn: "İleriye doğru birer ritmik sayar" */
   title: string;
   /** Bloom Taksonomisine göre zorluk (1: Hatırlama, 2: Anlama, 3: Uygulama, 4: Analiz, 5: Sentez) */
   bloomLevel: 1 | 2 | 3 | 4 | 5;
@@ -30,8 +30,8 @@ export const universalAtoms: MacroAtom[] = [
     domain: "NUM",
     grade: "G1",
     microAtoms: [
-      { id: "G1.NUM.001.1", title: "20'ye kadar ileriye 1'er sayar.", bloomLevel: 1 },
-      { id: "G1.NUM.001.2", title: "20'den geriye 1'er sayar.", bloomLevel: 2 },
+      { id: "G1.NUM.001.1", title: "20'ye kadar ileriye birer sayar.", bloomLevel: 1 },
+      { id: "G1.NUM.001.2", title: "20'den geriye birer sayar.", bloomLevel: 2 },
       { id: "G1.NUM.001.3", title: "Verilen bir sayıdan başlayarak ileri sayar.", bloomLevel: 3 },
       { id: "G1.NUM.001.4", title: "Sayı doğrusunda eksik bırakılan sayıyı bulur.", bloomLevel: 4 }
     ]

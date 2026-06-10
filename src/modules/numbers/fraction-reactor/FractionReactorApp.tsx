@@ -1,331 +1,371 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'motion/react';
+import { ArrowLeft, CheckCircle2, Home, Minus, PieChart, Plus, RotateCcw, Sparkles } from 'lucide-react';
+import { AstroBot, type BotMessage } from '../../../components/ui/AstroBot';
 import { useAtomStore } from '../../../store/useAtomStore';
 import { useGameStore } from '../../../store/useGameStore';
-import { AstroBot, BotMessage } from '../../../components/ui/AstroBot';
-import { PieChart, ArrowLeft, Zap, ShieldCheck, ArrowRight } from 'lucide-react';
+import { COMPLETION_ATOM_IDS, createFractionTasks, DENOMINATOR_OPTIONS, type FractionTask } from './fractionReactorTasks';
+
+const ACCENT = '#38E8FF';
+const SUCCESS = '#34D399';
+const ERROR = '#FB7185';
 
 export default function FractionReactorApp() {
   const { unlockAtom, unlockModule } = useAtomStore();
   const { addScore } = useGameStore();
+  const [tasks, setTasks] = useState<FractionTask[]>(() => createFractionTasks());
+  const [taskIndex, setTaskIndex] = useState(0);
+  const [numerator, setNumerator] = useState(0);
+  const [denominator, setDenominator] = useState(1);
+  const [feedback, setFeedback] = useState<'idle' | 'success' | 'error'>('idle');
+  const [isComplete, setIsComplete] = useState(false);
 
-  const MIN_DENOM = 1;
-  const MAX_DENOM = 12;
-
-  const [numerator, setNumerator] = useState<number>(0);
-  const [denominator, setDenominator] = useState<number>(1);
-  const [targetNum, setTargetNum] = useState<number>(1);
-  const [targetDenom, setTargetDenom] = useState<number>(2);
-  
-  const [gameState, setGameState] = useState<'PLAYING' | 'VICTORY'>('PLAYING');
-  const [showVictory, setShowVictory] = useState(false);
+  const task = tasks[taskIndex];
+  const progress = isComplete ? tasks.length : taskIndex;
+  const builtFraction = `${numerator}/${denominator}`;
+  const targetFraction = `${task.targetNum}/${task.targetDenom}`;
+  const canRemoveSlice = numerator > 0 && feedback !== 'success';
+  const canAddSlice = numerator < denominator && feedback !== 'success';
 
   useEffect(() => {
-    generateLevel();
-  }, []);
+    if (!isComplete) return;
+    COMPLETION_ATOM_IDS.forEach((atomId) => unlockAtom(atomId));
+    unlockModule('fraction-reactor-3');
+    addScore(140);
+  }, [addScore, isComplete, unlockAtom, unlockModule]);
 
-  // When denominator changes, ensure numerator is capped
-  useEffect(() => {
-    if (numerator > denominator) {
-      setNumerator(denominator);
+  const chooseDenominator = (value: number) => {
+    if (feedback === 'success') return;
+    setDenominator(value);
+    setNumerator((current) => Math.min(current, value));
+    setFeedback('idle');
+  };
+
+  const addSlice = () => {
+    if (!canAddSlice) return;
+    setNumerator((current) => Math.min(denominator, current + 1));
+    setFeedback('idle');
+  };
+
+  const removeSlice = () => {
+    if (!canRemoveSlice) return;
+    setNumerator((current) => Math.max(0, current - 1));
+    setFeedback('idle');
+  };
+
+  const checkAnswer = () => {
+    if (feedback === 'success') return;
+
+    if (numerator !== task.targetNum || denominator !== task.targetDenom) {
+      setFeedback('error');
+      return;
     }
-    checkVictory();
-  }, [denominator, numerator]);
 
-  const generateLevel = () => {
-    // Generate random fraction target
-    // Denominator between 2 and 8 for visibility
-    const newDenom = Math.floor(Math.random() * 7) + 2;
-    // Numerator between 1 and newDenom
-    const newNum = Math.floor(Math.random() * newDenom) + 1;
-    
-    setTargetDenom(newDenom);
-    setTargetNum(newNum);
-    setNumerator(0);
+    setFeedback('success');
+    window.setTimeout(() => {
+      if (taskIndex === tasks.length - 1) {
+        setIsComplete(true);
+        return;
+      }
+
+      setTaskIndex((current) => current + 1);
+      setDenominator(1);
+      setNumerator(0);
+      setFeedback('idle');
+    }, 860);
+  };
+
+  const restart = () => {
+    setTasks((currentTasks) => createFractionTasks(currentTasks));
+    setTaskIndex(0);
     setDenominator(1);
-    setGameState('PLAYING');
-    setShowVictory(false);
+    setNumerator(0);
+    setFeedback('idle');
+    setIsComplete(false);
   };
 
-  const checkVictory = () => {
-    if (gameState === 'VICTORY') return;
-    if (numerator === targetNum && denominator === targetDenom) {
-      setGameState('VICTORY');
-      setTimeout(() => {
-        unlockAtom('MAT.3.1.9.1');
-        unlockAtom('MAT.3.1.10.2');
-        unlockAtom('MAT.3.1.11.1');
-        unlockAtom('MAT.3.1.11.2');
-        unlockModule('fraction-reactor-3');
-        addScore(500);
-        setShowVictory(true);
-      }, 1000);
+  const botMessage: BotMessage = useMemo(() => {
+    if (isComplete) {
+      return { id: 500, text: 'Kesir tabakları tamam! Payı, paydayı, bütün-yarım-çeyrek modellerini doğru kurdun.', type: 'success' };
     }
-  };
-
-  const handleDenomChange = (val: number) => {
-    if (gameState === 'VICTORY') return;
-    setDenominator(val);
-  };
-
-  const handleSliceClick = () => {
-    if (gameState === 'VICTORY') return;
-    setNumerator((prev) => (prev < denominator ? prev + 1 : 0));
-  };
-
-  const getBotMessage = (): BotMessage => {
-    if (gameState === 'VICTORY') {
-      return { id: 1, text: 'Harika! Enerji çekirdeği tam istenen kapasitede senkronize edildi!', type: 'success' };
+    if (feedback === 'success') {
+      return { id: taskIndex * 10 + 2, text: `Harika! ${targetFraction} kesrini doğru kurdun.`, type: 'success' };
     }
-    if (numerator === 0 && denominator === 1) {
-      return { id: 2, text: `Komutanım, kalkanları açmak için ${targetNum}/${targetDenom} oranında enerji yüklemen gerekiyor! Önce alttaki PAYDA sürgüsünü ${targetDenom}'a/e çek, sonra dilimlere tıkla.`, type: 'error' };
+    if (feedback === 'error') {
+      return { id: taskIndex * 10 + 3, text: `${task.hint} Hedef ${targetFraction}, senin tabağın ${builtFraction}.`, type: 'error' };
     }
-    if (denominator === targetDenom && numerator !== targetNum) {
-      return { id: 3, text: `Payda (${denominator}) doğru! Şimdi ortadaki Reaktöre tıklayarak PAY (${targetNum}) miktarını doldur.`, type: 'info' };
-    }
-    return { id: 4, text: `Hedefimiz: ${targetNum}/${targetDenom}`, type: 'info' };
-  };
-
-  // SVG parameters
-  const size = 300;
-  const radius = 140;
-  const cx = size / 2;
-  const cy = size / 2;
-
-  const renderSlices = () => {
-    if (denominator === 1) {
-      return (
-        <circle 
-          cx={cx} 
-          cy={cy} 
-          r={radius} 
-          fill={numerator === 1 ? '#00E5FF' : '#12121A'} 
-          stroke={numerator === 1 ? '#B388FF' : '#333'} 
-          strokeWidth="4"
-          className="cursor-pointer transition-colors duration-300"
-          onClick={handleSliceClick}
-          style={{ filter: numerator === 1 ? 'drop-shadow(0 0 20px rgba(0,229,255,0.5))' : 'none' }}
-        />
-      );
-    }
-
-    const slices = [];
-    const angleStep = (2 * Math.PI) / denominator;
-
-    for (let i = 0; i < denominator; i++) {
-      const startAngle = i * angleStep - Math.PI / 2;
-      const endAngle = (i + 1) * angleStep - Math.PI / 2;
-
-      // Avoid floating point gaps by slightly extending the end angle if it is the last slice
-      const adjustedEndAngle = i === denominator - 1 ? endAngle + 0.01 : endAngle;
-
-      const x1 = cx + radius * Math.cos(startAngle);
-      const y1 = cy + radius * Math.sin(startAngle);
-      const x2 = cx + radius * Math.cos(adjustedEndAngle);
-      const y2 = cy + radius * Math.sin(adjustedEndAngle);
-
-      const largeArc = angleStep > Math.PI ? 1 : 0;
-      const d = `M ${cx} ${cy} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
-
-      const isFilled = i < numerator;
-
-      slices.push(
-        <motion.path
-          key={i}
-          d={d}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.2, delay: i * 0.02 }}
-          fill={isFilled ? '#00E5FF' : '#12121A'}
-          stroke="#0B0C10"
-          strokeWidth="4"
-          className="cursor-pointer origin-center transition-colors duration-300 hover:brightness-125"
-          onClick={handleSliceClick}
-          style={{ filter: isFilled ? 'drop-shadow(0 0 10px rgba(0,229,255,0.8))' : 'none' }}
-        />
-      );
-    }
-
-    return slices;
-  };
+    return { id: taskIndex * 10 + 1, text: `${task.prompt} Önce eş parça sayısını seç, sonra dolu dilimleri ayarla.`, type: 'info' };
+  }, [builtFraction, feedback, isComplete, targetFraction, task, taskIndex]);
 
   return (
-    <div className="h-full w-full bg-[#0B0C10] text-white flex flex-col overflow-y-auto overflow-x-hidden p-4 md:p-6 relative font-sans selection:bg-[#00E5FF] selection:text-black custom-scrollbar pb-32">
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[30%] left-[10%] w-[30%] h-[30%] rounded-full bg-[#00E5FF]/5 blur-[120px]"></div>
-        <div className="absolute top-[40%] right-[10%] w-[40%] h-[40%] rounded-full bg-[#B388FF]/5 blur-[120px]"></div>
-      </div>
+    <div className="relative h-full w-full overflow-x-hidden overflow-y-auto bg-[#070B12] pb-32 text-white">
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:3.25rem_3.25rem]" />
+      <div className="pointer-events-none fixed left-[6%] top-[8%] h-80 w-80 rounded-full bg-[#38E8FF]/10 blur-[115px]" />
+      <div className="pointer-events-none fixed bottom-[5%] right-[10%] h-80 w-80 rounded-full bg-[#FFB020]/10 blur-[120px]" />
 
-      <header className="max-w-7xl w-full mx-auto flex items-center justify-between relative z-20 mb-8 border-b border-gray-800 pb-6">
-        <div className="flex items-center gap-4">
-          <Link to="/" className="w-12 h-12 bg-[#12121A] rounded-2xl flex items-center justify-center border border-gray-800 hover:border-[#00E5FF] transition-colors group">
-            <ArrowLeft className="w-6 h-6 text-gray-500 group-hover:text-[#00E5FF] transition-colors" />
+      <header className="relative z-20 mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-7">
+        <div className="flex min-w-0 items-center gap-3">
+          <Link
+            to="/"
+            aria-label="Ana merkeze dön"
+            className="grid min-h-11 min-w-11 place-items-center rounded-2xl border border-white/10 bg-white/[0.05] text-white/72 transition hover:border-[#38E8FF]/40 hover:text-[#38E8FF]"
+          >
+            <ArrowLeft className="h-5 w-5" />
           </Link>
-          <div>
-            <h1 className="text-2xl font-black text-white tracking-tighter flex items-center gap-2">
-              <PieChart className="w-6 h-6 text-[#00E5FF]" /> KESİR <span className="text-[#00E5FF]">SENKRONİZATÖRÜ</span>
-            </h1>
-            <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mt-1">Pay & Payda Bütünlüğü</p>
+          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-white/10 bg-white/[0.06] text-[#38E8FF]">
+            <PieChart className="h-6 w-6" />
           </div>
+          <div className="min-w-0">
+            <h1 className="truncate text-xl font-black leading-tight text-[#38E8FF] md:text-2xl">Kesri Şekille Göster</h1>
+            <p className="mt-1 font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/48 md:text-xs">
+              İlkokul 3. Sınıf / Bütün, Pay ve Payda
+            </p>
+          </div>
+        </div>
+        <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-2 text-right">
+          <p className="font-mono text-[9px] font-black uppercase tracking-[0.18em] text-white/42">Görev</p>
+          <p className="text-xl font-black text-[#38E8FF]">{progress}/{tasks.length}</p>
         </div>
       </header>
 
-      <main className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 relative z-20 flex-1">
-        
-        {/* Core Reactor View */}
-        <div className="lg:col-span-7 bg-[#12121A] border border-gray-800 rounded-3xl p-8 shadow-2xl relative flex flex-col items-center justify-center min-h-[500px]">
-           <div className="absolute top-4 left-4 flex gap-2">
-              <div className="px-3 py-1 rounded bg-[#00E5FF]/10 text-[#00E5FF] text-xs font-bold border border-[#00E5FF]/20 uppercase tracking-widest">
-                  Hedef: {targetNum} / {targetDenom}
+      <main className="relative z-10 mx-auto grid min-h-[calc(100vh-112px)] w-full max-w-7xl grid-cols-1 gap-5 px-4 py-3 md:px-7 lg:grid-cols-[minmax(0,1fr)_390px]">
+        <section
+          data-testid="fraction-reactor-stage"
+          className="flex min-h-[560px] items-center justify-center rounded-[2rem] border border-[#38E8FF]/18 bg-[#071522]/88 p-5 shadow-[0_24px_90px_rgba(0,0,0,0.30)]"
+        >
+          <AnimatePresence mode="wait">
+            {isComplete ? (
+              <CompletionCard onRestart={restart} />
+            ) : (
+              <motion.div
+                key={task.id}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -18 }}
+                className="w-full max-w-4xl"
+              >
+                <div className="mb-5 text-center">
+                  <p className="font-mono text-[11px] font-black uppercase tracking-[0.24em] text-[#38E8FF]/74">Hedef kesir</p>
+                  <h2 className="mt-2 text-4xl font-black md:text-6xl">{targetFraction}</h2>
+                  <p className="mt-2 text-lg font-black text-white/70">{task.title}</p>
+                </div>
+
+                <div className="grid grid-cols-1 items-center gap-5 rounded-[2rem] border border-white/10 bg-black/24 p-5 md:grid-cols-[1fr_220px]">
+                  <button
+                    type="button"
+                    aria-label="Dilim ekle"
+                    onClick={addSlice}
+                    disabled={!canAddSlice}
+                    className="grid min-h-[340px] place-items-center rounded-[2rem] border border-[#38E8FF]/16 bg-[#38E8FF]/8 p-4 transition hover:border-[#38E8FF]/42 disabled:cursor-not-allowed disabled:opacity-80"
+                  >
+                    <FractionPlate numerator={numerator} denominator={denominator} feedback={feedback} />
+                  </button>
+
+                  <div className="rounded-[2rem] border border-white/10 bg-white/[0.05] p-5 text-center">
+                    <Sparkles className="mx-auto h-9 w-9 text-[#FFB020]" />
+                    <p className="mt-3 font-mono text-[10px] font-black uppercase tracking-[0.22em] text-white/44">Senin tabağın</p>
+                    <p className="mt-1 text-5xl font-black text-white">{builtFraction}</p>
+                    <p className="mt-3 text-sm font-black leading-snug text-white/58">{task.prompt}</p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </section>
+
+        <aside className="rounded-3xl border border-white/10 bg-[#0C1524]/88 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.26)] md:p-5">
+          {isComplete ? (
+            <div className="flex h-full min-h-[360px] flex-col items-center justify-center text-center">
+              <div className="grid h-24 w-24 place-items-center rounded-[2rem] border border-emerald-300/30 bg-emerald-300/14 shadow-[0_0_36px_rgba(52,211,153,0.22)]">
+                <CheckCircle2 className="h-12 w-12 text-emerald-300" />
               </div>
-           </div>
-
-           <div className="relative w-[300px] h-[300px] mb-8">
-               <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="overflow-visible filter drop-shadow-2xl">
-                 {/* Outer Ring */}
-                 <circle cx={cx} cy={cy} r={radius + 10} fill="none" stroke="#1F2833" strokeWidth="2" strokeDasharray="4 4" />
-                 <circle cx={cx} cy={cy} r={radius + 4} fill="none" stroke="#00E5FF" strokeWidth="1" opacity="0.3" />
-                 {renderSlices()}
-               </svg>
-               
-               {/* Center Indicator */}
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-black rounded-full border-4 border-[#0B0C10] flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.8)] z-10 pointer-events-none">
-                  <PieChart className="w-6 h-6 text-gray-500 opacity-50" />
-               </div>
-           </div>
-
-           <div className="text-center font-mono opacity-50 text-xs tracking-widest uppercase">
-              Birim Kesir Hacmi: {denominator > 1 ? `1/${denominator}` : '1 Tam'}
-           </div>
-        </div>
-
-        {/* Console / Controls */}
-        <div className="lg:col-span-5 bg-[#12121A] border border-gray-800 rounded-3xl p-8 flex flex-col justify-center">
-            
-            <div className="flex flex-col items-center mb-12">
-               <div className="text-xs font-bold text-gray-500 tracking-widest uppercase mb-4">Mevcut Durum</div>
-               <div className="text-8xl font-black font-mono text-white tracking-tighter relative flex flex-col items-center">
-                   <motion.span 
-                      key={`num-${numerator}`} 
-                      initial={{ y: -20, opacity: 0 }} 
-                      animate={{ y: 0, opacity: 1 }} 
-                      className={numerator === targetNum ? 'text-[#00FF88] text-shadow-glow' : 'text-[#00E5FF]'}
-                   >
-                     {numerator}
-                   </motion.span>
-                   <div className="w-24 h-2 bg-gray-700 my-2 rounded-full"></div>
-                   <motion.span 
-                      key={`den-${denominator}`} 
-                      initial={{ y: 20, opacity: 0 }} 
-                      animate={{ y: 0, opacity: 1 }}
-                      className={denominator === targetDenom ? 'text-[#00FF88] text-shadow-glow' : 'text-[#B388FF]'}
-                   >
-                     {denominator}
-                   </motion.span>
-               </div>
+              <p className="mt-6 font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#38E8FF]/74">Kesir kutlaması</p>
+              <h2 className="mt-2 text-2xl font-black">Tüm tabaklar tamam!</h2>
+              <p className="mt-2 max-w-xs text-sm font-bold leading-relaxed text-white/58">
+                Payda eş parça sayısı, pay ise dolu dilim sayısı olarak kuruldu.
+              </p>
+              <div className="mt-6 rounded-3xl border border-emerald-300/22 bg-emerald-300/10 px-6 py-4">
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/48">Görevler tamam</p>
+                <p className="mt-1 text-4xl font-black text-emerald-300">{tasks.length}/{tasks.length}</p>
+              </div>
             </div>
+          ) : (
+            <>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#38E8FF]/74">Dilim kontrolü</p>
+              <h2 className="mt-2 text-2xl font-black">Kesri kur ve kontrol et.</h2>
+              <p className="mt-2 text-sm font-bold leading-relaxed text-white/52">
+                Payda eş parçaları, pay dolu dilimleri anlatır.
+              </p>
 
-            <div className="space-y-6">
-                <div>
-                  <div className="flex justify-between items-center mb-4">
-                     <span className="text-xs font-bold text-[#B388FF] tracking-widest uppercase flex items-center gap-2">
-                        <Zap className="w-4 h-4" /> PAYDA (Bölücü)
-                     </span>
-                     <span className="text-xs font-mono text-gray-500">{denominator} / {MAX_DENOM}</span>
-                  </div>
-                  
-                  <input 
-                    type="range" 
-                    min={MIN_DENOM} 
-                    max={MAX_DENOM} 
-                    value={denominator}
-                    onChange={(e) => handleDenomChange(Number(e.target.value))}
-                    disabled={gameState === 'VICTORY'}
-                    className="w-full h-3 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-[#B388FF] disabled:opacity-50 hover:bg-gray-700 transition-colors"
-                  />
-                  <div className="mt-3 flex justify-between text-[10px] text-gray-600 font-mono">
-                     <span>Bütün (1)</span>
-                     <span>Çeyrek (1/4)</span>
-                     <span>1/12</span>
-                  </div>
+              <div className="mt-5">
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/44">Payda: eş parça sayısı</p>
+                <div className="mt-3 grid grid-cols-4 gap-2">
+                  {DENOMINATOR_OPTIONS.map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => chooseDenominator(value)}
+                      disabled={feedback === 'success'}
+                      className={`min-h-14 rounded-2xl border text-xl font-black transition ${
+                        denominator === value
+                          ? 'border-[#38E8FF]/70 bg-[#38E8FF]/18 text-white shadow-[0_0_24px_rgba(56,232,255,0.22)]'
+                          : 'border-white/10 bg-white/[0.06] text-white/80 hover:bg-white/[0.10]'
+                      } disabled:cursor-not-allowed disabled:opacity-60`}
+                    >
+                      {value}
+                    </button>
+                  ))}
                 </div>
+              </div>
 
-                <div className="p-4 bg-[#B388FF]/5 border border-[#B388FF]/20 rounded-xl mt-6">
-                   <p className="text-xs text-gray-400 leading-relaxed font-medium">
-                      <strong className="text-[#00E5FF]">Bilgi:</strong> Paydayı sürükleyerek çekirdeği kaç parçaya ayıracağını seç. Ardından parçalara tıklayarak <strong>PAY</strong> (istenen enerji) miktarını doldur.
-                   </p>
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={removeSlice}
+                  disabled={!canRemoveSlice}
+                  className="flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.06] text-sm font-black text-white/82 transition hover:bg-white/[0.10] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <Minus className="h-4 w-4" />
+                  Dilim azalt
+                </button>
+                <button
+                  type="button"
+                  onClick={addSlice}
+                  disabled={!canAddSlice}
+                  className="flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-[#38E8FF]/20 bg-[#38E8FF]/12 text-sm font-black text-white transition hover:bg-[#38E8FF]/18 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <Plus className="h-4 w-4" />
+                  Dilim ekle
+                </button>
+              </div>
+
+              <div
+                className={`mt-5 rounded-3xl border p-4 ${
+                  feedback === 'success'
+                    ? 'border-emerald-300/34 bg-emerald-300/10'
+                    : feedback === 'error'
+                      ? 'border-rose-300/34 bg-rose-400/10'
+                      : 'border-white/10 bg-black/24'
+                }`}
+              >
+                <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/44">Hedef / Senin</p>
+                <div className="mt-2 flex items-center justify-between gap-3">
+                  <span className="text-3xl font-black text-[#38E8FF]">{targetFraction}</span>
+                  <span className="text-2xl font-black text-white/32">=</span>
+                  <span className="text-3xl font-black text-white">{builtFraction}</span>
                 </div>
-            </div>
-            
-        </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={checkAnswer}
+                className="mt-5 min-h-14 w-full rounded-2xl bg-gradient-to-r from-[#38E8FF] to-[#B388FF] px-5 py-3 text-base font-black text-[#07101d] shadow-[0_0_28px_rgba(56,232,255,0.24)] transition hover:scale-[1.01]"
+              >
+                Kontrol Et
+              </button>
+            </>
+          )}
+        </aside>
       </main>
 
-      <AstroBot message={getBotMessage()} />
-
-      <AnimatePresence>
-        {showVictory && (
-           <motion.div 
-           initial={{ opacity: 0 }}
-           animate={{ opacity: 1 }}
-           className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center p-4"
-         >
-           <motion.div 
-             initial={{ scale: 0.9, y: 20 }}
-             animate={{ scale: 1, y: 0 }}
-             className="bg-[#12121A] border border-[#00E5FF]/30 p-10 rounded-[3rem] max-w-2xl w-full text-center relative overflow-hidden shadow-[0_0_100px_rgba(0,229,255,0.2)]"
-           >
-             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-[#00E5FF]/20 rounded-full blur-[100px] pointer-events-none"></div>
-             
-             <div className="w-24 h-24 bg-[#00E5FF]/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-[#00E5FF]/20">
-               <PieChart className="w-12 h-12 text-[#00E5FF]" />
-             </div>
-             
-             <h2 className="text-4xl lg:text-5xl font-black text-white mb-4 tracking-tighter">
-               SENKRONİZASYON <span className="text-[#00E5FF]">BAŞARILI!</span>
-             </h2>
-             <p className="text-gray-400 text-lg mb-10 max-w-md mx-auto">
-                Bütünü eş parçalara ayırdın ve doğru miktarda pay yüklemesi yaparak kalkanları aktif hale getirdin! 
-             </p>
-
-             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10 text-left">
-                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="bg-[#1F2833] border border-[#00FF88]/30 p-6 rounded-3xl relative overflow-hidden group">
-                   <div className="flex items-center gap-3 mb-2">
-                      <ShieldCheck className="w-5 h-5 text-[#00FF88]" />
-                      <span className="font-mono text-[#00FF88] font-bold text-xs">MAT.3.1.11.1</span>
-                   </div>
-                   <p className="text-white text-sm leading-relaxed">Paydanın bütünü kaça böldüğü kavrandı.</p>
-                </motion.div>
-
-                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }} className="bg-[#1F2833] border border-[#00E5FF]/30 p-6 rounded-3xl relative overflow-hidden group">
-                   <div className="flex items-center gap-3 mb-2">
-                      <ShieldCheck className="w-5 h-5 text-[#00E5FF]" />
-                      <span className="font-mono text-[#00E5FF] font-bold text-xs">MAT.3.1.11.2</span>
-                   </div>
-                   <p className="text-white text-sm leading-relaxed">Payın alınan dilim olduğu kavrandı.</p>
-                </motion.div>
-             </div>
-
-             <div className="flex gap-4 max-w-sm mx-auto">
-               <button 
-                 onClick={generateLevel}
-                 className="flex-1 px-6 py-4 bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-2xl border border-gray-700 transition-colors"
-               >
-                 YENİ GÖREV
-               </button>
-               <Link 
-                 to="/"
-                 className="flex-[2] px-6 py-4 bg-[#00E5FF] hover:bg-white text-black font-black uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 transition-colors"
-               >
-                 KÖPRÜYE DÖN <ArrowRight className="w-5 h-5" />
-               </Link>
-             </div>
-
-           </motion.div>
-         </motion.div>
-        )}
-      </AnimatePresence>
+      <AstroBot message={botMessage} />
     </div>
+  );
+}
+
+function FractionPlate({
+  numerator,
+  denominator,
+  feedback,
+}: {
+  numerator: number;
+  denominator: number;
+  feedback: 'idle' | 'success' | 'error';
+}) {
+  const angle = 360 / denominator;
+  const filledAngle = angle * numerator;
+  const fillColor = feedback === 'success' ? SUCCESS : feedback === 'error' ? ERROR : ACCENT;
+  const background = `conic-gradient(${fillColor} 0deg ${filledAngle}deg, rgba(255,255,255,0.10) ${filledAngle}deg 360deg)`;
+
+  return (
+    <motion.div
+      animate={feedback === 'error' ? { rotate: [-2, 2, -1, 1, 0] } : { rotate: 0 }}
+      className="relative grid h-72 w-72 place-items-center rounded-full border-[12px] border-[#16455A] shadow-[inset_0_0_38px_rgba(0,0,0,0.32),0_24px_60px_rgba(0,0,0,0.32)] md:h-80 md:w-80"
+      style={{ background }}
+    >
+      <div className="absolute inset-[11%] rounded-full border border-white/16 bg-[radial-gradient(circle_at_28%_24%,rgba(255,255,255,0.18),transparent_16%),radial-gradient(circle_at_64%_62%,rgba(255,255,255,0.12),transparent_18%)]" />
+      {Array.from({ length: denominator }, (_, index) => (
+        <div
+          key={index}
+          className="absolute left-1/2 top-1/2 h-[47%] w-1 origin-bottom rounded-full bg-[#06111F]/80"
+          style={{ transform: `translate(-50%, -100%) rotate(${index * angle}deg)` }}
+        />
+      ))}
+      <div className="relative grid h-28 w-28 place-items-center rounded-[2rem] border border-white/12 bg-black/38 backdrop-blur-sm">
+        <span className="text-4xl font-black text-white">{numerator}/{denominator}</span>
+      </div>
+    </motion.div>
+  );
+}
+
+function CompletionCard({ onRestart }: { onRestart: () => void }) {
+  return (
+    <motion.section
+      key="complete"
+      initial={{ opacity: 0, scale: 0.94, y: 20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      className="relative mx-auto flex w-full max-w-xl flex-col items-center justify-center rounded-3xl border border-emerald-300/24 bg-[#081622]/94 p-5 text-center shadow-[0_24px_90px_rgba(0,0,0,0.38)] md:p-7"
+    >
+      <div className="grid h-20 w-20 place-items-center rounded-[28px] bg-emerald-300/16 shadow-[0_0_38px_rgba(52,211,153,0.34)]">
+        <CheckCircle2 className="h-11 w-11 text-emerald-300" />
+      </div>
+      <h2 className="mt-4 text-3xl font-black text-white">Kesir Şekilleri Tamam!</h2>
+      <p className="mt-2 max-w-md text-sm font-bold leading-relaxed text-white/62 md:text-base">
+        Bütün, yarım, çeyrek, birim kesir, pay ve payda görevlerini doğru kurdun.
+      </p>
+
+      <div className="mt-5 w-full rounded-3xl border border-white/10 bg-black/24 p-4 text-left">
+        <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#38E8FF]">Kazanılan atomlar</p>
+        <div className="mt-3 max-h-64 space-y-2 overflow-y-auto pr-1">
+          {[
+            { id: 'MAT.3.1.9.1', label: 'Bütün modelini kesir sembolüyle eşleştirir.' },
+            { id: 'MAT.3.1.9.2', label: 'Yarım modelini 1/2 ile eşleştirir.' },
+            { id: 'MAT.3.1.9.3', label: 'Çeyrek modelini 1/4 ile eşleştirir.' },
+            { id: 'MAT.3.1.10.1', label: 'Birim kesri eş parçalardan tanımlar.' },
+            { id: 'MAT.3.1.11.1', label: 'Paydanın bütünü kaça böldüğünü ayırt eder.' },
+            { id: 'MAT.3.1.11.2', label: 'Payın alınan dilim sayısı olduğunu gösterir.' },
+          ].map((atom) => (
+            <div key={atom.id} className="flex items-center gap-3 rounded-2xl bg-white/[0.05] p-3">
+              <Sparkles className="h-5 w-5 shrink-0 fill-yellow-300 text-yellow-300" />
+              <div>
+                <p className="text-sm font-black text-white">{atom.id}</p>
+                <p className="text-xs font-bold text-white/48">{atom.label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-5 flex w-full flex-col gap-3 sm:flex-row">
+        <motion.button
+          type="button"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.96 }}
+          onClick={onRestart}
+          className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3 text-sm font-black text-white/80"
+        >
+          <RotateCcw className="h-4 w-4" />
+          Tekrar Oyna
+        </motion.button>
+        <Link
+          to="/"
+          className="flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#38E8FF] to-[#B388FF] px-4 py-3 text-sm font-black text-[#07101d]"
+        >
+          <Home className="h-4 w-4" />
+          Ana Merkez
+        </Link>
+      </div>
+    </motion.section>
   );
 }

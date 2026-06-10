@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ClipboardCopy, Download, ExternalLink, Filter, RefreshCcw, Search } from 'lucide-react';
 import { modules, type GradeRange, type ModuleMeta } from '../registry/moduleRegistry';
+import { parseBandParam, writeWorkflowScope } from './workflowScope';
 import { ReviewModuleCard } from './review-workbench/ReviewModuleCard';
 import {
   STORAGE_KEY,
@@ -17,7 +18,10 @@ import {
 } from './review-workbench/reviewWorkbenchModel';
 
 export default function ReviewWorkbench() {
-  const [selectedBand, setSelectedBand] = useState<GradeRange>('Lise');
+  const [selectedBand, setSelectedBand] = useState<GradeRange>(() => {
+    if (typeof window === 'undefined') return 'İlkokul';
+    return parseBandParam(new URLSearchParams(window.location.search).get('band')) ?? 'İlkokul';
+  });
   const [query, setQuery] = useState('');
   const [entries, setEntries] = useState<Record<string, ReviewEntry>>({});
   const [isLoaded, setIsLoaded] = useState(false);
@@ -43,6 +47,10 @@ export default function ReviewWorkbench() {
     if (!isLoaded) return;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
   }, [entries, isLoaded]);
+
+  useEffect(() => {
+    writeWorkflowScope(selectedBand);
+  }, [selectedBand]);
 
   const filteredModules = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase('tr-TR');

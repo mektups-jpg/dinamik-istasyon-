@@ -65,8 +65,8 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.1.1.8.2` (Nesnelerin ağırlıklarına göre ağır/hafif kıyası)
   * `MAT.1.1.9.x` (Madeni ve kâğıt paralar ile alım gücü)
 
-### 6. Veri Akış Ekranı (İstatistik & Çetele)
-* **Konsept:** Karanlık kontrol odasında **Astro-Bot'un getirdiği** renkli veri paketlerini (data packets) sınıflandırmak. Ekrana düşen verileri çetele tablosuna dokunarak işlemek.
+### 6. Renkli Paket Tablosu (İstatistik & Çetele) — Vitrin Hazır
+* **Konsept:** Karanlık kontrol odasında **Astro-Bot'un getirdiği** renkli paketleri aynı renk kutusuna koymak, ardından çizgileri sayıp en çok-en az kararını vermek.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.1.4.1.x` (Verileri tabloya/çeteleye dökmek ve en az/en çok ilişkisini yorumlamak)
 
@@ -89,20 +89,20 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.2.3.1.x` (Cisim / Şekil sınıflandırması)
   * `MAT.2.3.4.x` (Geometrik uzamsal sabitliğin korunumu)
 
-### 3. Kargo Gruplama Bandı (Çarpma, Bölme & Ritmik Sayma)
+### 3. Kargo Gruplama Bandı (Çarpma, Bölme & Ritmik Sayma) — Çarpma/Bölme Üretildi / Görüş Gerekli
 * **Konsept:** Fabrikadan çıkan yükleri dronlara yüklemek için yığılan kargoları ritmik sayarak üst üste eklemek (Çarpma) veya eşit şekilde filolara paylaştırmak (Bölme).
 * **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.2.1.4.x` (İleri ve geri ileri seviye ritmik saymalar)
-  * `MAT.2.2.4.x` (Çarpmanın tekrarlı toplama, bölmenin paylaştırma temeli)
-  * `MAT.2.2.5.x` (Çarpma / Bölme muhakemesi)
+  * `MAT.2.1.4.x` (İleri ve geri ritmik saymalar) — `Ritim Roketi 2-5` vitrin hazır akışında kapsanır.
+  * `MAT.2.2.4.x` (Çarpmanın tekrarlı toplama, bölmenin paylaştırma temeli) — `Kargo Gruplama Bandı` ile üretildi.
+  * `MAT.2.2.5.x` (Çarpma / Bölme muhakemesi) — `Kargo Gruplama Bandı` ile üretildi.
 
-### 4. Kuantum Denge Terazisi (İşlemler Arası İlişkiler & Eşitlik)
+### 4. Kuantum Denge Terazisi (İşlemler Arası İlişkiler & Eşitlik) — Üretildi / Görüş Gerekli
 * **Konsept:** 1. sınıftaki terazinin gelişmiş versiyonu. İki kefeye de dört işlemi içeren matematiksel denklem (örn: sol kefe 15+3, sağ kefe 20-?) yansıtılır.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.2.2.6.x` (Eşitlik sembolü ve eşitliği koruma refleksleri)
   * `MAT.2.2.3.x` (Toplama çıkarmanın denge ve sağlamadaki ilişkisi)
 
-### 5. Hologram Tasarım Üssü (Geometri, Simetri & Örüntü)
+### 5. Hologram Tasarım Üssü (Geometri, Simetri & Örüntü) — Üretildi / Görüş Gerekli
 * **Konsept:** Projeksiyon ekranına yansıyan yarım bir taşıtın simetrik eksenini bulmak, eksik geometrik parçalardan tam bir araç (Sentez) yapmak ve bu araçların üzerindeki örüntüyü dizmek.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.2.3.2.x` / `MAT.2.3.3.x` (Cisim ve şekil sentezi/inşası)
@@ -110,21 +110,21 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.2.1.5.x` (Gelişmiş sayı ve şekil örüntü kuralları)
   * `MAT.2.3.6.x` (Mesafe ve yön algısı rotasyonları)
 
-### 6. Kalibrasyon Kulesi (Ölçüm Merkezleri & Zaman)
+### 6. Kalibrasyon Kulesi (Ölçüm Merkezleri & Zaman) — Üretildi / Görüş Gerekli
 * **Konsept:** Ana tesisin sayaçları! Dijital saat ekranlarından çeyrek veya buçuk saatleri onaylamak, sıvı reaktörünü doldurmak, uzunlukları / kütleleri cihazlarla standart birimlere tahvil etmek.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.2.1.9.x` (Tam, Yarım, Çeyrek saatler dizgisi)
   * `MAT.2.3.5.x` (Sıvı miktarı doldurma ve tahmini)
   * `MAT.2.1.10.x` / `MAT.2.1.11.x` (Metre/Kg, standart ölçme ihtiyacı ve tahmini)
 
-### 7. Veri Çekirdeği (İstatistik ve Diziler)
+### 7. Veri Çekirdeği (İstatistik ve Diziler) — Üretildi / Görüş Gerekli
 * **Konsept:** Tesisin veri raporunu okuyan bir Dashboard. Kategorik değişkenleri ağaç şeması ve sembol grafiklerine sürükleyip bırakmak. Büyük veri yığınlarında çokluk tahmini ve sayıları büyükten küçüğe sıralamak.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.2.4.1.x` (Ağaç şeması, Nesne/Şekil grafiği, Veri sıklığı okuma)
   * `MAT.2.1.6.x` (Büyük verilerde (100'e kadar) çokluk tahmini)
   * `MAT.2.1.3.x` (Sıralama ve sayı dizinlerini okuma)
 
-### 8. Otomatik Kantin / Kasa Terminali (Fiziksel Paralar)
+### 8. Otomatik Kantin / Kasa Terminali (Fiziksel Paralar) — Üretildi / Görüş Gerekli
 * **Konsept:** Tamamen fiziksel donanımlı bir kasa/alışveriş simülasyonu. Ekranda madeni ve kâğıt paralar (sürükle-bırak fiziği ile) üst üste yığılır. Çocuğun elindeki bozuklukları sayarak birleştirip tam değeri bulması ve makineden yakıt/kargo satın alması istenir.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.2.1.8.x` (Paralar ile finansal değer eşleştirmeleri ve fiziksel para sayımı)
@@ -147,7 +147,7 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.3.1.10.x` (Birim kesirlerin boyut karşılaştırması)
   * `MAT.3.1.11.x` (Pay ve Payda ilişkisi)
 
-### 3. İşlem Laboratuvarı (Kalanlı Bölme ve Eldeli İşlemler)
+### 3. Dört İşlem Makinesi (Kalanlı Bölme ve Eldeli İşlemler) — Showcase Ready / Vitrin Hazır
 * **Konsept:** Alt alta yapılan işlemlerin canlandırmalı arayüzü. 4 işlemi yaparken "Elde var 1" yazmak yerine, 10 adet birliğin paketlenip "Onluklar" sütununa fiziksel olarak uçtuğu animasyonlar. Bölmede ise sepete eşit girmeyen parçaların "Kalan Kutusu"na (Remainder) düştüğü bir simülasyon.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.3.2.2.x` (Eldeli toplama, bozmalı çıkarma)
@@ -155,14 +155,17 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.3.2.1.x` / `MAT.3.2.3.x` (Yuvarlama ve zihinden işlemler)
   * `MAT.3.2.5.x` - `MAT.3.2.8.x` (Çok adımlı problemler, eşitliğin sağ/sol denge testleri)
 
-### 4. Dinamik Birim Dönüştürücü (Zaman, Uzunluk, Ağırlık, Para)
-* **Konsept:** İki taraflı sürgülü bir akıllı panel. Öğrenci santimetre ibresini "99" dan "100"e ittiği an ibre *tık* diye kilitlenir ve karşı tarafta büyük bir "1 Metre" yazar. Aynı şekilde kuruşlar 100'e ulaşınca 1 TL ikonuna dönüşür. Zaman da (60 dk -> 1 saat) bir analog saat kadranı etrafında senkronize döner.
-* **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.3.1.12.x` / `MAT.3.1.13.x` / `MAT.3.1.14.x` (Analog/Dijital saatler ve dakika çevrimleri)
-  * `MAT.3.1.15.x` / `MAT.3.3.5.x` (Metre/Santimetre, Kilogram/Gram ve Litre çevrimleri)
-  * `MAT.3.1.16.x` (Madeni-Kuruş dönüşümleri ve bütçe hesaplama)
+### 4. Ölçme Ailesi Küçük Atomları — Kısmi Vitrin / Görüş Gerekli
+* **Konsept:** Eski `Birim Dönüşüm İstasyonu` 12 görevli karma akıştan çıkarıldı. Çocuk ilk 3 saniyede hedefi anlasın diye zaman, süre, ölçü, para ve sıvı ayrı küçük atomlara bölündü. Eski birleşik deney arşivde tutulur.
+* **Aktif Atomlar:**
+  * `Saati Okuyorum` — `MAT.3.1.12.x` (Analog saat okuma ve dijital saat kodu) — Vitrin Hazır
+  * `Zaman Dönüşüm Makinesi` — `MAT.3.1.13.x` (Saat-dakika ve dakika-saniye dönüşümleri) — Vitrin Hazır
+  * `Süre Tahmin Dedektifi` — `MAT.3.1.14.1` (Günlük olayların makul süresini tahmin etme) — Vitrin Hazır
+  * `Ölçü Birimi Makinesi` — `MAT.3.1.15.x` (Metre-santimetre ve kilogram-gram)
+  * `Para Değeri Atölyesi` — `MAT.3.1.16.x` (Kuruş-TL ve para toplamı)
+  * `Litre Ölçme Atölyesi` — `MAT.3.3.5.x` (Litre, mililitre ve 1 litreye tamamlama)
 
-### 5. Dijital Geometri Tahtası (Çevre ve Çokgenler)
+### 5. Dijital Geometri Tahtası (Çevre ve Çokgenler) — Üretildi / Görüş Gerekli
 * **Konsept:** Dijital bir çivili tahta (Geoboard). Öğrenci lastikleri çekerek şekiller (beşgen, altıgen) oluşturur. Sistem, köşeleri (nokta) ve ayrıtları (çizgi) otomatik sayar. Şeklin etrafına tıklanınca çevresindeki birimler renklendirilerek toplanır (Çevre hesabı). Sanal ayna ile simetrik doğrular çizilir.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.3.3.1.x` / `MAT.3.3.2.x` (3D özellik tabloları ve 2D çokgen isimlendirmeleri)
@@ -170,7 +173,7 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.3.3.3.x` (Sanal cetvel kullanımı)
   * `MAT.3.3.6.x` / `MAT.3.3.7.x` / `MAT.3.3.8.x` (Simetri aynaları ve koordinat/ızgara yönergeleri)
 
-### 6. Veri Görselleştirme Terminali (Sütun Grafikleri)
+### 6. Veri Görselleştirme Terminali (Sütun Grafikleri) — Vitrin Hazır
 * **Konsept:** Ham verilerin girildiği modern bir Dashboard. Öğrenciler bir kategoriye değer girdikçe (Örn: Elma: 15), ekrandaki sütun grafiği / bar chart yukarı doğru yumuşak bir animasyonla uzar.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.3.4.1.x` (Verileri sayma, nicel tablolama ve sütun grafiği oluşturma/okuma)
@@ -179,28 +182,28 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
 
 ## 🏫 İLKOKUL 4. SINIF MODÜLLERİ
 
-### 1. 6 Haneli Veri Kapsülü (100.000'ler ve Örüntü)
+### 1. Altı Basamaklı Sayı Dedektifi (100.000'ler ve Örüntü) — Vitrin Hazır
 * **Konsept:** Dijital ekranlarda devasa 6 basamaklı sayıların parçalanıp döndüğü gelişmiş bir analiz ekranı. Abaküsün modern versiyonu olan dijital sürgülerle 6 haneli sayılar gruplanır, Yüz Binler hanesine kadar çözümlenir (Genişleyen UI) ve ekrandaki veriler ileri ritmik sayılarla örüntüye sokulup büyükten küçüğe sıralanır.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.4.1.1.x` / `MAT.4.1.2.x` (100.000'lere kadar devasa sayı temsili ve basamak gruplama)
   * `MAT.4.1.3.x` / `MAT.4.1.4.x` (6 haneli devasa sıralama ve ileri ritmik zincirler)
   * `MAT.4.1.5.x` (Karmaşık örüntüleri formülleştiren kural cümleleri)
 
-### 2. İleri İşlem İşletim Sistemi (Algoritmalar ve Zeka)
-* **Konsept:** Çift pencereli bir terminal (İşletim Sistemi). Öğrenci, dört ve çok basamaklı sayıların alt alta çıkarma/çarpma işlem algoritmalarını 'sütun kaydırmalarına' dikkat ederek simüle eder. Ayrıca 'Sıfır Silici/Sıfır Ekleyici' aracı ile 10, 100 ve 1000 ile kısa yoldan sihirli çarpma/bölme hareketleri yapar.
+### 2. İşlem Kısayolları Atölyesi (Zihinden İşlem ve Kısa Yollar) — Vitrin Hazır
+* **Konsept:** Çift pencereli bir işlem atölyesi. Öğrenci, dört ve çok basamaklı sayıların alt alta işlem adımlarını büyük kartlarla çözer. Ayrıca 10, 100 ve 1000 ile kısa yoldan çarpma/bölme için sıfır ekleme-silme hareketlerini görerek kullanır.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.4.2.1.x` / `MAT.4.2.2.x` / `MAT.4.2.4.x` (Zihinden kısa yollar, sonu sıfırlı çarpmalar, elde/bozma mekanikleri)
   * `MAT.4.2.3.x` / `MAT.4.2.5.x` (Önceden yuvarlayarak tahmin ve uzun sütunlu işlem algoritmaları)
   * `MAT.4.2.6.x` - `MAT.4.2.9.x` (Çok kuralı/ardışık problemleri parçalama ve denklem eşitliğini koruma)
 
-### 3. Dinamik Kesir Terazisi (Denk Kesirler ve Bileşiklik)
+### 3. Kesir Denge Terazisi (Denk Kesirler ve Bileşiklik) — Vitrin Hazır
 * **Konsept:** Şeffaf su tanklarıyla desteklenen neon bir laboratuvar terazisi. Basit kesir (Pay < Payda) ve Bileşik kesir sınırları test edilebilir. "Sadeleştirici/Genişletici Lazer" aracılığıyla kesrin içi bölünüp küçültüldüğünde (veya katlandığında) tanktaki hacmin değişmediği (Denklik korunduğu) ve Payda büyüdükçe dilimin ufalması gibi gerçeklikler su mekanikleriyle doğrulanır.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.4.1.6.x` / `MAT.4.1.7.x` (Basit, Bileşik, Tam Sayılı Kesirler ve Denk Kesir sadeleştirme/genişletme)
   * `MAT.4.1.8.x` / `MAT.4.1.9.x` (Birim kesirlerde kural tersliği ve eş paydalı alan kıyası)
   * `MAT.4.1.10.x` / `MAT.4.1.11.x` / `MAT.4.1.12.x` (Bütünden parçaya, kesir işlemi algoritmaları ve problem kurgusu)
 
-### 4. Açınım ve Çevre Analiz Masası (Geometri ve Alan Tahmini)
+### 4. Açınım ve Çevre Keşfi (Geometri ve Alan Tahmini) — Vitrin Hazır
 * **Konsept:** Üç boyutlu küplerin ve prizmaların bir kâğıt kutusu gibi ekranda *şlak* diye 2D zemine serildiği bir 3D tarama masası. Öğrenci açılan şekilde kenar eşliklerini test eder, sanal bir metre sararak şeklin dış Çevresini bulur, içini "üçgen fayanslar" sürükleyerek Alan tahmini yapar.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.4.3.1.x` (3D'den 2D'ye çokgen açınımları ve ambalaj modelleri)
@@ -208,19 +211,49 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.4.3.4.x` (Frekans alan şablonlarıyla -standart olmayan birimle- tahmini iç bölge alanı doldurma)
   * `MAT.4.3.8.x` / `MAT.4.3.9.x` / `MAT.4.3.10.x` (Çapraz/Zor simetri aynaları, kodlama bloklarıyla şekil inşası)
 
-### 5. Rotasyonlu Açı İletkisi (Dönme Dolap)
+### 5. Açı Ölçme Çarkı (Dönme Dolap) — Vitrin Hazır
 * **Konsept:** Açının iki çizgi değil de "menteşe/merkez ekseninde dönme eylemi" olduğunu kanıtlayan, merkeze sabitli sanal bir kapı/tekerlek sistemi. Dönme eylemi başladıkça sistem dijital olarak açıları saptar. Öğrenci sanal bir iletkiyi (açıölçer) sistemin üstüne oturtur. 90, dar veya geniş klasörlerine dönebilen şekilleri sürükler.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.4.3.5.x` (Açıyı rotasyon -dönme- olarak simüle etme mantığı)
   * `MAT.4.3.6.x` (Açı ölçme aleti -iletki- sistem entegrasyonu)
   * `MAT.4.3.7.x` (Dik, Dar, Geniş açıların 90 birim sınırı üzerinden eylemsel olarak klasörlenmesi)
 
-### 6. Ağ Tasarım ve Optimizasyon Terminali (Dönüşüm & İleri Veri)
-* **Konsept:** Çok amaçlı dev ekran kontrol paneli. Bir yanda ton (t) ibreleri milimetrelere (mm) çevrilen endüstriyel dönüştürücü vites mekanizması var. Diğer yanda çoklu (örneğin A ve B sınıfından) verilerin aynı grafik üzerinde çiftli-sütunlarla (ikili bar chart) okunuşu işleniyor. Sistem sonunda da "Bu bardağın devrilmesi İMKANSIZ" diyerek Olasılık mekanikleri etiketletiyor.
+### 6. Ölçü Dönüşüm Makinesi — Vitrin Hazır
+* **Konsept:** Tek amaçlı bir dönüşüm makinesi. Öğrenci girişteki mm, cm, ton veya kilogram değerini görür; büyük cevap kartlarından doğru dönüşümü seçer.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
-  * `MAT.4.1.13.x` (Ton->Kg, mm->cm, m dönüşümleri)
-  * `MAT.4.4.1.x` (İmkansız, Kesin, Olabilir olasılık kurgu etiketlemeleri)
-  * `MAT.4.4.2.x` (İkili veya daha fazla kategori barındıran kompleks sütun grafiği ile çapraz mukayese)
+  * `MAT.4.1.13.x` (Milimetre-santimetre, santimetre-metre, ton-kilogram, kilogram-gram dönüşümleri)
+
+### 7. Olasılık Etiketleri — Vitrin Hazır
+* **Konsept:** Renkli kapsüllere ve günlük olaylara bakıp olayı `İmkânsız`, `Kesin` veya `Olabilir` etiketiyle ayıran kısa karar laboratuvarı.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.4.4.1.x` (İmkânsız, kesin ve olabilir durumları ayırt etme)
+
+### 8. İki Sınıf Grafiği — Vitrin Hazır
+* **Konsept:** İki sınıfın yan yana sütunlarını okuyup daha çok, daha az ve fark kararlarını veren sade grafik karşılaştırma oyunu.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.4.4.2.x` (İki veri grubunu sütun grafiğinde karşılaştırma)
+
+### 9. Bölme Tahmini — Vitrin Hazır
+* **Konsept:** Tahmin rotasında bölme işlemini tam yapmadan önce sayıyı yakın ve kolay bölünen bir sayıya yuvarlayıp yaklaşık sonucu seçer.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.4.2.3.2` (Bölme sonucunu işlem yapmadan önce tahmin etme)
+
+### 10. Bölme Dedektifi — Vitrin Hazır
+* **Konsept:** Bölme dedektif masasında kalan kutusunu okuyarak kalansız bölme ve kalanlı bölme kararını verir.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.4.2.5.2` / `MAT.4.2.5.3` (Kalanlı ve kalansız bölme algoritması)
+
+### 11. Uzun Çarpma Fabrikası — Vitrin Hazır
+* **Konsept:** Birler ve onlar sonuçlarının üretim bandında oluştuğu, öğrencinin yer değerini koruyarak uzun çarpma sonucunu tamamladığı oyun.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.4.2.5.1` (Çok basamaklı iki sayıyla uzun çarpma algoritması)
+
+### 12. Problem Kur ve Çöz Atölyesi — Vitrin Hazır
+* **Konsept:** Çocuk işlem sırası, hikaye problemi çözme ve verilen işleme uygun problem kurma akışını kısa, dokunulabilir kartlarla tamamlar.
+* **Sağladığı Atom Grupları (%100 Kapsam):**
+  * `MAT.4.2.7.1` / `MAT.4.2.8.1` (Karma problem çözme ve problem tasarımı)
+
+> Eski `Ölçü, Olasılık ve Veri İstasyonu` üç konuyu tek ekranda taşıdığı için arşive alındı; kazanımlar yukarıdaki üç ayrı atomda ilerler.
 
 ---
 

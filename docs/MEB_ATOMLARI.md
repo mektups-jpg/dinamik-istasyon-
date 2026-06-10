@@ -100,14 +100,14 @@ Bu doküman, MEB müfredatındaki kazanımların en küçük, test edilebilir, t
     *   MAT.2.1.3.1: İki basamaklı sayıları büyükten küçüğe sıralar.
     *   MAT.2.1.3.2: İki basamaklı sayıları küçükten büyüğe sıralar.
 *   **MAT.2.1.4 (Ritmik Sayma İleri/Geri)**
-    *   MAT.2.1.4.1: İleriye doğru 2'şer ritmik sayar.
-    *   MAT.2.1.4.2: İleriye doğru 3'er ritmik sayar.
-    *   MAT.2.1.4.3: İleriye doğru 4'er ritmik sayar.
-    *   MAT.2.1.4.4: İleriye doğru 5'er ritmik sayar.
-    *   MAT.2.1.4.5: Geriye doğru 2'şer ritmik sayar.
-    *   MAT.2.1.4.6: Geriye doğru 3'er ritmik sayar.
-    *   MAT.2.1.4.7: Geriye doğru 4'er ritmik sayar.
-    *   MAT.2.1.4.8: Geriye doğru 5'er ritmik sayar.
+    *   MAT.2.1.4.1: İleriye doğru ikişer ritmik sayar.
+    *   MAT.2.1.4.2: İleriye doğru üçer ritmik sayar.
+    *   MAT.2.1.4.3: İleriye doğru dörder ritmik sayar.
+    *   MAT.2.1.4.4: İleriye doğru beşer ritmik sayar.
+    *   MAT.2.1.4.5: Geriye doğru ikişer ritmik sayar.
+    *   MAT.2.1.4.6: Geriye doğru üçer ritmik sayar.
+    *   MAT.2.1.4.7: Geriye doğru dörder ritmik sayar.
+    *   MAT.2.1.4.8: Geriye doğru beşer ritmik sayar.
 *   **MAT.2.1.5 (Gelişmiş Örüntüler)**
     *   MAT.2.1.5.1: Sayı örüntüsündeki artış miktarının kuralını sayılarla formülize eder.
     *   MAT.2.1.5.2: Şekil örüntüsündeki elemanların sayısal büyüme kuralını test eder.
@@ -195,13 +195,13 @@ Bu doküman, MEB müfredatındaki kazanımların en küçük, test edilebilir, t
     *   MAT.3.1.3.1: Üç basamaklı sayıları büyükten küçüğe sıralar.
     *   MAT.3.1.3.2: Üç basamaklı sayıları küçükten büyüğe sıralar.
 *   **MAT.3.1.4 (Ritmik Sayma)**
-    *   MAT.3.1.4.1: İleriye doğru 6'şar ritmik sayar.
-    *   MAT.3.1.4.2: İleriye doğru 7'şer ritmik sayar.
-    *   MAT.3.1.4.3: İleriye doğru 8'er ritmik sayar.
-    *   MAT.3.1.4.4: İleriye doğru 9'ar ritmik sayar.
+    *   MAT.3.1.4.1: İleriye doğru altışar ritmik sayar.
+    *   MAT.3.1.4.2: İleriye doğru yedişer ritmik sayar.
+    *   MAT.3.1.4.3: İleriye doğru sekizer ritmik sayar.
+    *   MAT.3.1.4.4: İleriye doğru dokuzar ritmik sayar.
     *   MAT.3.1.4.5: Geriye doğru ritmik sayma zincirini tamamlar.
 *   **MAT.3.1.5 (Tek ve Çift Sayılar)**
-    *   MAT.3.1.5.1: Nesneleri 2'şerli eşleyerek (artanı bularak) sayının Tek/Çift olduğunu vizüalize eder.
+    *   MAT.3.1.5.1: Nesneleri ikişerli eşleyerek (artanı bularak) sayının Tek/Çift olduğunu vizüalize eder.
     *   MAT.3.1.5.2: Sayının sadece birler basamağına bakarak "Tek" etiketi koyar.
     *   MAT.3.1.5.3: Sayının sadece birler basamağına bakarak "Çift" etiketi koyar.
 *   **MAT.3.1.6 (Tek/Çift İşlem Kuralları)**
@@ -529,7 +529,7 @@ Bu doküman, MEB müfredatındaki kazanımların en küçük, test edilebilir, t
 
 **Tema 4: Geometrik Nicelikler (Alan ve Çevre Sentezi)**
 *   **MAT.6.4.1 (Uzunluk-Alan Analojisi)**
-    *   MAT.6.4.1.1: Uzunluk ölçüleri 10'ar 10'ar büyürken, alan ölçülerinin kare (m²) olmasından dolayı 100'er 100'er büyüdüğünü/küçüldüğünü hesaplar.
+    *   MAT.6.4.1.1: Uzunluk ölçüleri onar onar büyürken, alan ölçülerinin kare (m²) olmasından dolayı yüzer yüzer büyüdüğünü/küçüldüğünü hesaplar.
 *   **MAT.6.4.2 (Paralelkenar ve Üçgen Alanı)**
     *   MAT.6.4.2.1: Bir dikdörtgeni ortadan köşegenle keserek Üçgenin alanı (Taban x Yükseklik / 2) formülünü ispatlar.
     *   MAT.6.4.2.2: Dikdörtgeni yan yatırarak Paralelkenarın alan formülünü (Taban x Yükseklik) kurgular.
@@ -603,7 +603,7 @@ Bu doküman, MEB müfredatındaki kazanımların en küçük, test edilebilir, t
 *   **MAT.7.4.4 (Hacim Formülasyonu)**
     *   MAT.7.4.4.1: Hacim = Taban Alanı x Yükseklik ana mantığını her türlü prizmada çalıştırıp doğrular.
 *   **MAT.7.4.5 (3D Ölçü Birim Dönüşümleri)**
-    *   MAT.7.4.5.1: m³ ile cm³ arasındaki geçişin (1000'er 1000'er) nedenini küplerden yola çıkarak oranlar/çözer.
+    *   MAT.7.4.5.1: m³ ile cm³ arasındaki geçişin (biner biner) nedenini küplerden yola çıkarak oranlar/çözer.
 *   **MAT.7.4.6 (Hacim ve Yüzey Alan Problemleri)**
     *   MAT.7.4.6.1: Verilen bir yüzme havuzu veya ambalaj kutusunun malzeme sarfiyatı (Alan) ile içine alacağı su (Hacim) ayrımını yaparak problemi çözer.
 *   **MAT.7.4.7 (Dairenin Alan Kurgusu)**

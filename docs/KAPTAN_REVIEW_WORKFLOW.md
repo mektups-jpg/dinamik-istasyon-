@@ -73,21 +73,79 @@ Panelin sag tarafi uretim yonlendirme alanidir:
 ### Lise Uretim Sohbeti
 
 ```text
-Bu Dinamik Istasyon ana uretim hattidir. Yalniz bu sohbet kod degistirebilir.
+Bu sohbet Dinamik Istasyon LISE uretim hattidir.
 
-Once AGENTS.md, .agent/CURRENT_TASK.md, PROGRESS.md, docs/KAPTAN_REVIEW_WORKFLOW.md,
-docs/MODULE_SHOWCASE_READINESS.md, docs/MODULE_QUALITY_SCORECARD.md ve ilgili module speclerini oku.
+Calisma klasoru:
+/Users/matnastik/Documents/New project 4/.worktrees/lise
 
-Kural:
-- Ayni anda tek modul.
-- Kaptan notlarini oncelige al.
-- 12. sinifta siradaki hedefleri tek tek cilala.
-- Ana oyuncak buyuk, sade, etkilesimli ve ogrenci dostu olacak.
-- Panel/reçete hissi, fazla yazi, cevap sizintisi, anlamsiz dekor hard fail.
-- Kaptan canli onayi olmadan Showcase Ready verme.
-- Her modülde teknik testleri ve gorsel QA kanitini yaz.
+Branch:
+codex/lise
 
-Ilk is: review-workbench notlarini ve mevcut 12. sinif durumunu ozetle, sonra siradaki tek modul icin plan yap ve uygula.
+Ana hedef:
+Lise 9-12. sinif modullerini ogrenci gozuyle canli denetleyip Kaptan standardina gore %95 kaliteye yaklastirmak.
+
+Once project context primer calistir: AGENTS.md, README.md, .agent/CURRENT_TASK.md, PROGRESS.md,
+docs/KAPTAN_REVIEW_WORKFLOW.md, docs/MEB_ATOMLARI.md, docs/MODULE_SHOWCASE_READINESS.md,
+docs/MODULE_QUALITY_SCORECARD.md ve ilgili module speclerini oku.
+
+Kapsam:
+- Sadece 9-12. sinif modullerinde calis.
+- Ilk oncelik 12. sinif kalan `Review Needed / Gorus Gerekli` modulleri.
+- Vitrin hazir olan modullere Kaptan istemedikce dokunma.
+- Kaptan onayi olmayan modul `Showcase Ready / Vitrin Hazir` yapilmayacak.
+- Ayni anda tek modul yap.
+
+Kalite referansi:
+- 3D Cisimler, Dizi Carki, Polinom Kasasi ve 1. sinif sayi dogrusu sadeligi.
+- Buyuk ana oyuncak, az yazi, dogrudan etkilesim, sahnede matematiksel sebep-sonuc.
+- Sag panel sadece destek olsun; sahne basrolde olsun.
+- Fazla yazi, panel/recete hissi, cevap sizintisi, anlamsiz dekor, tasma ve zayif feedback hard fail.
+- Her anlamli ogrenci eylemine gorsel veya kisa AstroBot geri bildirimi gelsin.
+- Desktop/kiosk ana hedef; telefon gorunumu ikinci oncelik.
+
+Calisma yontemi:
+- Once canli tarayicida ogrenci gibi oyna.
+- Ilk 3 saniyede ogrenci ne yapacagini anliyor mu kontrol et.
+- Eksikleri kisa raporla.
+- Sonra uygula.
+- Kaptan kontrol ederken durma; siradaki Kaptan onayi bekleyen veya `Review Needed` lise modulune gecip calismaya devam et.
+- Kaptan sadece gorsel onay ve karar gereken yerlerde yorulsun; dogru/yanlis tiklama gibi kontrolleri asistan yapsin.
+
+Her modulde zorunlu canli test:
+- Yanlisa tiklayinca uyari/renk/feedback geliyor mu?
+- Dogruya tiklayinca ilerleme/basari/yerlesme calisiyor mu?
+- Gorev gecisi calisiyor mu?
+- Completion ekrani calisiyor mu?
+- Tekrar oynama calisiyor mu?
+- Ana merkeze donus calisiyor mu?
+- Console hatasi var mi?
+- Tasma/cakisma var mi?
+- Yazi miktari lise seviyesine uygun ve gereksiz uzun degil mi?
+- Matematik hedefi ve MEB atomu net mi?
+
+Sinif hedefi:
+- 12. sinifta kalan `Review Needed` modulleri Kaptan standardina yaklastir.
+- 12. sinif kalan review hattini bitirince net rapor ver: "12. sinif review hattinin kalanlari bitti."
+- Sonra 9-11 kalite farklarini sirayla ele al.
+- Her sinifta en az 5 kaliteli/vitrin adayi modul standardini koru.
+
+Sunucu/hat kontrolu:
+- Tarayicida Lise hatti gorunmeli.
+- 3000 portunda yanlislikla ilkokul/ortaokul sunucusu calisiyorsa bunu tespit et, duzelt veya dogru portu Kaptan'a net soyle.
+- Yanlis calisma agacinda islem yapma.
+
+Test plani:
+- `npm run module:check -- <module-id>`
+- `npx tsc --noEmit`
+- `npm run build`
+- `git diff --check`
+- Canli Browser/CU testi
+
+Showcase kurali:
+- Kaptan onayi olmadan hicbir module `Showcase Ready` deme.
+- Kaptan "vitrin hazir" derse ancak o zaman ilgili modul vitrin hazir olarak isaretlenebilir.
+
+Ilk is: git durumunu kontrol et, mevcut degisiklikleri anlamadan dokunma. Sonra Lise hattini canli ac, siradaki `Review Needed` lise modulunu ogrenci gibi denetle, eksikleri raporla ve uygula.
 ```
 
 ### Ortaokul Audit Sohbeti

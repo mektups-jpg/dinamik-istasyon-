@@ -13,6 +13,20 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Sonraki küçük adım:
 ```
 
+## 2026-06-03 - İlkokul 04-11 Uzun Çarpma Kaptan Vitrin Onayı
+- Okunan bağlam: Kaptan'ın canlı `Uzun Çarpma Fabrikası` onayı, registry 04-11 kaydı, module spec, MODULES, readiness ve scorecard satırları.
+- Yapılan iş: `long-multiplication-factory-4` registry statüsü `showcase-ready` yapıldı. Spec, MODULES, showcase readiness, kalite scorecard, PROGRESS ve CURRENT_TASK kayıtları Kaptan canlı görsel onayıyla eşitlendi.
+- Değişen dosyalar: `src/registry/moduleRegistry.ts`, `docs/module-specs/04-11-long-multiplication-factory-4.md`, `docs/MODULES.md`, `docs/MODULE_SHOWCASE_READINESS.md`, `docs/MODULE_QUALITY_SCORECARD.md`, `PROGRESS.md`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`.
+- Test: Browser/Codex dashboard `/?grade=4&showcase=long-multiplication` içinde `Uzun Çarpma Fabrikası` kartı `Vitrin Hazır` göründü; `Problem Kur ve Çöz Atölyesi` tek bekleyen 4. sınıf işlem atomu olarak kaldı. `npm run module:check -- long-multiplication-factory-4` 18 pass / 4 warn / 0 fail, `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük paket uyarısını verdi.
+- Sonraki küçük adım: `Problem Kur ve Çöz Atölyesi` Kaptan canlı onayı bekleyen sıradaki 4. sınıf işlem atomu olarak kalır.
+
+## 2026-06-03 - İlkokul 04-11 Uzun Çarpma Dil Cilası
+- Okunan bağlam: Kaptan'ın canlı ekran geri bildirimi, `long-multiplication-factory-4` görev/app dosyaları, 4. sınıf üretim hattı guardrail'leri.
+- Yapılan iş: Öğrenciye görünen uzun çarpma dili sadeleştirildi. `Birler satırını yak`, `Onlar satırını kaydır`, `ara çarpım` ve `algoritma` yerine `Birler sonucunu bul`, `Onlar sonucunu bul`, `Sonucu tamamla`, `birler/onlar sonucu` ifadeleri kullanıldı. Kaptan'ın canlı yorumlarıyla birler adımı `İkinci çarpan olan 4 ile 124 sayısını çarp`, onlar adımı `İkinci çarpan burada 40 demektir` netliğine çekildi.
+- Değişen dosyalar: `src/modules/grade4/long-multiplication-factory-4/longMultiplicationFactory4Tasks.ts`, `src/modules/grade4/long-multiplication-factory-4/LongMultiplicationFactory4App.tsx`, `.agent/CURRENT_TASK.md`, `.agent/WORKLOG.md`, `PROGRESS.md`.
+- Test: Browser/Codex canlı kontrolde yeni başlıklar göründü; yanlış kart `Bir daha bak` verdi, doğru kart görev ilerletti, 3/3 completion ve yeni final metni görüldü, console error/warn 0. `npm run module:check -- long-multiplication-factory-4` 18 pass / 4 warn / 0 fail; `npx tsc --noEmit` geçti; `npm run build` geçti.
+- Sonraki küçük adım: Kaptan canlı gözle kontrol ederse `Uzun Çarpma Fabrikası` için Vitrin Hazır onayı ayrı alınacak.
+
 ## 2026-05-23 - Kaptan İnceleme Paneli ve 3 Hatlı Çalışma Dokümantasyonu
 - Okunan bağlam: `documentation-sync` skill, `project-context-primer` skill, `.agent/CURRENT_TASK.md`, `PROGRESS.md`, `README.md`, `docs/AUTONOMOUS_MODULE_PIPELINE.md`, `ReviewWorkbench` ve `ReviewModuleCard`.
 - Yapılan iş: `/review-workbench` için sağ tarafta canlı önizleme kullanan yeni Kaptan çalışma düzeni dokümante edildi. Tek repo + üç sohbet hattı + tek kod yazan üretim hattı kuralı yazıldı; ilkokul ve ortaokul sohbetleri audit-only, lise/ana sohbet üretim hattı olarak ayrıldı. Yeni sohbetlere verilecek hazır promptlar kalıcı kılavuza eklendi.
@@ -1564,3 +1578,296 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Düzeltme: Tüm kurallar ortak `RuleCartridgeCore` ve `RuleFlowRail` parçalarına taşındı. Toplam/fark, çarpım, bölüm ve zincir artık aynı portlu çekirdeği kullanıyor; eski içinden geçen statik ray kalıpları kaldırıldı. Toplam/fark etiketleri orta gövdenin arkasında kalmayacak şekilde gövde dışına alındı.
 - QA: Browser/Codex canlı kontrolde `Toplam`, `Fark`, `Çarpım`, `Bölüm`, `Zincir` kartuşlarının her biri tek tek tıklandı; ortak çekirdek, doğru sembol, yeni raylar, eski path yokluğu, yatay taşma `0` ve console warning/error `0` doğrulandı. Görseller: `.agent/visual-reports/12-07-core-sum-after-label-fix.png`, `.agent/visual-reports/12-07-core-product.png`, `.agent/visual-reports/12-07-core-quotient.png`, `.agent/visual-reports/12-07-core-chain.png`.
 - Test: Kaynak kabul kontrolü geçti; `npm run module:check -- derivative-rule-forge` 34 pass / 2 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-31 İlkokul - 02-09 Kargo Gruplama Bandı
+- Kapsam: MODULES.md içinde kalan 2. sınıf `Kargo Gruplama Bandı` çarpma/bölme kısmı ayrı modül olarak üretildi. Vitrin hazır `Ritim Roketi 2-5` dosyalarına dokunulmadı.
+- Uygulama: Yeni route `/embed/numbers/cargo-grouping-band-2`, registry statüsü `review-needed`. Atomlar yalnız SSOT `MAT.2.2.4.1`, `MAT.2.2.4.2`, `MAT.2.2.4.3`, `MAT.2.2.4.4`, `MAT.2.2.5.1`.
+- QA: Browser/Codex canlı akışta yanlış cevap `Bir daha bak` feedback'i verdi; 5 doğru görev completion'a ulaştı. `Tekrar Oyna` 1/5'e döndü ve ilk görev değişti; `Ana Merkez` ilkokul dashboard'una döndü. Dashboard `/?grade=2` içinde 9 modül, 5 `Vitrin Hazır`, 4 `Görüş Gerekli`, ilkokul hattı true, lise hattı false ve yatay taşma false doğrulandı.
+- Test: `npm run module:check -- cargo-grouping-band-2` 22 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-31 İlkokul - 02-10 Kuantum Denge Terazisi
+- Kapsam: MODULES.md içinde kalan 2. sınıf `Kuantum Denge Terazisi` eksik sayı/eşitlik modülü üretildi. Vitrin hazır 2. sınıf modüllerine dokunulmadı.
+- Uygulama: Yeni route `/embed/numbers/quantum-balance-2`, registry statüsü `review-needed`. Atomlar yalnız SSOT `MAT.2.2.3.1`, `MAT.2.2.3.2`, `MAT.2.2.3.3`, `MAT.2.2.6.1`.
+- QA: Browser/Codex canlı akışta yanlış cevap `Bir daha bak` feedback'i verdi; 5 doğru görev eksik toplanan, eksilen, çıkan ve iki işlemli eşitlik zinciriyle completion'a ulaştı. `Tekrar Oyna` 1/5'e döndü ve ilk görev değişti. Dashboard `/?grade=2` içinde 10 modül, ilkokul hattı true, lise hattı false ve yatay taşma false doğrulandı.
+- Test: `npm run module:check -- quantum-balance-2` 21 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-31 İlkokul - 02-11 Hologram Tasarım Üssü
+- Kapsam: MODULES.md içinde kalan 2. sınıf `Hologram Tasarım Üssü` geometri/simetri/örüntü modülü üretildi. Vitrin hazır 2. sınıf modüllerine dokunulmadı.
+- Uygulama: Yeni route `/embed/geometry/hologram-design-base-2`, registry statüsü `review-needed`. Atomlar yalnız SSOT `MAT.2.3.2.1`, `MAT.2.3.3.1`, `MAT.2.3.7.1`, `MAT.2.3.7.2`, `MAT.2.1.5.1`, `MAT.2.1.5.2`, `MAT.2.3.6.1`.
+- QA: Browser/Codex canlı akışta yanlış cevap `Bir daha bak` feedback'i verdi; 7 doğru görev model kurma, simetri, asimetri, sayı/şekil örüntüsü ve kroki yön zinciriyle completion'a ulaştı. `Tekrar Oyna` 1/7'ye döndü ve ilk görev değişti. Dashboard `/?grade=2` içinde 11 modül, ilkokul hattı true, lise hattı false ve yatay taşma false doğrulandı.
+- Test: `npm run module:check -- hologram-design-base-2` 24 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-31 İlkokul - 03-07 Dört İşlem Makinesi
+- Kapsam: MODULES.md içinde kalan 3. sınıf `Dört İşlem Makinesi` işlem modülü üretildi. Vitrin hazır 3. sınıf modüllerine dokunulmadı.
+- Uygulama: Yeni route `/embed/numbers/operation-lab-3`, registry statüsü `review-needed`. Atomlar yalnız SSOT `MAT.3.2.1.1`, `MAT.3.2.1.2`, `MAT.3.2.1.3`, `MAT.3.2.2.1`, `MAT.3.2.2.2`, `MAT.3.2.3.1`, `MAT.3.2.4.1`, `MAT.3.2.4.2`, `MAT.3.2.5.1`, `MAT.3.2.6.1`, `MAT.3.2.6.2`, `MAT.3.2.7.1`, `MAT.3.2.8.1`.
+- QA: Browser/Codex canlı akışta yanlış cevap `Bir daha bak` feedback'i verdi; 13 doğru görev yuvarlama, zihinden işlem, eldeli/bozmalı işlemler, çarpma, kalanlı bölme, problem ve eşitlik zinciriyle completion'a ulaştı. `Tekrar Oyna` 1/13'e döndü ve ilk görev değişti. Dashboard `/?grade=3` içinde 7 modül, ilkokul hattı true, lise hattı false ve yatay taşma false doğrulandı.
+- Test: `npm run module:check -- operation-lab-3` 30 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-05-31 İlkokul - 03-08 Birim Dönüşüm İstasyonu
+- Kapsam: MODULES.md içinde kalan 3. sınıf `Dinamik Birim Dönüştürücü` başlığı `Birim Dönüşüm İstasyonu` adıyla üretildi. Vitrin hazır 3. sınıf modüllerine dokunulmadı.
+- Uygulama: Yeni route `/embed/measure/unit-converter-3`, registry statüsü `review-needed`. Atomlar yalnız SSOT `MAT.3.1.12.1`, `MAT.3.1.12.2`, `MAT.3.1.13.1`, `MAT.3.1.13.2`, `MAT.3.1.14.1`, `MAT.3.1.15.1`, `MAT.3.1.15.2`, `MAT.3.1.16.1`, `MAT.3.1.16.2`, `MAT.3.3.5.1`, `MAT.3.3.5.2`, `MAT.3.3.5.3`.
+- QA: Browser/Codex canlı akışta yanlış cevap `Bir daha bak` feedback'i verdi; 12 doğru görev saat okuma, dijital saat, saat-dakika, dakika-saniye, süre tahmini, uzunluk/kütle, para ve litre-mililitre zinciriyle completion'a ulaştı. `Tekrar Oyna` 1/12'ye döndü ve ilk görev değişti. Dashboard `/?grade=3` içinde 8 modül, ilkokul hattı true, lise hattı false ve yatay taşma false doğrulandı.
+- Test: `npm run module:check -- unit-converter-3` 29 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-06-07 İlkokul - 03-08 Birim Dönüşüm İstasyonu Pedagojik Cila
+- Kullanıcı geri bildirimi: Atom CU ile çocuk gözüyle incelensin, eksikleri pedagojik olarak değerlendirilip düzeltisin.
+- Değerlendirme: İlk ekran anlaşılırdı; ancak saat yüzünde sayı tutamakları eksikti, `Kuralı oku` etiketi tıklanabilir gibi durmasına rağmen işlev taşımıyordu, ölçü/para/sıvı sahnelerindeki genel token modeli bazı görevlerde gerçek sayıyı temsil etmiyordu ve bazı görevler tekrar oynayınca sabit kalıyordu.
+- Düzeltme: Saat yüzüne 1-12 sayı tutamakları eklendi. `Kuralı oku` etiketi `Kartı seç` yapıldı. Süre, kuruş, litre, mililitre ve eksik sıvı görevleri seed kontrollü varyant havuzuna bağlandı. Canlı model `2 saat` için iki `60 dk`, para için gerçek TL/kuruş kartları, sıvı için görevdeki mL/L kartları gibi göreve uygun görsel nesneler gösteriyor. Completion panel metni tam modül adıyla hizalandı.
+- QA: Browser/Codex canlı kontrolde ilk ekran, yanlış/doğru akış, 12/12 completion, `Tekrar Oyna`, farklı ilk saat/seçenek dizisi, ölçü modeli, console warning/error ve yatay taşma kontrolü geçti. `module:check`, `tsc`, `build`, `git diff --check` kapıları çalıştırıldı. Kaptan onayı olmadan statü `Review Needed / Görüş Gerekli` kaldı.
+
+## 2026-06-07 İlkokul - 03-08 Analog Saat Netlik Düzeltmesi
+- Kullanıcı geri bildirimi: Analog saatte akrep ile yelkovan kontrolsüz duruyor ve saat tam anlaşılmıyor.
+- Değerlendirme: Eski saat kolları CSS transform ile konumlanıyordu; kollar gerçek saat gibi merkezden çizilmediği için özellikle çocuk gözüyle akrep-yelkovan karışabiliyordu. İlk görevde akrep ve yelkovan aynı renge de düşebiliyordu.
+- Düzeltme: Saat modeli SVG koordinat sistemine taşındı. Akrep ve yelkovan merkezden çıkan ayrı çizgiler oldu; akrep sabit mor, yelkovan sabit mavi renkle ayrıldı. Kollar sayıların üstüne binmesin diye uzunlukları ayarlandı, açıklama etiketi kadranın dışına alındı ve ipucu dili `Yelkovan dakikayı, akrep saati gösterir.` oldu.
+- QA: Browser/Codex canlı kontrolde 08:15 ekranında yelkovan 3'ü, akrep 8'in biraz ilerisini gösterdi; 1-12 sayıları, akrep/yelkovan etiketi, console temizliği ve yatay taşma false doğrulandı. `module:check`, `tsc`, `build`, `git diff --check` kapıları çalıştırıldı.
+
+## 2026-05-31 İlkokul - 03-09 Dijital Geometri Tahtası
+- Kapsam: MODULES.md içinde kalan 3. sınıf `Dijital Geometri Tahtası` çevre/çokgen/simetri modülü üretildi. Vitrin hazır 3. sınıf modüllerine dokunulmadı.
+- Uygulama: Yeni route `/embed/geometry/geometry-board-3`, registry statüsü `review-needed`. Atomlar yalnız SSOT `MAT.3.3.1.1`, `MAT.3.3.1.2`, `MAT.3.3.1.3`, `MAT.3.3.2.1`, `MAT.3.3.3.1`, `MAT.3.3.4.1`, `MAT.3.3.4.2`, `MAT.3.3.6.1`, `MAT.3.3.7.1`, `MAT.3.3.8.1`.
+- QA: Browser/Codex canlı ilk bakışta yatay/dikey SVG çizgilerini zayıflatan parlama filtresi yakalandı ve düzeltildi. Son kontrolde çivili tahta, cisim iskeleti, çokgen/çevre/simetri sahneleri ve cevap kartları görünür. Yanlış cevap `Bir daha bak` feedback'i verdi; 10 doğru görev completion'a ulaştı. `Tekrar Oyna` 1/10'a döndü. Dashboard `/?grade=3` içinde 9 modül, 5 `Vitrin Hazır`, 4 `Görüş Gerekli`, ilkokul hattı true, lise hattı false ve yatay taşma false doğrulandı.
+- Test: `npm run module:check -- geometry-board-3` 26 pass / 4 warn / 0 fail; `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı gelmeden `Showcase Ready` yapılmayacak.
+
+## 2026-06-01 İlkokul - 04-04 Açınım ve Çevre Keşfi Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "tamamdır. o zaman bu atomu vitrin hazır şeklinde isimlendir".
+- Değerlendirme: Modül son canlı cila turunda farklı küp açınımları, farklı simetri varyantları, iki kenar çizgisiyle net eş kenar görevi, 6 desenli kod havuzu, yanlış/doğru feedback, completion, tekrar oynama, ana merkeze dönüş ve teknik kapıları geçmişti. Kaptan farklı küp açınımlarının 4. sınıf için pedagojik olarak uygun olduğuna onay verdi.
+- Düzeltme: Registry statüsü `showcase-ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready` ile senkronlandı. Modül oynanış dosyalarına dokunulmadı.
+
+## 2026-06-01 İlkokul - 04-05 Açı Ölçme Çarkı Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "bu atomu vitrin hazır şeklinde isimlendir."
+- Değerlendirme: Modül önceki canlı QA turunda menteşe/dönme sahnesi, iletki yerleştirme, dik/dar/geniş açı görevleri, yanlış/doğru feedback, completion, tekrar oynama, ana merkeze dönüş ve teknik kapıları geçmişti. Bu mesaj Kaptan canlı görsel onayı olarak kaydedildi.
+- Düzeltme: Registry statüsü `showcase-ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready` ile senkronlandı. Modül oynanış dosyalarına dokunulmadı.
+
+## 2026-06-01 İlkokul - 04-06/07/08 Ölçü, Olasılık ve Veri Ayrımı
+- Kullanıcı geri bildirimi: "bu atomda 3 farklı konu var. ölçü dönüşümü, olasılık ve grafik bunların üçünün de ayrı olması daha iyi olmaz mı."
+- Değerlendirme: Uygun. 4. sınıfta ölçü dönüşümü, olasılık dili ve grafik okuma farklı zihinsel eylemler; tek modülde birleşince ilk 3 saniye hedef bulanıklaşıyor. Ayrı atomlar çocuk için daha kısa, daha anlaşılır ve daha iyi tekrar edilebilir olur.
+- Düzeltme: Eski `network-optimization-terminal-4` registry kaydı arşive alındı. Ortak `Grade4DecisionStationApp` kabuğu çıkarıldı ve üç yeni route bağlandı: `/embed/measure/unit-converter-4`, `/embed/data/probability-label-lab-4`, `/embed/data/two-group-bar-chart-4`. Registry kategori tipine `Veri` eklendi; bu ortak kayıt etkisi raporlanacak.
+- QA: Browser/Codex canlı turda üç atomda yanlış kart `Bir daha bak` feedback'i verdi, doğru kartlar completion'a ulaştı, `Tekrar Oyna` yeniden başlattı, console app issue yok ve yatay taşma false.
+- Test: `npm run module:check -- unit-converter-4` 21 pass / 4 warn / 0 fail; `npm run module:check -- probability-label-lab-4` 20 pass / 4 warn / 0 fail; `npm run module:check -- two-group-bar-chart-4` 18 pass / 4 warn / 0 fail. Kaptan onayı gelmeden `Showcase Ready` yapılmadı.
+
+## 2026-06-02 İlkokul - 04-06 Ölçü Dönüşüm Makinesi Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "bu atomu vitrin hazır şeklinde isimlendirebilirsin."
+- Değerlendirme: Bu mesaj `Ölçü Dönüşüm Makinesi` için Kaptan canlı görsel onayı olarak kaydedildi. Modül önceki canlı QA turunda 4 görev, yanlış/doğru feedback, completion, tekrar oynama, console ve taşma kapılarını geçmişti.
+- Düzeltme: Registry statüsü `showcase-ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, MODULES, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready` ile senkronlandı. Modül oynanış dosyalarına dokunulmadı.
+
+## 2026-06-02 İlkokul - 04-07 Olasılık Etiketleri Soru Çeşitliliği
+- Kullanıcı geri bildirimi: "`Olasılık Etiketleri` adlı atomda her farklı oynayışımda aynı sorular geliyor. CU ile incele. bu uygun mu."
+- Kök neden: Browser/Codex canlı kontrolde iki restartta aynı prompt dizisi geldi. Kaynakta `createProbabilityLabel4Tasks()` sabit olarak `impossible/certain/possible` görevlerini tek örnekle üretiyordu.
+- Düzeltme: Her kategori için üçer çocuk-dostu senaryo havuzu eklendi. Görev sırası karıştırılıyor; aynı kategori senaryosu art arda tekrar etmiyor. MEB kapsamı yine yalnız `MAT.4.4.1.1`, `MAT.4.4.1.2`, `MAT.4.4.1.3`.
+- QA: Browser/Codex canlı kontrolde üç oyun turu farklı prompt dizileri üretti; ilk turda yanlış kart `Bir daha bak` feedback'i verdi, üç turda da completion açıldı, `Tekrar Oyna` çalıştı, console app issue yok ve yatay taşma false. Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-02 İlkokul - 04-07 Olasılık Etiketleri Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "bu atomu vitrin hazır şeklinde isimlendirebilirsin."
+- Değerlendirme: Bu mesaj `Olasılık Etiketleri` için Kaptan canlı görsel onayı olarak kaydedildi. Modül son cila turunda farklı soru dizileri, yanlış/doğru feedback, completion, tekrar oynama, console ve taşma kapılarını geçmişti.
+- Düzeltme: Registry statüsü `showcase-ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, MODULES, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready` ile senkronlandı. Modül oynanış dosyalarına dokunulmadı.
+
+## 2026-06-02 İlkokul - 04-08 İki Sınıf Grafiği Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "bu atomu da vitrin hazır şeklinde isimlendir."
+- Değerlendirme: Bu mesaj `İki Sınıf Grafiği` için Kaptan canlı görsel onayı olarak kaydedildi. Modül önceki canlı QA turunda 4 görev, yanlış/doğru feedback, completion, tekrar oynama, console ve taşma kapılarını geçmişti.
+- Düzeltme: Registry statüsü `showcase-ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, MODULES, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready` ile senkronlandı. Modül oynanış dosyalarına dokunulmadı.
+
+## 2026-06-03 İlkokul - 04-09/10/11 Eksik İşlem Atomları
+- Kullanıcı geri bildirimi: "bu üç atomu ekleyelim. vitrin hazır dediklerime dokunmayalımm."
+- Değerlendirme: MEB atom karşılaştırmasında 4. sınıf paneli vitrin seti tamam olsa da işlem temasında altı atom registry/spec kapsamı dışında kalıyordu: bölme tahmini, uzun çarpma, kalanlı/kalansız bölme, karma problem çözme ve problem tasarımı.
+- Düzeltme: Vitrin hazır modül klasörlerine dokunmadan üç yeni atom üretildi: `Bölme Dedektifi` (`/embed/numbers/division-detective-4`), `Uzun Çarpma Fabrikası` (`/embed/numbers/long-multiplication-factory-4`) ve `Problem Kur ve Çöz Atölyesi` (`/embed/algebra/problem-studio-4`). Yeni ortak `Grade4OperationMissionApp` yalnız bu üç atom tarafından kullanılır.
+- QA: Browser/Codex canlı turda üç yeni atomda yanlış kart `Bir daha bak` feedback'i verdi, doğru kartlar 3 görev zincirini completion'a ulaştırdı, `Tekrar Oyna` yeniden 1/3'e döndürdü, console app issue yok ve yatay taşma false ölçüldü. Dashboard `/?grade=4` içinde 8 eski `Vitrin Hazır` kart aynen kaldı; yeni üç kart `Görüş Gerekli`.
+- Test: `npm run module:check -- division-detective-4` 20 pass / 4 warn / 0 fail; `npm run module:check -- long-multiplication-factory-4` 18 pass / 4 warn / 0 fail; `npm run module:check -- problem-studio-4` 19 pass / 4 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+- Statü: Üç yeni atom `Review Needed / Görüş Gerekli`; Kaptan canlı görsel onayı olmadan `Showcase Ready` yapılmayacak.
+
+## 2026-06-03 İlkokul - 04-09 Bölme Dedektifi Türkçe Ek Düzeltmesi
+- Kullanıcı geri bildirimi: Canlı ekranda `Sonuç 60'ye yakın` yazıyordu; doğru yazım `Sonuç 60'a yakın`.
+- Kök neden: Bölme tahmini görevinde sayı yönelme eki sabit `'ye` olarak elle yazılmıştı.
+- Düzeltme: `src/lib/turkishText.ts` içine sayının okunuşuna göre yönelme eki üreten `formatNumberWithTurkishDative` yardımcısı eklendi. `Bölme Dedektifi` artık `60'a`, `50'ye`, `70'e` gibi ekleri bu ortak kuralla üretiyor.
+- QA: Kabul kontrolü önce kırmızı yakalandı, düzeltme sonrası yeşile döndü. Browser/Codex canlı kontrolde `Sonuç 60'a yakın` görüldü ve `60'ye` görünmedi.
+
+## 2026-06-03 İlkokul - 04-09/10 Bölme Tahmini Ayrımı
+- Kullanıcı geri bildirimi: "`Bölme Dedektifi` atomunda bölme tahmini ile bölme işlemi bir arada verilmiş. Anlamayı kolaylaştırmak için bunları ayırmak daha iyi olur mu?"
+- Değerlendirme: Uygun. Tahmin ve bölme algoritması iki ayrı zihinsel eylem; 4. sınıf öğrencisi için tek atomda hedef değiştirmesi ilk 3 saniye netliğini azaltıyor.
+- Düzeltme: `Bölme Tahmini` (`/embed/numbers/division-estimate-4`) yeni ayrı atom olarak eklendi ve yalnız `MAT.4.2.3.2` kapsamını taşır. `Bölme Dedektifi` artık yalnız kalanlı/kalansız bölme atomlarını (`MAT.4.2.5.2`, `MAT.4.2.5.3`) taşır. `Uzun Çarpma Fabrikası` 04-11, `Problem Kur ve Çöz Atölyesi` 04-12 sırasına kaydırıldı.
+- QA: Kırmızı kabul kontrolü eski birleşik yapıyı yakaladı; ayrım sonrası kabul kontrolü geçti. Browser/Codex canlı QA'da `Bölme Tahmini` ekranında tahmin dışı kalan/kalanlı dil görünmedi, yanlış kart `Bir daha bak` feedback'i verdi, 3 doğru zincir completion'a ulaştı ve `Tekrar Oyna` 1/3'e döndürdü. `Bölme Dedektifi` ekranında tahmin/yaklaşık dil görünmedi, 2 görevli kalanlı/kalansız akış yanlış feedback, completion ve tekrar oynama kapılarını geçti. Dashboard `/?grade=4` içinde iki ayrı `Görüş Gerekli` kartı ve 8 eski `Vitrin Hazır` kart doğrulandı; console app issue yok.
+- Test: `npm run module:check -- division-estimate-4` 18 pass / 4 warn / 0 fail; `npm run module:check -- division-detective-4` 19 pass / 4 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı olmadan yeni iki bölme atomu `Review Needed / Görüş Gerekli`.
+
+## 2026-06-03 İlkokul - 04-09 Bölme Tahmini Çeşitliliği
+- Kullanıcı geri bildirimi: "`Bölme Tahmini` atomunda hep sonuç 10'un katı olacak şekilde çıkıyor. Bu olması gereken bir şey mi?"
+- Değerlendirme: İlk görevde 10'un katı sonuç pedagojik olarak iyi bir başlangıç; fakat her görev böyle kalırsa öğrenci tahmin stratejisi yerine örüntüyü ezberleyebilir.
+- Düzeltme: İlk görev 40/50/60/70 gibi güvenli 10 katı havuzunda kaldı. 2. ve 3. görevlerde sonuç havuzu 25/35/45/55 olacak şekilde genişletildi; bölünen sayı yine kolay bölünen uyumlu sayıya yaklaştırılıyor.
+- QA: Kabul kontrolü önce eski tekdüze havuzu yakaladı, değişiklik sonrası geçti. Browser/Codex canlı QA'da doğru cevaplar `70`, `45`, `25` geldi; 2. ve 3. görevlerde 10 katı olmayan sonuç görüldü ve 3/3 completion geçti.
+
+## 2026-06-03 İlkokul - 04-09 Bölme Tahmini Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "`Bölme Tahmini` atomunu vitrin hazır şeklinde isimlendirebilirsin."
+- Değerlendirme: Bu mesaj `Bölme Tahmini` için Kaptan canlı görsel onayı olarak kaydedildi. Modül son canlı QA turunda tek hedefli tahmin akışı, çeşitlenen kolay bölüm sonuçları, yanlış/doğru feedback, completion, tekrar oynama, console ve teknik kapıları geçmişti.
+- Düzeltme: Registry statüsü `showcase-ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, MODULES, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready` ile senkronlandı. Modül oynanış dosyasına dokunulmadı.
+
+## 2026-06-03 İlkokul - 04-10 Bölme Dedektifi Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "`Bölme Dedektifi`ni vitrin hazır şeklinde isimlendirebilirsin."
+- Değerlendirme: Bu mesaj `Bölme Dedektifi` için Kaptan canlı görsel onayı olarak kaydedildi. Modül son canlı QA turunda tahmin/yaklaşık dilinden arındırılmış 2 görevli kalanlı/kalansız bölme akışı, yanlış/doğru feedback, completion, tekrar oynama, console ve teknik kapıları geçmişti.
+- Düzeltme: Registry statüsü `showcase-ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, MODULES, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready` ile senkronlandı. Modül oynanış dosyasına dokunulmadı.
+
+## 2026-06-03 İlkokul - 04-12 Problem Kur ve Çöz Türkçe Ek Cilası
+- Kullanıcı geri bildirimi: Canlı ekranda `4 kutuda 9 kalem var` ifadesi belirsizdi; doğru anlam `4 kutuda 9'ar kalem var` olmalıydı.
+- Kök neden: `Problem Kur ve Çöz Atölyesi` hikaye görevi her kutudaki kalem sayısını üretirken üleştirme ekini hiç kullanmıyordu.
+- Düzeltme: Ortak `src/lib/turkishText.ts` içine sayının okunuşuna göre `6'şar`, `8'er`, `9'ar` gibi yazan `formatNumberWithTurkishDistributiveSuffix` yardımcısı eklendi. `src/modules/grade4/problem-studio-4/problemStudio4Tasks.ts` bu yardımcıyı kullanacak şekilde güncellendi. Son problem kurma görevinde `eşit konur` ifadesi de çocuk için daha doğal olan `eşit olarak paylaştırılır` diline çekildi. Kaptan'ın ikinci canlı dil notuyla `12 kalem daha geldi` ifadesi de daha somut `Kutulara 12 kalem daha kondu.` yapısına dönüştürüldü.
+- Ortak dosya etkisi: `src/lib/turkishText.ts` global Türkçe ek yardımcısıdır; bu dokunuş aynı tür ek hatasını başka modüllerde tekrar elle düzeltme ihtiyacını azaltmak için bilinçli yapıldı.
+- QA: Browser/Codex canlı kontrolde `/embed/algebra/problem-studio-4` akışı baştan sona oynandı. 2. görevde `5 kutuda 9'ar kalem var...` ve sonra `6 kutuda 8'er kalem var. Kutulara 15 kalem daha kondu...` görüldü; eski çıplak `9 kalem var` ve `kalem daha geldi` kalıpları görünmedi. Yanlış kart `Bir daha bak` feedback'i verdi, doğru kart ilerletti, 3. görevde doğru cevap `eşit olarak paylaştırılır` diliyle göründü ve completion açıldı. Console warning/error 0.
+- Test: `npm run module:check -- problem-studio-4` 19 pass / 4 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Build yalnız mevcut büyük chunk uyarısını verdi. Bu cila turundan sonra Kaptan canlı görsel onayı geldi ve atom `Showcase Ready / Vitrin Hazır` olarak işaretlendi.
+
+## 2026-06-03 İlkokul - 04-12 Problem Kur ve Çöz Atölyesi Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "bu atomun adını vitrin hazır şeklinde isimlendir."
+- Değerlendirme: Bu mesaj `Problem Kur ve Çöz Atölyesi` için Kaptan canlı görsel onayı olarak kaydedildi. Modül son canlı QA turunda Türkçe hikaye dili, yanlış/doğru feedback, görev ilerleme, completion, console ve teknik kapıları geçmişti.
+- Düzeltme: Registry statüsü `showcase-ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, MODULES, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready / Vitrin Hazır` ile senkronlandı. Modül oynanış dosyasına dokunulmadı.
+
+## 2026-06-03 İlkokul - 03-06 Sütun Grafiği Terminali Kaptan Vitrin Onayı
+- Kullanıcı geri bildirimi: "sütun grafiği atomunu vitrin hazır şeklinde isimlendir".
+- Değerlendirme: Bu mesaj `Sütun Grafiği Terminali` için Kaptan canlı görsel onayı olarak kaydedildi. Modül önceki canlı QA turunda 5 görev, yanlış/doğru feedback, completion, tekrar oynama, console ve taşma kapılarını geçmişti; 2026-06-03 tekrar kontrolünde 6 oyun turu tamamlandı ve veri setlerinin değişebildiği doğrulandı.
+- Düzeltme: Registry statüsü `showcase-ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, MODULES, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready / Vitrin Hazır` ile senkronlandı. Modül oynanış dosyasına dokunulmadı.
+
+## 2026-06-03 İlkokul - 03-07 Dört İşlem Makinesi Bozma Modeli Cilası
+- Kullanıcı geri bildirimi: "`Bozma kutusu` ne işe yarıyor?"
+- Değerlendirme: Canlı kontrolde `52 - 18` görevindeki `Bozma kutusu`nun yalnız 15 pasif kare gösterdiği, 1 onluğun 10 birliğe dönüşmesini çocuk için yeterince anlatmadığı görüldü.
+- Düzeltme: Bozma sahnesi `Bozma modeli` olarak yeniden kuruldu. Sol model `52 = 5 onluk + 2 birlik`, orta eylem `1 onluk boz / 10 birlik al`, sağ model `4 onluk + 12 birlik` gösteriyor; kısa açıklama artık `2 birlik yetmez. 1 onluk, 10 birliğe dönüşür...` diyor. Yeni spec kontratları `operation-lab-3-borrow-breakdown`, `operation-lab-3-borrow-before`, `operation-lab-3-borrow-action`, `operation-lab-3-borrow-after` ile korumaya alındı.
+- QA: Kırmızı kabul kontrolü önce 4 eksik test id ile fail verdi, uygulama sonrası `module:check` 34 pass / 3 warn / 0 fail oldu. Browser/Codex canlı QA'da bozma görevi görüldü, yanlış kart `Bir daha bak` feedback'i verdi, doğru kart `Bozmalı çıkarma adımını doğru seçtin.` mesajını verdi, yatay taşma false ve console app issue 0 kaldı. `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-03 İlkokul - 03-07 Dört İşlem Makinesi Yuvarlama Modeli Cilası
+- Kullanıcı geri bildirimi: Ana ekrandaki `İşlem parçaları` kutusu işlevsiz görünüyor; tahmin görevinde işlem yapılacak sayıların en yakın yüzlüğe yuvarlanmış halleri gösterilse daha iyi olabilir.
+- Değerlendirme: Uygun bulundu. Bu atomdaki ilk görev yaklaşık sonuç seçtirdiği için çocuk kutu doldurmak yerine sayıları yuvarlama izini görmeli; bu, 3. sınıf tahmin kazanımıyla daha doğrudan örtüşüyor.
+- Düzeltme: `estimate-sum` görevleri için `Yuvarlama modeli` eklendi. İlk sürüm iki sayıyı ayrı kartlarda en yakın yüzlüğe çeviriyordu; 2026-06-06 ek cilasıyla model artık yuvarlanmış sayıyı yazmaz, sayıyı iki yüzlük kapısı arasında nokta olarak gösterir. Yeni spec kontratları `operation-lab-3-rounding-model`, `operation-lab-3-rounding-first`, `operation-lab-3-rounding-second` ile korumaya alındı. Dosya boyu uyarısını büyütmemek için görsel modeller `OperationLab3Models.tsx` dosyasına ayrıldı.
+- QA: Kırmızı kabul kontrolü önce eksik test id ile fail verdi, uygulama sonrası `module:check` 38 pass / 3 warn / 0 fail oldu. Browser/Codex canlı QA'da eski `İşlem parçaları` bu görevde görünmedi ve cevap sızdıran yaklaşık toplam kutusu kaldırıldı. Yanlış kart feedback verdi, doğru kart görev geçişi yaptı, yatay taşma false ve console app issue 0 kaldı. Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-03 İlkokul - 03-07 Dört İşlem Makinesi İpucu Şeridi Cilası
+- Kullanıcı geri bildirimi: Ana sahnede `Kısa ipucu` kutusu ile soldaki işlem/model kutuları üst üste gelmiş gibi karmaşıklık oluşturuyor.
+- Değerlendirme: Uygun bulundu. Cevap paneli yüzünden oyun sahnesi 814 px'e daralıyor; iç düzen yine de iki kolona geçtiği için 230 px'lik ipucu paneli ana modelle gereksiz rekabet ediyordu.
+- Düzeltme: `Kısa ipucu` yan kolondan çıkarılıp ana makinenin altına `operation-lab-3-hint-strip` rehber şeridi olarak taşındı. Ana model alanı genişletildi (`max-w-2xl`), ipucu artık işlem kartlarının yanında değil altında okunuyor.
+- QA: Browser/Codex canlı ölçümde yuvarlama modeli 630 px genişlikte, ipucu şeridi modelin altında, çakışma false ve yatay taşma false. Yanlış kart `Tekrar dene`, doğru kart görev geçişi verdi; console app issue 0. `module:check` yeni şerit kontratıyla 39 pass / 3 warn / 0 fail; `tsc`, `build`, `git diff --check` geçti. Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-03 İlkokul - 03-07 Dört İşlem Makinesi Cevap Sızıntısı Cilası
+- Kullanıcı geri bildirimi: `Yaklaşık toplam 200 + 200 = Yaklaşık 400` kutusu yan cevap panelini ıskartaya çıkarıyor.
+- Değerlendirme: Uygun bulundu. Yuvarlanmış sayıları göstermek hedef kazanıma hizmet ediyor; fakat toplam sonucunu doğrudan yazmak çocuğun seçim ve zihinden toplama adımını elinden alıyor.
+- Düzeltme: Tahmin modelindeki `Yaklaşık toplam` sonuç kutusu kaldırıldı. İpucu `Yuvarlanan sayıları zihninde topla, sonra kartı seç.` olarak güncellendi. 2026-06-06 ek cilasıyla yuvarlanmış değer de doğrudan yazılmıyor; sahnede yalnız sayıların yüzlük çizgisindeki konumu kalıyor.
+- QA: Browser/Codex canlı kontrolde sol sahne `Yaklaşık 400` veya `Yaklaşık toplam` göstermedi, `operation-lab-3-rounding-result` DOM'dan kalktı, sağ panelde seçenekler durdu. Yanlış kart `Tekrar dene`, doğru kart görev geçişi verdi; yatay taşma false ve console app issue 0. `module:check` 38 pass / 3 warn / 0 fail; `tsc`, `build`, `git diff --check` geçti. Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-03 İlkokul - 03-07 Dört İşlem Makinesi Problem Dili Cilası
+- Kullanıcı geri bildirimi: `3 kutuda 4 kalem var` ifadesi her kutudaki kalem sayısını netleştirmeli.
+- Değerlendirme: Uygun bulundu. Eski cümle her kutuda 4 kalem olduğunu açık söylemiyor; 3. sınıf problem çözmede ilk işlem seçimi için bu ayrım kritik. Kalite kapısı `4'er` yerine ilkokul dili için `dörder` yazımını tercih etti.
+- Düzeltme: `problem-first` ve `problem-result` görevleri `formatTurkishDistributiveNumber(4)` yardımcısıyla `3 kutuda dörder kalem var` üretir hale getirildi. Böylece üleştirme ifadesi manuel yazıma bağlı kalmadı.
+- QA: Browser/Codex canlı kontrolde 10. görevde sahne, sağ panel ve AstroBot `3 kutuda dörder kalem var. 5 kalem daha eklendi. Önce hangi işlem yapılır?` dedi; eski `3 kutuda 4 kalem var` ve `kalem daha geldi` kalıpları görünmedi. Yanlış kart `Tekrar dene`, doğru kart görev geçişi verdi; 11. görevde de `3 kutuda dörder kalem var. 5 kalem daha eklendi. Toplam kaç kalem oldu?` doğrulandı. Console app issue 0, yatay taşma false. `module:check` 38 pass / 3 warn / 0 fail; `tsc`, `build`, `git diff --check` geçti. Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-03 İlkokul - 03-07 Dört İşlem Makinesi Sadelik Cilası
+- Kullanıcı geri bildirimi: 2. görevden itibaren ana ekrandaki genel `İşlem parçaları` kutusu kaldırılırsa ekran daha sade ve anlaşılır olabilir mi?
+- Değerlendirme: Uygun bulundu. Zihinden işlem, çarpma, problem ve eşitlik görevlerinde bu kutu matematiksel bir karar verdirmiyor; çocuğun dikkatini sağdaki cevap kartları ve kısa ipucundan dağıtabiliyor. Anlamı olan yuvarlama, bozma ve kalan modelleri ise korunmalı.
+- Düzeltme: `MiniBlocks` artık yalnız `Yuvarlama modeli`, `Bozma modeli` ve `Kalan kutusu` döndürüyor; diğer görevlerde pasif genel kutu hiç çizilmiyor.
+- QA: `module:check` 38 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Browser/Codex canlı kontrolde 2. görev `Zihinden topla` ve 3. görev `Zihinden çıkar` ekranlarında `İşlem parçaları` görünmedi, kısa ipucu şeridi kaldı, yanlış kart AstroBot `Bir daha bak` feedback'i verdi, doğru kart görev ilerletti; yatay taşma false, console warn/error yok.
+
+## 2026-06-06 İlkokul - 03-07 Dört İşlem Makinesi Taşıma Kutusu Kontrolü
+- Kullanıcı geri bildirimi: Ana ekrandaki `Taşıma kutusu` gerçekten işlevli mi, CU ile kontrol edilsin; işlev yoksa kaldırılsın.
+- Değerlendirme: Browser/Codex canlı kontrolde taşıma görevinde sahne içinde tıklanabilir hedef yoktu; kutu yalnız statik karelerden oluşuyordu. `15 birlik, 1 onluk ve 5 birlik` fikri zaten kısa ipucunda ve cevap kartlarında açık verildiği için kutu çocuğa ek karar desteği sağlamıyor.
+- Düzeltme: `carry` görevi için `MiniObjectTray` kaldırıldı. `Yuvarlama modeli`, `Bozma modeli` ve `Kalan kutusu` korundu.
+- QA: Browser/Codex canlı kontrolde 4. görev `Onluğu taşı` ekranında `Taşıma kutusu` ve genel `İşlem parçaları` görünmedi. Yanlış kartta alt şerit `Tekrar dene` durumuna geçti, doğru kart 5. görev `Onluğu boz` paneline ilerletti; yatay taşma false, console warn/error yok. `module:check` 38 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti.
+
+## 2026-06-06 İlkokul - 03-07 Dört İşlem Makinesi Yuvarlama Yakınlık Cilası
+- Kullanıcı geri bildirimi: Ana ekrandaki `Yuvarlama modeli` doğrudan sonucu yazıyor; öğrencinin düşünmesine gerek kalmıyor.
+- Değerlendirme: Uygun bulundu. Yaklaşık toplam daha önce kaldırılmıştı, fakat `238 -> 200` gibi yuvarlanmış sayıların açık yazılması yine cevabı fazla kolaylaştırıyordu.
+- Düzeltme: `RoundingCard` artık ok ve yuvarlanmış sayı yazmaz. Her sayı, alt ve üst yüzlük etiketleri olan çizgi üzerinde renkli nokta olarak gösterilir; `Hangi yüzlüğe daha yakın?` sorusu kalır.
+- QA: Browser/Codex canlı kontrolde `418 + 276` yuvarlama görevinde sahne yalnız `400-500` ve `200-300` yüzlük çizgilerini, sayıları ve noktaları gösterdi; `Yaklaşık 700`, okla yazılmış yuvarlanmış değer veya `Taşıma kutusu` sahnede görünmedi. Yanlış kart `Tekrar dene/Bir daha bak` feedback'i verdi, doğru kart 2. görev `Zihinden topla` ekranına ilerletti; yatay taşma false ve console warn/error yok. `module:check` 38 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-06 İlkokul - 03-07 Dört İşlem Makinesi Bozma Cevap Sızıntısı Cilası
+- Kullanıcı geri bildirimi: Bozma sorusunda ana ekranda `1 onluk boz` cevabı direkt verilmiş; pedagojik açıdan uygun mu?
+- Değerlendirme: Uygun değil. Doğru seçenek sağ cevap kartında kalmalı; ana sahne yalnız `2 birlikten 8 çıkmaz` durumunu ve dönüşüm ihtiyacını göstermeli. Başlık, çip, ipucu ve model doğru hamleyi aynen yazarsa çocuk karar vermeden cevabı kopyalar.
+- Düzeltme: `borrow` görevi başlığı `Birlik yetmiyor` oldu; çipler `birlik yetmez / hamleyi seç`, ipucu `Birlik kutusunda yeterli parça yok. Hangi hamle modeli düzeltir?` diline çekildi. `BorrowBreakdown` seçim öncesi `1 onluk boz`, `10 birlik al` ve `4 onluk + 12 birlik` sonucunu göstermiyor; `Hamleden sonra` alanı soru işaretli bekliyor. Doğru karttan sonra dönüşüm açılıp `4 onluk + 12 birlik` gösteriliyor.
+- QA: Kaynak kabul kontrolü önce cevap sızıntısını fail verdi, düzeltme sonrası geçti. Browser/Codex canlı QA'da dört doğru cevapla 5. göreve gelindi; seçim öncesi sahnede `Birlik yetmiyor`, `birlik yetmez`, `hamleyi seç`, soru işaretli hamle sonrası alanı ve cevabı söylemeyen kısa ipucu göründü. Yanlış kart `Tekrar dene/Bir daha bak` feedback'i verdi ve cevap yine açılmadı; doğru karttan sonra dönüşüm açıldı, sonra `Çarpımı tahmin et` görevine geçildi. Yatay taşma false, console warn/error yok. `module:check` 38 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-06 İlkokul - 03-07 Dört İşlem Makinesi Bozma İpucu Dili Cilası
+- Kullanıcı geri bildirimi: Ana ekranda öğrenciye ipucu vermek gerekirken sanki cevap verilmiş gibi duruyor.
+- Değerlendirme: Uygun bulundu. Önceki cila doğru cevabı aynen kaldırmıştı; fakat `hamleyi seç / Doğru hamleyi seç` dili matematik ipucundan çok cevap kartına komut veriyor gibi görünüyordu.
+- Düzeltme: Ana sahne çipleri `2 < 8` ve `onluklara bak` oldu. Model metni `Birlikler az kaldı / Onluklara bak`, kısa açıklama `Birlik kutusu için destek ara`, ipucu ise `Onluk kutusundan destek almayı düşün` diline çekildi. Böylece cevap olan `1 onluk boz` yalnız sağ cevap kartlarında kaldı.
+- QA: Browser/Codex canlı kontrolde seçim öncesi sahne `1 onluk boz`, `10 birlik al`, `4 onluk + 12 birlik` veya eski `hamleyi seç` komutlarını göstermedi; kavramsal ipucu `2 < 8 / onluklara bak` göründü. Yanlış kart `Tekrar dene/Bir daha bak` feedback'i verdi ve dönüşüm açılmadı; doğru karttan sonra dönüşüm açıldı ve sonra `Çarpımı tahmin et` görevine geçildi. Yatay taşma false, console warn/error yok. Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-06 İlkokul - 03-07 Dört İşlem Makinesi Kalan Modeli Cilası
+- Kullanıcı geri bildirimi: Ana ekrandaki `Kalan kutusu` bölümünün işlevi var mı; yoksa uygun olan yapılsın.
+- Değerlendirme: Uygun bulundu. Eski kalan bölümü öğrencinin karar vermesine yardım eden bir mekanik değil, pasif nesne kutusuydu; ayrıca `17 için 2 nesne dışarıda kalır` gibi cevap hissini erken verebiliyordu. Kalanlı bölme için daha doğru yaklaşım, tam grupları ve tam gruba giremeyen nesneleri göstermek ama cevabı sağdaki kartlara bırakmak.
+- Düzeltme: `remainder` görevi `Kalanı bul` başlığına, `5'li gruplar / dışarıda kalan` çiplerine ve cevabı söylemeyen kısa ipucuna çekildi. `MiniObjectTray` kaldırıldı; yerine `operation-lab-3-remainder-model`, `operation-lab-3-remainder-group` ve `operation-lab-3-remainder-leftovers` test kimlikleriyle 5'li tam grupları ve dışarıda kalan nesneleri gösteren `Kalan modeli` eklendi.
+- QA: Browser/Codex canlı kontrolde kalan görevinde 3 tam 5'li grup ve 2 dışarıda kalan nesne göründü; sahne `Kalan kutusu`, `2 kaldı`, `17 için 2` veya seçim öncesi `2 artar` cevabını yazmadı. Yanlış kart `Tekrar dene/Bir daha bak` feedback'i verdi ve model bozulmadı; doğru kart sonraki göreve ilerletti. Yatay taşma false, console warn/error yok. `module:check` 41 pass / 3 warn / 0 fail; `npx tsc --noEmit`, `npm run build` ve `git diff --check` geçti. Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-06 İlkokul - 03-07 Dört İşlem Makinesi Adlandırma Cilası
+- Kullanıcı geri bildirimi: Atom adı pedagojik açıdan değerlendirilsin ve uygunsa değiştirilsin.
+- Değerlendirme: `İşlem Laboratuvarı` doğru ama 3. sınıf öğrencisi için biraz soyut bulundu. Modül sahnesi zaten `İşlem makinesi` diliyle çalıştığı ve kapsamı dört işlem, tahmin, kalanlı bölme, problem ve eşitlik olduğu için `Dört İşlem Makinesi` adı daha hızlı anlaşılır ve görsel temayla daha uyumlu.
+- Düzeltme: Embed başlığı, registry kart adı, açıklama, spec başlığı, MODULES başlığı ve kalite kayıtları `Dört İşlem Makinesi` olarak eşitlendi. Registry açıklamasındaki eski `kalan kutusu` dili `kalan modeli` olarak güncellendi.
+
+## 2026-06-06 İlkokul - 03-07 Dört İşlem Makinesi AstroBot Çakışma Cilası
+- Kullanıcı geri bildirimi: Ana ekranda AstroBot düşünce kutusu alttaki `İşlemi oku` kutusunun üzerine geliyor; alttaki kutunun ne olduğu anlaşılmıyor.
+- Değerlendirme: Uygun bulundu. `Kısa ipucu` şeridi sahnenin en altında durduğu için sabit AstroBot balonu ile aynı güvenli alanı kullanıyordu. Ayrıca `İşlemi oku` bir eylem gibi görünmesine rağmen gerçek bir buton değildi; çocuk için anlamı net değildi.
+- Düzeltme: `operation-lab-3-hint-strip` makinenin üstüne taşındı. Pasif durum rozeti `İşlemi oku` yerine `Kartı seç` oldu; başarı ve hata durumlarında `Makine kilitlendi` / `Tekrar dene` dili korundu. Global AstroBot dosyasına dokunulmadı.
+- QA: Browser/Codex canlı kontrolde ipucu şeridi makine panelinin üstünde göründü, `Kartı seç` rozeti net okundu, eski `İşlemi oku` metni ekranda kalmadı, yatay taşma false ve console warn/error yok. Modül statüsü `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-06 İlkokul - 03-07 Dört İşlem Makinesi Sayı Çeşitliliği
+- Kullanıcı geri bildirimi: Her oynayışta aynı sayılar gelirse öğrenci sayıları ezberleyebilir; kontrol edilip değerlendirilsin.
+- Değerlendirme: Uygun bulundu. Canlı/kod kontrolünde ilk birkaç görev küçük havuzdan değişirken taşıma, bozma, çarpma, kalan, problem, hikaye ve eşitlik görevlerinin önemli kısmı sabit sayılarla kaldığı görüldü. Bu, 13 görevli atomda tekrar kullanım için ezber riski oluşturuyordu.
+- Düzeltme: `createOperationLab3Tasks` tüm görev türlerini seed kontrollü sayı havuzlarına bağladı. `Tekrar Oyna` yeni seed ile tahmin, zihinden işlem, taşıma, bozma, çarpma tahmini, çarpma, kalanlı bölme, yönerge, problem, hikaye ve eşitlik görevlerinin sayılarını yeniden kuruyor. Bozma modeli de artık `52 - 18` sabitine bağlı değil; seçilen çıkarma işleminden onluk-birlik modelini hesaplıyor.
+- QA: Kırmızı kabul kontrolü önce sabit görev işaretlerini fail verdi, düzeltme sonrası geçti. Browser/Codex canlı kontrolde iki tam tur oynandı: 1. tur 13/13 completion, `Tekrar Oyna` sonrası 2. tur 13/13 completion ve 13 ifadenin 13'ü değişti. Örnek değişimler: `187 + 241` → `452 + 319`, `56 + 27` → `68 + 25`, `73 - 45` → `81 - 36`, `17 / 5` → `19 / 4`. Console warn/error yok, yatay taşma false. Modül statüsü `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-06 İlkokul - 03-07 Dört İşlem Makinesi Showcase Ready
+- Kullanıcı geri bildirimi: Completion sonrası sağ cevap panelinde hâlâ eski adlandırma yazıyor; bu kelime değiştirilsin ve atom `Vitrin Hazır` yapılsın.
+- Değerlendirme: Uygun bulundu. Modül adı önce `Dört İşlem Makinesi` olarak güncellenmişti; completion panelindeki eski ifade gözden kaçmış ve ad tutarlılığını bozuyordu.
+- Düzeltme: Sağ panel completion metni `Dört İşlem Makinesi tamam.` oldu. Registry statüsü `showcase-ready`, dashboard etiketi `Vitrin Hazır` olacak şekilde güncellendi. Spec, MODULES, showcase readiness, scorecard, progress ve current task kayıtları `Showcase Ready / Vitrin Hazır` ile senkronlandı.
+- QA: Browser/Codex canlı kontrolde completion sonrası eski adlandırma görünmedi, sağ panel `Dört İşlem Makinesi tamam.` gösterdi; dashboard `/?grade=3` içinde kart `Vitrin Hazır` olarak doğrulandı. `module:check`, `tsc`, `build`, `git diff --check` kapıları çalıştırıldı.
+
+## 2026-06-07 İlkokul - 03-08 Ölçme Ailesini Küçük Atomlara Ayırma
+- Kullanıcı geri bildirimi: `Birim Dönüşüm İstasyonu` görevleri birkaç atom olacak şekilde düzeltilirse pedagojik olarak daha uygun olur mu, karar verilip en uygun şekilde uygulansın.
+- Değerlendirme: Uygun bulundu. Eski birleşik istasyon saat okuma, zaman dönüşümü, süre tahmini, uzunluk-kütle, para ve sıvı ölçme gibi farklı zihinsel modelleri 12 görevde birleştiriyordu. Çocuk ilk 3 saniyede hedefi daha rahat anlasın diye konu aileleri ayrıldı.
+- Düzeltme: Ortak `UnitConverter3Experience` kabuğu oluşturuldu. Eski `unit-converter-3` registry statüsü `archived` oldu. Aktif 3. sınıf laboratuvarına `clock-reader-3`, `time-conversion-3`, `duration-estimate-3`, `length-mass-converter-3`, `money-value-workshop-3` ve `liquid-measure-workshop-3` eklendi. Her yeni atom yalnız kendi SSOT kazanım grubunu açıyor ve `Review Needed` durumunda bekliyor.
+- QA: Browser/Codex canlı kontrolde altı atomun tamamında ilk ekran anlaşılır, yanlış kart kırmızı feedback + AstroBot ipucu, doğru zincir completion, console 0 warning/error ve yatay taşma false doğrulandı. Tamamlanan görev sayıları sırasıyla 4/4, 4/4, 3/3, 4/4, 4/4 ve 5/5. Dashboard `/?grade=3` içinde yeni altı aktif kart ve `Eski Deneyler` arşivinde eski birleşik istasyon doğrulandı. `module:check` yeni altı atomda 0 fail; arşiv `unit-converter-3` 29 pass / 5 warn / 0 fail. `npx tsc --noEmit`, `npm run build`, `git diff --check` geçti; build yalnız mevcut büyük chunk uyarısını verdi. Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-07 İlkokul - 03-08a Saati Okuyorum Saat Çeşitliliği
+- Kullanıcı geri bildirimi: `Saati Okuyorum` atomunda hep aynı sayılar/saatler geliyor; pedagojik olarak uygun mu, değerlendir ve düzelt.
+- Değerlendirme: Uygun değil. Saat okuma atomu tekrar oynandığında aynı birkaç analog saat ve dijital cevap dönerse çocuk akrep-yelkovan ilişkisini okumak yerine cevapları ezberleyebilir.
+- Düzeltme: Ortak 3. sınıf ölçme görev üreticisindeki saat havuzu 12 okunabilir örneğe çıkarıldı. Saat çeldiricileri `bir saat kaydırma`, `yelkovanın üstündeki sayıyı dakika sanma` ve `dakikayı yakın farklı değerle karıştırma` hatalarından üretilir hale geldi.
+- QA: Kabul kontrolünde farklı seed dizileri `12:00, 05:55, 06:10, 02:30` gibi değişen dört saat üretti. Browser/Codex canlı QA'da yanlış kart kırmızı feedback + AstroBot ipucu verdi, 4/4 completion tamamlandı, `Tekrar Oyna` sonrası ilk saat `12:00` -> `05:55` değişti, console warn/error 0 ve yatay taşma false. Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-07 İlkokul - 03-08a Saati Okuyorum Showcase Ready
+- Kullanıcı geri bildirimi: Kaptan canlı kontrolden sonra `Saati Okuyorum` atomunun vitrin hazır olarak isimlendirilmesini istedi.
+- Düzeltme: `clock-reader-3` registry statüsü `showcase-ready` yapıldı. Spec, MODULES, showcase readiness, kalite scorecard, progress ve current task kayıtları `Showcase Ready / Vitrin Hazır` ile eşitlendi.
+- QA: Önceki canlı QA kanıtları korundu: yanlış kart kırmızı feedback + AstroBot ipucu, 4/4 completion, `Tekrar Oyna` sonrası yeni saat, console warn/error 0 ve yatay taşma false. Bu turda dashboard `/?grade=3` içinde `Saati Okuyorum` kartı `Vitrin Hazır` göründü; diğer yeni ölçme atomları `Görüş Gerekli` kaldı.
+
+## 2026-06-07 İlkokul - 03-08b Zaman Dönüşüm Makinesi Sayı Çeşitliliği
+- Kullanıcı geri bildirimi: `Zaman Dönüşüm Makinesi` atomunda her oynayışta sayıların aynı mı farklı mı geldiği kontrol edilsin; uygun olan yapılsın.
+- Değerlendirme: Kod kabul kontrolünde görevler değişiyor gibi görünse de 3 oyunluk döngüye giriyordu. `2/3/4 saat` ve `3/4/5 dakika` küçük havuzu tekrar kullanımda ezber riski oluşturuyordu.
+- Düzeltme: Saat-dakika ve dakika-saniye havuzları sekizer örneğe çıkarıldı. Çeldiriciler 60 yerine 10'la çarpma, bir önceki dönüşüme kayma ve 100'le çarpma gibi gerçek öğrenci hatalarından üretilir hale geldi. Bu değişiklik ortak 3. sınıf ölçme üreticisinde olduğu için arşivdeki eski birleşik `unit-converter-3` route'unda da zaman dönüşümü görevleri daha çeşitli gelir.
+- QA: Kabul kontrolünde 8 ardışık seed için 8 farklı görev dizisi doğrulandı. Browser/Codex canlı QA'da ilk görev `8 saat kaç dakika eder?`, yanlış kart kırmızı feedback + AstroBot ipucu, 4/4 completion, `Tekrar Oyna` sonrası ilk cevap `480 dakika` -> `60 dakika`, console warn/error 0 ve yatay taşma false doğrulandı. Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-07 İlkokul - 03-08b Zaman Dönüşüm Makinesi Showcase Ready
+- Kullanıcı geri bildirimi: Kaptan canlı kontrolden sonra `Zaman Dönüşüm Makinesi` atomunun vitrin hazır olarak isimlendirilmesini istedi.
+- Düzeltme: `time-conversion-3` registry statüsü `showcase-ready` yapıldı. Spec, MODULES, showcase readiness, kalite scorecard, progress ve current task kayıtları `Showcase Ready / Vitrin Hazır` ile eşitlendi.
+- QA: Önceki canlı QA kanıtları korundu: yanlış kart kırmızı feedback + AstroBot ipucu, 4/4 completion, `Tekrar Oyna` sonrası yeni sayı, console warn/error 0 ve yatay taşma false. Bu turda dashboard `/?grade=3` içinde `Zaman Dönüşüm Makinesi` kartı `Vitrin Hazır` olarak doğrulandı; kalan yeni ölçme atomları `Görüş Gerekli` kaldı.
+
+## 2026-06-07 İlkokul - 03-08c Süre Tahmin Dedektifi Birim Ölçeği Cilası
+- Kullanıcı geri bildirimi: Canlı modelde `ders` ve `okul zamanı` gibi bağlam kelimeleri yerine `saniye`, `dakika`, `saat` gibi süre birimi kelimeleri görünse daha anlaşılır olur mu diye soruldu.
+- Değerlendirme: Uygun bulundu. Bu atomun hedefi olayı sınıflandırmak değil, günlük olay için makul süre birimini seçmek. Bu yüzden modelin bağlam etiketleri yerine süre ölçeğini göstermesi çocuk için daha doğrudan; ayrıca doğru cevabı yazmadığı için cevap kartı oyunu korunuyor.
+- Düzeltme: Süre tahmini görevlerinin canlı model kartları ortak `saniye`, `dakika`, `saat` ölçeğine çekildi. Soru, cevaplar ve feedback mantığı değişmedi. Eski birleşik `unit-converter-3` route'u aynı ortak üreticiyi kullandığı için bu cila orada da süre tahmini sahnesini sadeleştirir.
+- QA: Browser/Codex canlı kontrolde canlı modelde `saniye`, `dakika`, `saat` kartları görüldü; `ders` / `okul zamanı` bağlam etiketleri model kartlarından kalktı. Yanlış kart kırmızı feedback verdi, doğru akış 3/3 completion'a ulaştı, console warn/error 0 ve yatay taşma false. Modül statüsü `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-07 İlkokul - 03-08c Süre Tahmin Dedektifi Olay Çeşitliliği
+- Kullanıcı geri bildirimi: Her oynayışta aynı işlemler/olaylar tekrarlanırsa öğrencinin ezberleyebileceği ve bunun pedagojik olarak uygun olmayabileceği belirtildi.
+- Değerlendirme: Uygun değil. İlk kabul kontrolünde 8 ardışık seed yalnız 3 farklı görev dizisi üretti; aynı üç olay sadece sıra değiştiriyordu. Bu, süre tahmini yerine cevap ezberi riskini artırıyordu.
+- Düzeltme: Süre tahmini olay havuzu 9 günlük örneğe çıkarıldı: kısa saniye olayları, dakika ölçeği olayları ve saat ölçeği olayları birlikte kullanılıyor. Canlı modeldeki `saniye / dakika / saat` ölçeği korunuyor ve cevap kartı oyunu cevap sızdırmadan devam ediyor.
+- QA: Kırmızı kabul kontrolü `unique signatures 3` ile düştü; düzeltme sonrası 8 ardışık seed için `unique signatures 8` doğrulandı. Browser/Codex canlı QA'da yanlış kart feedback'i çalıştı, 3/3 completion tamamlandı, `Tekrar Oyna` sonrası ilk olay `Diş fırçalama` olarak değişti, console warn/error 0 ve yatay taşma false. Modül statüsü `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-07 İlkokul - 03-08c Süre Tahmin Dedektifi Yarım Gün Dil Netliği
+- Kullanıcı geri bildirimi: `Okulda geçirilen yarım gün` ifadesinin öğrencide 12 saat çağrışımı yapabileceği, bu yüzden sorunun düzeltilmesinin daha uygun olacağı belirtildi.
+- Değerlendirme: Uygun bulundu. 4 saatlik cevap için `yarım gün` ifadesi çocukta takvimsel yarım gün / 12 saat düşüncesi doğurabilir; bu, süre tahmini kazanımını değil dili tartıştırır.
+- Düzeltme: Olay metni `Okulda geçen bir sabah` yapıldı. Cevap `4 saat`, çeldiriciler `4 saniye` ve `4 dakika` olarak korundu; matematik hedefi ve oyun akışı değişmedi.
+- QA: Kabul kontrolünde eski `Okulda geçirilen yarım gün` ifadesinin havuzdan kalktığı ve yeni `Okulda geçen bir sabah` ifadesinin geldiği doğrulandı. Browser/Codex canlı kontrolde temiz yüklemede eski ifade görünmedi, console warn/error 0 ve yatay taşma false. Modül statüsü `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-07 İlkokul - 03-08c Süre Tahmin Dedektifi Showcase Ready
+- Kullanıcı geri bildirimi: Kaptan canlı kontrolden sonra `Süre Tahmin Dedektifi` atomunun vitrin hazır olarak isimlendirilmesini istedi.
+- Düzeltme: `duration-estimate-3` registry statüsü `showcase-ready` yapıldı. Spec, MODULES, showcase readiness, kalite scorecard, progress ve current task kayıtları `Showcase Ready / Vitrin Hazır` ile eşitlendi.
+- QA: Önceki canlı QA kanıtları korundu: yanlış kart feedback, 3/3 completion, `Tekrar Oyna` sonrası farklı olay, `saniye / dakika / saat` canlı model ölçeği, `Okulda geçen bir sabah` dil netliği, console warn/error 0 ve yatay taşma false. Bu turda dashboard `/?grade=3` içinde `Süre Tahmin Dedektifi` kartı `Vitrin Hazır` olarak doğrulandı; `Ölçü Birimi Makinesi` hâlâ `Görüş Gerekli` kaldı.
+
+## 2026-06-10 İlkokul - 01-06 Renkli Paket Tablosu Dil Cilası
+- Kullanıcı geri bildirimi: `Veri Akış Ekranı` atomu CU ile pedagojik açıdan incelensin; sağ paneldeki `Sarı paketler hangi satıra gider?` gibi soru kökleri 1. sınıf öğrencisi için anlaşılır mı değerlendirilsin ve uygunsa düzeltme yapılsın.
+- Değerlendirme: Atomun veri/çetele/en çok-en az hedefi uygun; büyük cevap kartları, renkli paketler ve anlık feedback 1. sınıf için iyi bir oyun hissi veriyor. Ancak `hangi satıra gider?` ve `tablo satırı` dili ilk 3 saniyede çocuk için soyut kalabilir. Öğrencinin yaptığı gerçek eylem paketi aynı renk kutusuna koymak olduğu için dil `renk kutusu` ve `hangi kutuya koyarsın?` kalıbına çekildi. Modül adı da teknik `Veri Akış Ekranı` yerine çocuk için daha somut `Renkli Paket Tablosu` yapıldı. Registry kategorisi `Olasılık` yerine kazanıma uygun `Veri` oldu.
+- Düzeltme: `dataFlowScreenTasks` içindeki tablo görevi başlığı `Renk kutusunu seç`, prompt `... paketleri hangi kutuya koyarsın?`, çetele promptu `... paketleri say. Kaç çizgi çizersin?`, en çok/en az promptları daha kısa hale geldi. UI etiketlerinde `tablo satırı` yerine `renk kutusu`, başarı/completion metinlerinde de `renk kutuları` ve `çizgiler` dili kullanıldı. Spec, registry, MODULES, scorecard, readiness, roadmap ve current task kayıtları yeni adla eşitlendi.
+- QA: Browser/Codex canlı kontrolde ilk ekranda `Renkli Paket Tablosu`, `Yeşil paketleri hangi kutuya koyarsın?` ve `renk kutusu` etiketleri göründü; eski `hangi satıra gider?` dili görünmedi. Yanlış kart `Tekrar dene` + AstroBot ipucu verdi; doğru kart görev geçişi yaptı. Tam zincir 5/5 completion'a ulaştı, completion metni yeni adla göründü, yatay taşma false ve console warn/error 0. Dashboard `/?grade=1` içinde kart `Renkli Paket Tablosu`, kategori `VERİ`, statü `Görüş Gerekli`, `İlkokul hattı açık` olarak doğrulandı. `npm run module:check -- data-flow-screen` 20 pass / 3 warn / 0 fail; `npx tsc --noEmit` ve `npm run build` geçti, build yalnız mevcut büyük chunk uyarısını verdi.
+- Statü: Bu cila turunda modül `Review Needed / Görüş Gerekli` kaldı; sonrasında Kaptan canlı görsel onayıyla `Showcase Ready / Vitrin Hazır` yapıldı.
+
+## 2026-06-10 İlkokul - 01-06 Renkli Paket Tablosu Showcase Ready
+- Kullanıcı geri bildirimi: Kaptan canlı kontrolden sonra `Renkli Paket Tablosu` atomunun vitrin hazır olarak isimlendirilmesini istedi.
+- Düzeltme: `data-flow-screen` registry statüsü `showcase-ready` yapıldı. Spec, MODULES, showcase readiness, kalite scorecard, progress ve current task kayıtları `Showcase Ready / Vitrin Hazır` ile eşitlendi. Modül oynanış dosyasına bu turda dokunulmadı.
+- QA: Önceki canlı QA kanıtları korundu: 1. sınıf için sade `renk kutusu` dili, yanlış kart feedback, doğru görev geçişi, 5/5 completion, console warn/error 0 ve yatay taşma false. Bu turda dashboard `/?grade=1` içinde kart `Vitrin Hazır / Veri / Renkli Paket Tablosu` olarak doğrulandı.

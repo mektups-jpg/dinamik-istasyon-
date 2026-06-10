@@ -18,11 +18,13 @@ Bu dosya, "modül tamamlandı" demeden önce çalıştırılacak kalite kapısı
 
 ## 3. Görsel/UX Kapısı
 - İlk viewport "neyle oynayacağım?" sorusunu yanıtlamalı.
+- Öğrenciye görünen soru ve yönergeler sınıf seviyesine uygun, somut nesne + eylem + beklenti içeren açık cümleler olmalı. "Yarım için kaç eş parça?" gibi eksik bağlamlı kısa ifadeler yerine "Yarım pizza yapmak için bütün pizza kaç eş dilime ayrılır?" gibi çocuk gözüyle anlaşılır dil kullanılmalı.
 - Kontroller sahneye doğrudan etki etmeli.
 - AstroBot konuşma balonu otomatik kapanmamalı; kullanıcı kapatana veya yeni mesaj gelene kadar okunabilir kalmalı.
 - Global AstroBot sabit kalmalı ve balonu botun sağ tarafına doğru açılmalı; mesaj geldiğinde sahne/panel yer değiştirmemeli.
 - AstroBot, sahne kanıt kartı ve panel aynı uzun cümleyi tekrar etmemeli; panel geri bildirimi kısa durum çipi olmalı.
 - Görsel öğeler matematiksel anlam taşımalı.
+- Bir atomda farklı görev ekranları, ritim durakları veya kavram fazları varsa her faz sakin ama ayırt edici bir renk kimliği taşımalı; bu renk değişimi çocuğa "yeni ekrandayım" sinyali vermeli, doğru/yanlış feedback renkleriyle karışmamalı.
 - Sağ/alt panel ana sahneyi boğmamalı.
 - Bilgisayar/kiosk desktop görünüm ana karar alanıdır; embed/dar dizüstü görünümde yatay taşma, kırpılan aksiyon veya tıklanamayan overlay olmamalı. Telefon yalnız Kaptan özellikle isterse nonblocking smoke sayılır.
 - Playwright/Chrome QA'da screenshot almadan önce gerçek görünüm ölçüsü doğrulanmalı: `window.innerWidth/innerHeight`, `window.outerWidth/outerHeight`, `#root` rect ve `documentElement` ölçüleri kaydedilir. Küçük Playwright viewport'u büyük Chrome penceresinde kalıp dışı gri görünüyorsa bu modül hatası değil QA kurulum hatasıdır; modül puanlanmadan önce viewport pencereye eşleştirilir veya gerçek viewport screenshotı kullanılır.

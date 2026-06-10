@@ -22,7 +22,7 @@ export default function MagnitudeCoreApp() {
     }
   }, [macroMastered, microMastered, unlockModule]);
   const [botMessage, setBotMessage] = useState<BotMessage>({
-    text: "Devasa Nicelik Çekirdeği'ne hoş geldin. Büyük sayıları rahat okuyabilmek için, rakamları sağdan sola doğru 3'erli gruplara ayırman gerekiyor. Biraz odaklanırsak bunu rahatça çözebiliriz.",
+    text: "Devasa Nicelik Çekirdeği'ne hoş geldin. Büyük sayıları rahat okuyabilmek için, rakamları sağdan sola doğru üçerli gruplara ayırman gerekiyor. Biraz odaklanırsak bunu rahatça çözebiliriz.",
     type: 'info',
     id: 0
   });
@@ -180,7 +180,7 @@ function MacroSimulator({ onWin, showBotMessage }: { onWin: () => void, showBotM
       // Automatically prep next state but let user see result first via button click
     } else {
       setError(true);
-      showBotMessage("İşlem başarısız. Sayıları bölüklere ayırırken daima sağdan (birler basamağından) başlamalı ve sola doğru 3'er saymalısın. Lazerleri yeniden ayarla.", "error");
+      showBotMessage("İşlem başarısız. Sayıları bölüklere ayırırken daima sağdan (birler basamağından) başlamalı ve sola doğru üçer saymalısın. Lazerleri yeniden ayarla.", "error");
       setTimeout(() => {
         setError(false);
         setLasers([]);
@@ -226,7 +226,7 @@ function MacroSimulator({ onWin, showBotMessage }: { onWin: () => void, showBotM
         <Award className="w-32 h-32 text-[#00E5FF] mb-6 animate-pulse drop-shadow-[0_0_20px_rgba(0,229,255,0.6)]" />
         <h2 className="text-4xl font-black text-white mb-4">SİSTEM ÇÖZÜLDÜ!</h2>
         <p className="text-lg text-[#00E5FF] font-bold tracking-widest mb-2 uppercase">Kazanım: MAT.5.1.1 Elde Edildi</p>
-        <p className="text-gray-400 mb-10 text-lg">Bölükleri sağdan 3'er 3'er ayırma kuralını tamamen kavradın. Milyonlara kadar olan devasa sayılar artık senin için çok basit.</p>
+        <p className="text-gray-400 mb-10 text-lg">Bölükleri sağdan üçer üçer ayırma kuralını tamamen kavradın. Milyonlara kadar olan devasa sayılar artık senin için çok basit.</p>
         <div className="flex flex-col sm:flex-row gap-4">
           <Link to="/" className="bg-[#1F2833] text-white border border-gray-700 px-8 py-4 rounded-xl font-bold hover:bg-gray-800 transition-all">
             Lobiye Dön
@@ -252,7 +252,7 @@ function MacroSimulator({ onWin, showBotMessage }: { onWin: () => void, showBotM
       <div className="text-center mb-6">
         <h2 className="text-3xl font-black text-white mb-4">Sayı Lazer Ayrıştırıcısı</h2>
         <p className="text-gray-400 max-w-lg mx-auto">
-          Rakamların arasına tıklayarak lazerleri yerleştir. Sağdan 3'erli gruplar oluşturacak şekilde blokları parçalamalısın.
+          Rakamların arasına tıklayarak lazerleri yerleştir. Sağdan üçerli gruplar oluşturacak şekilde blokları parçalamalısın.
         </p>
       </div>
 

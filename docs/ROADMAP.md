@@ -89,7 +89,7 @@ Amaç: küçük yaş kullanıcıları için ürünün giriş deneyimini güçlen
 - [ ] 1. sınıf: Otonom Rota Bağlantısı.
 - [ ] 1. sınıf: Optik Kalite Kontrol Bandı.
 - [ ] 1. sınıf: Akıllı Lojistik Terminali.
-- [ ] 1. sınıf: Veri Akış Ekranı.
+- [x] 1. sınıf: Renkli Paket Tablosu.
 - [ ] 2. sınıf: Lazer Kesim Odası.
 - [ ] 2. sınıf: Kargo Gruplama Bandı.
 - [ ] 2. sınıf: Kuantum Denge Terazisi.

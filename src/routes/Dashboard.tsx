@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { activeModules, archivedModules, ModuleMeta } from '../registry/moduleRegistry';
+import {
+  WORKFLOW_SCOPE_STORAGE_KEY,
+  type WorkflowScope,
+  getWorkflowScopeLabel,
+  isGradeAllowedInScope,
+  readWorkflowScope,
+  writeWorkflowScope,
+} from './workflowScope';
 import { useGameStore } from '../store/useGameStore';
 import { useAtomStore } from '../store/useAtomStore';
 import { Battery, Play, Lock, ChevronLeft, Hexagon, Fingerprint, X, User as UserIcon, LogOut } from 'lucide-react';
@@ -11,10 +19,20 @@ import { AstroBot, BotMessage } from '../components/ui/AstroBot';
 import { ProfilePanel } from '../components/ui/ProfilePanel';
 
 export default function Dashboard() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { score } = useGameStore();
   const { masteredModules, masteredAtoms, displayName, role } = useAtomStore();
   const [selectedGrade, setSelectedGrade] = useState<number | null>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [workflowScope, setWorkflowScope] = useState<WorkflowScope>(readWorkflowScope);
+
+  useEffect(() => {
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === WORKFLOW_SCOPE_STORAGE_KEY) setWorkflowScope(readWorkflowScope());
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -32,11 +50,44 @@ export default function Dashboard() {
     return archivedModules.filter(m => m.grade === grade);
   };
 
+  const isScopeLockedGrade = (grade: number) => !isGradeAllowedInScope(grade, workflowScope);
+
+  useEffect(() => {
+    const gradeFromUrl = parseGradeSearchParam(searchParams);
+    setSelectedGrade(gradeFromUrl !== null && !isScopeLockedGrade(gradeFromUrl) ? gradeFromUrl : null);
+  }, [searchParams, workflowScope]);
+
+  const openGrade = (grade: number) => {
+    if (isScopeLockedGrade(grade)) return;
+    const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.set('grade', String(grade));
+    setSearchParams(nextSearchParams, { replace: true });
+    setSelectedGrade(grade);
+  };
+
+  const returnToSectors = () => {
+    const nextSearchParams = new URLSearchParams(searchParams);
+    nextSearchParams.delete('grade');
+    setSearchParams(nextSearchParams, { replace: true });
+    setSelectedGrade(null);
+  };
+
+  const showAllGrades = () => {
+    writeWorkflowScope('all');
+    setWorkflowScope('all');
+  };
+
   const getBotMessage = (): BotMessage => {
     let text = `Hoş geldin ${displayName}! Giriş yapmak istediğin laboratuvar kapısını seç.`;
     let type: 'info' | 'success' | 'error' = 'info';
 
     if (selectedGrade !== null) {
+      if (isScopeLockedGrade(selectedGrade)) {
+        text = `${selectedGrade}. sınıf ${getWorkflowScopeLabel(workflowScope).toLocaleLowerCase('tr-TR')} dışında. Önce tüm sınıfları göster ya da hat içinde kal.`;
+        type = 'info';
+        return { id: selectedGrade, text, type };
+      }
+
       const count = getModulesForGrade(selectedGrade).length;
       const archiveCount = getArchivedModulesForGrade(selectedGrade).length;
       if (count === 0) {
@@ -133,6 +184,27 @@ export default function Dashboard() {
 
       {/* ANA İÇERİK MİMARİSİ */}
       <main className="relative z-10 max-w-7xl mx-auto px-8 pt-8 pb-32">
+        {workflowScope !== 'all' && (
+          <section className="mb-8 flex flex-col gap-4 rounded-3xl border border-[#00E5FF]/20 bg-[#06101e]/88 p-5 shadow-[0_20px_70px_rgba(0,0,0,0.28)] md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="font-mono text-[10px] font-black uppercase tracking-[0.24em] text-[#00E5FF]">
+                Çalışma hattı kilidi
+              </p>
+              <h2 className="mt-1 text-2xl font-black text-white">{getWorkflowScopeLabel(workflowScope)} açık</h2>
+              <p className="mt-1 text-sm leading-relaxed text-white/58">
+                Dalgın tıklamaları önlemek için bu hatta ait olmayan sınıf kapıları pasif.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={showAllGrades}
+              className="min-h-12 rounded-2xl border border-white/10 bg-white/[0.05] px-5 py-3 text-sm font-black text-white/78 transition hover:border-[#00E5FF]/45 hover:text-[#00E5FF]"
+            >
+              Tüm sınıfları göster
+            </button>
+          </section>
+        )}
+
         <AnimatePresence mode="wait">
           {selectedGrade === null ? (
             <motion.div 
@@ -156,7 +228,9 @@ export default function Dashboard() {
                     key={grade} 
                     grade={grade} 
                     moduleCount={getModulesForGrade(grade).length}
-                    onClick={() => setSelectedGrade(grade)} 
+                    isScopeLocked={isScopeLockedGrade(grade)}
+                    scopeLabel={getWorkflowScopeLabel(workflowScope)}
+                    onClick={() => openGrade(grade)}
                   />
                 ))}
               </div>
@@ -170,7 +244,7 @@ export default function Dashboard() {
               transition={{ duration: 0.4 }}
             >
               <button 
-                onClick={() => setSelectedGrade(null)}
+                onClick={returnToSectors}
                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-10 group"
               >
                 <div className="bg-[#121212] p-2 rounded-full border border-gray-800 group-hover:border-gray-500 transition-colors">
@@ -232,6 +306,12 @@ export default function Dashboard() {
   );
 }
 
+function parseGradeSearchParam(searchParams: URLSearchParams): number | null {
+  const grade = Number(searchParams.get('grade'));
+  if (!Number.isInteger(grade) || grade < 1 || grade > 12) return null;
+  return grade;
+}
+
 function ArchiveModuleCard({ mod }: { mod: ModuleMeta }) {
   return (
     <Link
@@ -260,28 +340,49 @@ function ArchiveModuleCard({ mod }: { mod: ModuleMeta }) {
 
 // --- ALT BİLEŞENLER ---
 
-function GradeDoor({ grade, moduleCount, onClick }: { grade: number, moduleCount: number, onClick: () => void }) {
+function GradeDoor({
+  grade,
+  moduleCount,
+  isScopeLocked,
+  scopeLabel,
+  onClick,
+}: {
+  grade: number;
+  moduleCount: number;
+  isScopeLocked: boolean;
+  scopeLabel: string;
+  onClick: () => void;
+}) {
   const isLocked = moduleCount === 0;
+  const isMuted = isLocked || isScopeLocked;
 
   return (
     <motion.button 
-      whileHover={{ y: -5, boxShadow: isLocked ? 'none' : '0 10px 30px rgba(0,229,255,0.15)' }}
+      whileHover={{ y: isMuted ? 0 : -5, boxShadow: isMuted ? 'none' : '0 10px 30px rgba(0,229,255,0.15)' }}
       whileTap={{ scale: 0.96 }}
-      onClick={onClick}
+      onClick={() => {
+        if (isScopeLocked) return;
+        onClick();
+      }}
+      disabled={isScopeLocked}
       className={`relative aspect-[3/4] w-full rounded-3xl flex flex-col items-center justify-between p-6 overflow-hidden border transition-colors ${
-        isLocked 
+        isMuted
           ? 'bg-[#121212]/40 border-gray-900/50 grayscale opacity-70 cursor-not-allowed hidden-or-locked' 
           : 'bg-[#121212]/80 backdrop-blur-xl border-gray-800 hover:border-[#00E5FF]/40 cursor-pointer'
       }`}
     >
       {/* Parlama Efekti */}
-      {!isLocked && (
+      {!isMuted && (
         <div className="absolute -inset-2 bg-gradient-to-t from-[#00E5FF]/20 to-transparent opacity-0 hover:opacity-100 blur-xl transition-opacity duration-500"></div>
       )}
 
       {/* Sayaç veya Kilit */}
       <div className="w-full flex justify-end relative z-10">
-        {isLocked ? (
+        {isScopeLocked ? (
+          <div className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-white/38">
+            Hat dışı
+          </div>
+        ) : isLocked ? (
           <Lock className="w-5 h-5 text-gray-700" />
         ) : (
           <div className="bg-[#1F2833] border border-gray-700 text-[#00E5FF] text-[10px] font-bold px-2.5 py-1 rounded-full">
@@ -297,11 +398,13 @@ function GradeDoor({ grade, moduleCount, onClick }: { grade: number, moduleCount
 
       {/* Etiket */}
       <div className="w-full text-center relative z-10">
-        <p className={`text-xs font-bold uppercase tracking-widest ${isLocked ? 'text-gray-700' : 'text-gray-400'}`}>Sınıf</p>
+        <p className={`text-xs font-bold uppercase tracking-widest ${isMuted ? 'text-gray-700' : 'text-gray-400'}`}>
+          {isScopeLocked ? scopeLabel : 'Sınıf'}
+        </p>
       </div>
 
       {/* Alt Vurgu Çizgisi */}
-      {!isLocked && (
+      {!isMuted && (
         <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00E5FF]/50 to-transparent"></div>
       )}
     </motion.button>

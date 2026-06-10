@@ -33,7 +33,14 @@ const spec = specPath ? readFileSync(specPath, 'utf8') : '';
 const specTitle = spec.match(/^#\s+(.+)$/m)?.[1] ?? '';
 const specScope = findSpecScope(spec);
 const specAtoms = unique(specScope.match(/MAT\.\d+\.\d+\.\d+\.\d+/g) ?? []);
-const specRoute = spec.match(/\/embed\/[a-z/-]+/g)?.find((route) => route.includes(moduleId));
+const specRoute = spec.match(/\/embed\/[a-z0-9/-]+/g)?.find((route) => route.includes(moduleId));
+const specTurkishIssues = findTurkishDistributiveWritingIssues(spec);
+
+if (specTurkishIssues.length > 0) {
+  fail.push(`Spec içinde Türkçe üleştirme yazımı hatası: ${specTurkishIssues.join(', ')}`);
+} else if (spec) {
+  pass.push('Spec Türkçe üleştirme yazımı kontrolü geçti.');
+}
 
 if (specAtoms.length === 0) {
   fail.push('Spec içinde atom ID bulunamadı.');
@@ -70,6 +77,13 @@ if (registryBlock) {
   if (specRoute && registryBlock.includes(`path: '${specRoute}'`)) pass.push('Registry route spec ile eşleşiyor.');
   else if (specRoute) fail.push(`Registry route spec ile eşleşmiyor: ${specRoute}`);
 
+  const registryTurkishIssues = findTurkishDistributiveWritingIssues(registryBlock);
+  if (registryTurkishIssues.length > 0) {
+    fail.push(`Registry içinde Türkçe üleştirme yazımı hatası: ${registryTurkishIssues.join(', ')}`);
+  } else {
+    pass.push('Registry Türkçe üleştirme yazımı kontrolü geçti.');
+  }
+
   const gradeMatch = registryBlock.match(/grade:\s*(\d+)/);
   if (gradeMatch && Number(gradeMatch[1]) >= 10) pass.push(`Registry grade doğrulandı: ${gradeMatch[1]}`);
   else warn.push('Registry grade 10/11 olarak doğrulanamadı.');
@@ -87,6 +101,13 @@ if (!specOnly) {
     pass.push(`Kaynak klasörü bulundu: ${rel(sourceDir)}`);
     const sourceFiles = walk(sourceDir).filter((file) => /\.(ts|tsx)$/.test(file));
     const sourceText = sourceFiles.map((file) => readFileSync(file, 'utf8')).join('\n');
+    const sourceTurkishIssues = findTurkishDistributiveWritingIssues(sourceText);
+    if (sourceTurkishIssues.length > 0) {
+      fail.push(`Kaynakta Türkçe üleştirme yazımı hatası: ${sourceTurkishIssues.join(', ')}`);
+    } else {
+      pass.push('Kaynak Türkçe üleştirme yazımı kontrolü geçti.');
+    }
+
     const testIds = unique(spec.match(/`([a-z0-9-]+(?:-\*)?)`/g)?.map((value) => value.slice(1, -1)).filter((value) => value.includes('-')) ?? []);
     const concreteTestIds = testIds.filter((value) => !value.includes('*'));
 
@@ -174,6 +195,36 @@ function titleGuess(id) {
 
 function stripOrderPrefix(title) {
   return title.replace(/^\d{2}-\d{2}\s+/, '').trim();
+}
+
+function findTurkishDistributiveWritingIssues(text) {
+  const issues = [];
+  const pattern = /\b(\d+)['’](?:şer|şar|er|ar)(?:li|lı|lik|lık|le|la)?\b/giu;
+  const correctionByNumber = {
+    1: 'birer',
+    2: 'ikişer',
+    3: 'üçer',
+    4: 'dörder',
+    5: 'beşer',
+    6: 'altışar',
+    7: 'yedişer',
+    8: 'sekizer',
+    9: 'dokuzar',
+    10: 'onar',
+    100: 'yüzer',
+    1000: 'biner',
+  };
+
+  for (const match of text.matchAll(pattern)) {
+    const raw = match[0];
+    const number = Number(match[1]);
+    const base = correctionByNumber[number] ?? 'sayıyı yazıyla kullan';
+    const suffix = raw.toLocaleLowerCase('tr-TR');
+    const correction = suffix.endsWith('li') || suffix.endsWith('lı') ? `${base}li` : base;
+    issues.push(`${raw} → ${correction}`);
+  }
+
+  return unique(issues);
 }
 
 function report() {
