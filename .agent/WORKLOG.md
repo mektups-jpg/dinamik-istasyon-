@@ -1871,3 +1871,27 @@ Bu dosya, uzun soluklu otomasyon ve manuel geliştirme sırasında kısa teknik 
 - Kullanıcı geri bildirimi: Kaptan canlı kontrolden sonra `Renkli Paket Tablosu` atomunun vitrin hazır olarak isimlendirilmesini istedi.
 - Düzeltme: `data-flow-screen` registry statüsü `showcase-ready` yapıldı. Spec, MODULES, showcase readiness, kalite scorecard, progress ve current task kayıtları `Showcase Ready / Vitrin Hazır` ile eşitlendi. Modül oynanış dosyasına bu turda dokunulmadı.
 - QA: Önceki canlı QA kanıtları korundu: 1. sınıf için sade `renk kutusu` dili, yanlış kart feedback, doğru görev geçişi, 5/5 completion, console warn/error 0 ve yatay taşma false. Bu turda dashboard `/?grade=1` içinde kart `Vitrin Hazır / Veri / Renkli Paket Tablosu` olarak doğrulandı.
+
+## 2026-06-10 İlkokul - 02-09 Eş Gruplar Kargo Bandı Dil ve Pedagoji Cilası
+- Kullanıcı geri bildirimi: `cargo-grouping-band-2` atomu CU ile incelensin; pedagojik uygunluk ve kelime seçimi değerlendirilsin, uygunsa düzeltme yapılsın.
+- Değerlendirme: Kazanım kapsamı uygun; eş grup, çarpma, eşit paylaştırma ve aynı sayıda çıkarma hedefleri doğru. Ancak ilk ekranda `dron`, `kısa işlem` ve teknik `kısa yol` ifadeleri 2. sınıf için gereksiz soyutluk oluşturuyordu. Öğrenci ilk 3 saniyede `kaç kutu var, her kutuda kaç kargo var, hangi çarpma işlemi?` çizgisini daha rahat görmeli.
+- Düzeltme: Modül adı `Eş Gruplar Kargo Bandı` oldu. Görev metinleri `kutu`, `eş grup`, `çarpma işlemi`, `eşit paylaştırma`, `aynı sayıda çıkarma` ve `tur sayısı` diliyle sadeleştirildi. Completion atom açıklamaları çocuk/veli gözüyle okunur hale getirildi. Registry, spec, MODULES, showcase readiness, kalite scorecard ve progress kayıtları yeni adla eşitlendi.
+- Statü: Kaptan canlı görsel onayı henüz verilmediği için modül `Review Needed / Görüş Gerekli` durumunda bırakıldı; `Showcase Ready` yapılmadı.
+
+## 2026-06-10 İlkokul - 02-09 Eş Gruplar Kargo Bandı Sayı Çeşitliliği
+- Kullanıcı geri bildirimi: Atomda her oynayışta aynı sayıların mı kullanıldığı incelensin; pedagojik açıdan değerlendirilsin ve uygun olan yapılsın.
+- Değerlendirme: Tekrar oynama yeni seed ile ilk görevi değiştiriyordu, ancak kod kontrolünde çarpma/paylaştırma havuzunun küçük olduğu ve birkaç tur sonra aynı sayı düzenlerinin geri dönebildiği görüldü. Bu, öğrencinin eş grup mantığı yerine cevapları ezberlemesine yol açabilir.
+- Düzeltme: `GROUP_CASES` ve `SHARE_CASES` 2-5 çarpım gerçekleri içinde 15 örneğe çıkarıldı. `SWAP_CASES` ayrı oluşturuldu ve `3 x 3` gibi dizilişi değişmeyen simetrik örnekler dışarıda bırakıldı. İlk 20 seed için 20 farklı görev imzası doğrulandı.
+- QA: Browser/Codex canlı kontrolde üç tekrar turunun ilk görevleri `2 x 3`, `3 x 2`, `2 x 4` olarak değişti; 5/5 completion ekranında `Eş gruplar tamam!` ve sağ panelde `Eş gruplar tamamlandı.` doğrulandı. Console warn/error yok, yatay taşma false.
+- Statü: Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-10 İlkokul - 02-09 Eş Gruplar Kargo Bandı Canlı İpucu Cilası
+- Kullanıcı geri bildirimi: Canlı ipucunda `25-5-5...` gibi yarım görünen bir ifade var; yanlışlık olup olmadığı incelensin ve düzeltilsin.
+- Değerlendirme: Uygun bulundu. Üç noktayla biten ardışık çıkarma 2. sınıf öğrencisi için işlemin nerede bittiğini belirsiz bırakıyor.
+- Düzeltme: Aynı sayıda çıkarma ipucu tam yol olarak gösterildi: `25 -> 20 -> 15 -> 10 -> 5 -> 0` gibi. Canlı ipucu metni uzun olduğunda satır kırabilecek hale getirildi.
+- Statü: Modül hâlâ `Review Needed / Görüş Gerekli`; Kaptan onayı olmadan `Showcase Ready` yapılmadı.
+
+## 2026-06-10 İlkokul - 02-09 Eş Gruplar Kargo Bandı Showcase Ready
+- Kullanıcı geri bildirimi: Kaptan canlı kontrolden sonra `Eş Gruplar Kargo Bandı` atomunun vitrin hazır olarak isimlendirilmesini ve emeklerin GitHub'a commit edilmesini istedi.
+- Düzeltme: `cargo-grouping-band-2` registry statüsü `showcase-ready` yapıldı. Spec, MODULES, showcase readiness, kalite scorecard, roadmap, progress ve current task kayıtları `Showcase Ready / Vitrin Hazır` ile eşitlendi.
+- QA: Önceki canlı QA kanıtları korundu: yanlış kart feedback, 5/5 completion, tekrar oynama, sayı çeşitliliği, tam çıkarma yolu canlı ipucu, console warn/error 0 ve yatay taşma false. Bu turda dashboard statüsü commit öncesi tekrar doğrulanacak.

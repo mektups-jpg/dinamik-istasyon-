@@ -91,7 +91,7 @@ Amaç: küçük yaş kullanıcıları için ürünün giriş deneyimini güçlen
 - [ ] 1. sınıf: Akıllı Lojistik Terminali.
 - [x] 1. sınıf: Renkli Paket Tablosu.
 - [ ] 2. sınıf: Lazer Kesim Odası.
-- [ ] 2. sınıf: Kargo Gruplama Bandı.
+- [x] 2. sınıf: Eş Gruplar Kargo Bandı.
 - [ ] 2. sınıf: Kuantum Denge Terazisi.
 - [ ] 3. sınıf: İşlem Laboratuvarı ve Dinamik Birim Dönüştürücü.
 - [ ] 4. sınıf: Dinamik Kesir Terazisi ve Rotasyonlu Açı İletkisi.

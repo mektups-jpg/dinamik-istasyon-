@@ -740,8 +740,8 @@ export const modules: ModuleMeta[] = [
   },
   {
     id: 'cargo-grouping-band-2',
-    title: 'Kargo Gruplama Bandı',
-    description: 'Eş kargo gruplarını çarpma kısa yoluna çevir, eşit paylaştır ve bölme turunu bul.',
+    title: 'Eş Gruplar Kargo Bandı',
+    description: 'Kargoları eş kutularla say, çarpma işlemini seç, eşit paylaştır ve tur sayısını bul.',
     category: 'Cebir',
     difficulty: 'Kolay',
     grade: 2,
@@ -754,8 +754,8 @@ export const modules: ModuleMeta[] = [
       'MAT.2.2.4.4',
       'MAT.2.2.5.1',
     ],
-    status: 'review-needed',
-    archiveNote: '2. sınıf Kargo Gruplama Bandı üretildi; Kaptan canlı göz onayı bekliyor.'
+    status: 'showcase-ready',
+    archiveNote: '2. sınıf Eş Gruplar Kargo Bandı 2026-06-10 Kaptan canlı görsel onayıyla Showcase Ready.'
   },
   {
     id: 'quantum-balance-2',

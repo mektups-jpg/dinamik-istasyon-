@@ -70,7 +70,7 @@ export default function CargoGroupingBand2App() {
   };
 
   const botMessage: BotMessage = useMemo(() => {
-    if (isComplete) return { id: 260, text: 'Kargo bandı hazır! Çarpma, eşit paylaştırma ve bölme kısa yolunu çözdün.', type: 'success' };
+    if (isComplete) return { id: 260, text: 'Eş gruplar tamam! Çarpma, eşit paylaştırma ve tur sayısını doğru kullandın.', type: 'success' };
     if (feedback === 'success') return { id: taskIndex * 10 + 2, text: task.successText, type: 'success' };
     if (feedback === 'error') return { id: taskIndex * 10 + 3, text: `Bir daha bak. ${task.hint}`, type: 'error' };
     return { id: taskIndex * 10 + 1, text: task.prompt, type: 'info' };
@@ -78,8 +78,8 @@ export default function CargoGroupingBand2App() {
 
   return (
     <Grade2MissionFrame
-      title="Kargo Gruplama Bandı"
-      subtitle="İlkokul 2. Sınıf / Çarpma ve Bölme Temeli"
+      title="Eş Gruplar Kargo Bandı"
+      subtitle="İlkokul 2. Sınıf / Eş Gruplar ve Paylaştırma"
       icon={<Truck className="h-6 w-6" />}
       accent={ACCENT}
       progress={isComplete ? tasks.length : taskIndex + 1}
@@ -104,7 +104,7 @@ export default function CargoGroupingBand2App() {
             >
               <div className="mb-5 text-center">
                 <p className="font-mono text-[11px] font-black uppercase tracking-[0.24em]" style={{ color: task.color }}>
-                  Kargo gruplama bandı
+                  Eş gruplar bandı
                 </p>
                 <h2 className="mt-2 text-3xl font-black md:text-5xl">{task.title}</h2>
                 <p className="mx-auto mt-2 max-w-xl text-sm font-bold leading-relaxed text-white/60 md:text-base">{task.prompt}</p>
@@ -132,7 +132,7 @@ export default function CargoGroupingBand2App() {
           }`}
         >
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-white/44">Hedef</p>
-          <p className="mt-2 text-lg font-black leading-snug text-white">{isComplete ? 'Kargo bandı tamamlandı.' : task.prompt}</p>
+          <p className="mt-2 text-lg font-black leading-snug text-white">{isComplete ? 'Eş gruplar tamamlandı.' : task.prompt}</p>
         </div>
         {!isComplete && (
           <div className="mt-5 grid grid-cols-1 gap-3">
@@ -173,9 +173,9 @@ function CargoStage({ task, feedback }: { task: CargoTask; feedback: 'idle' | 's
         <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-white/[0.05] p-4">
           <div>
             <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/46">Canlı ipucu</p>
-            <p className="mt-3 text-3xl font-black text-white">{task.helperLabel}</p>
+            <p className="mt-3 break-words text-2xl font-black leading-tight text-white md:text-3xl">{task.helperLabel}</p>
             <p className="mt-3 text-sm font-bold leading-relaxed text-white/56">
-              Kargoları grup grup izle; her grup aynıysa kısa yol kullanabilirsin.
+              {task.guideText}
             </p>
           </div>
           <div
@@ -187,7 +187,7 @@ function CargoStage({ task, feedback }: { task: CargoTask; feedback: 'idle' | 's
                   : 'border-white/10 bg-black/24 text-white/60'
             }`}
           >
-            {feedback === 'success' ? 'Doğru!' : feedback === 'error' ? 'Tekrar dene' : 'Kargoları say'}
+            {feedback === 'success' ? 'Doğru!' : feedback === 'error' ? 'Tekrar dene' : task.actionLabel}
           </div>
         </div>
       </div>
@@ -198,7 +198,7 @@ function CargoStage({ task, feedback }: { task: CargoTask; feedback: 'idle' | 's
 function GroupScene({ task }: { task: CargoTask }) {
   return (
     <div data-testid="cargo-grouping-band-2-groups" className="min-h-80">
-      <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/46">Eş kargo grupları</p>
+      <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/46">Eş kargo kutuları</p>
       <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: task.groups }).map((_, groupIndex) => (
           <CargoBay key={groupIndex} label={`${groupIndex + 1}. grup`} count={task.perGroup} color={task.color} />
@@ -231,7 +231,7 @@ function SubtractScene({ task }: { task: CargoTask }) {
 
   return (
     <div data-testid="cargo-grouping-band-2-subtract" className="min-h-80">
-      <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/46">Her turda aynı sayıda indir</p>
+      <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-white/46">Her turda aynı sayıda çıkar</p>
       <div className="mt-5 flex flex-wrap items-center gap-3">
         {steps.map((value, index) => (
           <motion.div
@@ -330,9 +330,9 @@ function CompletionCard({ onRestart }: { onRestart: () => void }) {
       <div className="grid h-20 w-20 place-items-center rounded-[28px] bg-emerald-300/16 shadow-[0_0_38px_rgba(52,211,153,0.28)]">
         <CheckCircle2 className="h-11 w-11 text-emerald-300" />
       </div>
-      <h2 className="mt-4 text-3xl font-black text-white">Kargo bandı hazır!</h2>
+      <h2 className="mt-4 text-3xl font-black text-white">Eş gruplar tamam!</h2>
       <p className="mt-2 max-w-md text-sm font-bold leading-relaxed text-white/62 md:text-base">
-        Eş grupları çarpma kısa yoluna çevirdin, kargoları eşit paylaştırdın ve bölmeyi gördün.
+        Eş kargo kutularını çarpma ile anlattın, kargoları eşit paylaştırdın ve tur sayısını buldun.
       </p>
       <div className="mt-5 max-h-72 w-full space-y-2 overflow-y-auto rounded-3xl border border-white/10 bg-black/24 p-4 text-left">
         <p className="font-mono text-[10px] font-black uppercase tracking-[0.22em] text-[#34D399]">Kazanılan atomlar</p>

@@ -9,7 +9,7 @@ Dinamik İstasyon İlkokul üretim hattı. Yalnız 1-4. sınıf modülleri canl�
 In Progress / Kaptan Review Needed.
 
 1. sınıf: 6 görev Kaptan onayıyla Vitrin Hazır.
-2. sınıf: 5 görev Kaptan onayıyla Vitrin Hazır; `Kalibrasyon Kulesi`, `Veri Çekirdeği`, `Kasa Terminali`, `Kargo Gruplama Bandı`, `Kuantum Denge Terazisi` ve `Hologram Tasarım Üssü` üretildi, Kaptan canlı görsel onayı bekliyor.
+2. sınıf: 6 görev Kaptan onayıyla Vitrin Hazır; `Eş Gruplar Kargo Bandı` 2026-06-10 Kaptan canlı onayıyla eklendi. `Kalibrasyon Kulesi`, `Veri Çekirdeği`, `Kasa Terminali`, `Kuantum Denge Terazisi` ve `Hologram Tasarım Üssü` üretildi, Kaptan canlı görsel onayı bekliyor.
 3. sınıf: 5 görev, `Sütun Grafiği Terminali`, `Dört İşlem Makinesi`, `Saati Okuyorum`, `Zaman Dönüşüm Makinesi` ve `Süre Tahmin Dedektifi` Kaptan onayıyla Vitrin Hazır.
 3. sınıf yeni üretimlerinden `Ölçü Birimi Makinesi`, `Para Değeri Atölyesi`, `Litre Ölçme Atölyesi` ve `Dijital Geometri Tahtası` Kaptan canlı görsel onayı bekliyor; eski birleşik `Birim Dönüşüm İstasyonu` arşivde.
 4. sınıf: `Altı Basamaklı Sayı Dedektifi`, `İşlem Kısayolları Atölyesi`, `Kesir Denge Terazisi`, `Açınım ve Çevre Keşfi`, `Açı Ölçme Çarkı`, `Ölçü Dönüşüm Makinesi`, `Olasılık Etiketleri`, `İki Sınıf Grafiği`, `Bölme Tahmini`, `Bölme Dedektifi`, `Uzun Çarpma Fabrikası` ve `Problem Kur ve Çöz Atölyesi` Kaptan onayıyla Vitrin Hazır; eski karma `Ölçü, Olasılık ve Veri İstasyonu` arşivlendi.
@@ -173,7 +173,7 @@ In Progress / Kaptan Review Needed.
 
 ## Next Steps
 
-1. Kaptan 2. sınıf `Kalibrasyon Kulesi` / `Veri Çekirdeği` / `Kasa Terminali` / `Kargo Gruplama Bandı` / `Kuantum Denge Terazisi` / `Hologram Tasarım Üssü` ve 3. sınıf kalan yeni ölçme atomları / `Dijital Geometri Tahtası` atomlarını canlı gözle kontrol eder.
+1. Kaptan 2. sınıf `Kalibrasyon Kulesi` / `Veri Çekirdeği` / `Kasa Terminali` / `Kuantum Denge Terazisi` / `Hologram Tasarım Üssü` ve 3. sınıf kalan yeni ölçme atomları / `Dijital Geometri Tahtası` atomlarını canlı gözle kontrol eder.
 2. Kaptan onayladığı modüller ayrı ayrı Vitrin Hazır olarak işaretlenir.
 3. MODULES.md kalan ilkokul başlıklarında sıradaki eksik modül tek tek ele alınır; vitrin hazır modüllere dokunulmaz.
 

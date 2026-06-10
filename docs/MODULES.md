@@ -89,12 +89,12 @@ Yeni modüller `docs/MODULE_DESIGN_GUIDE.md` içindeki ürün tasarım filtresin
   * `MAT.2.3.1.x` (Cisim / Şekil sınıflandırması)
   * `MAT.2.3.4.x` (Geometrik uzamsal sabitliğin korunumu)
 
-### 3. Kargo Gruplama Bandı (Çarpma, Bölme & Ritmik Sayma) — Çarpma/Bölme Üretildi / Görüş Gerekli
-* **Konsept:** Fabrikadan çıkan yükleri dronlara yüklemek için yığılan kargoları ritmik sayarak üst üste eklemek (Çarpma) veya eşit şekilde filolara paylaştırmak (Bölme).
+### 3. Eş Gruplar Kargo Bandı (Çarpma, Bölme & Ritmik Sayma) — Vitrin Hazır
+* **Konsept:** Kargoları eş kutular halinde saymak, tekrarlı toplamayı çarpma işlemiyle anlatmak, kargoları robotlara eşit paylaştırmak ve aynı sayıda çıkararak tur sayısını bulmak.
 * **Sağladığı Atom Grupları (%100 Kapsam):**
   * `MAT.2.1.4.x` (İleri ve geri ritmik saymalar) — `Ritim Roketi 2-5` vitrin hazır akışında kapsanır.
-  * `MAT.2.2.4.x` (Çarpmanın tekrarlı toplama, bölmenin paylaştırma temeli) — `Kargo Gruplama Bandı` ile üretildi.
-  * `MAT.2.2.5.x` (Çarpma / Bölme muhakemesi) — `Kargo Gruplama Bandı` ile üretildi.
+  * `MAT.2.2.4.x` (Çarpmanın tekrarlı toplama, bölmenin paylaştırma temeli) — `Eş Gruplar Kargo Bandı` ile üretildi.
+  * `MAT.2.2.5.x` (Çarpma / Bölme muhakemesi) — `Eş Gruplar Kargo Bandı` ile üretildi.
 
 ### 4. Kuantum Denge Terazisi (İşlemler Arası İlişkiler & Eşitlik) — Üretildi / Görüş Gerekli
 * **Konsept:** 1. sınıftaki terazinin gelişmiş versiyonu. İki kefeye de dört işlemi içeren matematiksel denklem (örn: sol kefe 15+3, sağ kefe 20-?) yansıtılır.
