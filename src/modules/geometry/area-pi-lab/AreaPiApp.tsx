@@ -526,6 +526,25 @@ export default function AreaPiApp() {
                             {/* Radius text label, stays horizontal roughly by inverse rotation if needed, but since it's rotating, we just put it on the wheel */}
                         </motion.g>
                     </svg>
+
+                    {showArc && rollProgress === 1 && piUnlocked && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="pointer-events-none absolute left-4 top-4 max-w-[min(21rem,calc(100%-2rem))] rounded-xl border border-pink-300/45 bg-slate-950/85 px-4 py-3 text-pink-50 shadow-xl shadow-pink-500/10 backdrop-blur-md"
+                        >
+                            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-pink-200">
+                                <Disc className="h-3 w-3" /> Pembe dilim
+                            </div>
+                            <div className="mt-1 text-sm font-bold leading-snug">
+                                Çevre izinin {angleShareText}
+                            </div>
+                            <div className="mt-2 rounded-md bg-pink-500/10 px-2.5 py-2 font-mono text-xs font-black leading-relaxed text-white">
+                                <div>{arcOperationLabel}</div>
+                                <div>{arcOperationValue}</div>
+                            </div>
+                        </motion.div>
+                    )}
                 </div>
 
                 {/* Right Panel */}
@@ -549,7 +568,7 @@ export default function AreaPiApp() {
                                 </div>
                             )}
 
-                            {rollProgress === 1 && (
+                            {rollProgress === 1 && !piUnlocked && (
                                 <div className="rounded-xl border border-slate-600 bg-slate-950/60 p-3">
                                     <div className="text-sm font-black leading-snug text-cyan-100">Çevreyi çapa böl: yaklaşık kaç çıkar?</div>
                                     <div className="mt-3 grid grid-cols-3 gap-2">
@@ -599,23 +618,6 @@ export default function AreaPiApp() {
                             )}
                         </div>
 
-                        {showArc && rollProgress === 1 && piUnlocked && (
-                            <div className="mt-4 pt-3 border-t border-indigo-500/30">
-                                <div className="text-xs font-bold text-pink-300 mb-2 flex items-center gap-2">
-                                    <Disc className="w-3 h-3"/> Pembe dilim: çevre izinin {angleShareText}
-                                </div>
-                                <div className="space-y-2 rounded-lg border border-pink-400/30 bg-pink-950/30 p-3 text-sm text-pink-50">
-                                    <p>
-                                        Tam çember 360°. Pembe dilim {targetAngle}° olduğu için sarı çevre izinin{' '}
-                                        <span className="font-black text-white">{angleShareText}</span> kadarını gösterir.
-                                    </p>
-                                    <div className="rounded-md bg-slate-950/60 px-3 py-2 font-mono text-sm font-black leading-relaxed text-white">
-                                        <div>{arcOperationLabel}</div>
-                                        <div>{arcOperationValue}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
                     </div>
 
                     {/* Circle Controls */}
